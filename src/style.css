@@ -40,3 +40,15 @@ button {
 button:hover {
   opacity: 0.9;
 }
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.signup-form input {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
