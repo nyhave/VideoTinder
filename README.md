@@ -6,8 +6,10 @@ VideoTinder is a minimal progressive web app (PWA) dating prototype. Instead of 
 
 * Drag left/right on short videos to swipe like Tinder
 * Offline support via service worker
+* Simple sign-up form
 * Invite to video speed date
 * New FaceTime-style speed date screen
+
 
 ## Getting Started
 
@@ -20,5 +22,6 @@ VideoTinder is a minimal progressive web app (PWA) dating prototype. Instead of 
    npm start
    ```
 3. Open `public/index.html` in your browser.
+4. Sign up with your name to start swiping.
 
 Since dependencies are loaded from CDNs, no build step is required.
