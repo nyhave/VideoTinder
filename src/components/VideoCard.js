@@ -21,9 +21,22 @@ export default function VideoCard({ src, onSwipeLeft, onSwipeRight }) {
     startX = null;
   };
 
-  return (
-    <div ref={ref} className="video-card" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-      <video src={src} autoPlay loop muted playsInline width="300" height="500" />
-    </div>
+  return React.createElement(
+    'div',
+    {
+      ref: ref,
+      className: 'video-card',
+      onTouchStart: handleTouchStart,
+      onTouchEnd: handleTouchEnd,
+    },
+    React.createElement('video', {
+      src: src,
+      autoPlay: true,
+      loop: true,
+      muted: true,
+      playsInline: true,
+      width: 300,
+      height: 500,
+    })
   );
 }

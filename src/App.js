@@ -20,18 +20,20 @@ export default function App() {
 
   const current = videos[0];
 
-  return (
-    <div className="app">
-      {current ? (
-        <VideoCard
-          src={current}
-          onSwipeLeft={() => handleSwipe('left')}
-          onSwipeRight={() => handleSwipe('right')}
-        />
-      ) : (
-        <p>No more videos</p>
-      )}
-      <button onClick={inviteToSpeedDate}>Invite to Speed Date</button>
-    </div>
+  return React.createElement(
+    'div',
+    { className: 'app' },
+    current
+      ? React.createElement(VideoCard, {
+          src: current,
+          onSwipeLeft: () => handleSwipe('left'),
+          onSwipeRight: () => handleSwipe('right'),
+        })
+      : React.createElement('p', null, 'No more videos'),
+    React.createElement(
+      'button',
+      { onClick: inviteToSpeedDate },
+      'Invite to Speed Date'
+    )
   );
 }
