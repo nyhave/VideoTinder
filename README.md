@@ -4,10 +4,12 @@ VideoTinder is a minimal progressive web app (PWA) dating prototype. Instead of 
 
 ## Features
 
-* Swipe left/right on short videos
+* Drag left/right on short videos to swipe like Tinder
 * Offline support via service worker
 * Simple sign-up form
-* Invite to video speed date (placeholder)
+* Invite to video speed date
+* New FaceTime-style speed date screen
+
 
 ## Getting Started
 
