@@ -6,6 +6,6 @@ ReactDOM.render(React.createElement(App), document.getElementById('root'));
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/public/service-worker.js');
+    navigator.serviceWorker.register('service-worker.js');
   });
 }
