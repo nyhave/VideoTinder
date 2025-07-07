@@ -40,3 +40,31 @@ button {
 button:hover {
   opacity: 0.9;
 }
+
+.speed-date {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: black;
+}
+
+.remote-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.local-video {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  width: 30%;
+  border: 2px solid white;
+  border-radius: 8px;
+}
+
+.end-call-button {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+}

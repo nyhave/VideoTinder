@@ -1,5 +1,6 @@
 import React, { useState } from 'https://cdn.skypack.dev/react';
 import VideoCard from './components/VideoCard.js';
+import SpeedDate from './components/SpeedDate.js';
 
 const sampleVideos = [
   'sample1.mp4',
@@ -9,16 +10,25 @@ const sampleVideos = [
 
 export default function App() {
   const [videos, setVideos] = useState(sampleVideos);
+  const [showSpeedDate, setShowSpeedDate] = useState(false);
 
   const handleSwipe = (direction) => {
     setVideos(videos.slice(1));
   };
 
   const inviteToSpeedDate = () => {
-    alert('Speed date invitation sent!');
+    setShowSpeedDate(true);
+  };
+
+  const endSpeedDate = () => {
+    setShowSpeedDate(false);
   };
 
   const current = videos[0];
+
+  if (showSpeedDate) {
+    return React.createElement(SpeedDate, { onEnd: endSpeedDate });
+  }
 
   return React.createElement(
     'div',
