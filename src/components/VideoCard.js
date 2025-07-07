@@ -32,7 +32,7 @@ export default function VideoCard({ src, onSwipeLeft, onSwipeRight }) {
     React.createElement('video', {
       src: src,
       autoPlay: true,
-      loop: true,
+      // Remove the loop attribute so each video plays once
       muted: true,
       playsInline: true,
       width: 300,
