@@ -2,6 +2,7 @@ const CACHE_NAME = 'videotinder-v1';
 const URLS_TO_CACHE = [
   '/',
   '/public/index.html',
+  '/public/style.css'
 ];
 
 self.addEventListener('install', event => {

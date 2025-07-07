@@ -14,7 +14,10 @@ VideoTinder is a minimal progressive web app (PWA) dating prototype. Instead of 
    ```bash
    npm install
    ```
-2. Start a simple web server from the project root (for example using `npx serve`).
-3. Open `public/index.html` in your browser.
+2. Start a simple web server from the project root:
+   ```bash
+   npm start
+   ```
+3. Open `public/index.html` (or simply `/public`) in your browser.
 
 Since dependencies are loaded from CDNs, no build step is required.
