@@ -1,0 +1,12 @@
+{
+  "name": "videotinder",
+  "version": "1.0.0",
+  "description": "A minimal React PWA for swiping short videos and speed dating.",
+  "scripts": {
+    "start": "npx serve -s ."
+  },
+  "dependencies": {
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0"
+  }
+}
