@@ -14,6 +14,7 @@ export default function RealDatingApp() {
     const stored = localStorage.getItem('loggedIn');
     return stored === 'true';
   });
+  const DEFAULT_USER_ID = '101';
   const profiles=useCollection('profiles');
   const [userId,setUserId]=useState(null);
   const [ageRange,setAgeRange]=useState([35,55]);
@@ -36,7 +37,10 @@ export default function RealDatingApp() {
       setUserId(null);
       return;
     }
-    if(!userId && profiles.length) setUserId(profiles[0].id);
+    if(!userId && profiles.length){
+      const defaultProfile = profiles.find(p => p.id === DEFAULT_USER_ID);
+      setUserId((defaultProfile || profiles[0]).id);
+    }
   },[loggedIn, profiles, userId]);
 
 
