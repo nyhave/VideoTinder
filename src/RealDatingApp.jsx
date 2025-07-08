@@ -22,7 +22,9 @@ async function seedData() {
   await Promise.all(testUsers.map(u=>setDoc(doc(db,'profiles',u.id),u)));
   const testClips=[
     {id:'c1',profileId:'101',gender:'Kvinde',text:'Bøger er mit frirum.'},
-    {id:'c2',profileId:'104',gender:'Mand',text:'Cykler hver dag.'}
+    {id:'c2',profileId:'104',gender:'Mand',text:'Cykler hver dag.'},
+    {id:'c3',profileId:'105',gender:'Mand',text:'Elsker at lave mad.'},
+    {id:'c4',profileId:'106',gender:'Mand',text:'Fotograferer naturen.'}
   ];
   await Promise.all(testClips.map(c=>setDoc(doc(db,'clips',c.id),c)));
   await setDoc(doc(db,'matches','m1'),{id:'m1',userId:'101',profileId:'104',lastMessage:'Hej Peter!'});
@@ -43,8 +45,10 @@ export default function RealDatingApp() {
   if(step===0) return React.createElement(WelcomeScreen, { onNext: ()=>setStep(1) });
   const selectProfile=id=>{setViewProfile(id); setTab('discovery');};
 
+
   return React.createElement('div', { className: 'flex flex-col min-h-screen w-full bg-gradient-to-br from-pink-100 to-white' },
     React.createElement('div', { className: 'flex-1' },
+
       tab==='discovery' && !viewProfile && (
         React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange })
       ),
@@ -56,7 +60,7 @@ export default function RealDatingApp() {
       tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange }),
       tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId })
     ),
-    React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around' },
+    React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around fixed bottom-0 left-0 right-0' },
       React.createElement(HomeIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('discovery'); setViewProfile(null);} }),
       React.createElement(ChatIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('chat') }),
       React.createElement(CalendarDays, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('checkin') }),
