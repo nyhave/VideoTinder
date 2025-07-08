@@ -42,11 +42,21 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange }) 
       )
     ),
     React.createElement(SectionTitle, { title: 'Video-klip' }),
-    React.createElement('div', { className: 'flex space-x-4 mb-4' }, (profile.videoClips||[]).slice(0,3).map((_,i)=>React.createElement(CameraIcon,{key:i,className:'w-10 h-10'}))),
+    React.createElement('div', { className: 'flex space-x-4 mb-4' },
+      Array.from({length:3}).map((_,i)=>{
+        const hasClip=(profile.videoClips||[])[i];
+        return React.createElement(CameraIcon,{key:i,className:`w-10 h-10 ${hasClip?'':'opacity-50 text-gray-400'}`});
+      })
+    ),
     React.createElement(SectionTitle, { title: 'Lyd-klip' }),
-    React.createElement('div', { className: 'flex space-x-4 mb-4' }, (profile.audioClips||[]).slice(0,3).map((_,i)=>React.createElement(Mic,{key:i,className:'w-10 h-10'}))),
+    React.createElement('div', { className: 'flex space-x-4 mb-4' },
+      Array.from({length:3}).map((_,i)=>{
+        const hasClip=(profile.audioClips||[])[i];
+        return React.createElement(Mic,{key:i,className:`w-10 h-10 ${hasClip?'':'opacity-50 text-gray-400'}`});
+      })
+    ),
     React.createElement(SectionTitle, { title: 'Om mig' }),
-      React.createElement(Textarea, { readOnly: true }, profile.clip),
+      React.createElement(Textarea, { className: 'mb-4', readOnly: true }, profile.clip),
       React.createElement('button', {
         className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
         onClick: saveChanges
