@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 import { Mic, Camera as CameraIcon } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Textarea } from './ui/textarea.js';
@@ -18,28 +20,15 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange }) 
     React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}` }),
     React.createElement(SectionTitle, { title: 'Aldersinterval' }),
     React.createElement('div', { className: 'flex flex-col gap-4 mb-4' },
-      React.createElement('div', null,
-        React.createElement('label', null, `Alder fra: ${ageRange[0]}`),
-        React.createElement('input', {
-          type: 'range',
-          min: '18',
-          max: '80',
-          value: ageRange[0],
-          onChange: e=>onChangeAgeRange([Number(e.target.value),ageRange[1]]),
-          className: 'w-full'
-        })
-      ),
-      React.createElement('div', null,
-        React.createElement('label', null, `Alder til: ${ageRange[1]}`),
-        React.createElement('input', {
-          type: 'range',
-          min: '18',
-          max: '80',
-          value: ageRange[1],
-          onChange: e=>onChangeAgeRange([ageRange[0],Number(e.target.value)]),
-          className: 'w-full'
-        })
-      )
+      React.createElement('label', null, `Alder: ${ageRange[0]} - ${ageRange[1]}`),
+      React.createElement(Slider, {
+        range: true,
+        min: 18,
+        max: 80,
+        value: ageRange,
+        onChange: onChangeAgeRange,
+        className: 'w-full'
+      })
     ),
     React.createElement(SectionTitle, { title: 'Video-klip' }),
     React.createElement('div', { className: 'flex space-x-4 mb-4' },
