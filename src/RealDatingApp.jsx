@@ -7,6 +7,7 @@ import DailyCheckIn from './components/DailyCheckIn.jsx';
 import ProfileSettings from './components/ProfileSettings.jsx';
 import AdminScreen from './components/AdminScreen.jsx';
 import { useCollection } from './firebase.js';
+import seedData from './seedData.js';
 
 
 export default function RealDatingApp() {
