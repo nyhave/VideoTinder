@@ -29,4 +29,4 @@ To create a production build run:
 ```bash
 npm run build
 ```
-The compiled files will be placed in the `dist` folder and can be deployed to GitHub Pages or any static host.
+The compiled files will be placed in the `dist` folder. When changes are pushed to `main`, a GitHub Actions workflow builds the project and deploys the contents of `dist` to GitHub Pages automatically.
