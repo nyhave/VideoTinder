@@ -110,6 +110,16 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         return React.createElement(CameraIcon,{key:i,className:`w-10 h-10 ${hasClip?'text-pink-500':'opacity-50 text-gray-400'}`});
       })
     ),
+    React.createElement('div', { className: 'flex flex-col gap-2 mb-4' },
+      (profile.videoClips || []).map((url,i) =>
+        React.createElement('video', {
+          key: i,
+          src: url,
+          controls: true,
+          className: 'w-full rounded'
+        })
+      )
+    ),
     !publicView && React.createElement(React.Fragment, null,
       React.createElement('input', {
         type:'file',
@@ -135,6 +145,16 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         const hasClip=(profile.audioClips||[])[i];
         return React.createElement(Mic,{key:i,className:`w-10 h-10 ${hasClip?'text-pink-500':'opacity-50 text-gray-400'}`});
       })
+    ),
+    React.createElement('div', { className: 'flex flex-col gap-2 mb-4' },
+      (profile.audioClips || []).map((url,i) =>
+        React.createElement('audio', {
+          key: i,
+          src: url,
+          controls: true,
+          className: 'w-full'
+        })
+      )
     ),
     !publicView && React.createElement(React.Fragment, null,
       React.createElement('input', {
