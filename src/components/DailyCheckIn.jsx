@@ -11,9 +11,12 @@ export default function DailyCheckIn({ userId }) {
   const [text,setText]=useState('');
 
   const save = async () => {
-    if(!text.trim()) return;
-    const id = Date.now().toString();
-    await setDoc(doc(db,'reflections',id),{id,userId,day:refs.length+1,text:text.trim()});
+    const trimmed = text.trim();
+    if(!trimmed) return;
+    const now = new Date();
+    const date = now.toISOString().split('T')[0];
+    const id = `${userId}-${date}`;
+    await setDoc(doc(db,'reflections',id),{id,userId,date,text:trimmed});
     setText('');
   };
 
@@ -23,12 +26,12 @@ export default function DailyCheckIn({ userId }) {
       days.map(day => (
         React.createElement('div', {
           key: day,
-          className: `p-2 text-center text-sm ${refs.some(r=>r.day===day)?'bg-pink-200 rounded':''}`
+          className: `p-2 text-center text-sm ${refs.some(r=>new Date(r.date).getDate()===day)?'bg-pink-200 rounded':''}`
         }, day)
       ))
     ),
     React.createElement('ul', { className: 'list-disc list-inside mb-4' },
-      refs.map(r => React.createElement('li', { key: r.id }, `Dag ${r.day}: ${r.text}`))
+      refs.map(r => React.createElement('li', { key: r.id }, `${r.date}: ${r.text}`))
     ),
     React.createElement(Textarea, {
       placeholder: 'Del din refleksion...',
