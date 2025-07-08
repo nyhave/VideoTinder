@@ -46,7 +46,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange }) 
     React.createElement(SectionTitle, { title: 'Lyd-klip' }),
     React.createElement('div', { className: 'flex space-x-4 mb-4' }, (profile.audioClips||[]).slice(0,3).map((_,i)=>React.createElement(Mic,{key:i,className:'w-10 h-10'}))),
     React.createElement(SectionTitle, { title: 'Om mig' }),
-      React.createElement(Textarea, { readOnly: true }, profile.clip),
+      React.createElement(Textarea, { className: 'mb-4', readOnly: true }, profile.clip),
       React.createElement('button', {
         className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
         onClick: saveChanges
