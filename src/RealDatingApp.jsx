@@ -45,7 +45,7 @@ export default function RealDatingApp() {
   const selectProfile=id=>{setViewProfile(id); setTab('discovery');};
 
   return React.createElement('div', { className: 'flex flex-col min-h-screen bg-gradient-to-br from-pink-100 to-white' },
-    React.createElement('div', { className: 'flex-1' },
+    React.createElement('div', { className: 'flex-1 pb-20' },
       tab==='discovery' && !viewProfile && (
         React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange })
       ),
@@ -53,16 +53,16 @@ export default function RealDatingApp() {
         React.createElement(ProfileSettings, { userId: viewProfile, ageRange, onChangeAgeRange: setAgeRange })
       ),
       tab==='chat' && React.createElement(ChatScreen, { userId }),
-      tab==='checkin' && React.createElement(DailyCheckIn, { userId })
+      tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
+      tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange }),
+      tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId })
     ),
-    React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around' },
+    React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around fixed bottom-0 left-0 right-0' },
       React.createElement(HomeIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('discovery'); setViewProfile(null);} }),
       React.createElement(ChatIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('chat') }),
       React.createElement(CalendarDays, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('checkin') }),
       React.createElement(UserIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('profile') }),
       React.createElement(Sparkles, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('admin') })
-    ),
-    tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange }),
-    tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId })
+    )
   );
 }
