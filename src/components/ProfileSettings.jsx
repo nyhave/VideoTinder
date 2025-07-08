@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Mic, Camera as CameraIcon } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Textarea } from './ui/textarea.js';
-import SectionTitle from './SectionTitle.js';
+import SectionTitle from './SectionTitle.jsx';
 import { db, getDoc, doc } from '../firebase.js';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange }) {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User, PlayCircle, Heart } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
-import SectionTitle from './SectionTitle.js';
+import SectionTitle from './SectionTitle.jsx';
 import { useCollection } from '../firebase.js';
 
 export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
