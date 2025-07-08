@@ -25,4 +25,6 @@ and simple profile management powered by Firebase.
 3. Open `public/index.html` in your browser.
 4. Sign up with your name to start swiping.
 
+Use the **Reset database** button under the admin tab to load the demo data at any time.
+
 Since dependencies are loaded from CDNs, no build step is required.

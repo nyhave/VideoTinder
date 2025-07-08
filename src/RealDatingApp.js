@@ -230,7 +230,7 @@ const ProfileSettings = ({ userId, ageRange, onChangeAgeRange }) => {
 };
 
 // AdminScreen
-const AdminScreen = ({ profiles, onSwitch }) => (
+const AdminScreen = ({ profiles, onSwitch, onReset }) => (
   React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: 'Admin: Skift profil' }),
     React.createElement('select', {
@@ -241,6 +241,10 @@ const AdminScreen = ({ profiles, onSwitch }) => (
       React.createElement('option', { value: '' }, '-- vælg profil --'),
       profiles.map(p => React.createElement('option', { key: p.id, value: p.id }, p.name))
     ),
+    React.createElement(Button, {
+      className: 'bg-pink-500 text-white w-full mb-2',
+      onClick: onReset
+    }, 'Reset database'),
     React.createElement('p', { className: 'text-gray-500 text-sm' }, 'Oplev app’en som en anden bruger.')
   )
 );
@@ -276,7 +280,8 @@ export default function RealDatingApp() {
   const [tab,setTab]=useState('discovery');
   const [viewProfile,setViewProfile]=useState(null);
 
-  useEffect(()=>{seedData();},[]);
+  const handleReset=()=>{seedData();};
+
   useEffect(()=>{if(!userId && profiles.length) setUserId(profiles[0].id);},[profiles]);
 
   if(step===0) return React.createElement(WelcomeScreen, { onNext: ()=>setStep(1) });
@@ -302,6 +307,6 @@ export default function RealDatingApp() {
       React.createElement(Sparkles, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('admin') })
     ),
     tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange }),
-    tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId })
+    tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId, onReset: handleReset })
   );
 }
