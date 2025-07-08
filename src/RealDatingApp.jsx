@@ -42,6 +42,7 @@ export default function RealDatingApp() {
 
   if(step===0) return React.createElement(WelcomeScreen, { onNext: ()=>setStep(1) });
   const selectProfile=id=>{setViewProfile(id); setTab('discovery');};
+  const handleReset=()=>{seedData();};
 
   return React.createElement('div', { className: 'flex flex-col min-h-screen bg-gradient-to-br from-pink-100 to-white' },
     React.createElement('div', { className: 'flex-1' },
@@ -52,7 +53,9 @@ export default function RealDatingApp() {
         React.createElement(ProfileSettings, { userId: viewProfile, ageRange, onChangeAgeRange: setAgeRange })
       ),
       tab==='chat' && React.createElement(ChatScreen, { userId }),
-      tab==='checkin' && React.createElement(DailyCheckIn, { userId })
+      tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
+      tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange }),
+      tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId, onReset: handleReset })
     ),
     React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around' },
       React.createElement(HomeIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('discovery'); setViewProfile(null);} }),
@@ -60,8 +63,6 @@ export default function RealDatingApp() {
       React.createElement(CalendarDays, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('checkin') }),
       React.createElement(UserIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('profile') }),
       React.createElement(Sparkles, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('admin') })
-    ),
-    tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange }),
-    tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId })
+    )
   );
 }
