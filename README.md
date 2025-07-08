@@ -31,3 +31,18 @@ To create a production build run:
 npm run build
 ```
 The compiled files will be placed in the `dist` folder. When changes are pushed to `main`, a GitHub Actions workflow builds the project and deploys the contents of `dist` to GitHub Pages automatically.
+
+## GitHub Pages Deployment
+
+Before the workflow can build the site, you must provide your Firebase credentials as repository secrets. Define these secrets in **Settings > Secrets and variables**:
+
+```
+FIREBASE_API_KEY
+FIREBASE_AUTH_DOMAIN
+FIREBASE_PROJECT_ID
+FIREBASE_STORAGE_BUCKET
+FIREBASE_MESSAGING_SENDER_ID
+FIREBASE_APP_ID
+```
+
+During the build job, these secrets are written to a `.env` file so Parcel can embed the Firebase config.
