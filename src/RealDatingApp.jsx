@@ -33,7 +33,7 @@ async function seedData() {
 }
 
 export default function RealDatingApp() {
-  const [step,setStep]=useState(0);
+  const [loggedIn,setLoggedIn]=useState(false);
   const profiles=useCollection('profiles');
   const [userId,setUserId]=useState(null);
   const [ageRange,setAgeRange]=useState([35,55]);
@@ -41,9 +41,15 @@ export default function RealDatingApp() {
   const [viewProfile,setViewProfile]=useState(null);
 
   useEffect(()=>{seedData();},[]);
-  useEffect(()=>{if(!userId && profiles.length) setUserId(profiles[0].id);},[profiles]);
+  useEffect(()=>{
+    if(!loggedIn){
+      setUserId(null);
+      return;
+    }
+    if(!userId && profiles.length) setUserId(profiles[0].id);
+  },[loggedIn, profiles, userId]);
 
-  if(step===0) return React.createElement(WelcomeScreen, { onNext: ()=>setStep(1) });
+  if(!loggedIn) return React.createElement(WelcomeScreen, { onNext: ()=>setLoggedIn(true) });
   const selectProfile=id=>{setViewProfile(id); setTab('discovery');};
 
 
@@ -60,7 +66,7 @@ export default function RealDatingApp() {
       ),
       tab==='chat' && React.createElement(ChatScreen, { userId }),
       tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
-      tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange }),
+      tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange, onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);} }),
       tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId })
     ),
     React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around fixed bottom-0 left-0 right-0' },
