@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
+import { db, collection, getDocs } from '../firebase.js';
 
 export default function AdminScreen({ profiles, onSwitch, currentUserId }) {
+  const [firestoreInfo, setFirestoreInfo] = useState(null);
+
+  const showFirestoreInfo = async () => {
+    const config = {
+      apiKey: process.env.FIREBASE_API_KEY,
+      authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+      appId: process.env.FIREBASE_APP_ID
+    };
+    let status = 'OK';
+    try {
+      await getDocs(collection(db, 'profiles'));
+    } catch (err) {
+      status = 'FAILED';
+    }
+    setFirestoreInfo({ config, status });
+  };
+
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: 'Administration' }),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-pink-600' }, 'Skift profil'),
@@ -18,6 +39,11 @@ export default function AdminScreen({ profiles, onSwitch, currentUserId }) {
     ),
     React.createElement('p', { className: 'text-gray-500 text-sm mb-4' }, 'Oplev app\u2019en som en anden bruger.'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-pink-600' }, 'Reset database'),
-    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: seedData }, 'Reset database')
+    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: seedData }, 'Reset database'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Firestore info'),
+    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: showFirestoreInfo }, 'Show credentials'),
+    firestoreInfo && React.createElement('pre', { className: 'mt-2 bg-gray-100 p-2 rounded whitespace-pre-wrap text-xs' },
+      JSON.stringify(firestoreInfo.config, null, 2) + '\nStatus: ' + firestoreInfo.status
+    )
   );
 }
