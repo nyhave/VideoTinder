@@ -50,7 +50,7 @@ export default function RealDatingApp() {
       tab==='chat' && React.createElement(ChatScreen, { userId }),
       tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
       tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange, onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);} }),
-      tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId })
+      tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId, currentUserId: userId })
     ),
     React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around fixed bottom-0 left-0 right-0' },
       React.createElement(HomeIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('discovery'); setViewProfile(null);} }),
