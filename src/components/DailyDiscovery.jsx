@@ -47,7 +47,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
               React.createElement(PlayCircle, { className: 'w-5 h-5' }), 'Afspil'
             ),
             React.createElement(Button, { size: 'sm', className: 'bg-pink-500 text-white flex items-center gap-1' },
-              React.createElement(Heart, { className: 'w-5 h-5' }), 'Synes'
+              React.createElement(Heart, { className: 'w-5 h-5' }), 'Like'
             )
           )
         )
