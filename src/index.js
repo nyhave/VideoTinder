@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import RealDatingApp from './RealDatingApp.js';
+import RealDatingApp from './RealDatingApp.jsx';
 
 ReactDOM.render(React.createElement(RealDatingApp), document.getElementById('root'));
 
