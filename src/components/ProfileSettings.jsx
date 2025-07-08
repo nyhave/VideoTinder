@@ -3,12 +3,16 @@ import { Mic, Camera as CameraIcon } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
-import { db, getDoc, doc } from '../firebase.js';
+import { db, getDoc, doc, updateDoc } from '../firebase.js';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange }) {
   const [profile,setProfile]=useState(null);
   useEffect(()=>{if(!userId)return;getDoc(doc(db,'profiles',userId)).then(s=>s.exists()&&setProfile({id:s.id,...s.data()}));},[userId]);
   if(!profile) return React.createElement('p', null, 'Indlæser profil...');
+
+  const saveChanges = async () => {
+    await updateDoc(doc(db,'profiles',userId), { ageRange });
+  };
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}` }),
@@ -42,6 +46,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange }) 
     React.createElement(SectionTitle, { title: 'Lyd-klip' }),
     React.createElement('div', { className: 'flex space-x-4 mb-4' }, (profile.audioClips||[]).slice(0,3).map((_,i)=>React.createElement(Mic,{key:i,className:'w-10 h-10'}))),
     React.createElement(SectionTitle, { title: 'Om mig' }),
-    React.createElement(Textarea, { readOnly: true }, profile.clip)
-  );
+      React.createElement(Textarea, { readOnly: true }, profile.clip),
+      React.createElement('button', {
+        className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
+        onClick: saveChanges
+      }, 'Gem ændringer')
+    );
 }
