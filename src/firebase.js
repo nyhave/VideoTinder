@@ -15,12 +15,12 @@ import {
 } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBzhR7SOvS63dNS7fcF9OmyAEryfmHwbIY',
-  authDomain: 'videotinder-38b8b.firebaseapp.com',
-  projectId: 'videotinder-38b8b',
-  storageBucket: 'videotinder-38b8b.firebasestorage.app',
-  messagingSenderId: '1025473667340',
-  appId: '1:1025473667340:web:757da72042b702a5966929'
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID
 };
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
