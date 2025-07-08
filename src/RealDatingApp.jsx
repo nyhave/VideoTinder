@@ -22,7 +22,9 @@ async function seedData() {
   await Promise.all(testUsers.map(u=>setDoc(doc(db,'profiles',u.id),u)));
   const testClips=[
     {id:'c1',profileId:'101',gender:'Kvinde',text:'Bøger er mit frirum.'},
-    {id:'c2',profileId:'104',gender:'Mand',text:'Cykler hver dag.'}
+    {id:'c2',profileId:'104',gender:'Mand',text:'Cykler hver dag.'},
+    {id:'c3',profileId:'105',gender:'Mand',text:'Elsker at lave mad.'},
+    {id:'c4',profileId:'106',gender:'Mand',text:'Fotograferer naturen.'}
   ];
   await Promise.all(testClips.map(c=>setDoc(doc(db,'clips',c.id),c)));
   await setDoc(doc(db,'matches','m1'),{id:'m1',userId:'101',profileId:'104',lastMessage:'Hej Peter!'});
