@@ -1,6 +1,6 @@
 import React from 'https://cdn.skypack.dev/react';
 import ReactDOM from 'https://cdn.skypack.dev/react-dom';
-import RealDatingApp from './RealDatingApp.js';
+import RealDatingApp from './RealDatingApp.jsx';
 
 ReactDOM.render(React.createElement(RealDatingApp), document.getElementById('root'));
 
