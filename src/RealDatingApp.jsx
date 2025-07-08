@@ -47,7 +47,9 @@ export default function RealDatingApp() {
   const selectProfile=id=>{setViewProfile(id); setTab('discovery');};
 
 
-  return React.createElement('div', { className: 'flex flex-col min-h-screen bg-gradient-to-br from-pink-100 to-white w-full max-w-md mx-auto' },
+
+  return React.createElement('div', { className: 'flex flex-col min-h-screen w-full bg-gradient-to-br from-pink-100 to-white' },
+
     React.createElement('div', { className: 'flex-1' },
 
       tab==='discovery' && !viewProfile && (
