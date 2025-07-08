@@ -4,13 +4,13 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
 
-export default function AdminScreen({ profiles, onSwitch }) {
+export default function AdminScreen({ profiles, onSwitch, currentUserId }) {
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: 'Admin: Skift profil' }),
     React.createElement('select', {
       className: 'border p-2 mb-4 w-full',
       onChange: e=>onSwitch(e.target.value),
-      defaultValue: ''
+      value: currentUserId || ''
     },
       React.createElement('option', { value: '' }, '-- vælg profil --'),
       profiles.map(p => React.createElement('option', { key: p.id, value: p.id }, p.name))
