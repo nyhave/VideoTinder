@@ -7,7 +7,7 @@ import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { db, getDoc, doc, updateDoc } from '../firebase.js';
 
-export default function ProfileSettings({ userId, ageRange, onChangeAgeRange }) {
+export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false }) {
   const [profile,setProfile]=useState(null);
   useEffect(()=>{if(!userId)return;getDoc(doc(db,'profiles',userId)).then(s=>s.exists()&&setProfile({id:s.id,...s.data()}));},[userId]);
   if(!profile) return React.createElement('p', null, 'Indlæser profil...');
@@ -18,8 +18,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange }) 
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}` }),
-    React.createElement(SectionTitle, { title: 'Aldersinterval' }),
-    React.createElement('div', { className: 'flex flex-col gap-4 mb-4' },
+    !publicView && React.createElement(SectionTitle, { title: 'Aldersinterval' }),
+    !publicView && React.createElement('div', { className: 'flex flex-col gap-4 mb-4' },
       React.createElement('label', null, `Alder: ${ageRange[0]} - ${ageRange[1]}`),
       React.createElement(Slider, {
         range: true,
@@ -46,7 +46,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange }) 
     ),
     React.createElement(SectionTitle, { title: 'Om mig' }),
       React.createElement(Textarea, { className: 'mb-4', readOnly: true }, profile.clip),
-      React.createElement('button', {
+      !publicView && React.createElement('button', {
         className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
         onClick: saveChanges
       }, 'Gem ændringer')

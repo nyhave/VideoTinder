@@ -56,7 +56,7 @@ export default function RealDatingApp() {
         React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange })
       ),
       viewProfile && (
-        React.createElement(ProfileSettings, { userId: viewProfile, ageRange, onChangeAgeRange: setAgeRange })
+        React.createElement(ProfileSettings, { userId: viewProfile, ageRange, onChangeAgeRange: setAgeRange, publicView: true })
       ),
       tab==='chat' && React.createElement(ChatScreen, { userId }),
       tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
