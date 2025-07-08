@@ -7,7 +7,7 @@ import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { db, getDoc, doc, updateDoc } from '../firebase.js';
 
-export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false }) {
+export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {} }) {
   const [profile,setProfile]=useState(null);
   useEffect(()=>{if(!userId)return;getDoc(doc(db,'profiles',userId)).then(s=>s.exists()&&setProfile({id:s.id,...s.data()}));},[userId]);
   if(!profile) return React.createElement('p', null, 'Indlæser profil...');
@@ -46,9 +46,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     ),
     React.createElement(SectionTitle, { title: 'Om mig' }),
       React.createElement(Textarea, { className: 'mb-4', readOnly: true }, profile.clip),
-      !publicView && React.createElement('button', {
+    !publicView && React.createElement('button', {
         className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
         onClick: saveChanges
-      }, 'Gem ændringer')
+      }, 'Gem ændringer'),
+    !publicView && React.createElement('button', {
+        className: 'mt-2 bg-gray-200 text-gray-700 px-4 py-2 rounded',
+        onClick: onLogout
+      }, 'Logout')
     );
 }
