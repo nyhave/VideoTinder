@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
+import seedData from '../seedData.js';
 
 export default function AdminScreen({ profiles, onSwitch }) {
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
@@ -15,6 +16,6 @@ export default function AdminScreen({ profiles, onSwitch }) {
       profiles.map(p => React.createElement('option', { key: p.id, value: p.id }, p.name))
     ),
     React.createElement('p', { className: 'text-gray-500 text-sm' }, 'Oplev app’en som en anden bruger.'),
-    React.createElement(Button, { className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded' }, 'Reset database')
+    React.createElement(Button, { className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded', onClick: seedData }, 'Reset database')
   );
 }
