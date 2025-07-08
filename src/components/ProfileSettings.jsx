@@ -12,12 +12,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [profile,setProfile]=useState(null);
   const videoRef = useRef();
   const audioRef = useRef();
+
   const videoRecorder = useRef();
   const audioRecorder = useRef();
   const videoChunks = useRef([]);
   const audioChunks = useRef([]);
   const [videoRecording, setVideoRecording] = useState(false);
   const [audioRecording, setAudioRecording] = useState(false);
+
   useEffect(()=>{if(!userId)return;getDoc(doc(db,'profiles',userId)).then(s=>s.exists()&&setProfile({id:s.id,...s.data()}));},[userId]);
   if(!profile) return React.createElement('p', null, 'Indlæser profil...');
 
@@ -33,6 +35,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const handleVideoChange = e => uploadFile(e.target.files[0], 'videoClips');
   const handleAudioChange = e => uploadFile(e.target.files[0], 'audioClips');
+
 
   const startVideoRecording = async () => {
     if (videoRecording) return;
@@ -119,12 +122,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement(Button, {
         className:'mb-4 bg-pink-500 text-white',
         onClick:()=>videoRef.current && videoRef.current.click()
-      }, 'Upload video')
-    ,
+      }, 'Upload video'),
       React.createElement(Button, {
         className:'mb-4 ml-2 bg-pink-500 text-white',
         onClick:()=> videoRecording ? stopVideoRecording() : startVideoRecording()
       }, videoRecording ? 'Stop optagelse' : 'Optag video')
+
     ),
     React.createElement(SectionTitle, { title: 'Lyd-klip' }),
     React.createElement('div', { className: 'flex space-x-4 mb-2' },
@@ -145,8 +148,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement(Button, {
         className:'mb-4 bg-pink-500 text-white',
         onClick:()=>audioRef.current && audioRef.current.click()
-      }, 'Upload lyd')
-    ,
+      }, 'Upload lyd'),
       React.createElement(Button, {
         className:'mb-4 ml-2 bg-pink-500 text-white',
         onClick:()=> audioRecording ? stopAudioRecording() : startAudioRecording()
