@@ -12,6 +12,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [profile,setProfile]=useState(null);
   const videoRef = useRef();
   const audioRef = useRef();
+
+  const videoRecorder = useRef();
+  const audioRecorder = useRef();
+  const videoChunks = useRef([]);
+  const audioChunks = useRef([]);
+  const [videoRecording, setVideoRecording] = useState(false);
+  const [audioRecording, setAudioRecording] = useState(false);
+
   useEffect(()=>{if(!userId)return;getDoc(doc(db,'profiles',userId)).then(s=>s.exists()&&setProfile({id:s.id,...s.data()}));},[userId]);
   if(!profile) return React.createElement('p', null, 'Indlæser profil...');
 
@@ -27,6 +35,55 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const handleVideoChange = e => uploadFile(e.target.files[0], 'videoClips');
   const handleAudioChange = e => uploadFile(e.target.files[0], 'audioClips');
+
+
+  const startVideoRecording = async () => {
+    if (videoRecording) return;
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    const recorder = new MediaRecorder(stream);
+    videoChunks.current = [];
+    recorder.ondataavailable = e => videoChunks.current.push(e.data);
+    recorder.onstop = () => {
+      const blob = new Blob(videoChunks.current, { type: recorder.mimeType });
+      const file = new File([blob], `video-${Date.now()}.webm`, { type: blob.type });
+      uploadFile(file, 'videoClips');
+      stream.getTracks().forEach(t => t.stop());
+    };
+    videoRecorder.current = recorder;
+    recorder.start();
+    setVideoRecording(true);
+  };
+
+  const stopVideoRecording = () => {
+    if (videoRecorder.current && videoRecording) {
+      videoRecorder.current.stop();
+      setVideoRecording(false);
+    }
+  };
+
+  const startAudioRecording = async () => {
+    if (audioRecording) return;
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const recorder = new MediaRecorder(stream);
+    audioChunks.current = [];
+    recorder.ondataavailable = e => audioChunks.current.push(e.data);
+    recorder.onstop = () => {
+      const blob = new Blob(audioChunks.current, { type: recorder.mimeType });
+      const file = new File([blob], `audio-${Date.now()}.webm`, { type: blob.type });
+      uploadFile(file, 'audioClips');
+      stream.getTracks().forEach(t => t.stop());
+    };
+    audioRecorder.current = recorder;
+    recorder.start();
+    setAudioRecording(true);
+  };
+
+  const stopAudioRecording = () => {
+    if (audioRecorder.current && audioRecording) {
+      audioRecorder.current.stop();
+      setAudioRecording(false);
+    }
+  };
 
   const saveChanges = async () => {
     await updateDoc(doc(db,'profiles',userId), { ageRange });
@@ -57,6 +114,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement('input', {
         type:'file',
         accept:'video/*',
+        capture:'environment',
         ref:videoRef,
         onChange:handleVideoChange,
         className:'hidden'
@@ -64,7 +122,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement(Button, {
         className:'mb-4 bg-pink-500 text-white',
         onClick:()=>videoRef.current && videoRef.current.click()
-      }, 'Upload video')
+      }, 'Upload video'),
+      React.createElement(Button, {
+        className:'mb-4 ml-2 bg-pink-500 text-white',
+        onClick:()=> videoRecording ? stopVideoRecording() : startVideoRecording()
+      }, videoRecording ? 'Stop optagelse' : 'Optag video')
+
     ),
     React.createElement(SectionTitle, { title: 'Lyd-klip' }),
     React.createElement('div', { className: 'flex space-x-4 mb-2' },
@@ -77,6 +140,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement('input', {
         type:'file',
         accept:'audio/*',
+        capture:'user',
         ref:audioRef,
         onChange:handleAudioChange,
         className:'hidden'
@@ -84,7 +148,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement(Button, {
         className:'mb-4 bg-pink-500 text-white',
         onClick:()=>audioRef.current && audioRef.current.click()
-      }, 'Upload lyd')
+      }, 'Upload lyd'),
+      React.createElement(Button, {
+        className:'mb-4 ml-2 bg-pink-500 text-white',
+        onClick:()=> audioRecording ? stopAudioRecording() : startAudioRecording()
+      }, audioRecording ? 'Stop optagelse' : 'Optag lyd')
     ),
     React.createElement(SectionTitle, { title: 'Om mig' }),
       React.createElement(Textarea, { className: 'mb-4', readOnly: true }, profile.clip),
