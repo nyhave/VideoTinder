@@ -56,7 +56,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange }) 
       })
     ),
     React.createElement(SectionTitle, { title: 'Om mig' }),
-      React.createElement(Textarea, { readOnly: true }, profile.clip),
+      React.createElement(Textarea, { className: 'mb-4', readOnly: true }, profile.clip),
       React.createElement('button', {
         className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
         onClick: saveChanges
