@@ -10,12 +10,20 @@ import { useCollection } from './firebase.js';
 
 
 export default function RealDatingApp() {
-  const [loggedIn,setLoggedIn]=useState(false);
+  const [loggedIn,setLoggedIn]=useState(() => {
+    const stored = localStorage.getItem('loggedIn');
+    return stored === 'true';
+  });
   const profiles=useCollection('profiles');
   const [userId,setUserId]=useState(null);
   const [ageRange,setAgeRange]=useState([35,55]);
   const [tab,setTab]=useState('discovery');
   const [viewProfile,setViewProfile]=useState(null);
+
+  // Persist login status between sessions
+  useEffect(() => {
+    localStorage.setItem('loggedIn', loggedIn ? 'true' : 'false');
+  }, [loggedIn]);
 
 
   useEffect(()=>{
