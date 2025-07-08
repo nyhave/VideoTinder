@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'https://cdn.skypack.dev/react';
 import { User, PlayCircle, Heart } from 'https://cdn.skypack.dev/lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
-import SectionTitle from './SectionTitle.jsx';
+import SectionTitle from './SectionTitle.js';
 import { useCollection } from '../firebase.js';
 
 export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {

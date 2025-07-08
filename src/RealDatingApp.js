@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'https://cdn.skypack.dev/react';
 import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays, Sparkles } from 'https://cdn.skypack.dev/lucide-react';
-import WelcomeScreen from './components/WelcomeScreen.jsx';
-import DailyDiscovery from './components/DailyDiscovery.jsx';
-import ChatScreen from './components/ChatScreen.jsx';
-import DailyCheckIn from './components/DailyCheckIn.jsx';
-import ProfileSettings from './components/ProfileSettings.jsx';
-import AdminScreen from './components/AdminScreen.jsx';
+import WelcomeScreen from './components/WelcomeScreen.js';
+import DailyDiscovery from './components/DailyDiscovery.js';
+import ChatScreen from './components/ChatScreen.js';
+import DailyCheckIn from './components/DailyCheckIn.js';
+import ProfileSettings from './components/ProfileSettings.js';
+import AdminScreen from './components/AdminScreen.js';
 import { useCollection, db, collection, getDocs, deleteDoc, doc, setDoc } from './firebase.js';
 
 async function seedData() {

@@ -3,7 +3,7 @@ import { User as UserIcon, Smile, MessageCircle as ChatIcon } from 'https://cdn.
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
-import SectionTitle from './SectionTitle.jsx';
+import SectionTitle from './SectionTitle.js';
 import { useCollection } from '../firebase.js';
 
 export default function ChatScreen({ userId }) {
