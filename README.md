@@ -14,16 +14,17 @@ and simple profile management powered by Firebase.
 
 ## Getting Started
 
-1. Install dependencies
+1. Copy `.env.example` to `.env` and fill in your Firebase credentials.
+2. Install dependencies
    ```bash
    npm install
    ```
-2. Start the development server:
+3. Start the development server:
    ```bash
    npm run dev
    ```
-3. Open the provided local URL (typically http://localhost:1234) in your browser.
-4. Sign up with your name to start swiping.
+4. Open the provided local URL (typically http://localhost:1234) in your browser.
+5. Sign up with your name to start swiping.
 
 To create a production build run:
 ```bash
