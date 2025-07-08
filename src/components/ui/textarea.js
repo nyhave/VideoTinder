@@ -1,4 +1,4 @@
-import React from 'https://cdn.skypack.dev/react';
+import React from 'react';
 export function Textarea({ className = '', ...props }) {
   return React.createElement('textarea', { className, ...props }, props.children);
 }

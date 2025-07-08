@@ -3,10 +3,19 @@
   "version": "1.0.0",
   "description": "A minimal React PWA for swiping short videos and speed dating.",
   "scripts": {
-    "start": "npx serve ."
+    "start": "npx serve .",
+    "dev": "parcel public/index.html",
+    "build": "parcel build public/index.html --dist-dir dist"
   },
   "dependencies": {
+    "firebase": "^9.23.0",
+    "lucide-react": "^0.322.0",
     "react": "^17.0.0",
     "react-dom": "^17.0.0"
+  },
+  "devDependencies": {
+    "@parcel/packager-raw-url": "^2.15.4",
+    "@parcel/transformer-webmanifest": "^2.15.4",
+    "parcel": "^2.9.3"
   }
 }

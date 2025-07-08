@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'https://cdn.skypack.dev/react';
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import React, { useState, useEffect } from 'react';
+import { initializeApp } from 'firebase/app';
 import {
   getFirestore,
   collection,
@@ -12,7 +12,7 @@ import {
   getDoc,
   updateDoc,
   setDoc
-} from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+} from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBzhR7SOvS63dNS7fcF9OmyAEryfmHwbIY',

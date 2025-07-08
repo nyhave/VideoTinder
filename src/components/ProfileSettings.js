@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'https://cdn.skypack.dev/react';
-import { Mic, Camera as CameraIcon } from 'https://cdn.skypack.dev/lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Mic, Camera as CameraIcon } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.js';
