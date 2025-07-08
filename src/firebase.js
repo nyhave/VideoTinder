@@ -13,6 +13,12 @@ import {
   updateDoc,
   setDoc
 } from 'firebase/firestore';
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -24,6 +30,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+export const storage = getStorage(app);
 
 export function useCollection(collectionName, field, value) {
   const [data, setData] = useState([]);
@@ -48,5 +55,10 @@ export {
   where,
   getDoc,
   updateDoc,
-  setDoc
+  setDoc,
+  ref,
+  uploadBytes,
+  getDownloadURL
 };
+
+export { storage };
