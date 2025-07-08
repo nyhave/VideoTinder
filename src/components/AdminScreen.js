@@ -1,6 +1,6 @@
 import React from 'https://cdn.skypack.dev/react';
 import { Card } from './ui/card.js';
-import SectionTitle from './SectionTitle.jsx';
+import SectionTitle from './SectionTitle.js';
 
 export default function AdminScreen({ profiles, onSwitch }) {
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
