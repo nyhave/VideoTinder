@@ -18,11 +18,15 @@ and simple profile management powered by Firebase.
    ```bash
    npm install
    ```
-2. Start a simple web server from the project root:
+2. Start the development server:
    ```bash
-   npm start
+   npm run dev
    ```
-3. Open `public/index.html` in your browser.
+3. Open the provided local URL (typically http://localhost:1234) in your browser.
 4. Sign up with your name to start swiping.
 
-Since dependencies are loaded from CDNs, no build step is required.
+To create a production build run:
+```bash
+npm run build
+```
+The compiled files will be placed in the `dist` folder and can be deployed to GitHub Pages or any static host.

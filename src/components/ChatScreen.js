@@ -1,5 +1,5 @@
-import React, { useState } from 'https://cdn.skypack.dev/react';
-import { User as UserIcon, Smile, MessageCircle as ChatIcon } from 'https://cdn.skypack.dev/lucide-react';
+import React, { useState } from 'react';
+import { User as UserIcon, Smile, MessageCircle as ChatIcon } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';

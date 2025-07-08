@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'https://cdn.skypack.dev/react';
-import { User, PlayCircle, Heart } from 'https://cdn.skypack.dev/lucide-react';
+import React, { useState, useEffect } from 'react';
+import { User, PlayCircle, Heart } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.js';

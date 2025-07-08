@@ -1,4 +1,4 @@
-import React from 'https://cdn.skypack.dev/react';
+import React from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'https://cdn.skypack.dev/react';
-import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays, Sparkles } from 'https://cdn.skypack.dev/lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays, Sparkles } from 'lucide-react';
 import WelcomeScreen from './components/WelcomeScreen.js';
 import DailyDiscovery from './components/DailyDiscovery.js';
 import ChatScreen from './components/ChatScreen.js';
