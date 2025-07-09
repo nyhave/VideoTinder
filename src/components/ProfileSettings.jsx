@@ -117,8 +117,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     }
   };
 
-
-
   const handleAgeRangeChange = async range => {
     onChangeAgeRange(range);
     await updateDoc(doc(db,'profiles',userId), { ageRange: range });
@@ -229,6 +227,88 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     }
   };
 
+  const videoSection = React.createElement(React.Fragment, null,
+    React.createElement(SectionTitle, { title: 'Video-klip' }),
+    React.createElement('div', { className: 'flex space-x-4 mb-2' },
+      Array.from({ length: 3 }).map((_, i) => {
+        const hasClip = (profile.videoClips || [])[i];
+        return React.createElement(CameraIcon, { key: i, className: `w-10 h-10 ${hasClip ? 'text-pink-500' : 'opacity-50 text-gray-400'}` });
+      })
+    ),
+    React.createElement('div', { className: 'flex flex-col gap-2 mb-4' },
+      (profile.videoClips || []).map((url, i) =>
+        React.createElement('div', { key: i, className: 'flex flex-col mb-2' },
+          React.createElement(VideoPreview, { src: url }),
+          !publicView && React.createElement(Button, {
+            className: 'mt-1 bg-pink-500 text-white',
+            onClick: () => deleteFile('videoClips', i)
+          }, 'Slet')
+        )
+      )
+    ),
+    !publicView && React.createElement(React.Fragment, null,
+      React.createElement('input', {
+        type: 'file',
+        accept: 'video/*',
+        capture: 'environment',
+        ref: videoRef,
+        onChange: handleVideoChange,
+        className: 'hidden'
+      }),
+      React.createElement(Button, {
+        className: 'mb-4 bg-pink-500 text-white',
+        onClick: () => videoRef.current && videoRef.current.click()
+      }, 'Upload video'),
+      React.createElement(Button, {
+        className: 'mb-4 ml-2 bg-pink-500 text-white',
+        onClick: () => setShowVideoRecorder(true)
+      }, 'Optag video')
+    )
+  );
+
+  const audioSection = React.createElement(React.Fragment, null,
+    React.createElement(SectionTitle, { title: 'Lyd-klip' }),
+    React.createElement('div', { className: 'flex space-x-4 mb-2' },
+      Array.from({ length: 3 }).map((_, i) => {
+        const hasClip = (profile.audioClips || [])[i];
+        return React.createElement(Mic, { key: i, className: `w-10 h-10 ${hasClip ? 'text-pink-500' : 'opacity-50 text-gray-400'}` });
+      })
+    ),
+    React.createElement('div', { className: 'flex flex-col gap-2 mb-4' },
+      (profile.audioClips || []).map((url, i) =>
+        React.createElement('div', { key: i, className: 'flex flex-col mb-2' },
+          React.createElement('audio', {
+            src: url,
+            controls: true,
+            className: 'w-full'
+          }),
+          !publicView && React.createElement(Button, {
+            className: 'mt-1 bg-pink-500 text-white',
+            onClick: () => { setReplaceTarget({ field: 'audioClips', index: i }); audioRef.current && audioRef.current.click(); }
+          }, 'Erstat')
+        )
+      )
+    ),
+    !publicView && React.createElement(React.Fragment, null,
+      React.createElement('input', {
+        type: 'file',
+        accept: 'audio/*',
+        capture: 'user',
+        ref: audioRef,
+        onChange: handleAudioChange,
+        className: 'hidden'
+      }),
+      React.createElement(Button, {
+        className: 'mb-4 bg-pink-500 text-white',
+        onClick: () => audioRef.current && audioRef.current.click()
+      }, 'Upload lyd'),
+      React.createElement(Button, {
+        className: 'mb-4 ml-2 bg-pink-500 text-white',
+        onClick: () => setShowAudioRecorder(true)
+      }, 'Optag lyd')
+    )
+  );
+
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement('div', { className:'flex items-center mb-4 gap-4' },
       profile.photoURL ?
@@ -248,8 +328,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onClick:()=>photoRef.current && photoRef.current.click()
       }, profile.photoURL ? 'Skift billede' : 'Upload billede')
     ),
-    React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` }),
     publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
+    React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` }),
+    videoSection,
+    audioSection,
     !publicView && React.createElement('div', { className: 'flex flex-col gap-4 mb-4' },
       React.createElement('label', null, 'By'),
       React.createElement(Input, {
@@ -284,83 +366,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onChange: handleDistanceRangeChange,
         className: 'w-full'
       })
-    ),
-    React.createElement(SectionTitle, { title: 'Video-klip' }),
-    React.createElement('div', { className: 'flex space-x-4 mb-2' },
-      Array.from({length:3}).map((_,i)=>{
-        const hasClip=(profile.videoClips||[])[i];
-        return React.createElement(CameraIcon,{key:i,className:`w-10 h-10 ${hasClip?'text-pink-500':'opacity-50 text-gray-400'}`});
-      })
-    ),
-    React.createElement('div', { className: 'flex flex-col gap-2 mb-4' },
-      (profile.videoClips || []).map((url,i) =>
-        React.createElement('div', { key: i, className:'flex flex-col mb-2' },
-          React.createElement(VideoPreview, { src: url }),
-          !publicView && React.createElement(Button, {
-            className:'mt-1 bg-pink-500 text-white',
-            onClick:()=>deleteFile('videoClips', i)
-          }, 'Slet')
-        )
-      )
-    ),
-    !publicView && React.createElement(React.Fragment, null,
-      React.createElement('input', {
-        type:'file',
-        accept:'video/*',
-        capture:'environment',
-        ref:videoRef,
-        onChange:handleVideoChange,
-        className:'hidden'
-      }),
-      React.createElement(Button, {
-        className:'mb-4 bg-pink-500 text-white',
-        onClick:()=>videoRef.current && videoRef.current.click()
-      }, 'Upload video'),
-      React.createElement(Button, {
-        className:'mb-4 ml-2 bg-pink-500 text-white',
-        onClick:()=> setShowVideoRecorder(true)
-      }, 'Optag video')
-
-    ),
-    React.createElement(SectionTitle, { title: 'Lyd-klip' }),
-    React.createElement('div', { className: 'flex space-x-4 mb-2' },
-      Array.from({length:3}).map((_,i)=>{
-        const hasClip=(profile.audioClips||[])[i];
-        return React.createElement(Mic,{key:i,className:`w-10 h-10 ${hasClip?'text-pink-500':'opacity-50 text-gray-400'}`});
-      })
-    ),
-    React.createElement('div', { className: 'flex flex-col gap-2 mb-4' },
-      (profile.audioClips || []).map((url,i) =>
-        React.createElement('div', { key: i, className:'flex flex-col mb-2' },
-          React.createElement('audio', {
-            src: url,
-            controls: true,
-            className: 'w-full'
-          }),
-          !publicView && React.createElement(Button, {
-            className:'mt-1 bg-pink-500 text-white',
-            onClick:()=>{setReplaceTarget({field:'audioClips',index:i}); audioRef.current && audioRef.current.click();}
-          }, 'Erstat')
-        )
-      )
-    ),
-    !publicView && React.createElement(React.Fragment, null,
-      React.createElement('input', {
-        type:'file',
-        accept:'audio/*',
-        capture:'user',
-        ref:audioRef,
-        onChange:handleAudioChange,
-        className:'hidden'
-      }),
-      React.createElement(Button, {
-        className:'mb-4 bg-pink-500 text-white',
-        onClick:()=>audioRef.current && audioRef.current.click()
-      }, 'Upload lyd'),
-      React.createElement(Button, {
-        className:'mb-4 ml-2 bg-pink-500 text-white',
-        onClick:()=> setShowAudioRecorder(true)
-      }, 'Optag lyd')
     ),
     React.createElement(SectionTitle, { title: 'Om mig' }),
       React.createElement(Textarea, {
