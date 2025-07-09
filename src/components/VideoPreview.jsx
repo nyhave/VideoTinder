@@ -4,6 +4,6 @@ export default function VideoPreview({ src }) {
   return React.createElement('video', {
     src,
     controls: true,
-    className: 'w-40 rounded'
+    className: 'w-32 rounded'
   });
 }

@@ -61,6 +61,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     setProfile({...profile, [field]: updated});
   };
 
+  const deleteFile = async (field, index) => {
+    const updated = [...(profile[field] || [])];
+    updated.splice(index, 1);
+    await updateDoc(doc(db,'profiles',userId), { [field]: updated });
+    setProfile({...profile, [field]: updated});
+  };
+
   const handleVideoChange = e => {
     const file = e.target.files[0];
     if(replaceTarget && replaceTarget.field==='videoClips'){
@@ -189,8 +196,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement(VideoPreview, { src: url }),
           !publicView && React.createElement(Button, {
             className:'mt-1 bg-pink-500 text-white',
-            onClick:()=>{setReplaceTarget({field:'videoClips',index:i}); videoRef.current && videoRef.current.click();}
-          }, 'Erstat')
+            onClick:()=>deleteFile('videoClips', i)
+          }, 'Slet')
         )
       )
     ),
