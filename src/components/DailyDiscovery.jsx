@@ -37,7 +37,10 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
           onClick: () => onSelectProfile(c.profileId)
         },
           React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
-            React.createElement(User, { className: 'w-10 h-10 text-pink-500' }),
+            (profiles.find(p=>p.id===c.profileId)?.photoURL ?
+              React.createElement('img', { src: profiles.find(p=>p.id===c.profileId)?.photoURL, className: 'w-10 h-10 rounded-full object-cover' }) :
+              React.createElement(User, { className: 'w-10 h-10 text-pink-500' })
+            ),
             React.createElement('div', null,
               React.createElement('p', { className: 'font-medium' }, `${nameMap[c.profileId]} (${profiles.find(p=>p.id===c.profileId)?.age})`),
               c.text && React.createElement('p', { className: 'text-sm text-gray-500' }, `“${c.text}”`)
