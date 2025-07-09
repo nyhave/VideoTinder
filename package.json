@@ -1,5 +1,5 @@
 {
-  "name": "videotinder",
+  "name": "realdate",
   "version": "1.0.0",
   "description": "A minimal React PWA for swiping short videos and speed dating.",
   "scripts": {
