@@ -7,7 +7,7 @@ import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
-import { db, storage, getDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL, listAll } from '../firebase.js';
+import { db, storage, getDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {} }) {
@@ -69,9 +69,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const deleteFile = async (field, index) => {
     const updated = [...(profile[field] || [])];
+    const url = updated[index];
     updated.splice(index, 1);
     await updateDoc(doc(db,'profiles',userId), { [field]: updated });
     setProfile({...profile, [field]: updated});
+    if(url){
+      try {
+        await deleteObject(ref(storage, url));
+      } catch(err){
+        console.error('Failed to delete file', err);
+      }
+    }
   };
 
   const handleVideoChange = e => {
