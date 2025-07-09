@@ -318,6 +318,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement('div', { className:'w-24 h-24 rounded bg-gray-200 flex items-center justify-center' },
             React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500' })
           ),
+        publicView && React.createElement(Button, {
+          className: 'ml-auto bg-pink-500 text-white',
+          onClick: toggleLike
+        }, likes.some(l=>l.profileId===userId) ? 'Unmatch' : 'Match'),
         !publicView && React.createElement('input', {
           type:'file',
           accept:'image/*',
@@ -380,10 +384,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onChange: publicView ? undefined : handleClipChange
       })
     ),
-    publicView && React.createElement(Button, {
-        className: 'mt-4 w-full bg-pink-500 text-white',
-        onClick: toggleLike
-      }, likes.some(l=>l.profileId===userId) ? 'Unmatch' : 'Match'),
     !publicView && React.createElement('button', {
         className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
         onClick: saveChanges
