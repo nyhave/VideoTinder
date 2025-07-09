@@ -31,7 +31,11 @@ export default function DailyCheckIn({ userId }) {
       ))
     ),
     React.createElement('ul', { className: 'list-disc list-inside mb-4' },
-      refs.map(r => React.createElement('li', { key: r.id }, `${r.date}: ${r.text}`))
+      refs.map(r => {
+        const d = r.date || r.id.split('-')[1];
+        const formatted = d ? new Date(d).toISOString().split('T')[0] : 'Ukendt dato';
+        return React.createElement('li', { key: r.id }, `${formatted}: ${r.text}`);
+      })
     ),
     React.createElement(Textarea, {
       placeholder: 'Del din refleksion...',
