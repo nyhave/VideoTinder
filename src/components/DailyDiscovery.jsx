@@ -3,14 +3,17 @@ import { User, PlayCircle, Heart } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
-import { useCollection, db, doc, setDoc, deleteDoc, getDoc } from '../firebase.js';
+import { useCollection, db, doc, setDoc, deleteDoc, getDoc, updateDoc } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 
 export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
   const profiles = useCollection('profiles');
   const user = profiles.find(p => p.id === userId) || {};
   const interest = user.interest;
-  const limit = user.subscriptionActive ? 6 : 3;
+  const hasSubscription = user.subscriptionExpires && new Date(user.subscriptionExpires) > new Date();
+  const today = new Date().toISOString().split('T')[0];
+  const extra = user.extraClipsDate === today ? 3 : 0;
+  const limit = (hasSubscription ? 6 : 3) + extra;
   const filtered = profiles.filter(p =>
     p.gender === interest &&
     p.age >= ageRange[0] &&
@@ -20,6 +23,11 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
 
   const [hoursUntil, setHoursUntil] = useState(0);
   const [showPurchase, setShowPurchase] = useState(false);
+  const handleExtraPurchase = async () => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    await updateDoc(doc(db, 'profiles', userId), { extraClipsDate: todayStr });
+    setShowPurchase(false);
+  };
   const toggleLike = async profileId => {
     const likeId = `${userId}-${profileId}`;
     const exists = likes.some(l => l.profileId === profileId);
@@ -113,7 +121,8 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
     showPurchase && React.createElement(PurchaseOverlay, {
       title: 'Flere klip',
       price: '9 kr',
-      onClose: () => setShowPurchase(false)
+      onClose: () => setShowPurchase(false),
+      onBuy: handleExtraPurchase
     },
       React.createElement('p', { className: 'text-center text-sm mb-2' }, 'Få 3 ekstra klip i dag')
     )

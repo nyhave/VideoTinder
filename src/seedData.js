@@ -6,8 +6,10 @@ export default async function seedData() {
     const snap = await getDocs(collection(db, c));
     await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
   }
+  const now = new Date();
+  const expiry = new Date(now); expiry.setMonth(now.getMonth() + 1);
   const testUsers = [
-    {id:'101',name:'Maria',age:49,gender:'Kvinde',interest:'Mand',audioClips:[],videoClips:['/sample1.mp4'],clip:'Elsker bøger og gåture.',subscriptionActive:true},
+    {id:'101',name:'Maria',age:49,gender:'Kvinde',interest:'Mand',audioClips:[],videoClips:['/sample1.mp4'],clip:'Elsker bøger og gåture.',subscriptionActive:true,subscriptionExpires:expiry.toISOString()},
     {id:'102',name:'Sofie',age:35,gender:'Kvinde',interest:'Mand',audioClips:[],videoClips:['/sample1.mp4'],clip:'Yoga-entusiast.'},
     {id:'103',name:'Emma',age:41,gender:'Kvinde',interest:'Mand',audioClips:[],videoClips:['/sample1.mp4'],clip:'Musikalsk sjæl.'},
     {id:'104',name:'Peter',age:45,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Cykler i weekenden.'},

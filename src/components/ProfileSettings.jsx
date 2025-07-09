@@ -26,13 +26,23 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [showSub, setShowSub] = useState(false);
 
   const handlePurchase = async () => {
-    await updateDoc(doc(db, 'profiles', userId), { subscriptionActive: true });
-    setProfile({ ...profile, subscriptionActive: true });
+    const now = new Date();
+    const current = profile.subscriptionExpires ? new Date(profile.subscriptionExpires) : now;
+    const base = current > now ? current : now;
+    const expiry = new Date(base);
+    expiry.setMonth(expiry.getMonth() + 1);
+    await updateDoc(doc(db, 'profiles', userId), {
+      subscriptionActive: true,
+      subscriptionExpires: expiry.toISOString()
+    });
+    setProfile({ ...profile, subscriptionActive: true, subscriptionExpires: expiry.toISOString() });
     setShowSub(false);
   };
 
   useEffect(()=>{if(!userId)return;getDoc(doc(db,'profiles',userId)).then(s=>s.exists()&&setProfile({id:s.id,...s.data()}));},[userId]);
   if(!profile) return React.createElement('p', null, 'Indlæser profil...');
+
+  const subscriptionActive = profile.subscriptionExpires && new Date(profile.subscriptionExpires) > new Date();
 
   const uploadFile = async (file, field) => {
     if(!file) return;
@@ -318,6 +328,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'mt-2 bg-blue-500 text-white w-full',
         onClick: recoverMissing
       }, 'Hent mistet fra DB'),
+    !publicView && profile.subscriptionExpires && React.createElement('p', {
+        className: 'text-center text-sm mt-2 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
+      }, subscriptionActive
+        ? `Abonnement aktivt til ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
+        : `Abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`),
     !publicView && React.createElement(Button, {
         className: 'mt-2 w-full bg-pink-500 text-white',
         onClick: () => setShowSub(true)
