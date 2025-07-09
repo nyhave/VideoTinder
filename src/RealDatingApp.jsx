@@ -11,14 +11,14 @@ import { useCollection } from './firebase.js';
 
 
 export default function RealDatingApp() {
-  const [loggedIn,setLoggedIn]=useState(() => {
+  const [loggedIn, setLoggedIn] = useState(() => {
     const stored = localStorage.getItem('loggedIn');
     return stored === 'true';
   });
   const DEFAULT_USER_ID = '101';
-  const profiles=useCollection('profiles');
-  const chats=useCollection('matches','userId',userId);
-  const [userId,setUserId]=useState(null);
+  const [userId, setUserId] = useState(null);
+  const profiles = useCollection('profiles');
+  const chats = useCollection('matches', 'userId', userId);
   const [ageRange,setAgeRange]=useState([35,55]);
   const [tab,setTab]=useState('discovery');
   const [viewProfile,setViewProfile]=useState(null);
