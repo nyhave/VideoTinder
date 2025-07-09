@@ -17,7 +17,8 @@ import {
   getStorage,
   ref,
   uploadBytes,
-  getDownloadURL
+  getDownloadURL,
+  listAll
 } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -58,7 +59,8 @@ export {
   setDoc,
   ref,
   uploadBytes,
-  getDownloadURL
+  getDownloadURL,
+  listAll
 };
 
 export { storage };
