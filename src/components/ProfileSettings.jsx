@@ -210,7 +210,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   };
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement('div', { className:'flex flex-col items-center mb-4' },
+    React.createElement('div', { className:'flex items-center mb-4 gap-4' },
       profile.photoURL ?
         React.createElement('img', { src: profile.photoURL, alt: 'Profil', className:'w-24 h-24 rounded-full object-cover' }) :
         React.createElement('div', { className:'w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center' },
@@ -224,7 +224,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className:'hidden'
       }),
       !publicView && React.createElement(Button, {
-        className:'mt-2 bg-pink-500 text-white',
+        className:'ml-4 bg-pink-500 text-white',
         onClick:()=>photoRef.current && photoRef.current.click()
       }, profile.photoURL ? 'Skift billede' : 'Upload billede')
     ),
