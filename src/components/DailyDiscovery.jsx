@@ -3,7 +3,7 @@ import { User, PlayCircle, Heart } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
-import { useCollection } from '../firebase.js';
+import { useCollection, db, doc, setDoc, deleteDoc } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 
 export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
@@ -16,9 +16,20 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
     return profile && profile.age >= ageRange[0] && profile.age <= ageRange[1];
   }).slice(0, 3);
   const nameMap = Object.fromEntries(profiles.map(p => [p.id, p.name]));
+  const likes = useCollection('likes','userId',userId);
 
   const [hoursUntil, setHoursUntil] = useState(0);
   const [showPurchase, setShowPurchase] = useState(false);
+  const toggleLike = async profileId => {
+    const likeId = `${userId}-${profileId}`;
+    const exists = likes.some(l => l.profileId === profileId);
+    const ref = doc(db,'likes',likeId);
+    if(exists){
+      await deleteDoc(ref);
+    } else {
+      await setDoc(ref,{id:likeId,userId,profileId});
+    }
+  };
   useEffect(() => {
     const now = new Date();
     const next = new Date(now);
@@ -35,9 +46,11 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
       filtered.length ? filtered.map(c => (
         React.createElement('li', {
           key: c.id,
-          className: 'p-4 bg-pink-50 rounded-lg cursor-pointer shadow flex flex-col',
+          className: 'p-4 bg-pink-50 rounded-lg cursor-pointer shadow flex flex-col relative',
           onClick: () => onSelectProfile(c.profileId)
         },
+          likes.some(l=>l.profileId===c.profileId) &&
+            React.createElement(Heart,{className:'w-6 h-6 text-pink-500 absolute top-2 right-2'}),
           React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
             (profiles.find(p=>p.id===c.profileId)?.photoURL ?
               React.createElement('img', { src: profiles.find(p=>p.id===c.profileId)?.photoURL, className: 'w-10 h-10 rounded-full object-cover' }) :
@@ -52,8 +65,13 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
             React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1' },
               React.createElement(PlayCircle, { className: 'w-5 h-5' }), 'Afspil'
             ),
-            React.createElement(Button, { size: 'sm', className: 'bg-pink-500 text-white flex items-center gap-1' },
-              React.createElement(Heart, { className: 'w-5 h-5' }), 'Like'
+            React.createElement(Button, {
+              size: 'sm',
+              className: 'bg-pink-500 text-white flex items-center gap-1',
+              onClick: e => {e.stopPropagation(); toggleLike(c.profileId);}
+            },
+              React.createElement(Heart, { className: 'w-5 h-5' }),
+              likes.some(l=>l.profileId===c.profileId) ? 'Unlike' : 'Like'
             )
           )
         )
