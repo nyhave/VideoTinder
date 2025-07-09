@@ -73,13 +73,13 @@ export default function RealDatingApp() {
     ),
     React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around fixed bottom-0 left-0 right-0' },
       React.createElement(HomeIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('discovery'); setViewProfile(null);} }),
-      React.createElement('div', { className: 'relative', onClick: ()=>setTab('chat') },
+      React.createElement('div', { className: 'relative', onClick: ()=>{setTab('chat'); setViewProfile(null);} },
         React.createElement(ChatIcon, { className: 'w-8 h-8 text-pink-600' }),
         hasUnread && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center' }, '1')
       ),
-      React.createElement(CalendarDays, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('checkin') }),
-      React.createElement(UserIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('profile') }),
-      React.createElement(InfoIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('about') })
+      React.createElement(CalendarDays, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} }),
+      React.createElement(UserIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('profile'); setViewProfile(null);} }),
+      React.createElement(InfoIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('about'); setViewProfile(null);} })
       )
   );
 }
