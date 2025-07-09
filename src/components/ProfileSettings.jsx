@@ -124,6 +124,23 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await updateDoc(doc(db,'profiles',userId), { ageRange: range });
   };
 
+  const handleCityChange = async e => {
+    const city = e.target.value;
+    setProfile({ ...profile, city });
+    await updateDoc(doc(db,'profiles',userId), { city });
+  };
+
+  const handleInterestChange = async e => {
+    const interest = e.target.value;
+    setProfile({ ...profile, interest });
+    await updateDoc(doc(db,'profiles',userId), { interest });
+  };
+
+  const handleDistanceRangeChange = async range => {
+    setDistanceRange(range);
+    await updateDoc(doc(db,'profiles',userId), { distanceRange: range });
+  };
+
   const handleClipChange = async e => {
     const clip = e.target.value;
     setProfile({ ...profile, clip });
@@ -232,20 +249,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       }, profile.photoURL ? 'Skift billede' : 'Upload billede')
     ),
     React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` }),
-    !publicView && React.createElement('p', { className: 'text-center mb-2' },
-      `Interesseret i ${profile.interest === 'Mand' ? 'Mænd' : 'Kvinder'} mellem ${ageRange[0]} og ${ageRange[1]} og i en afstand mellem ${distanceRange[0]} og ${distanceRange[1]} km`
-    ),
     !publicView && React.createElement('div', { className: 'flex flex-col gap-4 mb-4' },
       React.createElement('label', null, 'By'),
       React.createElement(Input, {
         value: profile.city || '',
-        onChange: e => setProfile({ ...profile, city: e.target.value }),
+        onChange: handleCityChange,
         className: 'border p-2 rounded'
       }),
       React.createElement(SectionTitle, { title: 'Interesseret i' }),
       React.createElement('select', {
         value: profile.interest || 'Mand',
-        onChange: e => setProfile({ ...profile, interest: e.target.value }),
+        onChange: handleInterestChange,
         className: 'border p-2 rounded'
       },
         React.createElement('option', { value: 'Mand' }, 'Mænd'),
@@ -266,7 +280,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         min: 0,
         max: 100,
         value: distanceRange,
-        onChange: setDistanceRange,
+        onChange: handleDistanceRangeChange,
         className: 'w-full'
       })
     ),
