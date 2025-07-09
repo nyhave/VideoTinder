@@ -7,7 +7,7 @@ import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
-import { db, storage, getDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL } from '../firebase.js';
+import { db, storage, getDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL, listAll } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {} }) {
@@ -151,6 +151,40 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await updateDoc(doc(db,'profiles',userId), { ageRange });
   };
 
+  const recoverMissing = async () => {
+    const profileRef = doc(db, 'profiles', userId);
+    const snap = await getDoc(profileRef);
+    if (!snap.exists()) return;
+    let { photoURL = '', audioClips = [], videoClips = [] } = snap.data();
+    const listRef = ref(storage, `profiles/${userId}`);
+    const { items } = await listAll(listRef);
+    const updates = {};
+    for (const item of items) {
+      const url = await getDownloadURL(item);
+      const name = item.name;
+      if (name.startsWith('photo-')) {
+        if (!photoURL) {
+          photoURL = url;
+          updates.photoURL = url;
+        }
+      } else if (name.startsWith('videoClips-')) {
+        if (!videoClips.includes(url)) {
+          videoClips.push(url);
+          updates.videoClips = videoClips;
+        }
+      } else if (name.startsWith('audioClips-')) {
+        if (!audioClips.includes(url)) {
+          audioClips.push(url);
+          updates.audioClips = audioClips;
+        }
+      }
+    }
+    if (Object.keys(updates).length) {
+      await updateDoc(profileRef, updates);
+      setProfile({ ...profile, ...updates });
+    }
+  };
+
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement('div', { className:'flex flex-col items-center mb-4' },
       profile.photoURL ?
@@ -266,6 +300,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
         onClick: saveChanges
       }, 'Gem ændringer'),
+    !publicView && React.createElement(Button, {
+        className: 'mt-2 bg-blue-500 text-white w-full',
+        onClick: recoverMissing
+      }, 'Hent mistet fra DB'),
     !publicView && React.createElement(Button, {
         className: 'mt-2 w-full bg-pink-500 text-white',
         onClick: () => setShowSub(true)
