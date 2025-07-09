@@ -10,7 +10,6 @@ import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
 import { useCollection, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
-import VideoRecorder from './VideoRecorder.jsx';
 import AudioRecorder from './AudioRecorder.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 
@@ -20,7 +19,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const audioRef = useRef();
   const photoRef = useRef();
 
-  const [showVideoRecorder, setShowVideoRecorder] = useState(false);
   const [showAudioRecorder, setShowAudioRecorder] = useState(false);
   const [replaceTarget, setReplaceTarget] = useState(null); // {field, index}
   const [showSub, setShowSub] = useState(false);
@@ -282,10 +280,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'mb-4 bg-pink-500 text-white',
         onClick: () => videoRef.current && videoRef.current.click()
       }, 'Upload video'),
-      React.createElement(Button, {
-        className: 'mb-4 ml-2 bg-pink-500 text-white',
-        onClick: () => setShowVideoRecorder(true)
-      }, 'Optag video')
     )
   );
 
@@ -444,18 +438,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     matchedProfile && React.createElement(MatchOverlay, {
         name: matchedProfile.name,
         onClose: () => setMatchedProfile(null)
-      }),
-    showVideoRecorder && React.createElement(VideoRecorder, {
-        onCancel: () => { setShowVideoRecorder(false); setReplaceTarget(null); },
-        onRecorded: file => {
-          if(replaceTarget && replaceTarget.field==='videoClips'){
-            replaceFile(file,'videoClips',replaceTarget.index);
-            setReplaceTarget(null);
-          } else {
-            uploadFile(file,'videoClips');
-          }
-          setShowVideoRecorder(false);
-        }
       }),
     showAudioRecorder && React.createElement(AudioRecorder, {
         onCancel: () => { setShowAudioRecorder(false); setReplaceTarget(null); },
