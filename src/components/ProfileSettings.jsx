@@ -382,10 +382,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onChange: publicView ? undefined : handleClipChange
       })
     ),
-    !publicView && React.createElement('button', {
-        className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
-        onClick: saveChanges
-      }, 'Gem ændringer'),
     !publicView && React.createElement(Button, {
         className: 'mt-2 bg-blue-500 text-white w-full',
         onClick: recoverMissing
