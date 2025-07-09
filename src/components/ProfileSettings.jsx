@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { Mic, Camera as CameraIcon, User as UserIcon } from 'lucide-react';
+import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
@@ -235,14 +235,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         return React.createElement(CameraIcon, { key: i, className: `w-10 h-10 ${hasClip ? 'text-pink-500' : 'opacity-50 text-gray-400'}` });
       })
     ),
-    React.createElement('div', { className: 'flex flex-col gap-2 mb-4' },
+    React.createElement('div', { className: 'flex flex-wrap gap-2 mb-4 justify-between' },
       (profile.videoClips || []).map((url, i) =>
-        React.createElement('div', { key: i, className: 'flex flex-col mb-2' },
+        React.createElement('div', { key: i, className: 'flex flex-col items-center w-[30%]' },
           React.createElement(VideoPreview, { src: url }),
           !publicView && React.createElement(Button, {
-            className: 'mt-1 bg-pink-500 text-white',
+            className: 'mt-1 bg-pink-500 text-white p-1 rounded-full flex items-center justify-center',
             onClick: () => deleteFile('videoClips', i)
-          }, 'Slet')
+          }, React.createElement(TrashIcon, { className: 'w-4 h-4' }))
         )
       )
     ),
