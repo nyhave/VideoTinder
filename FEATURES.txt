@@ -1,12 +1,14 @@
-Daily discovery of short video clips
+Daily discovery of short video clips or sound clips
 Basic chat between matched profiles
 Calendar interface for daily reflection notes
 Profile settings with age range filtering
 Ability to upload or record video clips
 Ability to upload or record audio clips
-Switch between user profiles in admin mode
-Reset database from admin screen
-Show Firestore credentials status
 Offline support via service worker caching
 PWA manifest for standalone installation
+
+Admin mode
 Seed data loader for test accounts and clips
+Switch between user profiles 
+Reset database from 
+Show Firestore credentials status
