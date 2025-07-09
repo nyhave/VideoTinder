@@ -22,7 +22,7 @@ export default function PremiumFeatures({ userId, onBack, onSelectProfile }) {
           onClick: () => onSelectProfile(p.id)
         },
           p.photoURL ?
-            React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded-full object-cover' }) :
+            React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
             React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
           React.createElement('span', null, `${p.name} (${p.age})`)
         )
