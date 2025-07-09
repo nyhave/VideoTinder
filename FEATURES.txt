@@ -7,6 +7,8 @@ Ability to upload or record audio clips
 Offline support via service worker caching
 PWA manifest for standalone installation
 
+Profile pictures cached for offline viewing
+
 Admin mode
 Seed data loader for test accounts and clips
 Switch between user profiles 

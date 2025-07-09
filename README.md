@@ -10,6 +10,7 @@ and simple profile management powered by Firebase.
 * Basic chat between matched profiles
 * Calendar for daily reflections
 * Minimal profile settings and admin mode
+* Profile pictures cached for offline viewing
 
 
 ## Getting Started

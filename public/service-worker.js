@@ -1,6 +1,7 @@
 // Bump the cache name whenever cached files change to ensure
 // clients receive the latest versions.
 const CACHE_NAME = 'videotinder-v2';
+const IMAGE_CACHE = 'image-cache-v1';
 const URLS_TO_CACHE = [
   '/',
   '/public/index.html',
@@ -30,6 +31,21 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  if (event.request.destination === 'image') {
+    event.respondWith(
+      caches.open(IMAGE_CACHE).then(cache =>
+        cache.match(event.request).then(response => {
+          if (response) return response;
+          return fetch(event.request)
+            .then(networkResponse => {
+              cache.put(event.request, networkResponse.clone());
+              return networkResponse;
+            });
+        })
+      )
+    );
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then(response => {
       return response || fetch(event.request);
