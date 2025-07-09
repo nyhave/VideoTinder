@@ -13,6 +13,7 @@ export default function PremiumFeatures({ userId, onBack, onSelectProfile }) {
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: 'Premium' }),
     React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
+    React.createElement('p', { className: 'mb-4 text-sm text-gray-700' }, 'Her er profiler der har liket dig:'),
     React.createElement('ul', { className: 'space-y-4' },
       likedProfiles.length ? likedProfiles.map(p => (
         React.createElement('li', {
