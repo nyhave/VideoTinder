@@ -16,6 +16,7 @@ and simple profile management powered by Firebase.
 * Profile pictures cached for offline viewing
 * Premium page showing who liked you (subscription required)
 * Seed data includes 11 mandlige profiler der matcher standardbrugeren så du kan teste premium og ekstra klip
+* Video- og lydklip begrænset til 10 sekunder
 
 
 ## Getting Started

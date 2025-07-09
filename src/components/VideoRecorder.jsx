@@ -7,6 +7,7 @@ export default function VideoRecorder({ onCancel, onRecorded }) {
   const streamRef = useRef();
   const recorderRef = useRef();
   const chunksRef = useRef([]);
+  const timeoutRef = useRef();
   const [recording, setRecording] = useState(false);
 
   useEffect(() => {
@@ -33,12 +34,15 @@ export default function VideoRecorder({ onCancel, onRecorded }) {
       onRecorded && onRecorded(file);
     };
     recorder.start();
+    timeoutRef.current = setTimeout(() => stop(), 10000);
     setRecording(true);
   };
 
   const stop = () => {
     if(recorderRef.current){
       recorderRef.current.stop();
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
       setRecording(false);
     }
   };
