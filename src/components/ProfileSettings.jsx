@@ -10,7 +10,7 @@ import VideoPreview from './VideoPreview.jsx';
 import { db, storage, getDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL, listAll } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 
-export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {} }) {
+export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, onOpenPremium = () => {} }) {
   const [profile,setProfile]=useState(null);
   const videoRef = useRef();
   const audioRef = useRef();
@@ -314,6 +314,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'mt-2 w-full bg-pink-500 text-white',
         onClick: () => setShowSub(true)
       }, 'K\u00f8b abonnement'),
+    !publicView && profile.subscriptionActive && React.createElement(Button, {
+        className: 'mt-2 w-full bg-pink-500 text-white',
+        onClick: onOpenPremium
+      }, 'Premium'),
     !publicView && React.createElement('button', {
         className: 'mt-2 bg-gray-200 text-gray-700 px-4 py-2 rounded',
         onClick: onLogout
