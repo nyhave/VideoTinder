@@ -26,14 +26,14 @@ export default function DailyCheckIn({ userId }) {
       days.map(day => (
         React.createElement('div', {
           key: day,
-          className: `p-2 text-center text-sm ${refs.some(r=>new Date(r.date).getDate()===day)?'bg-pink-200 rounded':''}`
+          className: `p-2 text-center text-sm ${refs.some(r=>parseInt((r.date||'').split('-')[2],10)===day)?'bg-pink-200 rounded':''}`
         }, day)
       ))
     ),
     React.createElement('ul', { className: 'list-disc list-inside mb-4' },
       refs.map(r => {
         const d = r.date || r.id.split('-')[1];
-        const formatted = d ? new Date(d).toISOString().split('T')[0] : 'Ukendt dato';
+        const formatted = d ? d : 'Ukendt dato';
         return React.createElement('li', { key: r.id }, `${formatted}: ${r.text}`);
       })
     ),
