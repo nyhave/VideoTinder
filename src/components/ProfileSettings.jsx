@@ -332,7 +332,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           onClick:()=>photoRef.current && photoRef.current.click()
         }, profile.photoURL ? 'Skift billede' : 'Upload billede')
       ),
-      React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` })
+      React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` }),
+      !publicView && profile.subscriptionExpires && React.createElement('p', {
+        className: 'text-center text-sm mt-2 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
+      }, subscriptionActive
+        ? `Premium abonnement aktivt til ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
+        : `Premium abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`)
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
@@ -390,11 +395,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'mt-2 bg-blue-500 text-white w-full',
         onClick: recoverMissing
       }, 'Hent mistet fra DB'),
-    !publicView && profile.subscriptionExpires && React.createElement('p', {
-        className: 'text-center text-sm mt-2 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
-      }, subscriptionActive
-        ? `Abonnement aktivt til ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
-        : `Abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`),
     !publicView && !subscriptionActive && React.createElement(Button, {
         className: 'mt-2 w-full bg-pink-500 text-white',
         onClick: () => setShowSub(true)
