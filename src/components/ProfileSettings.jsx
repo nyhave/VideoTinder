@@ -314,8 +314,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
       React.createElement('div', { className:'flex items-center mb-4 gap-4' },
         profile.photoURL ?
-          React.createElement('img', { src: profile.photoURL, alt: 'Profil', className:'w-24 h-24 rounded-full object-cover' }) :
-          React.createElement('div', { className:'w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center' },
+          React.createElement('img', { src: profile.photoURL, alt: 'Profil', className:'w-24 h-24 rounded object-cover' }) :
+          React.createElement('div', { className:'w-24 h-24 rounded bg-gray-200 flex items-center justify-center' },
             React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500' })
           ),
         !publicView && React.createElement('input', {
