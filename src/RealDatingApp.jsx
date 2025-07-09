@@ -46,7 +46,7 @@ export default function RealDatingApp() {
 
 
 
-  return React.createElement('div', { className: 'flex flex-col min-h-screen w-screen bg-gradient-to-br from-pink-100 to-white' },
+  return React.createElement('div', { className: 'flex flex-col min-h-screen w-screen bg-gradient-to-br from-pink-100 to-white pb-24' },
 
     React.createElement('div', { className: 'flex-1' },
 
