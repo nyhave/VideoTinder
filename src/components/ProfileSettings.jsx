@@ -7,6 +7,7 @@ import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
+import AudioPreview from './AudioPreview.jsx';
 import { db, storage, getDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 
@@ -57,6 +58,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     const url = await getDownloadURL(storageRef);
     const updated = [...(profile[field] || [])];
     updated[index] = url;
+    await updateDoc(doc(db,'profiles',userId), { [field]: updated });
+    setProfile({...profile, [field]: updated});
+  };
+
+  const deleteClip = async (field, index) => {
+    const updated = [...(profile[field] || [])];
+    updated.splice(index, 1);
     await updateDoc(doc(db,'profiles',userId), { [field]: updated });
     setProfile({...profile, [field]: updated});
   };
@@ -183,15 +191,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         return React.createElement(CameraIcon,{key:i,className:`w-10 h-10 ${hasClip?'text-pink-500':'opacity-50 text-gray-400'}`});
       })
     ),
-    React.createElement('div', { className: 'flex flex-col gap-2 mb-4' },
+    React.createElement('div', { className: 'grid grid-cols-3 gap-2 mb-4' },
       (profile.videoClips || []).map((url,i) =>
-        React.createElement('div', { key: i, className:'flex flex-col mb-2' },
-          React.createElement(VideoPreview, { src: url }),
-          !publicView && React.createElement(Button, {
-            className:'mt-1 bg-pink-500 text-white',
-            onClick:()=>{setReplaceTarget({field:'videoClips',index:i}); videoRef.current && videoRef.current.click();}
-          }, 'Erstat')
-        )
+        React.createElement(VideoPreview, {
+          key: i,
+          src: url,
+          onDelete: !publicView ? () => deleteClip('videoClips', i) : undefined,
+          onReplace: !publicView ? () => { setReplaceTarget({field:'videoClips', index:i}); videoRef.current && videoRef.current.click(); } : undefined
+        })
       )
     ),
     !publicView && React.createElement(React.Fragment, null,
@@ -220,19 +227,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         return React.createElement(Mic,{key:i,className:`w-10 h-10 ${hasClip?'text-pink-500':'opacity-50 text-gray-400'}`});
       })
     ),
-    React.createElement('div', { className: 'flex flex-col gap-2 mb-4' },
+    React.createElement('div', { className: 'grid grid-cols-3 gap-2 mb-4' },
       (profile.audioClips || []).map((url,i) =>
-        React.createElement('div', { key: i, className:'flex flex-col mb-2' },
-          React.createElement('audio', {
-            src: url,
-            controls: true,
-            className: 'w-full'
-          }),
-          !publicView && React.createElement(Button, {
-            className:'mt-1 bg-pink-500 text-white',
-            onClick:()=>{setReplaceTarget({field:'audioClips',index:i}); audioRef.current && audioRef.current.click();}
-          }, 'Erstat')
-        )
+        React.createElement(AudioPreview, {
+          key: i,
+          src: url,
+          onDelete: !publicView ? () => deleteClip('audioClips', i) : undefined,
+          onReplace: !publicView ? () => { setReplaceTarget({field:'audioClips', index:i}); audioRef.current && audioRef.current.click(); } : undefined
+        })
       )
     ),
     !publicView && React.createElement(React.Fragment, null,
