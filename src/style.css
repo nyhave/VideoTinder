@@ -40,6 +40,13 @@ button:hover {
   opacity: 0.9;
 }
 
+/* Outline style for destructive actions like unmatching */
+button.btn-outline-red {
+  background-color: transparent;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}
+
 
 .signup-form {
   display: flex;

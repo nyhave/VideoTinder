@@ -53,11 +53,11 @@ export default function DailyCheckIn({ userId }) {
         }
       }, '>')
     ),
-    React.createElement('div', { className: 'grid grid-cols-7 gap-1 mb-4' },
+    React.createElement('div', { className: 'grid grid-cols-7 gap-1 mb-4 text-xs' },
       days.map(day => (
         React.createElement('div', {
           key: day,
-          className: `p-2 text-center text-sm ${monthRefs.some(r=>parseInt(r.date.split('-')[2],10)===day)?'bg-pink-200 rounded':''}`
+          className: `p-1 text-center leading-tight ${monthRefs.some(r=>parseInt(r.date.split('-')[2],10)===day)?'bg-pink-200 rounded':''}`
         }, day)
       ))
     ),
