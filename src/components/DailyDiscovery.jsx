@@ -6,6 +6,7 @@ import SectionTitle from './SectionTitle.jsx';
 import { useCollection, db, doc, setDoc, deleteDoc, getDoc, updateDoc } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
+import InfoOverlay from './InfoOverlay.jsx';
 
 export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
   const profiles = useCollection('profiles');
@@ -24,6 +25,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
 
   const [hoursUntil, setHoursUntil] = useState(0);
   const [showPurchase, setShowPurchase] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
   const handleExtraPurchase = async () => {
     const todayStr = new Date().toISOString().split('T')[0];
@@ -120,7 +122,13 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
     ),
     React.createElement(Button, {
       className: 'mt-4 w-full bg-pink-500 text-white',
-      onClick: () => setShowPurchase(true)
+      onClick: () => {
+        if(user.extraClipsDate === today){
+          setShowInfo(true);
+        } else {
+          setShowPurchase(true);
+        }
+      }
     }, 'Hent flere...'),
     showPurchase && React.createElement(PurchaseOverlay, {
       title: 'Flere klip',
@@ -129,6 +137,12 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
       onBuy: handleExtraPurchase
     },
       React.createElement('p', { className: 'text-center text-sm mb-2' }, 'Få 3 ekstra klip i dag')
+    ),
+    showInfo && React.createElement(InfoOverlay, {
+      title: 'Flere klip',
+      onClose: () => setShowInfo(false)
+    },
+      React.createElement('p', { className: 'text-center text-sm' }, 'Du har allerede købt ekstra klip i dag')
     ),
     matchedProfile && React.createElement(MatchOverlay, {
       name: matchedProfile.name,
