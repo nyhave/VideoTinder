@@ -310,6 +310,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   );
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+    publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
     React.createElement('div', { className:'flex items-center mb-4 gap-4' },
       profile.photoURL ?
         React.createElement('img', { src: profile.photoURL, alt: 'Profil', className:'w-24 h-24 rounded-full object-cover' }) :
@@ -328,7 +329,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onClick:()=>photoRef.current && photoRef.current.click()
       }, profile.photoURL ? 'Skift billede' : 'Upload billede')
     ),
-    publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
     React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` }),
     videoSection,
     audioSection,
