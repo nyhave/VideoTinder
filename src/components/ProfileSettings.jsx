@@ -247,7 +247,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         return React.createElement('div', { key: i, className: 'w-[30%] flex flex-col items-center justify-center' },
           url
             ? React.createElement(VideoPreview, { src: url })
-            : React.createElement(CameraIcon, { className: 'w-10 h-10 text-gray-400' }),
+            : React.createElement(CameraIcon, {
+                className: `w-10 h-10 ${!publicView ? 'text-pink-500 cursor-pointer' : 'text-gray-400'}`,
+                onClick: !publicView ? () => {
+                  if (videoRef.current) videoRef.current.click();
+                } : undefined
+              }),
           url && !publicView && React.createElement(Button, {
             className: 'mt-1 bg-pink-500 text-white p-1 rounded-full flex items-center justify-center',
             onClick: () => deleteFile('videoClips', i)
@@ -309,6 +314,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   return React.createElement(React.Fragment, null,
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+      !publicView && React.createElement('button', {
+        className: 'mb-4 bg-gray-200 text-gray-700 px-4 py-2 rounded',
+        onClick: onLogout
+      }, 'Logout'),
       publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
       React.createElement('div', { className:'flex items-center mb-4 gap-4' },
         profile.photoURL ?
@@ -332,20 +341,25 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           onClick:()=>photoRef.current && photoRef.current.click()
         }, profile.photoURL ? 'Skift billede' : 'Upload billede')
       ),
-      React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` })
+      React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` }),
+      !publicView && profile.subscriptionExpires && React.createElement('p', {
+        className: 'text-center text-sm mt-2 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
+      }, subscriptionActive
+        ? `Premium abonnement aktivt til ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
+        : `Premium abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`)
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
     !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: 'Interesseret i' }),
-      React.createElement('select', {
-        value: profile.interest || 'Mand',
-        onChange: handleInterestChange,
-        className: 'border p-2 rounded'
-      },
-        React.createElement('option', { value: 'Mand' }, 'Mænd'),
-        React.createElement('option', { value: 'Kvinde' }, 'Kvinder')
-      ),
+        React.createElement('select', {
+          value: profile.interest || 'Mand',
+          onChange: handleInterestChange,
+          className: 'border p-2 rounded block mb-2'
+        },
+          React.createElement('option', { value: 'Mand' }, 'Mænd'),
+          React.createElement('option', { value: 'Kvinde' }, 'Kvinder')
+        ),
       React.createElement('label', { className: 'mt-2' }, `Alder: ${ageRange[0]} - ${ageRange[1]}`),
       React.createElement(Slider, {
         range: true,
@@ -394,15 +408,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'text-center text-sm mt-2 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
       }, subscriptionActive
         ? `Abonnement aktivt til ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
-        : `Abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`),
+        : ``),
+
     !publicView && !subscriptionActive && React.createElement(Button, {
         className: 'mt-2 w-full bg-pink-500 text-white',
         onClick: () => setShowSub(true)
       }, 'Køb abonnement'),
-    !publicView && React.createElement('button', {
-        className: 'mt-2 bg-gray-200 text-gray-700 px-4 py-2 rounded',
-        onClick: onLogout
-      }, 'Logout'),
     showSub && React.createElement(PurchaseOverlay, {
         title: 'Månedligt abonnement',
         price: '59 kr/md',
