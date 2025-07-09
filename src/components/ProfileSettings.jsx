@@ -14,7 +14,7 @@ import VideoRecorder from './VideoRecorder.jsx';
 import AudioRecorder from './AudioRecorder.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 
-export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, viewerId }) {
+export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, viewerId, onBack }) {
   const [profile,setProfile]=useState(null);
   const videoRef = useRef();
   const audioRef = useRef();
@@ -249,6 +249,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       }, profile.photoURL ? 'Skift billede' : 'Upload billede')
     ),
     React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` }),
+    publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
     !publicView && React.createElement('div', { className: 'flex flex-col gap-4 mb-4' },
       React.createElement('label', null, 'By'),
       React.createElement(Input, {
