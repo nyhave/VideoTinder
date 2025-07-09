@@ -7,6 +7,8 @@ and simple profile management powered by Firebase.
 ## Features
 
 * Daily discovery of short video clips (up to 3 or 6 with subscription)
+* Option to buy 3 extra clips for the day
+* Monthly subscriptions with visible expiration date
 * Basic chat between matched profiles with option to unmatch
 * Calendar for daily reflections
 * Minimal profile settings and admin mode
