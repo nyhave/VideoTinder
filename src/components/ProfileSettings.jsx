@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { Mic, Camera as CameraIcon } from 'lucide-react';
+import { Mic, Camera as CameraIcon, User as UserIcon } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
@@ -12,6 +12,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [profile,setProfile]=useState(null);
   const videoRef = useRef();
   const audioRef = useRef();
+  const photoRef = useRef();
 
   const videoRecorder = useRef();
   const audioRecorder = useRef();
@@ -33,8 +34,18 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     setProfile({...profile, [field]: updated});
   };
 
+  const uploadPhoto = async file => {
+    if(!file) return;
+    const storageRef = ref(storage, `profiles/${userId}/photo-${Date.now()}-${file.name}`);
+    await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(storageRef);
+    await updateDoc(doc(db,'profiles',userId), { photoURL: url });
+    setProfile({...profile, photoURL: url});
+  };
+
   const handleVideoChange = e => uploadFile(e.target.files[0], 'videoClips');
   const handleAudioChange = e => uploadFile(e.target.files[0], 'audioClips');
+  const handlePhotoChange = e => uploadPhoto(e.target.files[0]);
 
 
   const startVideoRecording = async () => {
@@ -90,6 +101,24 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   };
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+    React.createElement('div', { className:'flex flex-col items-center mb-4' },
+      profile.photoURL ?
+        React.createElement('img', { src: profile.photoURL, alt: 'Profil', className:'w-24 h-24 rounded-full object-cover' }) :
+        React.createElement('div', { className:'w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center' },
+          React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500' })
+        ),
+      !publicView && React.createElement('input', {
+        type:'file',
+        accept:'image/*',
+        ref:photoRef,
+        onChange:handlePhotoChange,
+        className:'hidden'
+      }),
+      !publicView && React.createElement(Button, {
+        className:'mt-2 bg-pink-500 text-white',
+        onClick:()=>photoRef.current && photoRef.current.click()
+      }, profile.photoURL ? 'Skift billede' : 'Upload billede')
+    ),
     React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}` }),
     !publicView && React.createElement(SectionTitle, { title: 'Aldersinterval' }),
     !publicView && React.createElement('div', { className: 'flex flex-col gap-4 mb-4' },
