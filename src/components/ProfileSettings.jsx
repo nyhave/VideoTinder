@@ -174,6 +174,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     }
   };
 
+  const handleAgeRangeChange = async range => {
+    onChangeAgeRange(range);
+    await updateDoc(doc(db,'profiles',userId), { ageRange: range });
+  };
+
+  const handleClipChange = async e => {
+    const clip = e.target.value;
+    setProfile({ ...profile, clip });
+    await updateDoc(doc(db,'profiles',userId), { clip });
+  };
+
   const saveChanges = async () => {
     await updateDoc(doc(db,'profiles',userId), {
       ageRange,
@@ -262,7 +273,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         min: 18,
         max: 80,
         value: ageRange,
-        onChange: onChangeAgeRange,
+        onChange: handleAgeRangeChange,
         className: 'w-full'
       }),
       React.createElement('label', { className: 'mt-2' }, `Afstand: ${distanceRange[0]} - ${distanceRange[1]} km`),
@@ -353,7 +364,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       }, audioRecording ? 'Stop optagelse' : 'Optag lyd')
     ),
     React.createElement(SectionTitle, { title: 'Om mig' }),
-      React.createElement(Textarea, { className: 'mb-4', readOnly: true }, profile.clip),
+      React.createElement(Textarea, {
+        className: 'mb-4',
+        readOnly: publicView,
+        value: profile.clip || '',
+        onChange: publicView ? undefined : handleClipChange
+      }),
     !publicView && React.createElement('button', {
         className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
         onClick: saveChanges
