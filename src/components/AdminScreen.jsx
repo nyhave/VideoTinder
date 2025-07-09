@@ -5,7 +5,7 @@ import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
 import { db, collection, getDocs } from '../firebase.js';
 
-export default function AdminScreen({ profiles, onSwitch, currentUserId }) {
+export default function AdminScreen({ profiles, onSwitch, currentUserId, onOpenDiscovery }) {
   const [firestoreInfo, setFirestoreInfo] = useState(null);
 
   const showFirestoreInfo = async () => {
@@ -38,6 +38,7 @@ export default function AdminScreen({ profiles, onSwitch, currentUserId }) {
       profiles.map(p => React.createElement('option', { key: p.id, value: p.id }, p.name))
     ),
     React.createElement('p', { className: 'text-gray-500 text-sm mb-4' }, 'Oplev app\u2019en som en anden bruger.'),
+    onOpenDiscovery && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white px-4 py-2 rounded', onClick: onOpenDiscovery }, 'G\u00e5 til Dagens klip'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Firestore info'),
     React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: showFirestoreInfo }, 'Show credentials'),
     firestoreInfo && React.createElement('pre', { className: 'mt-2 bg-gray-100 p-2 rounded whitespace-pre-wrap text-xs' },
