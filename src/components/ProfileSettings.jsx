@@ -238,22 +238,19 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const videoSection = React.createElement(React.Fragment, null,
     React.createElement(SectionTitle, { title: 'Video-klip' }),
-    React.createElement('div', { className: 'flex space-x-4 mb-2' },
+    React.createElement('div', { className: 'flex items-center gap-4 mb-4 justify-between' },
       Array.from({ length: 3 }).map((_, i) => {
-        const hasClip = (profile.videoClips || [])[i];
-        return React.createElement(CameraIcon, { key: i, className: `w-10 h-10 ${hasClip ? 'text-pink-500' : 'opacity-50 text-gray-400'}` });
-      })
-    ),
-    React.createElement('div', { className: 'flex flex-wrap gap-2 mb-4 justify-between' },
-      (profile.videoClips || []).map((url, i) =>
-        React.createElement('div', { key: i, className: 'flex flex-col items-center w-[30%]' },
-          React.createElement(VideoPreview, { src: url }),
-          !publicView && React.createElement(Button, {
+        const url = (profile.videoClips || [])[i];
+        return React.createElement('div', { key: i, className: 'w-[30%] flex flex-col items-center justify-center' },
+          url
+            ? React.createElement(VideoPreview, { src: url })
+            : React.createElement(CameraIcon, { className: 'w-10 h-10 text-gray-400' }),
+          url && !publicView && React.createElement(Button, {
             className: 'mt-1 bg-pink-500 text-white p-1 rounded-full flex items-center justify-center',
             onClick: () => deleteFile('videoClips', i)
           }, React.createElement(TrashIcon, { className: 'w-4 h-4' }))
-        )
-      )
+        );
+      })
     ),
     !publicView && React.createElement(React.Fragment, null,
       React.createElement('input', {
@@ -272,26 +269,19 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const audioSection = React.createElement(React.Fragment, null,
     React.createElement(SectionTitle, { title: 'Lyd-klip' }),
-    React.createElement('div', { className: 'flex space-x-4 mb-2' },
+    React.createElement('div', { className: 'space-y-2 mb-4' },
       Array.from({ length: 3 }).map((_, i) => {
-        const hasClip = (profile.audioClips || [])[i];
-        return React.createElement(Mic, { key: i, className: `w-10 h-10 ${hasClip ? 'text-pink-500' : 'opacity-50 text-gray-400'}` });
-      })
-    ),
-    React.createElement('div', { className: 'flex flex-wrap gap-2 mb-4 justify-between' },
-      (profile.audioClips || []).map((url, i) =>
-        React.createElement('div', { key: i, className: 'flex flex-col items-center w-[30%]' },
-          React.createElement('audio', {
-            src: url,
-            controls: true,
-            className: 'w-full'
-          }),
-          !publicView && React.createElement(Button, {
-            className: 'mt-1 bg-pink-500 text-white p-1 rounded-full flex items-center justify-center',
+        const url = (profile.audioClips || [])[i];
+        return React.createElement('div', { key: i, className: 'flex items-center' },
+          url
+            ? React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' })
+            : React.createElement('div', { className: 'flex-1 flex justify-center' }, React.createElement(Mic, { className: 'w-8 h-8 text-gray-400' })),
+          url && !publicView && React.createElement(Button, {
+            className: 'ml-2 bg-pink-500 text-white p-1 rounded w-[20%] flex items-center justify-center',
             onClick: () => deleteFile('audioClips', i)
           }, React.createElement(TrashIcon, { className: 'w-4 h-4' }))
-        )
-      )
+        );
+      })
     ),
     !publicView && React.createElement(React.Fragment, null,
       React.createElement('input', {
