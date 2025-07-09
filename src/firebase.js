@@ -11,7 +11,8 @@ import {
   where,
   getDoc,
   updateDoc,
-  setDoc
+  setDoc,
+  arrayUnion
 } from 'firebase/firestore';
 import {
   getStorage,
@@ -58,6 +59,7 @@ export {
   getDoc,
   updateDoc,
   setDoc,
+  arrayUnion,
   ref,
   uploadBytes,
   getDownloadURL,
