@@ -99,8 +99,7 @@ export default function ChatScreen({ userId }) {
             React.createElement(ChatIcon, null)
           ),
           React.createElement(Button, {
-            variant: 'outline',
-            className: 'border-red-500 text-red-500',
+            className: 'btn-outline-red',
             onClick: unmatch
           }, 'Unmatch')
         )
