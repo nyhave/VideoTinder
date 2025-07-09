@@ -9,6 +9,6 @@ export default function AboutScreen({ onOpenAdmin }) {
       'Velkommen til en ny måde at date på. Her handler det ikke om hurtige swipes, men om at tage sig tid til at lære hinanden at kende. '
       + 'RealDate er for dig, der søger noget ægte og meningsfuldt. Tag det stille og roligt, og find den forbindelse, der virkelig betyder noget.'
     ),
-    onOpenAdmin && React.createElement(Button, { className: 'bg-pink-500 hover:bg-pink-600 text-white mt-4', onClick: onOpenAdmin }, 'Admin')
+    onOpenAdmin && React.createElement(Button, { className: 'bg-blue-500 hover:bg-blue-600 text-white mt-4', onClick: onOpenAdmin }, 'Admin')
   );
 }
