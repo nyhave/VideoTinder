@@ -20,6 +20,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const audioChunks = useRef([]);
   const [videoRecording, setVideoRecording] = useState(false);
   const [audioRecording, setAudioRecording] = useState(false);
+  const [replaceTarget, setReplaceTarget] = useState(null); // {field, index}
 
   useEffect(()=>{if(!userId)return;getDoc(doc(db,'profiles',userId)).then(s=>s.exists()&&setProfile({id:s.id,...s.data()}));},[userId]);
   if(!profile) return React.createElement('p', null, 'Indlæser profil...');
@@ -34,6 +35,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     setProfile({...profile, [field]: updated});
   };
 
+
   const uploadPhoto = async file => {
     if(!file) return;
     const storageRef = ref(storage, `profiles/${userId}/photo-${Date.now()}-${file.name}`);
@@ -43,9 +45,38 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     setProfile({...profile, photoURL: url});
   };
 
-  const handleVideoChange = e => uploadFile(e.target.files[0], 'videoClips');
-  const handleAudioChange = e => uploadFile(e.target.files[0], 'audioClips');
   const handlePhotoChange = e => uploadPhoto(e.target.files[0]);
+
+  const replaceFile = async (file, field, index) => {
+    if(!file) return;
+    const storageRef = ref(storage, `profiles/${userId}/${field}-${Date.now()}-${file.name}`);
+    await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(storageRef);
+    const updated = [...(profile[field] || [])];
+    updated[index] = url;
+    await updateDoc(doc(db,'profiles',userId), { [field]: updated });
+    setProfile({...profile, [field]: updated});
+  };
+
+  const handleVideoChange = e => {
+    const file = e.target.files[0];
+    if(replaceTarget && replaceTarget.field==='videoClips'){
+      replaceFile(file,'videoClips',replaceTarget.index);
+      setReplaceTarget(null);
+    } else {
+      uploadFile(file, 'videoClips');
+    }
+  };
+
+  const handleAudioChange = e => {
+    const file = e.target.files[0];
+    if(replaceTarget && replaceTarget.field==='audioClips'){
+      replaceFile(file,'audioClips',replaceTarget.index);
+      setReplaceTarget(null);
+    } else {
+      uploadFile(file, 'audioClips');
+    }
+  };
 
 
   const startVideoRecording = async () => {
@@ -57,7 +88,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     recorder.onstop = () => {
       const blob = new Blob(videoChunks.current, { type: recorder.mimeType });
       const file = new File([blob], `video-${Date.now()}.webm`, { type: blob.type });
-      uploadFile(file, 'videoClips');
+      if(replaceTarget && replaceTarget.field==='videoClips'){
+        replaceFile(file,'videoClips',replaceTarget.index);
+        setReplaceTarget(null);
+      } else {
+        uploadFile(file, 'videoClips');
+      }
       stream.getTracks().forEach(t => t.stop());
     };
     videoRecorder.current = recorder;
@@ -81,7 +117,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     recorder.onstop = () => {
       const blob = new Blob(audioChunks.current, { type: recorder.mimeType });
       const file = new File([blob], `audio-${Date.now()}.webm`, { type: blob.type });
-      uploadFile(file, 'audioClips');
+      if(replaceTarget && replaceTarget.field==='audioClips'){
+        replaceFile(file,'audioClips',replaceTarget.index);
+        setReplaceTarget(null);
+      } else {
+        uploadFile(file, 'audioClips');
+      }
       stream.getTracks().forEach(t => t.stop());
     };
     audioRecorder.current = recorder;
@@ -141,12 +182,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     ),
     React.createElement('div', { className: 'flex flex-col gap-2 mb-4' },
       (profile.videoClips || []).map((url,i) =>
-        React.createElement('video', {
-          key: i,
-          src: url,
-          controls: true,
-          className: 'w-full rounded'
-        })
+        React.createElement('div', { key: i, className:'flex flex-col mb-2' },
+          React.createElement('video', {
+            src: url,
+            controls: true,
+            className: 'w-full rounded'
+          }),
+          !publicView && React.createElement(Button, {
+            className:'mt-1 bg-pink-500 text-white',
+            onClick:()=>{setReplaceTarget({field:'videoClips',index:i}); videoRef.current && videoRef.current.click();}
+          }, 'Erstat')
+        )
       )
     ),
     !publicView && React.createElement(React.Fragment, null,
@@ -177,12 +223,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     ),
     React.createElement('div', { className: 'flex flex-col gap-2 mb-4' },
       (profile.audioClips || []).map((url,i) =>
-        React.createElement('audio', {
-          key: i,
-          src: url,
-          controls: true,
-          className: 'w-full'
-        })
+        React.createElement('div', { key: i, className:'flex flex-col mb-2' },
+          React.createElement('audio', {
+            src: url,
+            controls: true,
+            className: 'w-full'
+          }),
+          !publicView && React.createElement(Button, {
+            className:'mt-1 bg-pink-500 text-white',
+            onClick:()=>{setReplaceTarget({field:'audioClips',index:i}); audioRef.current && audioRef.current.click();}
+          }, 'Erstat')
+        )
       )
     ),
     !publicView && React.createElement(React.Fragment, null,
