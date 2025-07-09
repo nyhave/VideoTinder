@@ -4,7 +4,7 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
-import { useCollection, db, doc, updateDoc } from '../firebase.js';
+import { useCollection, db, doc, updateDoc, deleteDoc } from '../firebase.js';
 
 export default function ChatScreen({ userId }) {
   const profiles = useCollection('profiles');
@@ -33,12 +33,32 @@ export default function ChatScreen({ userId }) {
   const sendMessage = async () => {
     const trimmed = text.trim();
     if(!trimmed || !active) return;
-    await updateDoc(doc(db,'matches',active.id),{
-      lastMessage: trimmed,
-      unreadByProfile: true,
-      unreadByUser: false
-    });
+    const id1 = `${active.userId}-${active.profileId}`;
+    const id2 = `${active.profileId}-${active.userId}`;
+    await Promise.all([
+      updateDoc(doc(db,'matches',id1),{
+        lastMessage: trimmed,
+        unreadByProfile: true,
+        unreadByUser: false
+      }),
+      updateDoc(doc(db,'matches',id2),{
+        lastMessage: trimmed,
+        unreadByProfile: false,
+        unreadByUser: true
+      })
+    ]);
     setText('');
+  };
+
+  const unmatch = async () => {
+    if(!active) return;
+    const id1 = `${active.userId}-${active.profileId}`;
+    const id2 = `${active.profileId}-${active.userId}`;
+    await Promise.all([
+      deleteDoc(doc(db,'matches',id1)),
+      deleteDoc(doc(db,'matches',id2))
+    ]);
+    setActive(null);
   };
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-96' },
@@ -75,7 +95,12 @@ export default function ChatScreen({ userId }) {
             onClick: sendMessage
           },
             React.createElement(ChatIcon, null)
-          )
+          ),
+          React.createElement(Button, {
+            variant: 'outline',
+            className: 'border-red-500 text-red-500',
+            onClick: unmatch
+          }, 'Unmatch')
         )
       )
     ) : React.createElement('p', { className: 'text-center text-gray-500 flex-1 flex items-center justify-center' }, 'Vælg chat')

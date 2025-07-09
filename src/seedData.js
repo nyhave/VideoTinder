@@ -15,14 +15,24 @@ export default async function seedData() {
     {id:'106',name:'Henrik',age:40,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Naturligvis fotograf.'}
   ];
   await Promise.all(testUsers.map(u => setDoc(doc(db, 'profiles', u.id), u)));
-  await setDoc(doc(db,'matches','m1'),{
-    id:'m1',
-    userId:'101',
-    profileId:'104',
-    lastMessage:'Hej Peter!',
-    unreadByUser:false,
-    unreadByProfile:true
-  });
+  await Promise.all([
+    setDoc(doc(db,'matches','101-104'),{
+      id:'101-104',
+      userId:'101',
+      profileId:'104',
+      lastMessage:'Hej Peter!',
+      unreadByUser:false,
+      unreadByProfile:true
+    }),
+    setDoc(doc(db,'matches','104-101'),{
+      id:'104-101',
+      userId:'104',
+      profileId:'101',
+      lastMessage:'Hej Peter!',
+      unreadByUser:true,
+      unreadByProfile:false
+    })
+  ]);
   const today = new Date();
   const toDateString = d => d.toISOString().split('T')[0];
   const refDates = [0, 1, 2].map(offset => {

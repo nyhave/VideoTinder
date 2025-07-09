@@ -1,5 +1,6 @@
 Daily discovery of short video clips or sound clips
 Basic chat between matched profiles
+Unmatch to remove chat from both users
 Calendar interface for daily reflection notes
 Profile settings with age range filtering
 Ability to upload or record video clips
