@@ -1,7 +1,7 @@
 import { db, collection, getDocs, deleteDoc, doc, setDoc } from './firebase.js';
 
 export default async function seedData() {
-  const cols = ['profiles', 'matches', 'reflections'];
+  const cols = ['profiles', 'matches', 'reflections', 'likes'];
   for (const c of cols) {
     const snap = await getDocs(collection(db, c));
     await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
@@ -34,6 +34,11 @@ export default async function seedData() {
       unreadByUser:true,
       unreadByProfile:false
     })
+  ]);
+  await Promise.all([
+    setDoc(doc(db,'likes','101-104'),{id:'101-104',userId:'101',profileId:'104'}),
+    setDoc(doc(db,'likes','104-101'),{id:'104-101',userId:'104',profileId:'101'}),
+    setDoc(doc(db,'likes','105-101'),{id:'105-101',userId:'105',profileId:'101'})
   ]);
   const today = new Date();
   const toDateString = d => d.toISOString().split('T')[0];

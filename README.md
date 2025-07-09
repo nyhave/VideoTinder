@@ -13,6 +13,7 @@ and simple profile management powered by Firebase.
 * Calendar for daily reflections
 * Minimal profile settings and admin mode
 * Profile pictures cached for offline viewing
+* Premium page showing who liked you (subscription required)
 
 
 ## Getting Started

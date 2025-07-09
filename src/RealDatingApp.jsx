@@ -5,6 +5,7 @@ import DailyDiscovery from './components/DailyDiscovery.jsx';
 import ChatScreen from './components/ChatScreen.jsx';
 import DailyCheckIn from './components/DailyCheckIn.jsx';
 import ProfileSettings from './components/ProfileSettings.jsx';
+import PremiumFeatures from './components/PremiumFeatures.jsx';
 import AdminScreen from './components/AdminScreen.jsx';
 import AboutScreen from './components/AboutScreen.jsx';
 import { useCollection } from './firebase.js';
@@ -65,7 +66,8 @@ export default function RealDatingApp() {
       ),
       tab==='chat' && React.createElement(ChatScreen, { userId }),
       tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
-      tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange, onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);} }),
+      tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange, onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);}, onOpenPremium: ()=>setTab('premium') }),
+      tab==='premium' && React.createElement(PremiumFeatures, { userId, onBack: ()=>setTab('profile'), onSelectProfile: selectProfile }),
       tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId, currentUserId: userId, onOpenDiscovery: openDailyClips }),
       tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
     ),
