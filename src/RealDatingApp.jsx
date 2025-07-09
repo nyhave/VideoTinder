@@ -28,11 +28,7 @@ export default function RealDatingApp() {
   }, [loggedIn]);
 
 
-  useEffect(()=>{
-    import('./seedData.js')
-      .then(m => m.default())
-      .catch(err => console.error('Failed to seed database', err));
-  },[]);
+  // Removed automatic seeding of the database on app startup.
   useEffect(()=>{
     if(!loggedIn){
       setUserId(null);
