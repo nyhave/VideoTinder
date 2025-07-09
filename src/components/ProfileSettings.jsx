@@ -10,7 +10,6 @@ import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
 import { useCollection, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
-import AudioRecorder from './AudioRecorder.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, viewerId, onBack }) {
@@ -19,8 +18,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const audioRef = useRef();
   const photoRef = useRef();
 
-  const [showAudioRecorder, setShowAudioRecorder] = useState(false);
-  const [replaceTarget, setReplaceTarget] = useState(null); // {field, index}
   const [showSub, setShowSub] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
   const currentUserId = viewerId || userId;
@@ -116,12 +113,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       alert('Video må højest være 10 sekunder');
       return;
     }
-    if(replaceTarget && replaceTarget.field==='videoClips'){
-      replaceFile(file,'videoClips',replaceTarget.index);
-      setReplaceTarget(null);
-    } else {
-      uploadFile(file, 'videoClips');
-    }
+    uploadFile(file, 'videoClips');
   };
 
   const handleAudioChange = async e => {
@@ -131,12 +123,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       alert('Lydklip må højest være 10 sekunder');
       return;
     }
-    if(replaceTarget && replaceTarget.field==='audioClips'){
-      replaceFile(file,'audioClips',replaceTarget.index);
-      setReplaceTarget(null);
-    } else {
-      uploadFile(file, 'audioClips');
-    }
+    uploadFile(file, 'audioClips');
   };
 
   const handleAgeRangeChange = async range => {
@@ -291,18 +278,18 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         return React.createElement(Mic, { key: i, className: `w-10 h-10 ${hasClip ? 'text-pink-500' : 'opacity-50 text-gray-400'}` });
       })
     ),
-    React.createElement('div', { className: 'flex flex-col gap-2 mb-4' },
+    React.createElement('div', { className: 'flex flex-wrap gap-2 mb-4 justify-between' },
       (profile.audioClips || []).map((url, i) =>
-        React.createElement('div', { key: i, className: 'flex flex-col mb-2' },
+        React.createElement('div', { key: i, className: 'flex flex-col items-center w-[30%]' },
           React.createElement('audio', {
             src: url,
             controls: true,
             className: 'w-full'
           }),
           !publicView && React.createElement(Button, {
-            className: 'mt-1 bg-pink-500 text-white',
-            onClick: () => { setReplaceTarget({ field: 'audioClips', index: i }); audioRef.current && audioRef.current.click(); }
-          }, 'Erstat')
+            className: 'mt-1 bg-pink-500 text-white p-1 rounded-full flex items-center justify-center',
+            onClick: () => deleteFile('audioClips', i)
+          }, React.createElement(TrashIcon, { className: 'w-4 h-4' }))
         )
       )
     ),
@@ -318,10 +305,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'mb-4 bg-pink-500 text-white',
         onClick: () => audioRef.current && audioRef.current.click()
       }, 'Upload lyd'),
-      React.createElement(Button, {
-        className: 'mb-4 ml-2 bg-pink-500 text-white',
-        onClick: () => setShowAudioRecorder(true)
-      }, 'Optag lyd')
     )
   );
 
@@ -438,18 +421,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     matchedProfile && React.createElement(MatchOverlay, {
         name: matchedProfile.name,
         onClose: () => setMatchedProfile(null)
-      }),
-    showAudioRecorder && React.createElement(AudioRecorder, {
-        onCancel: () => { setShowAudioRecorder(false); setReplaceTarget(null); },
-        onRecorded: file => {
-          if(replaceTarget && replaceTarget.field==='audioClips'){
-            replaceFile(file,'audioClips',replaceTarget.index);
-            setReplaceTarget(null);
-          } else {
-            uploadFile(file,'audioClips');
-          }
-          setShowAudioRecorder(false);
-        }
       })
   );
 }
