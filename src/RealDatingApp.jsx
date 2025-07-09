@@ -59,14 +59,14 @@ export default function RealDatingApp() {
     React.createElement('div', { className: 'flex-1' },
 
       tab==='discovery' && !viewProfile && (
-        React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange })
+        React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange, onOpenPremium: ()=>setTab('premium') })
       ),
       viewProfile && (
         React.createElement(ProfileSettings, { userId: viewProfile, ageRange, onChangeAgeRange: setAgeRange, publicView: true })
       ),
       tab==='chat' && React.createElement(ChatScreen, { userId }),
       tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
-      tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange, onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);}, onOpenPremium: ()=>setTab('premium') }),
+      tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange, onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);} }),
       tab==='premium' && React.createElement(PremiumFeatures, { userId, onBack: ()=>setTab('profile'), onSelectProfile: selectProfile }),
       tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId, currentUserId: userId, onOpenDiscovery: openDailyClips }),
       tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
