@@ -9,6 +9,8 @@ import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
 import { db, storage, getDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
+import VideoRecorder from './VideoRecorder.jsx';
+import AudioRecorder from './AudioRecorder.jsx';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, onOpenPremium = () => {} }) {
   const [profile,setProfile]=useState(null);
@@ -16,12 +18,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const audioRef = useRef();
   const photoRef = useRef();
 
-  const videoRecorder = useRef();
-  const audioRecorder = useRef();
-  const videoChunks = useRef([]);
-  const audioChunks = useRef([]);
-  const [videoRecording, setVideoRecording] = useState(false);
-  const [audioRecording, setAudioRecording] = useState(false);
+  const [showVideoRecorder, setShowVideoRecorder] = useState(false);
+  const [showAudioRecorder, setShowAudioRecorder] = useState(false);
   const [replaceTarget, setReplaceTarget] = useState(null); // {field, index}
   const [showSub, setShowSub] = useState(false);
 
@@ -113,63 +111,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   };
 
 
-  const startVideoRecording = async () => {
-    if (videoRecording) return;
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    const recorder = new MediaRecorder(stream);
-    videoChunks.current = [];
-    recorder.ondataavailable = e => videoChunks.current.push(e.data);
-    recorder.onstop = () => {
-      const blob = new Blob(videoChunks.current, { type: recorder.mimeType });
-      const file = new File([blob], `video-${Date.now()}.webm`, { type: blob.type });
-      if(replaceTarget && replaceTarget.field==='videoClips'){
-        replaceFile(file,'videoClips',replaceTarget.index);
-        setReplaceTarget(null);
-      } else {
-        uploadFile(file, 'videoClips');
-      }
-      stream.getTracks().forEach(t => t.stop());
-    };
-    videoRecorder.current = recorder;
-    recorder.start();
-    setVideoRecording(true);
-  };
-
-  const stopVideoRecording = () => {
-    if (videoRecorder.current && videoRecording) {
-      videoRecorder.current.stop();
-      setVideoRecording(false);
-    }
-  };
-
-  const startAudioRecording = async () => {
-    if (audioRecording) return;
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const recorder = new MediaRecorder(stream);
-    audioChunks.current = [];
-    recorder.ondataavailable = e => audioChunks.current.push(e.data);
-    recorder.onstop = () => {
-      const blob = new Blob(audioChunks.current, { type: recorder.mimeType });
-      const file = new File([blob], `audio-${Date.now()}.webm`, { type: blob.type });
-      if(replaceTarget && replaceTarget.field==='audioClips'){
-        replaceFile(file,'audioClips',replaceTarget.index);
-        setReplaceTarget(null);
-      } else {
-        uploadFile(file, 'audioClips');
-      }
-      stream.getTracks().forEach(t => t.stop());
-    };
-    audioRecorder.current = recorder;
-    recorder.start();
-    setAudioRecording(true);
-  };
-
-  const stopAudioRecording = () => {
-    if (audioRecorder.current && audioRecording) {
-      audioRecorder.current.stop();
-      setAudioRecording(false);
-    }
-  };
 
   const saveChanges = async () => {
     await updateDoc(doc(db,'profiles',userId), { ageRange });
@@ -274,8 +215,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       }, 'Upload video'),
       React.createElement(Button, {
         className:'mb-4 ml-2 bg-pink-500 text-white',
-        onClick:()=> videoRecording ? stopVideoRecording() : startVideoRecording()
-      }, videoRecording ? 'Stop optagelse' : 'Optag video')
+        onClick:()=> setShowVideoRecorder(true)
+      }, 'Optag video')
 
     ),
     React.createElement(SectionTitle, { title: 'Lyd-klip' }),
@@ -315,8 +256,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       }, 'Upload lyd'),
       React.createElement(Button, {
         className:'mb-4 ml-2 bg-pink-500 text-white',
-        onClick:()=> audioRecording ? stopAudioRecording() : startAudioRecording()
-      }, audioRecording ? 'Stop optagelse' : 'Optag lyd')
+        onClick:()=> setShowAudioRecorder(true)
+      }, 'Optag lyd')
     ),
     React.createElement(SectionTitle, { title: 'Om mig' }),
       React.createElement(Textarea, { className: 'mb-4', readOnly: true }, profile.clip),
@@ -358,6 +299,30 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement('li', null, '📝 Udfoldede profiler – adgang til længere refleksioner, flere videoer'),
           React.createElement('li', null, '🎙️ Profilbooster: Få dit klip vist tidligere på dagen')
         )
-      )
+      ),
+    showVideoRecorder && React.createElement(VideoRecorder, {
+        onCancel: () => { setShowVideoRecorder(false); setReplaceTarget(null); },
+        onRecorded: file => {
+          if(replaceTarget && replaceTarget.field==='videoClips'){
+            replaceFile(file,'videoClips',replaceTarget.index);
+            setReplaceTarget(null);
+          } else {
+            uploadFile(file,'videoClips');
+          }
+          setShowVideoRecorder(false);
+        }
+      }),
+    showAudioRecorder && React.createElement(AudioRecorder, {
+        onCancel: () => { setShowAudioRecorder(false); setReplaceTarget(null); },
+        onRecorded: file => {
+          if(replaceTarget && replaceTarget.field==='audioClips'){
+            replaceFile(file,'audioClips',replaceTarget.index);
+            setReplaceTarget(null);
+          } else {
+            uploadFile(file,'audioClips');
+          }
+          setShowAudioRecorder(false);
+        }
+      })
     );
 }
