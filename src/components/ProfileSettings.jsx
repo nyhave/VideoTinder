@@ -11,6 +11,8 @@ import VideoPreview from './VideoPreview.jsx';
 import { db, storage, getDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject, useCollection, setDoc, deleteDoc } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
+import VideoRecorder from './VideoRecorder.jsx';
+import AudioRecorder from './AudioRecorder.jsx';
 
 export default function ProfileSettings({ userId, viewerId = userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {} }) {
   const [profile,setProfile]=useState(null);
@@ -18,12 +20,8 @@ export default function ProfileSettings({ userId, viewerId = userId, ageRange, o
   const audioRef = useRef();
   const photoRef = useRef();
 
-  const videoRecorder = useRef();
-  const audioRecorder = useRef();
-  const videoChunks = useRef([]);
-  const audioChunks = useRef([]);
-  const [videoRecording, setVideoRecording] = useState(false);
-  const [audioRecording, setAudioRecording] = useState(false);
+  const [showVideoRecorder, setShowVideoRecorder] = useState(false);
+  const [showAudioRecorder, setShowAudioRecorder] = useState(false);
   const [replaceTarget, setReplaceTarget] = useState(null); // {field, index}
   const [showSub, setShowSub] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
@@ -158,62 +156,16 @@ export default function ProfileSettings({ userId, viewerId = userId, ageRange, o
   };
 
 
-  const startVideoRecording = async () => {
-    if (videoRecording) return;
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    const recorder = new MediaRecorder(stream);
-    videoChunks.current = [];
-    recorder.ondataavailable = e => videoChunks.current.push(e.data);
-    recorder.onstop = () => {
-      const blob = new Blob(videoChunks.current, { type: recorder.mimeType });
-      const file = new File([blob], `video-${Date.now()}.webm`, { type: blob.type });
-      if(replaceTarget && replaceTarget.field==='videoClips'){
-        replaceFile(file,'videoClips',replaceTarget.index);
-        setReplaceTarget(null);
-      } else {
-        uploadFile(file, 'videoClips');
-      }
-      stream.getTracks().forEach(t => t.stop());
-    };
-    videoRecorder.current = recorder;
-    recorder.start();
-    setVideoRecording(true);
+
+  const handleAgeRangeChange = async range => {
+    onChangeAgeRange(range);
+    await updateDoc(doc(db,'profiles',userId), { ageRange: range });
   };
 
-  const stopVideoRecording = () => {
-    if (videoRecorder.current && videoRecording) {
-      videoRecorder.current.stop();
-      setVideoRecording(false);
-    }
-  };
-
-  const startAudioRecording = async () => {
-    if (audioRecording) return;
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const recorder = new MediaRecorder(stream);
-    audioChunks.current = [];
-    recorder.ondataavailable = e => audioChunks.current.push(e.data);
-    recorder.onstop = () => {
-      const blob = new Blob(audioChunks.current, { type: recorder.mimeType });
-      const file = new File([blob], `audio-${Date.now()}.webm`, { type: blob.type });
-      if(replaceTarget && replaceTarget.field==='audioClips'){
-        replaceFile(file,'audioClips',replaceTarget.index);
-        setReplaceTarget(null);
-      } else {
-        uploadFile(file, 'audioClips');
-      }
-      stream.getTracks().forEach(t => t.stop());
-    };
-    audioRecorder.current = recorder;
-    recorder.start();
-    setAudioRecording(true);
-  };
-
-  const stopAudioRecording = () => {
-    if (audioRecorder.current && audioRecording) {
-      audioRecorder.current.stop();
-      setAudioRecording(false);
-    }
+  const handleClipChange = async e => {
+    const clip = e.target.value;
+    setProfile({ ...profile, clip });
+    await updateDoc(doc(db,'profiles',userId), { clip });
   };
 
   const saveChanges = async () => {
@@ -304,7 +256,7 @@ export default function ProfileSettings({ userId, viewerId = userId, ageRange, o
         min: 18,
         max: 80,
         value: ageRange,
-        onChange: onChangeAgeRange,
+        onChange: handleAgeRangeChange,
         className: 'w-full'
       }),
       React.createElement('label', { className: 'mt-2' }, `Afstand: ${distanceRange[0]} - ${distanceRange[1]} km`),
@@ -350,8 +302,8 @@ export default function ProfileSettings({ userId, viewerId = userId, ageRange, o
       }, 'Upload video'),
       React.createElement(Button, {
         className:'mb-4 ml-2 bg-pink-500 text-white',
-        onClick:()=> videoRecording ? stopVideoRecording() : startVideoRecording()
-      }, videoRecording ? 'Stop optagelse' : 'Optag video')
+        onClick:()=> setShowVideoRecorder(true)
+      }, 'Optag video')
 
     ),
     React.createElement(SectionTitle, { title: 'Lyd-klip' }),
@@ -391,18 +343,16 @@ export default function ProfileSettings({ userId, viewerId = userId, ageRange, o
       }, 'Upload lyd'),
       React.createElement(Button, {
         className:'mb-4 ml-2 bg-pink-500 text-white',
-        onClick:()=> audioRecording ? stopAudioRecording() : startAudioRecording()
-      }, audioRecording ? 'Stop optagelse' : 'Optag lyd')
+        onClick:()=> setShowAudioRecorder(true)
+      }, 'Optag lyd')
     ),
     React.createElement(SectionTitle, { title: 'Om mig' }),
-      React.createElement(Textarea, { className: 'mb-4', readOnly: true }, profile.clip),
-    publicView && React.createElement(Button, {
-        className: 'mb-4 bg-pink-500 text-white flex items-center gap-1',
-        onClick: toggleLike
-      },
-        React.createElement(Heart, { className: 'w-5 h-5' }),
-        likes.some(l=>l.profileId===userId) ? 'Unlike' : 'Like'
-      ),
+      React.createElement(Textarea, {
+        className: 'mb-4',
+        readOnly: publicView,
+        value: profile.clip || '',
+        onChange: publicView ? undefined : handleClipChange
+      }),
     !publicView && React.createElement('button', {
         className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
         onClick: saveChanges
@@ -438,9 +388,29 @@ export default function ProfileSettings({ userId, viewerId = userId, ageRange, o
           React.createElement('li', null, '🎙️ Profilbooster: Få dit klip vist tidligere på dagen')
         )
       ),
-    matchedProfile && React.createElement(MatchOverlay, {
-        name: matchedProfile.name,
-        onClose: () => setMatchedProfile(null)
+    showVideoRecorder && React.createElement(VideoRecorder, {
+        onCancel: () => { setShowVideoRecorder(false); setReplaceTarget(null); },
+        onRecorded: file => {
+          if(replaceTarget && replaceTarget.field==='videoClips'){
+            replaceFile(file,'videoClips',replaceTarget.index);
+            setReplaceTarget(null);
+          } else {
+            uploadFile(file,'videoClips');
+          }
+          setShowVideoRecorder(false);
+        }
+      }),
+    showAudioRecorder && React.createElement(AudioRecorder, {
+        onCancel: () => { setShowAudioRecorder(false); setReplaceTarget(null); },
+        onRecorded: file => {
+          if(replaceTarget && replaceTarget.field==='audioClips'){
+            replaceFile(file,'audioClips',replaceTarget.index);
+            setReplaceTarget(null);
+          } else {
+            uploadFile(file,'audioClips');
+          }
+          setShowAudioRecorder(false);
+        }
       })
     );
 }
