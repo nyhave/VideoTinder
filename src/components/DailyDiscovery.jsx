@@ -3,7 +3,7 @@ import { User, PlayCircle, Heart } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
-import { useCollection, db, doc, setDoc, deleteDoc } from '../firebase.js';
+import { useCollection, db, doc, setDoc, deleteDoc, getDoc } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 
 export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
@@ -27,8 +27,36 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
     const ref = doc(db,'likes',likeId);
     if(exists){
       await deleteDoc(ref);
+      // remove any existing match when unliking
+      await Promise.all([
+        deleteDoc(doc(db,'matches',`${userId}-${profileId}`)),
+        deleteDoc(doc(db,'matches',`${profileId}-${userId}`))
+      ]);
     } else {
       await setDoc(ref,{id:likeId,userId,profileId});
+      const otherLike = await getDoc(doc(db,'likes',`${profileId}-${userId}`));
+      if(otherLike.exists()){
+        const m1 = {
+          id:`${userId}-${profileId}`,
+          userId,
+          profileId,
+          lastMessage:'',
+          unreadByUser:false,
+          unreadByProfile:false
+        };
+        const m2 = {
+          id:`${profileId}-${userId}`,
+          userId:profileId,
+          profileId:userId,
+          lastMessage:'',
+          unreadByUser:false,
+          unreadByProfile:false
+        };
+        await Promise.all([
+          setDoc(doc(db,'matches',m1.id),m1),
+          setDoc(doc(db,'matches',m2.id),m2)
+        ]);
+      }
     }
   };
   useEffect(() => {

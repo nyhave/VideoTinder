@@ -24,14 +24,24 @@ export default async function seedData() {
     {id:'c6',profileId:'105',gender:'Mand',text:'Søger eventyr.'}
   ];
   await Promise.all(testClips.map(c => setDoc(doc(db,'clips',c.id), c)));
-  await setDoc(doc(db,'matches','m1'),{
-    id:'m1',
-    userId:'101',
-    profileId:'104',
-    lastMessage:'Hej Peter!',
-    unreadByUser:false,
-    unreadByProfile:true
-  });
+  await Promise.all([
+    setDoc(doc(db,'matches','101-104'),{
+      id:'101-104',
+      userId:'101',
+      profileId:'104',
+      lastMessage:'Hej Peter!',
+      unreadByUser:false,
+      unreadByProfile:true
+    }),
+    setDoc(doc(db,'matches','104-101'),{
+      id:'104-101',
+      userId:'104',
+      profileId:'101',
+      lastMessage:'Hej Peter!',
+      unreadByUser:true,
+      unreadByProfile:false
+    })
+  ]);
   const date = new Date().toISOString().split('T')[0];
   await setDoc(doc(db,'reflections','r1'),{id:'r1',userId:'101',date,text:'Mødte Peter i dag.'});
 }
