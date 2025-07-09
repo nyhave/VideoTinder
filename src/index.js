@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import RealDatingApp from './RealDatingApp.jsx';
+import RealDateApp from './RealDateApp.jsx';
 
-ReactDOM.render(React.createElement(RealDatingApp), document.getElementById('root'));
+ReactDOM.render(React.createElement(RealDateApp), document.getElementById('root'));
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

@@ -11,7 +11,7 @@ import AboutScreen from './components/AboutScreen.jsx';
 import { useCollection } from './firebase.js';
 
 
-export default function RealDatingApp() {
+export default function RealDateApp() {
   const [loggedIn, setLoggedIn] = useState(() => {
     const stored = localStorage.getItem('loggedIn');
     return stored === 'true';
