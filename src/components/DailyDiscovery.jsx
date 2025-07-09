@@ -98,8 +98,10 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           className: 'p-4 bg-pink-50 rounded-lg cursor-pointer shadow flex flex-col relative',
           onClick: () => onSelectProfile(p.id)
         },
-          likes.some(l=>l.profileId===p.id) &&
-            React.createElement(Heart,{className:'w-6 h-6 text-pink-500 absolute top-2 right-2'}),
+          React.createElement(Heart, {
+            className: `w-8 h-8 absolute top-2 right-2 ${likes.some(l => l.profileId === p.id) ? 'text-pink-500' : 'text-gray-400'}`,
+            onClick: e => { e.stopPropagation(); toggleLike(p.id); }
+          }),
           React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
             (p.photoURL ?
               React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded-full object-cover' }) :
@@ -113,14 +115,6 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           React.createElement('div', { className: 'flex gap-2 mt-2' },
             React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1' },
               React.createElement(PlayCircle, { className: 'w-5 h-5' }), 'Afspil'
-            ),
-            React.createElement(Button, {
-              size: 'sm',
-              className: 'bg-pink-500 text-white flex items-center gap-1',
-              onClick: e => {e.stopPropagation(); toggleLike(p.id);}
-            },
-              React.createElement(Heart, { className: 'w-5 h-5' }),
-              likes.some(l=>l.profileId===p.id) ? 'Unlike' : 'Like'
             )
           )
         )
