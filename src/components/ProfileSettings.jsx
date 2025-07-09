@@ -8,7 +8,7 @@ import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { db, storage, getDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL } from '../firebase.js';
 
-export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {} }) {
+export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, onClose = null }) {
   const [profile,setProfile]=useState(null);
   const videoRef = useRef();
   const audioRef = useRef();
@@ -129,6 +129,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   };
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+    publicView && onClose && React.createElement(Button, { className: 'mb-4 bg-gray-200 text-gray-700 px-4 py-2 rounded', onClick: onClose }, 'Luk'),
     React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}` }),
     !publicView && React.createElement(SectionTitle, { title: 'Aldersinterval' }),
     !publicView && React.createElement('div', { className: 'flex flex-col gap-4 mb-4' },
