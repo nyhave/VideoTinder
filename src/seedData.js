@@ -24,6 +24,7 @@ export default async function seedData() {
     {id:'c6',profileId:'105',gender:'Mand',text:'Søger eventyr.'}
   ];
   await Promise.all(testClips.map(c => setDoc(doc(db,'clips',c.id), c)));
+
   await Promise.all([
     setDoc(doc(db,'matches','101-104'),{
       id:'101-104',
@@ -42,6 +43,17 @@ export default async function seedData() {
       unreadByProfile:false
     })
   ]);
-  const date = new Date().toISOString().split('T')[0];
-  await setDoc(doc(db,'reflections','r1'),{id:'r1',userId:'101',date,text:'Mødte Peter i dag.'});
+  const today = new Date();
+  const toDateString = d => d.toISOString().split('T')[0];
+  const refDates = [0, 1, 2].map(offset => {
+    const dt = new Date(today);
+    dt.setDate(today.getDate() - offset);
+    return toDateString(dt);
+  });
+  const reflections = [
+    { id: 'r1', userId: '101', date: refDates[0], text: 'Mødte Peter i dag.' },
+    { id: 'r2', userId: '101', date: refDates[1], text: 'Dejlig dag på arbejdet.' },
+    { id: 'r3', userId: '101', date: refDates[2], text: 'Tog på vandretur.' }
+  ];
+  await Promise.all(reflections.map(r => setDoc(doc(db,'reflections',r.id), r)));
 }
