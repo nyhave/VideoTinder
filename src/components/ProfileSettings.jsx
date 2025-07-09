@@ -44,6 +44,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const subscriptionActive = profile.subscriptionExpires && new Date(profile.subscriptionExpires) > new Date();
 
+  const maxVideos = (profile.videoClips || []).length >= 3;
+  const maxAudios = (profile.audioClips || []).length >= 3;
+
   const uploadFile = async (file, field) => {
     if(!file) return;
     const storageRef = ref(storage, `profiles/${userId}/${field}-${Date.now()}-${file.name}`);
@@ -261,8 +264,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'hidden'
       }),
       React.createElement(Button, {
-        className: 'mb-4 bg-pink-500 text-white',
-        onClick: () => videoRef.current && videoRef.current.click()
+        className: `mb-4 ${maxVideos ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
+        onClick: () => {
+          if(!maxVideos && videoRef.current) videoRef.current.click();
+        },
+        disabled: maxVideos
       }, 'Upload video'),
     )
   );
@@ -292,8 +298,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'hidden'
       }),
       React.createElement(Button, {
-        className: 'mb-4 bg-pink-500 text-white',
-        onClick: () => audioRef.current && audioRef.current.click()
+        className: `mb-4 ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
+        onClick: () => {
+          if(!maxAudios && audioRef.current) audioRef.current.click();
+        },
+        disabled: maxAudios
       }, 'Upload lyd'),
     )
   );
