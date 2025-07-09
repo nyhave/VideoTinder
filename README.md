@@ -1,7 +1,7 @@
 # VideoTinder
 
 VideoTinder is a small prototype for experimenting with a slower approach to online dating.
-The new **RealDatingApp** demonstrates daily video discovery, chat, reflection notes
+The new **RealDateApp** demonstrates daily video discovery, chat, reflection notes
 and simple profile management powered by Firebase.
 
 ## Features
