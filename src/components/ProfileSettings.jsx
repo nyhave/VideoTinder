@@ -120,20 +120,29 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await updateDoc(doc(db,'profiles',userId), { ageRange: range });
   };
 
+  const handleCityChange = async e => {
+    const city = e.target.value;
+    setProfile({ ...profile, city });
+    await updateDoc(doc(db,'profiles',userId), { city });
+  };
+
+  const handleInterestChange = async e => {
+    const interest = e.target.value;
+    setProfile({ ...profile, interest });
+    await updateDoc(doc(db,'profiles',userId), { interest });
+  };
+
+  const handleDistanceRangeChange = async range => {
+    setDistanceRange(range);
+    await updateDoc(doc(db,'profiles',userId), { distanceRange: range });
+  };
+
   const handleClipChange = async e => {
     const clip = e.target.value;
     setProfile({ ...profile, clip });
     await updateDoc(doc(db,'profiles',userId), { clip });
   };
 
-  const saveChanges = async () => {
-    await updateDoc(doc(db,'profiles',userId), {
-      ageRange,
-      interest: profile.interest || 'Mand',
-      city: profile.city || '',
-      distanceRange
-    });
-  };
 
   const recoverMissing = async () => {
     const profileRef = doc(db, 'profiles', userId);
@@ -196,13 +205,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement('label', null, 'By'),
       React.createElement(Input, {
         value: profile.city || '',
-        onChange: e => setProfile({ ...profile, city: e.target.value }),
+        onChange: handleCityChange,
         className: 'border p-2 rounded'
       }),
       React.createElement(SectionTitle, { title: 'Interesseret i' }),
       React.createElement('select', {
         value: profile.interest || 'Mand',
-        onChange: e => setProfile({ ...profile, interest: e.target.value }),
+        onChange: handleInterestChange,
         className: 'border p-2 rounded'
       },
         React.createElement('option', { value: 'Mand' }, 'Mænd'),
@@ -223,7 +232,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         min: 0,
         max: 100,
         value: distanceRange,
-        onChange: setDistanceRange,
+        onChange: handleDistanceRangeChange,
         className: 'w-full'
       })
     ),
@@ -311,10 +320,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         value: profile.clip || '',
         onChange: publicView ? undefined : handleClipChange
       }),
-    !publicView && React.createElement('button', {
-        className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
-        onClick: saveChanges
-      }, 'Gem ændringer'),
     !publicView && React.createElement(Button, {
         className: 'mt-2 bg-blue-500 text-white w-full',
         onClick: recoverMissing
