@@ -71,6 +71,20 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const handlePhotoChange = e => uploadPhoto(e.target.files[0]);
 
+  const checkDuration = file => new Promise(resolve => {
+    const el = document.createElement(file.type.startsWith('audio') ? 'audio' : 'video');
+    el.preload = 'metadata';
+    el.src = URL.createObjectURL(file);
+    el.onloadedmetadata = () => {
+      URL.revokeObjectURL(el.src);
+      resolve(el.duration <= 10);
+    };
+    el.onerror = () => {
+      URL.revokeObjectURL(el.src);
+      resolve(true);
+    };
+  });
+
   const replaceFile = async (file, field, index) => {
     if(!file) return;
     const storageRef = ref(storage, `profiles/${userId}/${field}-${Date.now()}-${file.name}`);
@@ -97,8 +111,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     }
   };
 
-  const handleVideoChange = e => {
+  const handleVideoChange = async e => {
     const file = e.target.files[0];
+    if(!file) return;
+    if(!(await checkDuration(file))){
+      alert('Video må højest være 10 sekunder');
+      return;
+    }
     if(replaceTarget && replaceTarget.field==='videoClips'){
       replaceFile(file,'videoClips',replaceTarget.index);
       setReplaceTarget(null);
@@ -107,8 +126,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     }
   };
 
-  const handleAudioChange = e => {
+  const handleAudioChange = async e => {
     const file = e.target.files[0];
+    if(!file) return;
+    if(!(await checkDuration(file))){
+      alert('Lydklip må højest være 10 sekunder');
+      return;
+    }
     if(replaceTarget && replaceTarget.field==='audioClips'){
       replaceFile(file,'audioClips',replaceTarget.index);
       setReplaceTarget(null);
