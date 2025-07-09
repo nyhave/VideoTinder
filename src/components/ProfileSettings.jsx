@@ -6,6 +6,7 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
+import VideoPreview from './VideoPreview.jsx';
 import { db, storage, getDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 
@@ -185,11 +186,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     React.createElement('div', { className: 'flex flex-col gap-2 mb-4' },
       (profile.videoClips || []).map((url,i) =>
         React.createElement('div', { key: i, className:'flex flex-col mb-2' },
-          React.createElement('video', {
-            src: url,
-            controls: true,
-            className: 'w-full rounded'
-          }),
+          React.createElement(VideoPreview, { src: url }),
           !publicView && React.createElement(Button, {
             className:'mt-1 bg-pink-500 text-white',
             onClick:()=>{setReplaceTarget({field:'videoClips',index:i}); videoRef.current && videoRef.current.click();}
