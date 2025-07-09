@@ -4,6 +4,7 @@ import 'rc-slider/assets/index.css';
 import { Mic, Camera as CameraIcon, User as UserIcon } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
+import { Input } from './ui/input.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
@@ -24,6 +25,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [audioRecording, setAudioRecording] = useState(false);
   const [replaceTarget, setReplaceTarget] = useState(null); // {field, index}
   const [showSub, setShowSub] = useState(false);
+  const [distanceRange, setDistanceRange] = useState([10,25]);
 
   const handlePurchase = async () => {
     const now = new Date();
@@ -40,6 +42,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   };
 
   useEffect(()=>{if(!userId)return;getDoc(doc(db,'profiles',userId)).then(s=>s.exists()&&setProfile({id:s.id,...s.data()}));},[userId]);
+  useEffect(()=>{if(profile && profile.distanceRange) setDistanceRange(profile.distanceRange);},[profile]);
   if(!profile) return React.createElement('p', null, 'Indlæser profil...');
 
   const subscriptionActive = profile.subscriptionExpires && new Date(profile.subscriptionExpires) > new Date();
@@ -172,7 +175,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   };
 
   const saveChanges = async () => {
-    await updateDoc(doc(db,'profiles',userId), { ageRange });
+    await updateDoc(doc(db,'profiles',userId), {
+      ageRange,
+      interest: profile.interest || 'Mand',
+      city: profile.city || '',
+      distanceRange
+    });
   };
 
   const recoverMissing = async () => {
@@ -228,16 +236,42 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onClick:()=>photoRef.current && photoRef.current.click()
       }, profile.photoURL ? 'Skift billede' : 'Upload billede')
     ),
-    React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}` }),
-    !publicView && React.createElement(SectionTitle, { title: 'Aldersinterval' }),
+    React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` }),
+    !publicView && React.createElement('p', { className: 'text-center mb-2' },
+      `Interesseret i ${profile.interest === 'Mand' ? 'Mænd' : 'Kvinder'} mellem ${ageRange[0]} og ${ageRange[1]} og i en afstand mellem ${distanceRange[0]} og ${distanceRange[1]} km`
+    ),
     !publicView && React.createElement('div', { className: 'flex flex-col gap-4 mb-4' },
-      React.createElement('label', null, `Alder: ${ageRange[0]} - ${ageRange[1]}`),
+      React.createElement('label', null, 'By'),
+      React.createElement(Input, {
+        value: profile.city || '',
+        onChange: e => setProfile({ ...profile, city: e.target.value }),
+        className: 'border p-2 rounded'
+      }),
+      React.createElement(SectionTitle, { title: 'Interesseret i' }),
+      React.createElement('select', {
+        value: profile.interest || 'Mand',
+        onChange: e => setProfile({ ...profile, interest: e.target.value }),
+        className: 'border p-2 rounded'
+      },
+        React.createElement('option', { value: 'Mand' }, 'Mænd'),
+        React.createElement('option', { value: 'Kvinde' }, 'Kvinder')
+      ),
+      React.createElement('label', { className: 'mt-2' }, `Alder: ${ageRange[0]} - ${ageRange[1]}`),
       React.createElement(Slider, {
         range: true,
         min: 18,
         max: 80,
         value: ageRange,
         onChange: onChangeAgeRange,
+        className: 'w-full'
+      }),
+      React.createElement('label', { className: 'mt-2' }, `Afstand: ${distanceRange[0]} - ${distanceRange[1]} km`),
+      React.createElement(Slider, {
+        range: true,
+        min: 0,
+        max: 100,
+        value: distanceRange,
+        onChange: setDistanceRange,
         className: 'w-full'
       })
     ),
