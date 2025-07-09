@@ -250,7 +250,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement('input', {
         type: 'file',
         accept: 'video/*',
-        capture: 'environment',
         ref: videoRef,
         onChange: handleVideoChange,
         className: 'hidden'
@@ -293,7 +292,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement('input', {
         type: 'file',
         accept: 'audio/*',
-        capture: 'user',
         ref: audioRef,
         onChange: handleAudioChange,
         className: 'hidden'
