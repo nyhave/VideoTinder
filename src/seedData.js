@@ -7,7 +7,7 @@ export default async function seedData() {
     await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
   }
   const testUsers = [
-    {id:'101',name:'Maria',age:49,gender:'Kvinde',interest:'Mand',audioClips:[],videoClips:[],clip:'Elsker bøger og gåture.'},
+    {id:'101',name:'Maria',age:49,gender:'Kvinde',interest:'Mand',audioClips:[],videoClips:[],clip:'Elsker bøger og gåture.',subscriptionActive:true},
     {id:'102',name:'Sofie',age:35,gender:'Kvinde',interest:'Mand',audioClips:[],videoClips:[],clip:'Yoga-entusiast.'},
     {id:'103',name:'Emma',age:41,gender:'Kvinde',interest:'Mand',audioClips:[],videoClips:[],clip:'Musikalsk sjæl.'},
     {id:'104',name:'Peter',age:45,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:[],clip:'Cykler i weekenden.'},
@@ -19,7 +19,9 @@ export default async function seedData() {
     {id:'c1',profileId:'101',gender:'Kvinde',text:'Bøger er mit frirum.'},
     {id:'c2',profileId:'104',gender:'Mand',text:'Cykler hver dag.'},
     {id:'c3',profileId:'105',gender:'Mand',text:'Elsker at lave mad.'},
-    {id:'c4',profileId:'106',gender:'Mand',text:'Fotograferer naturen.'}
+    {id:'c4',profileId:'106',gender:'Mand',text:'Fotograferer naturen.'},
+    {id:'c5',profileId:'104',gender:'Mand',text:'Elsker naturen.'},
+    {id:'c6',profileId:'105',gender:'Mand',text:'Søger eventyr.'}
   ];
   await Promise.all(testClips.map(c => setDoc(doc(db,'clips',c.id), c)));
   await setDoc(doc(db,'matches','m1'),{

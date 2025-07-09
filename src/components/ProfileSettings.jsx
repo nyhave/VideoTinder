@@ -25,6 +25,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [replaceTarget, setReplaceTarget] = useState(null); // {field, index}
   const [showSub, setShowSub] = useState(false);
 
+  const handlePurchase = async () => {
+    await updateDoc(doc(db, 'profiles', userId), { subscriptionActive: true });
+    setProfile({ ...profile, subscriptionActive: true });
+    setShowSub(false);
+  };
+
   useEffect(()=>{if(!userId)return;getDoc(doc(db,'profiles',userId)).then(s=>s.exists()&&setProfile({id:s.id,...s.data()}));},[userId]);
   if(!profile) return React.createElement('p', null, 'Indlæser profil...');
 
@@ -277,7 +283,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     showSub && React.createElement(PurchaseOverlay, {
         title: 'M\u00e5nedligt abonnement',
         price: '59 kr/md',
-        onClose: () => setShowSub(false)
+        onClose: () => setShowSub(false),
+        onBuy: handlePurchase
       },
         React.createElement('ul', { className: 'list-disc list-inside text-sm space-y-1' },
           React.createElement('li', null, '🎞️ Flere daglige klip: Se fx 6 i stedet for 3 kandidater om dagen'),
