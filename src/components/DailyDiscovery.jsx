@@ -5,6 +5,7 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useCollection, db, doc, setDoc, deleteDoc, getDoc, updateDoc } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
+import MatchOverlay from './MatchOverlay.jsx';
 
 export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
   const profiles = useCollection('profiles');
@@ -23,6 +24,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
 
   const [hoursUntil, setHoursUntil] = useState(0);
   const [showPurchase, setShowPurchase] = useState(false);
+  const [matchedProfile, setMatchedProfile] = useState(null);
   const handleExtraPurchase = async () => {
     const todayStr = new Date().toISOString().split('T')[0];
     await updateDoc(doc(db, 'profiles', userId), { extraClipsDate: todayStr });
@@ -63,6 +65,8 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
           setDoc(doc(db,'matches',m1.id),m1),
           setDoc(doc(db,'matches',m2.id),m2)
         ]);
+        const prof = profiles.find(p => p.id === profileId);
+        if(prof) setMatchedProfile(prof);
       }
     }
   };
@@ -125,6 +129,10 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
       onBuy: handleExtraPurchase
     },
       React.createElement('p', { className: 'text-center text-sm mb-2' }, 'Få 3 ekstra klip i dag')
-    )
+    ),
+    matchedProfile && React.createElement(MatchOverlay, {
+      name: matchedProfile.name,
+      onClose: () => setMatchedProfile(null)
+    })
   );
 }
