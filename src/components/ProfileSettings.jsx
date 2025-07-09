@@ -7,6 +7,7 @@ import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { db, storage, getDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL } from '../firebase.js';
+import PurchaseOverlay from './PurchaseOverlay.jsx';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {} }) {
   const [profile,setProfile]=useState(null);
@@ -20,6 +21,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [videoRecording, setVideoRecording] = useState(false);
   const [audioRecording, setAudioRecording] = useState(false);
   const [replaceTarget, setReplaceTarget] = useState(null); // {field, index}
+  const [showSub, setShowSub] = useState(false);
 
   useEffect(()=>{if(!userId)return;getDoc(doc(db,'profiles',userId)).then(s=>s.exists()&&setProfile({id:s.id,...s.data()}));},[userId]);
   if(!profile) return React.createElement('p', null, 'Indlæser profil...');
@@ -229,9 +231,26 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
         onClick: saveChanges
       }, 'Gem ændringer'),
+    !publicView && React.createElement(Button, {
+        className: 'mt-2 w-full bg-pink-500 text-white',
+        onClick: () => setShowSub(true)
+      }, 'K\u00f8b abonnement'),
     !publicView && React.createElement('button', {
         className: 'mt-2 bg-gray-200 text-gray-700 px-4 py-2 rounded',
         onClick: onLogout
-      }, 'Logout')
+      }, 'Logout'),
+    showSub && React.createElement(PurchaseOverlay, {
+        title: 'M\u00e5nedligt abonnement',
+        price: '59 kr/md',
+        onClose: () => setShowSub(false)
+      },
+        React.createElement('ul', { className: 'list-disc list-inside text-sm space-y-1' },
+          React.createElement('li', null, '🎞️ Flere daglige klip: Se fx 6 i stedet for 3 kandidater om dagen'),
+          React.createElement('li', null, '🔁 Se tidligere klip igen ("Fortryd swipe")'),
+          React.createElement('li', null, '🧠 Indsigt i hvem der har liket dig'),
+          React.createElement('li', null, '📝 Udfoldede profiler – adgang til længere refleksioner, flere videoer'),
+          React.createElement('li', null, '🎙️ Profilbooster: Få dit klip vist tidligere på dagen')
+        )
+      )
     );
 }
