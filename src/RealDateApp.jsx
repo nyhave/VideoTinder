@@ -62,7 +62,7 @@ export default function RealDateApp() {
         React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange, onOpenPremium: ()=>setTab('premium') })
       ),
       viewProfile && (
-        React.createElement(ProfileSettings, { userId: viewProfile, viewerId: userId, ageRange, onChangeAgeRange: setAgeRange, publicView: true })
+        React.createElement(ProfileSettings, { userId: viewProfile, viewerId: userId, ageRange, onChangeAgeRange: setAgeRange, publicView: true, onBack: openDailyClips })
       ),
       tab==='chat' && React.createElement(ChatScreen, { userId }),
       tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
