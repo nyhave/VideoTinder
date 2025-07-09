@@ -67,18 +67,16 @@ export default function ChatScreen({ userId }) {
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-96' },
     React.createElement(SectionTitle, { title: 'Samtale' }),
     React.createElement('div', { className: 'flex overflow-x-auto space-x-4 p-2' },
-      chats.length ?
-        chats.map(m => (
-          React.createElement('div', {
-            key: m.id,
-            className: 'text-center cursor-pointer',
-            onClick: () => openChat(m)
-          },
-            React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
-            React.createElement('p', { className: 'text-sm mt-1' }, nameMap[m.profileId])
-          )
-        )) :
-        React.createElement('p', { className: 'text-gray-500 text-center w-full' }, 'Ingen matches endnu')
+      chats.map(m => (
+        React.createElement('div', {
+          key: m.id,
+          className: 'text-center cursor-pointer',
+          onClick: () => openChat(m)
+        },
+          React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
+          React.createElement('p', { className: 'text-sm mt-1' }, nameMap[m.profileId])
+        )
+      ))
     ),
     active ? (
       React.createElement(React.Fragment, null,
