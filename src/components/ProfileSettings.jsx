@@ -338,14 +338,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
     !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: 'Interesseret i' }),
-      React.createElement('select', {
-        value: profile.interest || 'Mand',
-        onChange: handleInterestChange,
-        className: 'border p-2 rounded'
-      },
-        React.createElement('option', { value: 'Mand' }, 'Mænd'),
-        React.createElement('option', { value: 'Kvinde' }, 'Kvinder')
-      ),
+        React.createElement('select', {
+          value: profile.interest || 'Mand',
+          onChange: handleInterestChange,
+          className: 'border p-2 rounded block mb-2'
+        },
+          React.createElement('option', { value: 'Mand' }, 'Mænd'),
+          React.createElement('option', { value: 'Kvinde' }, 'Kvinder')
+        ),
       React.createElement('label', { className: 'mt-2' }, `Alder: ${ageRange[0]} - ${ageRange[1]}`),
       React.createElement(Slider, {
         range: true,
