@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays, Sparkles, Info as InfoIcon } from 'lucide-react';
+import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays, Info as InfoIcon } from 'lucide-react';
 import WelcomeScreen from './components/WelcomeScreen.jsx';
 import DailyDiscovery from './components/DailyDiscovery.jsx';
 import ChatScreen from './components/ChatScreen.jsx';
@@ -60,15 +60,14 @@ export default function RealDatingApp() {
       tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
       tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange, onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);} }),
       tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId, currentUserId: userId }),
-      tab==='about' && React.createElement(AboutScreen, null)
+      tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
     ),
     React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around fixed bottom-0 left-0 right-0' },
       React.createElement(HomeIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('discovery'); setViewProfile(null);} }),
       React.createElement(ChatIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('chat') }),
       React.createElement(CalendarDays, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('checkin') }),
       React.createElement(UserIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('profile') }),
-      React.createElement(Sparkles, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('admin') }),
       React.createElement(InfoIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>setTab('about') })
-    )
+      )
   );
 }
