@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { Mic, Camera as CameraIcon, User as UserIcon } from 'lucide-react';
+import { Mic, Camera as CameraIcon, User as UserIcon, Heart } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
-import { db, storage, getDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from '../firebase.js';
+import { db, storage, getDoc, doc, updateDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject, useCollection, setDoc, deleteDoc } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
+import MatchOverlay from './MatchOverlay.jsx';
 
-export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {} }) {
+export default function ProfileSettings({ userId, viewerId = userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {} }) {
   const [profile,setProfile]=useState(null);
   const videoRef = useRef();
   const audioRef = useRef();
@@ -26,6 +27,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [replaceTarget, setReplaceTarget] = useState(null); // {field, index}
   const [showSub, setShowSub] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
+  const likes = useCollection('likes','userId', viewerId);
+  const [matchedProfile, setMatchedProfile] = useState(null);
 
   const handlePurchase = async () => {
     const now = new Date();
@@ -39,6 +42,45 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     });
     setProfile({ ...profile, subscriptionActive: true, subscriptionExpires: expiry.toISOString() });
     setShowSub(false);
+  };
+
+  const toggleLike = async () => {
+    const likeId = `${viewerId}-${userId}`;
+    const exists = likes.some(l => l.profileId === userId);
+    const ref = doc(db, 'likes', likeId);
+    if (exists) {
+      await deleteDoc(ref);
+      await Promise.all([
+        deleteDoc(doc(db,'matches',`${viewerId}-${userId}`)),
+        deleteDoc(doc(db,'matches',`${userId}-${viewerId}`))
+      ]);
+    } else {
+      await setDoc(ref,{id:likeId,userId:viewerId,profileId:userId});
+      const otherLike = await getDoc(doc(db,'likes',`${userId}-${viewerId}`));
+      if(otherLike.exists()){
+        const m1 = {
+          id:`${viewerId}-${userId}`,
+          userId:viewerId,
+          profileId:userId,
+          lastMessage:'',
+          unreadByUser:false,
+          unreadByProfile:false
+        };
+        const m2 = {
+          id:`${userId}-${viewerId}`,
+          userId:userId,
+          profileId:viewerId,
+          lastMessage:'',
+          unreadByUser:false,
+          unreadByProfile:false
+        };
+        await Promise.all([
+          setDoc(doc(db,'matches',m1.id),m1),
+          setDoc(doc(db,'matches',m2.id),m2)
+        ]);
+        if(profile) setMatchedProfile(profile);
+      }
+    }
   };
 
   useEffect(()=>{if(!userId)return;getDoc(doc(db,'profiles',userId)).then(s=>s.exists()&&setProfile({id:s.id,...s.data()}));},[userId]);
@@ -354,6 +396,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     ),
     React.createElement(SectionTitle, { title: 'Om mig' }),
       React.createElement(Textarea, { className: 'mb-4', readOnly: true }, profile.clip),
+    publicView && React.createElement(Button, {
+        className: 'mb-4 bg-pink-500 text-white flex items-center gap-1',
+        onClick: toggleLike
+      },
+        React.createElement(Heart, { className: 'w-5 h-5' }),
+        likes.some(l=>l.profileId===userId) ? 'Unlike' : 'Like'
+      ),
     !publicView && React.createElement('button', {
         className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
         onClick: saveChanges
@@ -388,6 +437,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement('li', null, '📝 Udfoldede profiler – adgang til længere refleksioner, flere videoer'),
           React.createElement('li', null, '🎙️ Profilbooster: Få dit klip vist tidligere på dagen')
         )
-      )
+      ),
+    matchedProfile && React.createElement(MatchOverlay, {
+        name: matchedProfile.name,
+        onClose: () => setMatchedProfile(null)
+      })
     );
 }
