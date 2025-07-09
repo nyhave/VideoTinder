@@ -104,7 +104,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           }),
           React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
             (p.photoURL ?
-              React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded-full object-cover' }) :
+              React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
               React.createElement(User, { className: 'w-10 h-10 text-pink-500' })
             ),
             React.createElement('div', null,
