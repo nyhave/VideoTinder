@@ -189,9 +189,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       }, profile.photoURL ? 'Skift billede' : 'Upload billede')
     ),
     React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` }),
-    !publicView && React.createElement('p', { className: 'text-center mb-2' },
-      `Interesseret i ${profile.interest === 'Mand' ? 'Mænd' : 'Kvinder'} mellem ${ageRange[0]} og ${ageRange[1]} og i en afstand mellem ${distanceRange[0]} og ${distanceRange[1]} km`
-    ),
     !publicView && React.createElement('div', { className: 'flex flex-col gap-4 mb-4' },
       React.createElement('label', null, 'By'),
       React.createElement(Input, {
