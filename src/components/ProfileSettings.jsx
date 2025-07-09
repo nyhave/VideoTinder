@@ -309,36 +309,32 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     )
   );
 
-  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
-    React.createElement('div', { className:'flex items-center mb-4 gap-4' },
-      profile.photoURL ?
-        React.createElement('img', { src: profile.photoURL, alt: 'Profil', className:'w-24 h-24 rounded-full object-cover' }) :
-        React.createElement('div', { className:'w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center' },
-          React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500' })
-        ),
-      !publicView && React.createElement('input', {
-        type:'file',
-        accept:'image/*',
-        ref:photoRef,
-        onChange:handlePhotoChange,
-        className:'hidden'
-      }),
-      !publicView && React.createElement(Button, {
-        className:'ml-4 bg-pink-500 text-white',
-        onClick:()=>photoRef.current && photoRef.current.click()
-      }, profile.photoURL ? 'Skift billede' : 'Upload billede')
+  return React.createElement(React.Fragment, null,
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+      publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
+      React.createElement('div', { className:'flex items-center mb-4 gap-4' },
+        profile.photoURL ?
+          React.createElement('img', { src: profile.photoURL, alt: 'Profil', className:'w-24 h-24 rounded-full object-cover' }) :
+          React.createElement('div', { className:'w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center' },
+            React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500' })
+          ),
+        !publicView && React.createElement('input', {
+          type:'file',
+          accept:'image/*',
+          ref:photoRef,
+          onChange:handlePhotoChange,
+          className:'hidden'
+        }),
+        !publicView && React.createElement(Button, {
+          className:'ml-4 bg-pink-500 text-white',
+          onClick:()=>photoRef.current && photoRef.current.click()
+        }, profile.photoURL ? 'Skift billede' : 'Upload billede')
+      ),
+      React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` })
     ),
-    React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` }),
-    videoSection,
-    audioSection,
-    !publicView && React.createElement('div', { className: 'flex flex-col gap-4 mb-4' },
-      React.createElement('label', null, 'By'),
-      React.createElement(Input, {
-        value: profile.city || '',
-        onChange: handleCityChange,
-        className: 'border p-2 rounded'
-      }),
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
+    !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: 'Interesseret i' }),
       React.createElement('select', {
         value: profile.interest || 'Mand',
@@ -367,13 +363,23 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'w-full'
       })
     ),
-    React.createElement(SectionTitle, { title: 'Om mig' }),
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+      !publicView && React.createElement(React.Fragment, null,
+        React.createElement('label', null, 'By'),
+        React.createElement(Input, {
+          value: profile.city || '',
+          onChange: handleCityChange,
+          className: 'border p-2 rounded'
+        })
+      ),
+      React.createElement(SectionTitle, { title: 'Om mig' }),
       React.createElement(Textarea, {
         className: 'mb-4',
         readOnly: publicView,
         value: profile.clip || '',
         onChange: publicView ? undefined : handleClipChange
-      }),
+      })
+    ),
     publicView && React.createElement(Button, {
         className: 'mt-4 w-full bg-pink-500 text-white',
         onClick: toggleLike
@@ -394,13 +400,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     !publicView && !subscriptionActive && React.createElement(Button, {
         className: 'mt-2 w-full bg-pink-500 text-white',
         onClick: () => setShowSub(true)
-      }, 'K\u00f8b abonnement'),
+      }, 'Køb abonnement'),
     !publicView && React.createElement('button', {
         className: 'mt-2 bg-gray-200 text-gray-700 px-4 py-2 rounded',
         onClick: onLogout
       }, 'Logout'),
     showSub && React.createElement(PurchaseOverlay, {
-        title: 'M\u00e5nedligt abonnement',
+        title: 'Månedligt abonnement',
         price: '59 kr/md',
         onClose: () => setShowSub(false),
         onBuy: handlePurchase
@@ -441,5 +447,5 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           setShowAudioRecorder(false);
         }
       })
-    );
+  );
 }
