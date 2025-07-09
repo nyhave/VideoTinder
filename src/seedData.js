@@ -14,7 +14,15 @@ export default async function seedData() {
     {id:'103',name:'Emma',age:41,gender:'Kvinde',interest:'Mand',audioClips:[],videoClips:['/sample1.mp4'],clip:'Musikalsk sjæl.'},
     {id:'104',name:'Peter',age:45,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Cykler i weekenden.'},
     {id:'105',name:'Lars',age:52,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Madglad iværksætter.'},
-    {id:'106',name:'Henrik',age:40,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Naturligvis fotograf.'}
+    {id:'106',name:'Henrik',age:40,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Naturligvis fotograf.'},
+    {id:'107',name:'Anders',age:38,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Løber maraton.'},
+    {id:'108',name:'Johan',age:42,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Historieinteresseret.'},
+    {id:'109',name:'Morten',age:50,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Friluftsmenneske.'},
+    {id:'110',name:'Ole',age:47,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Nyder god kaffe.'},
+    {id:'111',name:'Jørgen',age:53,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Glad for sejlsport.'},
+    {id:'112',name:'Frederik',age:39,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Spiller guitar.'},
+    {id:'113',name:'Christian',age:44,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Kunstnerisk sjæl.'},
+    {id:'114',name:'Thomas',age:41,gender:'Mand',interest:'Kvinde',audioClips:[],videoClips:['/sample1.mp4'],clip:'Eventyrlysten.'}
   ];
   await Promise.all(testUsers.map(u => setDoc(doc(db, 'profiles', u.id), u)));
   await Promise.all([
