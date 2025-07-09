@@ -31,6 +31,7 @@ export default async function seedData() {
       userId:'101',
       profileId:'104',
       lastMessage:'Hej Peter!',
+      messages:[{from:'101',text:'Hej Peter!',ts:Date.now()}],
       unreadByUser:false,
       unreadByProfile:true
     }),
@@ -39,6 +40,7 @@ export default async function seedData() {
       userId:'104',
       profileId:'101',
       lastMessage:'Hej Peter!',
+      messages:[{from:'101',text:'Hej Peter!',ts:Date.now()}],
       unreadByUser:true,
       unreadByProfile:false
     })
