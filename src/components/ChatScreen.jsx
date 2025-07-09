@@ -1,16 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User as UserIcon, Smile, MessageCircle as ChatIcon } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
-import { useCollection } from '../firebase.js';
+import { useCollection, db, doc, updateDoc } from '../firebase.js';
 
 export default function ChatScreen({ userId }) {
   const profiles = useCollection('profiles');
   const chats = useCollection('matches', 'userId', userId);
   const nameMap = Object.fromEntries(profiles.map(p => [p.id, p.name]));
   const [active, setActive] = useState(null);
+  const [text, setText] = useState('');
+
+  useEffect(() => {
+    if(active){
+      const updated = chats.find(c => c.id === active.id);
+      if(updated) setActive(updated);
+      if(active.unreadByUser){
+        updateDoc(doc(db,'matches',active.id),{unreadByUser:false});
+      }
+    }
+  }, [chats, active]);
+
+  const openChat = chat => {
+    setActive(chat);
+    if(chat.unreadByUser){
+      updateDoc(doc(db,'matches',chat.id),{unreadByUser:false});
+    }
+  };
+
+  const sendMessage = async () => {
+    const trimmed = text.trim();
+    if(!trimmed || !active) return;
+    await updateDoc(doc(db,'matches',active.id),{
+      lastMessage: trimmed,
+      unreadByProfile: true,
+      unreadByUser: false
+    });
+    setText('');
+  };
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-96' },
     React.createElement(SectionTitle, { title: 'Samtale' }),
@@ -19,7 +48,7 @@ export default function ChatScreen({ userId }) {
         React.createElement('div', {
           key: m.id,
           className: 'text-center cursor-pointer',
-          onClick: () => setActive(m)
+          onClick: () => openChat(m)
         },
           React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
           React.createElement('p', { className: 'text-sm mt-1' }, nameMap[m.profileId])
@@ -34,8 +63,17 @@ export default function ChatScreen({ userId }) {
           )
         ),
         React.createElement('div', { className: 'flex items-center gap-2 mt-2' },
-          React.createElement(Textarea, { className: 'flex-1', placeholder: 'Skriv besked...' }),
-          React.createElement(Button, { className: 'bg-pink-500 text-white' },
+          React.createElement(Textarea, {
+            className: 'flex-1',
+            placeholder: 'Skriv besked...',
+            value: text,
+            onChange: e => setText(e.target.value)
+          }),
+          React.createElement(Button, {
+            className: 'bg-pink-500 text-white',
+            disabled: !text.trim(),
+            onClick: sendMessage
+          },
             React.createElement(ChatIcon, null)
           )
         )

@@ -22,7 +22,14 @@ export default async function seedData() {
     {id:'c4',profileId:'106',gender:'Mand',text:'Fotograferer naturen.'}
   ];
   await Promise.all(testClips.map(c => setDoc(doc(db,'clips',c.id), c)));
-  await setDoc(doc(db,'matches','m1'),{id:'m1',userId:'101',profileId:'104',lastMessage:'Hej Peter!'});
+  await setDoc(doc(db,'matches','m1'),{
+    id:'m1',
+    userId:'101',
+    profileId:'104',
+    lastMessage:'Hej Peter!',
+    unreadByUser:false,
+    unreadByProfile:true
+  });
   const date = new Date().toISOString().split('T')[0];
   await setDoc(doc(db,'reflections','r1'),{id:'r1',userId:'101',date,text:'Mødte Peter i dag.'});
 }
