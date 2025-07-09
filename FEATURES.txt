@@ -10,7 +10,7 @@ PWA manifest for standalone installation
 Profile pictures cached for offline viewing
 
 Admin mode
-Seed data loader for test accounts and clips
+Seed data loader for test profiles with sample clips
 Switch between user profiles 
 Reset database from 
 Show Firestore credentials status
