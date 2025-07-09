@@ -309,6 +309,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   return React.createElement(React.Fragment, null,
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+      !publicView && React.createElement('button', {
+        className: 'mb-4 bg-gray-200 text-gray-700 px-4 py-2 rounded',
+        onClick: onLogout
+      }, 'Logout'),
       publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
       React.createElement('div', { className:'flex items-center mb-4 gap-4' },
         profile.photoURL ?
@@ -399,10 +403,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'mt-2 w-full bg-pink-500 text-white',
         onClick: () => setShowSub(true)
       }, 'Køb abonnement'),
-    !publicView && React.createElement('button', {
-        className: 'mt-2 bg-gray-200 text-gray-700 px-4 py-2 rounded',
-        onClick: onLogout
-      }, 'Logout'),
     showSub && React.createElement(PurchaseOverlay, {
         title: 'Månedligt abonnement',
         price: '59 kr/md',
