@@ -46,3 +46,21 @@ FIREBASE_APP_ID
 ```
 
 During the build job, these secrets are written to a `.env` file so Parcel can embed the Firebase config.
+
+## Configuring CORS for Firebase Storage
+
+If you host the app on a domain like GitHub Pages, the browser uploads directly
+to Firebase Storage. The bucket must allow cross‑origin requests from your
+site. If you see errors about CORS or failed preflight requests during video or
+audio uploads, update the bucket's CORS rules:
+
+1. Edit the provided `cors.json` and replace the example origin with your
+   domain.
+2. Apply the settings with the Google Cloud SDK:
+
+```bash
+gsutil cors set cors.json gs://<your-storage-bucket>
+```
+
+After this configuration, uploads from your site will succeed without CORS
+errors.
