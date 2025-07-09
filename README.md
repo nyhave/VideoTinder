@@ -6,7 +6,7 @@ and simple profile management powered by Firebase.
 
 ## Features
 
-* Daily discovery of short video clips
+* Daily discovery of short video clips (up to 3 or 6 with subscription)
 * Basic chat between matched profiles
 * Calendar for daily reflections
 * Minimal profile settings and admin mode

@@ -11,10 +11,11 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange }) {
   const user = profiles.find(p => p.id === userId) || {};
   const interest = user.interest;
   const allClips = useCollection('clips', 'gender', interest);
+  const limit = user.subscriptionActive ? 6 : 3;
   const filtered = allClips.filter(c => {
     const profile = profiles.find(p => p.id === c.profileId);
     return profile && profile.age >= ageRange[0] && profile.age <= ageRange[1];
-  }).slice(0, 3);
+  }).slice(0, limit);
   const nameMap = Object.fromEntries(profiles.map(p => [p.id, p.name]));
   const likes = useCollection('likes','userId',userId);
 
