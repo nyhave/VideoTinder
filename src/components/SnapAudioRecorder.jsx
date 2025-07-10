@@ -9,6 +9,9 @@ export default function SnapAudioRecorder({ onCancel, onRecorded }) {
   const [recording, setRecording] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  // track elapsed time in milliseconds so we can show a countdown
+  const startTimeRef = useRef(null);
+
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
       streamRef.current = stream;
@@ -34,9 +37,9 @@ export default function SnapAudioRecorder({ onCancel, onRecorded }) {
     };
     recorder.start();
     setRecording(true);
-    const startTime = Date.now();
+    startTimeRef.current = Date.now();
     const tick = () => {
-      const elapsed = Date.now() - startTime;
+      const elapsed = Date.now() - startTimeRef.current;
       setProgress(Math.min(elapsed / 10000, 1));
       if(elapsed >= 10000){
         stop();
@@ -65,6 +68,11 @@ export default function SnapAudioRecorder({ onCancel, onRecorded }) {
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - progress);
 
+  // remaining seconds shown in the center of the circle
+  const remainingSeconds = startTimeRef.current
+    ? Math.max(0, 10 - Math.floor((Date.now() - startTimeRef.current) / 1000))
+    : 10;
+
   return React.createElement('div', { className:'fixed inset-0 z-50 flex items-center justify-center bg-black/60' },
     React.createElement('div', { className:'relative w-32 h-32' },
       React.createElement('svg', { className:'absolute inset-0 w-full h-full rotate-animation', viewBox:'0 0 100 100' },
@@ -77,6 +85,9 @@ export default function SnapAudioRecorder({ onCancel, onRecorded }) {
       React.createElement('button', { onClick: recording ? stop : start, className:'absolute inset-0 flex items-center justify-center text-pink-500 bg-white rounded-full' },
         React.createElement(Mic, { className:'w-8 h-8' })
       ),
+      React.createElement('div', {
+        className:'absolute inset-0 flex items-center justify-center text-white text-2xl font-bold pointer-events-none'
+      }, remainingSeconds),
       React.createElement('button', { onClick: cancel, className:'absolute -bottom-10 left-1/2 -translate-x-1/2 text-white' }, 'Annuller')
     )
   );
