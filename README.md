@@ -18,7 +18,7 @@ and simple profile management powered by Firebase.
 * Seed data includes 11 mandlige profiler der matcher standardbrugeren så du kan teste premium og ekstra klip
 * Video- og lydklip begrænset til 10 sekunder
   (optagelser lidt over 10s accepteres for at håndtere kodningsforsinkelser)
-* Animation med nedtælling viser hvor lang tid der er tilbage under lydoptagelse
+* Animation med nedtælling viser hvor lang tid der er tilbage under lyd- og videooptagelse
 
 
 ## Getting Started

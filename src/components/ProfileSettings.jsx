@@ -11,6 +11,7 @@ import VideoPreview from './VideoPreview.jsx';
 import { useCollection, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
+import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, viewerId, onBack }) {
@@ -20,6 +21,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const photoRef = useRef();
 
   const [showSnapRecorder, setShowSnapRecorder] = useState(false);
+  const [showSnapVideoRecorder, setShowSnapVideoRecorder] = useState(false);
   const [showSub, setShowSub] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
   const currentUserId = viewerId || userId;
@@ -149,6 +151,15 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     }
     setShowSnapRecorder(false);
     uploadFile(file, "audioClips");
+  };
+
+  const handleVideoRecorded = async file => {
+    if(!(await checkDuration(file))){
+      alert('Video må højest være 10 sekunder');
+      return;
+    }
+    setShowSnapVideoRecorder(false);
+    uploadFile(file, 'videoClips');
   };
 
 
@@ -286,13 +297,21 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onChange: handleVideoChange,
         className: 'hidden'
       }),
-      React.createElement(Button, {
-        className: `mb-4 ${maxVideos ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
-        onClick: () => {
-          if(!maxVideos && videoRef.current) videoRef.current.click();
-        },
-        disabled: maxVideos
-      }, 'Upload video'),
+      React.createElement('div', { className:'flex gap-2 mb-4' },
+        React.createElement(Button, {
+          className: `${maxVideos ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
+          onClick: () => {
+            if(!maxVideos && videoRef.current) videoRef.current.click();
+          },
+          disabled: maxVideos
+        }, 'Upload video'),
+        React.createElement(Button, {
+          className: `${maxVideos ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
+          onClick: () => { if(!maxVideos) setShowSnapVideoRecorder(true); },
+          disabled: maxVideos
+        }, React.createElement(CameraIcon, { className:'w-4 h-4' }))
+      ),
+      showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded }),
     )
   );
 
