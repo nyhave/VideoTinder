@@ -68,7 +68,7 @@ export default function RealDateApp() {
       tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
       tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange, onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);} }),
       tab==='premium' && React.createElement(PremiumFeatures, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-      tab==='admin' && React.createElement(AdminScreen, { onOpenDiscovery: openDailyClips }),
+      tab==='admin' && React.createElement(AdminScreen, null),
       tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
     ),
     React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around fixed bottom-0 left-0 right-0' },

@@ -5,7 +5,7 @@ import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
 import { db, collection, getDocs } from '../firebase.js';
 
-export default function AdminScreen({ onOpenDiscovery }) {
+export default function AdminScreen() {
   const [firestoreInfo, setFirestoreInfo] = useState(null);
 
   const showFirestoreInfo = async () => {
@@ -28,7 +28,6 @@ export default function AdminScreen({ onOpenDiscovery }) {
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: 'Administration' }),
-    onOpenDiscovery && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white px-4 py-2 rounded', onClick: onOpenDiscovery }, 'G\u00e5 til Dagens klip'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Firestore info'),
     React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: showFirestoreInfo }, 'Show credentials'),
     firestoreInfo && React.createElement('pre', { className: 'mt-2 bg-gray-100 p-2 rounded whitespace-pre-wrap text-xs' },
