@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 
-export default function WelcomeScreen({ onNext }) {
+export default function WelcomeScreen({ profiles = [], onLogin }) {
+  const [selected, setSelected] = useState('');
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, 'Om RealDate'),
     React.createElement('p', { className: 'mb-4 text-gray-700' },
@@ -10,6 +11,18 @@ export default function WelcomeScreen({ onNext }) {
       + 'Her handler det ikke om hurtige swipes.'
       + 'RealDate er for dig, der søger noget ægte og meningsfuldt.'
     ),
-    React.createElement(Button, { onClick: onNext, className: 'bg-pink-500 hover:bg-pink-600 text-white mt-4' }, 'Login')
+    React.createElement('select', {
+      className: 'border p-2 mb-4 w-full',
+      onChange: e => setSelected(e.target.value),
+      value: selected || ''
+    },
+      React.createElement('option', { value: '' }, '-- v\u00e6lg bruger --'),
+      profiles.map(p => React.createElement('option', { key: p.id, value: p.id }, p.name))
+    ),
+    React.createElement(Button, {
+      onClick: () => selected && onLogin(selected),
+      className: 'bg-pink-500 hover:bg-pink-600 text-white mt-4',
+      disabled: !selected
+    }, 'Login')
   );
 }
