@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { User as UserIcon, Smile, MessageCircle as ChatIcon } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
@@ -12,6 +12,7 @@ export default function ChatScreen({ userId }) {
   const nameMap = Object.fromEntries(profiles.map(p => [p.id, p.name]));
   const [active, setActive] = useState(null);
   const [text, setText] = useState('');
+  const messagesRef = useRef(null);
 
   useEffect(() => {
     if(active){
@@ -22,6 +23,12 @@ export default function ChatScreen({ userId }) {
       }
     }
   }, [chats, active]);
+
+  useEffect(() => {
+    if(messagesRef.current){
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }
+  }, [active?.messages?.length]);
 
   const openChat = chat => {
     setActive(chat);
@@ -51,6 +58,9 @@ export default function ChatScreen({ userId }) {
       })
     ]);
     setText('');
+    if(messagesRef.current){
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }
   };
 
   const unmatch = async () => {
@@ -80,7 +90,7 @@ export default function ChatScreen({ userId }) {
     ),
     active ? (
       React.createElement(React.Fragment, null,
-        React.createElement('div', { className: 'flex-1 overflow-y-auto bg-gray-100 p-4 rounded space-y-3 flex flex-col' },
+        React.createElement('div', { ref: messagesRef, className: 'flex-1 overflow-y-auto bg-gray-100 p-4 rounded space-y-3 flex flex-col' },
           (active.messages || []).map((m,i) => (
             React.createElement('div', {
               key: i,
