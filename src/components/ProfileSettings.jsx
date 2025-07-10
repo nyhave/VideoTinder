@@ -71,13 +71,19 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const handlePhotoChange = e => uploadPhoto(e.target.files[0]);
 
+  // Allow a small tolerance when validating clip length because the
+  // MediaRecorder output can be slightly longer than the requested
+  // duration due to encoding overhead.
   const checkDuration = file => new Promise(resolve => {
-    const el = document.createElement(file.type.startsWith('audio') ? 'audio' : 'video');
+    const el = document.createElement(
+      file.type.startsWith('audio') ? 'audio' : 'video'
+    );
     el.preload = 'metadata';
     el.src = URL.createObjectURL(file);
     el.onloadedmetadata = () => {
       URL.revokeObjectURL(el.src);
-      resolve(el.duration <= 10);
+      const max = 10.5; // accept files up to ~0.5s over the 10s limit
+      resolve(el.duration <= max);
     };
     el.onerror = () => {
       URL.revokeObjectURL(el.src);
