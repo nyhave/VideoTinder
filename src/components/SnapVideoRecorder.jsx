@@ -74,21 +74,25 @@ export default function SnapVideoRecorder({ onCancel, onRecorded }) {
     ? Math.max(0, 10 - Math.floor((Date.now() - startTimeRef.current) / 1000))
     : 10;
 
-  return React.createElement('div', { className:'fixed inset-0 z-50 flex items-center justify-center bg-black/60' },
-    React.createElement('div', { className:'relative w-72 h-72' },
-      React.createElement('video', { ref: videoRef, className:'absolute inset-0 w-full h-full object-cover rounded', autoPlay:true, muted:true, playsInline:true }),
-      React.createElement('svg', { className:'absolute inset-0 w-full h-full rotate-animation pointer-events-none z-10', viewBox:'0 0 100 100' },
-        React.createElement('circle', { cx:'50', cy:'50', r:radius, stroke:'#9ca3af', strokeWidth:'8', fill:'none' }),
-        React.createElement('circle', {
-          cx:'50', cy:'50', r:radius, stroke:'#ff4895', strokeWidth:'8', fill:'none',
-          strokeDasharray:circumference, strokeDashoffset:offset
-        })
-      ),
-      React.createElement('button', { onClick: recording ? stop : start, className:'absolute inset-0 flex items-center justify-center text-pink-500 bg-white rounded-full border border-pink-500 w-20 h-20 m-auto' },
-        React.createElement(CameraIcon, { className:'w-10 h-10' })
-      ),
-      React.createElement('div', { className:'absolute inset-0 flex items-center justify-center text-white text-4xl font-bold pointer-events-none z-20' }, remainingSeconds),
-      React.createElement('button', { onClick: cancel, className:'absolute -bottom-12 left-1/2 -translate-x-1/2 text-white bg-black/40 px-4 py-1 rounded' }, 'Annuller')
+  return React.createElement('div', { className:'fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60' },
+    React.createElement('div', { className:'flex-1 flex items-center justify-center w-full' },
+      React.createElement('div', { className:'text-white text-4xl font-bold pointer-events-none' }, remainingSeconds)
+    ),
+    React.createElement('div', { className:'flex-1 flex items-center justify-center w-full' },
+      React.createElement('div', { className:'relative w-72 h-72' },
+        React.createElement('video', { ref: videoRef, className:'absolute inset-0 w-full h-full object-cover rounded', autoPlay:true, muted:true, playsInline:true }),
+        React.createElement('svg', { className:'absolute inset-0 w-full h-full rotate-animation pointer-events-none z-10', viewBox:'0 0 100 100' },
+          React.createElement('circle', { cx:'50', cy:'50', r:radius, stroke:'#9ca3af', strokeWidth:'8', fill:'none' }),
+          React.createElement('circle', {
+            cx:'50', cy:'50', r:radius, stroke:'#ff4895', strokeWidth:'8', fill:'none',
+            strokeDasharray:circumference, strokeDashoffset:offset
+          })
+        ),
+        React.createElement('button', { onClick: recording ? stop : start, className:'absolute inset-0 flex items-center justify-center text-pink-500 bg-white rounded-full border border-pink-500 w-20 h-20 m-auto' },
+          React.createElement(CameraIcon, { className:'w-10 h-10' })
+        ),
+        React.createElement('button', { onClick: cancel, className:'absolute -bottom-12 left-1/2 -translate-x-1/2 text-white bg-black/40 px-4 py-1 rounded' }, 'Annuller')
+      )
     )
   );
 }
