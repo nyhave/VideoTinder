@@ -10,6 +10,8 @@ import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
 import { useCollection, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
+import AudioRecorder from "./AudioRecorder.jsx";
+import AudioContextRecorder from "./AudioContextRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, viewerId, onBack }) {
@@ -18,6 +20,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const audioRef = useRef();
   const photoRef = useRef();
 
+  const captureRef = useRef();
+  const [showRecorderA, setShowRecorderA] = useState(false);
+  const [showRecorderB, setShowRecorderB] = useState(false);
   const [showSub, setShowSub] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
   const currentUserId = viewerId || userId;
@@ -132,6 +137,33 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const handleAgeRangeChange = async range => {
     onChangeAgeRange(range);
     await updateDoc(doc(db,'profiles',userId), { ageRange: range });
+  };
+  const handleCaptureChange = async e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    if(!(await checkDuration(file))){
+      alert("Lydklip mu00E5 hu00F8jest vu00E6re 10 sekunder");
+      return;
+    }
+    uploadFile(file, "audioClips");
+  };
+
+  const handleRecordedA = async file => {
+    if(!(await checkDuration(file))){
+      alert("Lydklip mu00E5 hu00F8jest vu00E6re 10 sekunder");
+      return;
+    }
+    setShowRecorderA(false);
+    uploadFile(file, "audioClips");
+  };
+
+  const handleRecordedB = async file => {
+    if(!(await checkDuration(file))){
+      alert("Lydklip mu00E5 hu00F8jest vu00E6re 10 sekunder");
+      return;
+    }
+    setShowRecorderB(false);
+    uploadFile(file, "audioClips");
   };
 
   const handleCityChange = async e => {
@@ -302,13 +334,44 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onChange: handleAudioChange,
         className: 'hidden'
       }),
+      React.createElement('input', {
+        type: 'file',
+        accept: 'audio/*',
+        capture: 'microphone',
+        ref: captureRef,
+        onChange: handleCaptureChange,
+        className: 'hidden'
+      }),
       React.createElement(Button, {
-        className: `mb-4 ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
+        className: `mb-2 ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
         onClick: () => {
           if(!maxAudios && audioRef.current) audioRef.current.click();
         },
         disabled: maxAudios
       }, 'Upload lyd'),
+      React.createElement(Button, {
+        className: `mb-2 ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
+        onClick: () => {
+          if(!maxAudios) setShowRecorderA(true);
+        },
+        disabled: maxAudios
+      }, 'Optag (MediaRecorder)'),
+      React.createElement(Button, {
+        className: `mb-2 ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
+        onClick: () => {
+          if(!maxAudios && captureRef.current) captureRef.current.click();
+        },
+        disabled: maxAudios
+      }, 'Optag (Capture)'),
+      React.createElement(Button, {
+        className: `mb-4 ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
+        onClick: () => {
+          if(!maxAudios) setShowRecorderB(true);
+        },
+        disabled: maxAudios
+      }, 'Optag (WAV)'),
+      showRecorderA && React.createElement(AudioRecorder, { onCancel: () => setShowRecorderA(false), onRecorded: handleRecordedA }),
+      showRecorderB && React.createElement(AudioContextRecorder, { onCancel: () => setShowRecorderB(false), onRecorded: handleRecordedB })
     )
   );
 
