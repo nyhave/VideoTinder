@@ -68,11 +68,14 @@ export default function DailyCheckIn({ userId }) {
       })
     ),
     React.createElement(Textarea, {
-      placeholder: 'Del din refleksion...',
-      className: 'mb-4',
+      placeholder: 'Skriv din refleksion...',
+      className: 'mb-2',
       value: text,
       onChange: e => setText(e.target.value)
     }),
+    React.createElement('p', {
+      className: 'text-sm text-gray-500 mb-4 text-center'
+    }, 'Refleksioner er private'),
     React.createElement(Button, {
       className: 'bg-pink-500 text-white',
       disabled: !text.trim(),
