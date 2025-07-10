@@ -64,6 +64,7 @@ export default function SnapAudioRecorder({ onCancel, onRecorded }) {
     onCancel && onCancel();
   };
 
+  // size of the animated progress ring
   const radius = 45;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - progress);
@@ -74,21 +75,21 @@ export default function SnapAudioRecorder({ onCancel, onRecorded }) {
     : 10;
 
   return React.createElement('div', { className:'fixed inset-0 z-50 flex items-center justify-center bg-black/60' },
-    React.createElement('div', { className:'relative w-32 h-32' },
+    React.createElement('div', { className:'relative w-48 h-48' },
       React.createElement('svg', { className:'absolute inset-0 w-full h-full rotate-animation', viewBox:'0 0 100 100' },
-        React.createElement('circle', { cx:'50', cy:'50', r:radius, stroke:'#9ca3af', strokeWidth:'5', fill:'none' }),
+        React.createElement('circle', { cx:'50', cy:'50', r:radius, stroke:'#9ca3af', strokeWidth:'8', fill:'none' }),
         React.createElement('circle', {
-          cx:'50', cy:'50', r:radius, stroke:'#ff4895', strokeWidth:'5', fill:'none',
+          cx:'50', cy:'50', r:radius, stroke:'#ff4895', strokeWidth:'8', fill:'none',
           strokeDasharray:circumference, strokeDashoffset:offset
         })
       ),
-      React.createElement('button', { onClick: recording ? stop : start, className:'absolute inset-0 flex items-center justify-center text-pink-500 bg-white rounded-full border border-pink-500' },
-        React.createElement(Mic, { className:'w-8 h-8' })
+      React.createElement('button', { onClick: recording ? stop : start, className:'absolute inset-0 flex items-center justify-center text-pink-500 bg-white rounded-full border border-pink-500 w-20 h-20' },
+        React.createElement(Mic, { className:'w-10 h-10' })
       ),
       React.createElement('div', {
-        className:'absolute inset-0 flex items-center justify-center text-white text-2xl font-bold pointer-events-none'
+        className:'absolute inset-0 flex items-center justify-center text-white text-4xl font-bold pointer-events-none'
       }, remainingSeconds),
-      React.createElement('button', { onClick: cancel, className:'absolute -bottom-10 left-1/2 -translate-x-1/2 text-white' }, 'Annuller')
+      React.createElement('button', { onClick: cancel, className:'absolute -bottom-12 left-1/2 -translate-x-1/2 text-white bg-black/40 px-4 py-1 rounded' }, 'Annuller')
     )
   );
 }
