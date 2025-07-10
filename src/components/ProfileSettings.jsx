@@ -10,8 +10,6 @@ import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
 import { useCollection, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
-import AudioRecorder from "./AudioRecorder.jsx";
-import AudioContextRecorder from "./AudioContextRecorder.jsx";
 import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
 
@@ -21,9 +19,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const audioRef = useRef();
   const photoRef = useRef();
 
-  const captureRef = useRef();
-  const [showRecorderA, setShowRecorderA] = useState(false);
-  const [showRecorderB, setShowRecorderB] = useState(false);
   const [showSnapRecorder, setShowSnapRecorder] = useState(false);
   const [showSub, setShowSub] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
@@ -140,33 +135,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     onChangeAgeRange(range);
     await updateDoc(doc(db,'profiles',userId), { ageRange: range });
   };
-  const handleCaptureChange = async e => {
-    const file = e.target.files[0];
-    if(!file) return;
-    if(!(await checkDuration(file))){
-      alert("Lydklip må højest være 10 sekunder");
-      return;
-    }
-    uploadFile(file, "audioClips");
-  };
 
-  const handleRecordedA = async file => {
-    if(!(await checkDuration(file))){
-      alert("Lydklip må højest være 10 sekunder");
-      return;
-    }
-    setShowRecorderA(false);
-    uploadFile(file, "audioClips");
-  };
-
-  const handleRecordedB = async file => {
-    if(!(await checkDuration(file))){
-      alert("Lydklip må højest være 10 sekunder");
-      return;
-    }
-    setShowRecorderB(false);
-    uploadFile(file, "audioClips");
-  };
   const handleSnapRecorded = async file => {
     if(!(await checkDuration(file))){
       alert("Lydklip må højest være 10 sekunder");
@@ -345,14 +314,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onChange: handleAudioChange,
         className: 'hidden'
       }),
-      React.createElement('input', {
-        type: 'file',
-        accept: 'audio/*',
-        capture: 'microphone',
-        ref: captureRef,
-        onChange: handleCaptureChange,
-        className: 'hidden'
-      }),
       React.createElement(Button, {
         className: `mb-2 ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
         onClick: () => {
@@ -361,33 +322,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         disabled: maxAudios
       }, 'Upload lyd'),
       React.createElement(Button, {
-        className: `mb-2 ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
-        onClick: () => {
-          if(!maxAudios) setShowRecorderA(true);
-        },
-        disabled: maxAudios
-      }, 'Optag (MediaRecorder)'),
-      React.createElement(Button, {
-        className: `mb-2 ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
-        onClick: () => {
-          if(!maxAudios && captureRef.current) captureRef.current.click();
-        },
-        disabled: maxAudios
-      }, 'Optag (Capture)'),
-      React.createElement(Button, {
         className: `mb-2 flex items-center justify-center ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
         onClick: () => { if(!maxAudios) setShowSnapRecorder(true); },
         disabled: maxAudios
       }, React.createElement(Mic, { className: 'w-4 h-4' })),
-      React.createElement(Button, {
-        className: `mb-4 ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
-        onClick: () => {
-          if(!maxAudios) setShowRecorderB(true);
-        },
-        disabled: maxAudios
-      }, 'Optag (WAV)'),
-      showRecorderA && React.createElement(AudioRecorder, { onCancel: () => setShowRecorderA(false), onRecorded: handleRecordedA }),
-      showRecorderB && React.createElement(AudioContextRecorder, { onCancel: () => setShowRecorderB(false), onRecorded: handleRecordedB }),
       showSnapRecorder && React.createElement(SnapAudioRecorder, { onCancel: () => setShowSnapRecorder(false), onRecorded: handleSnapRecorded })
     )
   );
