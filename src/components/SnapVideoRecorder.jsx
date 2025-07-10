@@ -75,10 +75,8 @@ export default function SnapVideoRecorder({ onCancel, onRecorded }) {
     : 10;
 
   return React.createElement('div', { className:'fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60' },
-    React.createElement('div', { className:'flex-1 flex items-center justify-center w-full' },
-      React.createElement('div', { className:'text-white text-4xl font-bold pointer-events-none' }, remainingSeconds)
-    ),
-    React.createElement('div', { className:'flex-1 flex items-center justify-center w-full' },
+    React.createElement('div', { className:'flex-1 flex flex-col items-center justify-center w-full space-y-4' },
+      React.createElement('div', { className:'text-white text-4xl font-bold pointer-events-none' }, remainingSeconds),
       React.createElement('div', { className:'relative w-72 h-72' },
         React.createElement('video', { ref: videoRef, className:'absolute inset-0 w-full h-full object-cover rounded', autoPlay:true, muted:true, playsInline:true }),
         React.createElement('svg', { className:'absolute inset-0 w-full h-full rotate-animation pointer-events-none z-10', viewBox:'0 0 100 100' },
@@ -93,7 +91,8 @@ export default function SnapVideoRecorder({ onCancel, onRecorded }) {
         ),
         React.createElement('button', { onClick: cancel, className:'absolute -bottom-12 left-1/2 -translate-x-1/2 text-white bg-black/40 px-4 py-1 rounded' }, 'Annuller')
       )
-    )
+    ),
+    React.createElement('div', { className:'flex-1 w-full' })
   );
 }
 
