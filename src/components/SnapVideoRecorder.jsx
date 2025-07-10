@@ -76,7 +76,7 @@ export default function SnapVideoRecorder({ onCancel, onRecorded }) {
 
   return React.createElement('div', { className:'fixed inset-0 z-50 flex items-center justify-center bg-black/60' },
     React.createElement('div', { className:'relative w-72 h-72' },
-      React.createElement('video', { ref: videoRef, className:'absolute inset-0 w-full h-full object-cover rounded', autoPlay:true, muted:true }),
+      React.createElement('video', { ref: videoRef, className:'absolute inset-0 w-full h-full object-cover rounded', autoPlay:true, muted:true, playsInline:true }),
       React.createElement('svg', { className:'absolute inset-0 w-full h-full rotate-animation pointer-events-none', viewBox:'0 0 100 100' },
         React.createElement('circle', { cx:'50', cy:'50', r:radius, stroke:'#9ca3af', strokeWidth:'8', fill:'none' }),
         React.createElement('circle', {
