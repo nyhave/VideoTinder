@@ -315,13 +315,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'hidden'
       }),
       React.createElement(Button, {
-        className: `mb-2 ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
-        onClick: () => {
-          if(!maxAudios && audioRef.current) audioRef.current.click();
-        },
-        disabled: maxAudios
-      }, 'Upload lyd'),
-      React.createElement(Button, {
         className: `mb-2 flex items-center justify-center ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
         onClick: () => { if(!maxAudios) setShowSnapRecorder(true); },
         disabled: maxAudios
