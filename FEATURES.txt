@@ -6,7 +6,7 @@ Profile settings with age range filtering
 Ability to upload or record video clips
 Ability to upload or record audio clips
 Video/audio duration limited to 10 seconds
-Animated countdown shown while recording audio
+Animated countdown shown while recording audio or video
 Offline support via service worker caching
 PWA manifest for standalone installation
 
