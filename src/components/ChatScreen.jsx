@@ -4,11 +4,13 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
+import { useT } from '../i18n.js';
 import { useCollection, db, doc, updateDoc, deleteDoc, arrayUnion } from '../firebase.js';
 
 export default function ChatScreen({ userId }) {
   const profiles = useCollection('profiles');
   const chats = useCollection('matches', 'userId', userId);
+  const t = useT();
   const nameMap = Object.fromEntries(profiles.map(p => [p.id, p.name]));
   const [active, setActive] = useState(null);
   const [text, setText] = useState('');
@@ -75,7 +77,7 @@ export default function ChatScreen({ userId }) {
   };
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-96' },
-    React.createElement(SectionTitle, { title: 'Samtale' }),
+    React.createElement(SectionTitle, { title: t('chat') }),
     React.createElement('div', { className: 'flex overflow-x-auto space-x-4 p-2' },
       chats.map(m => (
         React.createElement('div', {

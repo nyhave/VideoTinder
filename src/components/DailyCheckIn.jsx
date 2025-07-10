@@ -3,10 +3,12 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
+import { useT } from '../i18n.js';
 import { useCollection, db, doc, setDoc } from '../firebase.js';
 
 export default function DailyCheckIn({ userId }) {
   const refs = useCollection('reflections','userId',userId);
+  const t = useT();
   const [month,setMonth]=useState(()=>{
     const d=new Date();
     d.setDate(1);
@@ -29,7 +31,7 @@ export default function DailyCheckIn({ userId }) {
   };
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title: 'Dagens refleksion' }),
+    React.createElement(SectionTitle, { title: t('checkInTitle') }),
     React.createElement('div', { className: 'flex justify-between items-center mb-2' },
       React.createElement(Button, {
         size: 'sm',

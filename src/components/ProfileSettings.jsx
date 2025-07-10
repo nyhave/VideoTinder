@@ -13,9 +13,11 @@ import PurchaseOverlay from './PurchaseOverlay.jsx';
 import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
 import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
+import { languages, useT } from '../i18n.js';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, viewerId, onBack }) {
   const [profile,setProfile]=useState(null);
+  const t = useT();
   const videoRef = useRef();
   const audioRef = useRef();
   const photoRef = useRef();
@@ -56,9 +58,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     const storageRef = ref(storage, `profiles/${userId}/${field}-${Date.now()}-${file.name}`);
     await uploadBytes(storageRef, file);
     const url = await getDownloadURL(storageRef);
-    const updated = [...(profile[field] || []), url];
+    const clip = { url, lang: profile.language || 'en' };
+    const updated = [...(profile[field] || []), clip];
     await updateDoc(doc(db,'profiles',userId), { [field]: updated });
-    setProfile({...profile, [field]: updated});
+    setProfile({ ...profile, [field]: updated });
   };
 
 
@@ -99,14 +102,15 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await uploadBytes(storageRef, file);
     const url = await getDownloadURL(storageRef);
     const updated = [...(profile[field] || [])];
-    updated[index] = url;
+    updated[index] = { url, lang: profile.language || 'en' };
     await updateDoc(doc(db,'profiles',userId), { [field]: updated });
     setProfile({...profile, [field]: updated});
   };
 
   const deleteFile = async (field, index) => {
     const updated = [...(profile[field] || [])];
-    const url = updated[index];
+    const item = updated[index];
+    const url = item && item.url ? item.url : item;
     updated.splice(index, 1);
     await updateDoc(doc(db,'profiles',userId), { [field]: updated });
     setProfile({...profile, [field]: updated});
@@ -251,13 +255,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           updates.photoURL = url;
         }
       } else if (name.startsWith('videoClips-')) {
-        if (!videoClips.includes(url)) {
-          videoClips.push(url);
+        if (!videoClips.some(v => v.url === url)) {
+          videoClips.push({ url, lang: profile.language || 'en' });
           updates.videoClips = videoClips;
         }
       } else if (name.startsWith('audioClips-')) {
-        if (!audioClips.includes(url)) {
-          audioClips.push(url);
+        if (!audioClips.some(a => a.url === url)) {
+          audioClips.push({ url, lang: profile.language || 'en' });
           updates.audioClips = audioClips;
         }
       }
@@ -269,10 +273,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   };
 
   const videoSection = React.createElement(React.Fragment, null,
-    React.createElement(SectionTitle, { title: 'Video-klip' }),
+    React.createElement(SectionTitle, { title: t('videoClips') }),
     React.createElement('div', { className: 'flex items-center gap-4 mb-4 justify-between' },
       Array.from({ length: 3 }).map((_, i) => {
-        const url = (profile.videoClips || [])[i];
+        const clip = (profile.videoClips || [])[i];
+        const url = clip && clip.url ? clip.url : clip;
         return React.createElement('div', { key: i, className: 'w-[30%] flex flex-col items-center justify-center' },
           url
             ? React.createElement(VideoPreview, { src: url })
@@ -319,17 +324,18 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const remainingAudios = Math.max(0, 3 - audioClips.length);
 
   const audioSection = React.createElement(React.Fragment, null,
-    React.createElement(SectionTitle, { title: 'Lyd-klip' }),
+    React.createElement(SectionTitle, { title: t('audioClips') }),
     React.createElement('div', { className: 'space-y-2 mb-4' },
-      audioClips.map((url, i) =>
-        React.createElement('div', { key: i, className: 'flex items-center' },
+      audioClips.map((clip, i) => {
+        const url = clip && clip.url ? clip.url : clip;
+        return React.createElement('div', { key: i, className: 'flex items-center' },
           React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' }),
           !publicView && React.createElement(Button, {
             className: 'ml-2 bg-pink-500 text-white p-1 rounded w-[20%] flex items-center justify-center',
             onClick: () => deleteFile('audioClips', i)
           }, React.createElement(TrashIcon, { className: 'w-4 h-4' }))
         )
-      )
+      })
     ),
     remainingAudios > 0 && React.createElement('div', { className: 'flex gap-4 justify-center mb-4' },
       Array.from({ length: remainingAudios }).map((_, i) =>
@@ -392,7 +398,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
     !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: 'Interesseret i' }),
+      React.createElement(SectionTitle, { title: t('interestedIn') }),
         React.createElement('select', {
           value: profile.interest || 'Mand',
           onChange: handleInterestChange,
@@ -418,7 +424,24 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         value: distanceRange,
         onChange: handleDistanceRangeChange,
         className: 'w-full'
-      })
+      }),
+      React.createElement('label', { className:'mt-2' }, t('language')),
+      React.createElement('select', {
+        className:'border p-2 rounded block mb-2',
+        value: profile.language || 'en',
+        onChange: e => { const language = e.target.value; setProfile({ ...profile, language }); updateDoc(doc(db,'profiles',userId), { language }); }
+      },
+        Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
+      ),
+      React.createElement('label', { className:'mt-2' }, t('preferredLanguages')),
+      React.createElement('select', {
+        multiple: true,
+        className:'border p-2 rounded w-full',
+        value: profile.preferredLanguages || [],
+        onChange: e => { const opts = Array.from(e.target.selectedOptions).map(o=>o.value); setProfile({ ...profile, preferredLanguages: opts }); updateDoc(doc(db,'profiles',userId), { preferredLanguages: opts }); }
+      },
+        Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
+      )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       !publicView && React.createElement(React.Fragment, null,
@@ -429,7 +452,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           className: 'border p-2 rounded'
         })
       ),
-      React.createElement(SectionTitle, { title: 'Om mig' }),
+      React.createElement(SectionTitle, { title: t('aboutMe') }),
       React.createElement(Textarea, {
         className: 'mb-4',
         readOnly: publicView,
