@@ -12,6 +12,7 @@ export default function AboutScreen({ onOpenAdmin }) {
     ),
     React.createElement('p', { className: 'mb-4 text-gray-700' }, 'Test 2 af Workflow'),
     React.createElement('p', { className: 'mb-4 text-gray-700' }, 'Workflow test tre'),
+    React.createElement('p', { className: 'mb-4 text-gray-700' }, 'Workflow test fire'),
     React.createElement('p', { className: 'text-gray-500 text-sm text-center mb-4' }, `Version ${version}`),
     onOpenAdmin && React.createElement(Button, { className: 'bg-blue-500 hover:bg-blue-600 text-white mt-4', onClick: onOpenAdmin }, 'Admin')
   );
