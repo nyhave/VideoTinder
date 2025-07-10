@@ -290,21 +290,26 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     )
   );
 
+  const audioClips = profile.audioClips || [];
+  const remainingAudios = Math.max(0, 3 - audioClips.length);
+
   const audioSection = React.createElement(React.Fragment, null,
     React.createElement(SectionTitle, { title: 'Lyd-klip' }),
     React.createElement('div', { className: 'space-y-2 mb-4' },
-      Array.from({ length: 3 }).map((_, i) => {
-        const url = (profile.audioClips || [])[i];
-        return React.createElement('div', { key: i, className: 'flex items-center' },
-          url
-            ? React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' })
-            : React.createElement('div', { className: 'flex-1 flex justify-center' }, React.createElement(Mic, { className: 'w-8 h-8 text-gray-400' })),
-          url && !publicView && React.createElement(Button, {
+      audioClips.map((url, i) =>
+        React.createElement('div', { key: i, className: 'flex items-center' },
+          React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' }),
+          !publicView && React.createElement(Button, {
             className: 'ml-2 bg-pink-500 text-white p-1 rounded w-[20%] flex items-center justify-center',
             onClick: () => deleteFile('audioClips', i)
           }, React.createElement(TrashIcon, { className: 'w-4 h-4' }))
-        );
-      })
+        )
+      )
+    ),
+    remainingAudios > 0 && React.createElement('div', { className: 'flex gap-4 justify-center mb-4' },
+      Array.from({ length: remainingAudios }).map((_, i) =>
+        React.createElement(Mic, { key: i, className: 'w-8 h-8 text-gray-400' })
+      )
     ),
     !publicView && React.createElement(React.Fragment, null,
       React.createElement('input', {
