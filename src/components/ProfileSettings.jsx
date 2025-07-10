@@ -410,7 +410,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     !publicView && React.createElement(Button, {
         className: 'mt-2 bg-blue-500 text-white w-full',
         onClick: recoverMissing
-      }, 'Hent mistet fra DB'),
+      }, 'Hent profilbillede, videoer og lydfiler fra databasen til test'),
+    !publicView && profile.subscriptionExpires && React.createElement('p', {
+        className: 'text-center text-sm mt-2 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
+      }, subscriptionActive
+        ? `Abonnement aktivt til ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
+        : ``),
+
     !publicView && !subscriptionActive && React.createElement(Button, {
         className: 'mt-2 w-full bg-pink-500 text-white',
         onClick: () => setShowSub(true)
