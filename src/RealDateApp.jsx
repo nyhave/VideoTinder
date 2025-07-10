@@ -49,7 +49,7 @@ export default function RealDateApp() {
   },[loggedIn, profiles, userId]);
 
 
-  if(!loggedIn) return React.createElement(WelcomeScreen, { onNext: ()=>setLoggedIn(true) });
+  if(!loggedIn) return React.createElement(WelcomeScreen, { profiles, onLogin: id=>{ setUserId(id); setLoggedIn(true); } });
   const selectProfile=id=>{setViewProfile(id); setTab('discovery');};
 
 
@@ -68,7 +68,7 @@ export default function RealDateApp() {
       tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
       tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange, onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);} }),
       tab==='premium' && React.createElement(PremiumFeatures, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-      tab==='admin' && React.createElement(AdminScreen, { profiles, onSwitch: setUserId, currentUserId: userId, onOpenDiscovery: openDailyClips }),
+      tab==='admin' && React.createElement(AdminScreen, { onOpenDiscovery: openDailyClips }),
       tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
     ),
     React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around fixed bottom-0 left-0 right-0' },
