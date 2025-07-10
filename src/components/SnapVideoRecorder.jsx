@@ -84,7 +84,7 @@ export default function SnapVideoRecorder({ onCancel, onRecorded }) {
             strokeDasharray:circumference, strokeDashoffset:offset
           })
         ),
-        React.createElement('button', { onClick: recording ? stop : start, className:'absolute inset-0 flex items-center justify-center text-pink-500 bg-white rounded-full border border-pink-500 w-20 h-20 m-auto' },
+        React.createElement('button', { onClick: recording ? stop : start, className:'absolute inset-0 flex items-center justify-center text-pink-500 bg-white rounded-full border border-pink-500 w-20 h-20' },
           React.createElement(CameraIcon, { className:'w-10 h-10' })
         ),
         React.createElement('div', { className:'absolute inset-0 flex items-center justify-center text-white text-4xl font-bold pointer-events-none' }, remainingSeconds),
