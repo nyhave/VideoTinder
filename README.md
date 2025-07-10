@@ -39,6 +39,8 @@ npm run build
 ```
 The compiled files will be placed in the `dist` folder. When changes are pushed to `main`, a GitHub Actions workflow builds the project and deploys the contents of `dist` to GitHub Pages automatically.
 
+Dette er en test af workflow.
+
 ## GitHub Pages Deployment
 
 Before the workflow can build the site, you must provide your Firebase credentials as repository secrets. Define these secrets in **Settings > Secrets and variables**:
