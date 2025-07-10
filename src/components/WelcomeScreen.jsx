@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 
 export default function WelcomeScreen({ profiles = [], onLogin }) {
-  const [selected, setSelected] = useState('');
+  const [selected, setSelected] = useState(profiles[0]?.id || '');
+
+  useEffect(() => {
+    if (!selected && profiles.length) {
+      setSelected(profiles[0].id);
+    }
+  }, [profiles, selected]);
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, 'Om RealDate'),
     React.createElement('p', { className: 'mb-4 text-gray-700' },
