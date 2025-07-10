@@ -12,6 +12,7 @@ import { useCollection, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, 
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import AudioRecorder from "./AudioRecorder.jsx";
 import AudioContextRecorder from "./AudioContextRecorder.jsx";
+import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, viewerId, onBack }) {
@@ -23,6 +24,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const captureRef = useRef();
   const [showRecorderA, setShowRecorderA] = useState(false);
   const [showRecorderB, setShowRecorderB] = useState(false);
+  const [showSnapRecorder, setShowSnapRecorder] = useState(false);
   const [showSub, setShowSub] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
   const currentUserId = viewerId || userId;
@@ -142,7 +144,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     const file = e.target.files[0];
     if(!file) return;
     if(!(await checkDuration(file))){
-      alert("Lydklip mu00E5 hu00F8jest vu00E6re 10 sekunder");
+      alert("Lydklip må højest være 10 sekunder");
       return;
     }
     uploadFile(file, "audioClips");
@@ -150,7 +152,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const handleRecordedA = async file => {
     if(!(await checkDuration(file))){
-      alert("Lydklip mu00E5 hu00F8jest vu00E6re 10 sekunder");
+      alert("Lydklip må højest være 10 sekunder");
       return;
     }
     setShowRecorderA(false);
@@ -159,12 +161,21 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const handleRecordedB = async file => {
     if(!(await checkDuration(file))){
-      alert("Lydklip mu00E5 hu00F8jest vu00E6re 10 sekunder");
+      alert("Lydklip må højest være 10 sekunder");
       return;
     }
     setShowRecorderB(false);
     uploadFile(file, "audioClips");
   };
+  const handleSnapRecorded = async file => {
+    if(!(await checkDuration(file))){
+      alert("Lydklip må højest være 10 sekunder");
+      return;
+    }
+    setShowSnapRecorder(false);
+    uploadFile(file, "audioClips");
+  };
+
 
   const handleCityChange = async e => {
     const city = e.target.value;
@@ -364,6 +375,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         disabled: maxAudios
       }, 'Optag (Capture)'),
       React.createElement(Button, {
+        className: `mb-2 flex items-center justify-center ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
+        onClick: () => { if(!maxAudios) setShowSnapRecorder(true); },
+        disabled: maxAudios
+      }, React.createElement(Mic, { className: 'w-4 h-4' })),
+      React.createElement(Button, {
         className: `mb-4 ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
         onClick: () => {
           if(!maxAudios) setShowRecorderB(true);
@@ -371,7 +387,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         disabled: maxAudios
       }, 'Optag (WAV)'),
       showRecorderA && React.createElement(AudioRecorder, { onCancel: () => setShowRecorderA(false), onRecorded: handleRecordedA }),
-      showRecorderB && React.createElement(AudioContextRecorder, { onCancel: () => setShowRecorderB(false), onRecorded: handleRecordedB })
+      showRecorderB && React.createElement(AudioContextRecorder, { onCancel: () => setShowRecorderB(false), onRecorded: handleRecordedB }),
+      showSnapRecorder && React.createElement(SnapAudioRecorder, { onCancel: () => setShowSnapRecorder(false), onRecorded: handleSnapRecorded })
     )
   );
 
