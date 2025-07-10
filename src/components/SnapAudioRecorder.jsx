@@ -76,13 +76,13 @@ export default function SnapAudioRecorder({ onCancel, onRecorded }) {
   return React.createElement('div', { className:'fixed inset-0 z-50 flex items-center justify-center bg-black/60' },
     React.createElement('div', { className:'relative w-32 h-32' },
       React.createElement('svg', { className:'absolute inset-0 w-full h-full rotate-animation', viewBox:'0 0 100 100' },
-        React.createElement('circle', { cx:'50', cy:'50', r:radius, stroke:'#e5e7eb', strokeWidth:'5', fill:'none' }),
+        React.createElement('circle', { cx:'50', cy:'50', r:radius, stroke:'#9ca3af', strokeWidth:'5', fill:'none' }),
         React.createElement('circle', {
           cx:'50', cy:'50', r:radius, stroke:'#ff4895', strokeWidth:'5', fill:'none',
           strokeDasharray:circumference, strokeDashoffset:offset
         })
       ),
-      React.createElement('button', { onClick: recording ? stop : start, className:'absolute inset-0 flex items-center justify-center text-pink-500 bg-white rounded-full' },
+      React.createElement('button', { onClick: recording ? stop : start, className:'absolute inset-0 flex items-center justify-center text-pink-500 bg-white rounded-full border border-pink-500' },
         React.createElement(Mic, { className:'w-8 h-8' })
       ),
       React.createElement('div', {
