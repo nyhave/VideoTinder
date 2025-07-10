@@ -3,6 +3,7 @@ import { User, PlayCircle, Heart, Star } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
+import { useT } from '../i18n.js';
 import { useCollection, db, doc, setDoc, deleteDoc, getDoc, updateDoc } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
@@ -10,16 +11,19 @@ import InfoOverlay from './InfoOverlay.jsx';
 
 export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOpenPremium }) {
   const profiles = useCollection('profiles');
+  const t = useT();
   const user = profiles.find(p => p.id === userId) || {};
   const interest = user.interest;
   const hasSubscription = user.subscriptionExpires && new Date(user.subscriptionExpires) > new Date();
   const today = new Date().toISOString().split('T')[0];
   const extra = user.extraClipsDate === today ? 3 : 0;
   const limit = (hasSubscription ? 6 : 3) + extra;
+  const preferred = user.preferredLanguages || [];
   const filtered = profiles.filter(p =>
     p.gender === interest &&
     p.age >= ageRange[0] &&
-    p.age <= ageRange[1]
+    p.age <= ageRange[1] &&
+    (preferred.length === 0 || preferred.includes(p.language || 'en'))
   ).slice(0, limit);
   const likes = useCollection('likes','userId',userId);
 
@@ -81,7 +85,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   }, []);
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title: 'Dagens klip' }),
+    React.createElement(SectionTitle, { title: t('dailyClips') }),
     hasSubscription && React.createElement(Button, {
       className: 'mb-4 w-full bg-yellow-400 text-white flex items-center gap-2',
       onClick: onOpenPremium
@@ -119,7 +123,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           )
         )
       )) :
-        React.createElement('li', { className: 'text-center text-gray-500' }, 'Ingen profiler fundet')
+        React.createElement('li', { className: 'text-center text-gray-500' }, t('noProfiles'))
     ),
     React.createElement(Button, {
       className: 'mt-4 w-full bg-pink-500 text-white',
@@ -130,7 +134,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           setShowPurchase(true);
         }
       }
-    }, 'Hent flere...'),
+    }, t('loadMore')),
     showPurchase && React.createElement(PurchaseOverlay, {
       title: 'Flere klip',
       price: '9 kr',
