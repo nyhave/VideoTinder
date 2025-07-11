@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { User as UserIcon, Smile, MessageCircle as ChatIcon } from 'lucide-react';
+import { User as UserIcon, Smile, MessageCircle as ChatIcon, ArrowLeft } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
@@ -11,7 +11,7 @@ export default function ChatScreen({ userId }) {
   const profiles = useCollection('profiles');
   const chats = useCollection('matches', 'userId', userId);
   const t = useT();
-  const nameMap = Object.fromEntries(profiles.map(p => [p.id, p.name]));
+  const profileMap = Object.fromEntries(profiles.map(p => [p.id, p]));
   const [active, setActive] = useState(null);
   const [text, setText] = useState('');
   const messagesRef = useRef(null);
@@ -78,22 +78,20 @@ export default function ChatScreen({ userId }) {
     setActive(null);
   };
 
-  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-96' },
-    React.createElement(SectionTitle, { title: t('chat') }),
-    React.createElement('div', { className: 'flex overflow-x-auto space-x-4 p-2' },
-      chats.map(m => (
-        React.createElement('div', {
-          key: m.id,
-          className: 'text-center cursor-pointer',
-          onClick: () => openChat(m)
-        },
-          React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
-          React.createElement('p', { className: 'text-sm mt-1' }, nameMap[m.profileId])
-        )
-      ))
-    ),
+  const activeProfile = active ? profileMap[active.profileId] || {} : null;
+
+  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1' },
+    React.createElement(SectionTitle, {
+      title: t('chat'),
+      action: active && React.createElement(Button, { className: 'flex items-center gap-1', onClick: () => setActive(null) },
+        React.createElement(ArrowLeft, { className: 'w-4 h-4' }), 'Tilbage')
+    }),
     active ? (
       React.createElement(React.Fragment, null,
+        activeProfile.photoURL ?
+          React.createElement('img', { src: activeProfile.photoURL, className: 'w-24 h-24 rounded-full object-cover self-center mb-2' }) :
+          React.createElement(UserIcon, { className: 'w-24 h-24 text-pink-500 self-center mb-2' }),
+        React.createElement('p', { className: 'text-center font-medium mb-2' }, `${activeProfile.name || ''}, ${activeProfile.age || ''}, ${activeProfile.city || ''}`),
         React.createElement('div', { ref: messagesRef, className: 'flex-1 overflow-y-auto bg-gray-100 p-4 rounded space-y-3 flex flex-col' },
           (active.messages || []).map((m,i) => (
             React.createElement('div', {
@@ -122,8 +120,24 @@ export default function ChatScreen({ userId }) {
           }, 'Unmatch')
         )
       )
-    ) : React.createElement('p', {
-        className: 'text-center text-gray-500 flex-1 flex items-center justify-center'
-      }, chats.length ? 'Vælg chat' : 'Ingen matches endnu')
+    ) : (
+      chats.length ?
+        React.createElement('ul', { className: 'space-y-4 overflow-y-auto flex-1' },
+          chats.map(m => {
+            const p = profileMap[m.profileId] || {};
+            return React.createElement('li', {
+              key: m.id,
+              className: 'flex items-center gap-4 bg-pink-50 p-2 rounded cursor-pointer',
+              onClick: () => openChat(m)
+            },
+              p.photoURL ?
+                React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
+                React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
+              React.createElement('span', null, `${p.name || ''}, ${p.age || ''}, ${p.city || ''}`)
+            );
+          })
+        ) :
+        React.createElement('p', { className: 'text-center text-gray-500 flex-1 flex items-center justify-center' }, 'Ingen matches endnu')
+    )
   );
 }
