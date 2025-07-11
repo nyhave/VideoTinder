@@ -25,13 +25,26 @@ export default async function seedData() {
     {id:'114',name:'Thomas',age:41,gender:'Mand',interest:'Kvinde',city:'København',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Eventyrlysten.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true}
   ];
   await Promise.all(testUsers.map(u => setDoc(doc(db, 'profiles', u.id), u)));
+  const chatMessages = [
+    {from:'101', text:'Hej Peter! Hvordan g\u00e5r det?', ts:Date.now()},
+    {from:'104', text:'Hej! Det g\u00e5r fint, hvad med dig?', ts:Date.now()},
+    {from:'101', text:'Jeg har haft en travl dag p\u00e5 arbejdet.', ts:Date.now()},
+    {from:'104', text:'Det lyder sp\u00e6ndende! Hvad laver du?', ts:Date.now()},
+    {from:'101', text:'Jeg arbejder som l\u00e6rer i folkeskolen.', ts:Date.now()},
+    {from:'104', text:'Fedt! Har du nogle hobbyer?', ts:Date.now()},
+    {from:'101', text:'Jeg kan godt lide at l\u00e6se b\u00f8ger og g\u00e5 ture.', ts:Date.now()},
+    {from:'104', text:'Det g\u00f8r jeg ogs\u00e5! Har du nogen yndlingsforfattere?', ts:Date.now()},
+    {from:'101', text:'Jeg l\u00e6ser meget af H.C. Andersen.', ts:Date.now()},
+    {from:'104', text:'Sp\u00e6ndende, vi burde m\u00f8des og tale mere om b\u00f8ger.', ts:Date.now()}
+  ];
+  const lastMsg = chatMessages[chatMessages.length-1].text;
   await Promise.all([
     setDoc(doc(db,'matches','101-104'),{
       id:'101-104',
       userId:'101',
       profileId:'104',
-      lastMessage:'Hej Peter!',
-      messages:[{from:'101',text:'Hej Peter!',ts:Date.now()}],
+      lastMessage:lastMsg,
+      messages:chatMessages,
       unreadByUser:false,
       unreadByProfile:true,
       newMatch:false
@@ -40,8 +53,8 @@ export default async function seedData() {
       id:'104-101',
       userId:'104',
       profileId:'101',
-      lastMessage:'Hej Peter!',
-      messages:[{from:'101',text:'Hej Peter!',ts:Date.now()}],
+      lastMessage:lastMsg,
+      messages:chatMessages,
       unreadByUser:true,
       unreadByProfile:false,
       newMatch:false
