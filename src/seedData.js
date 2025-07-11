@@ -8,8 +8,9 @@ export default async function seedData() {
   }
   const now = new Date();
   const expiry = new Date(now); expiry.setMonth(now.getMonth() + 1);
+  const purchase = now.toISOString();
   const testUsers = [
-    {id:'101',name:'Maria',age:49,gender:'Kvinde',interest:'Mand',city:'Odense',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Elsker bøger og gåture.',subscriptionActive:true,subscriptionExpires:expiry.toISOString(),language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'101',name:'Maria',age:49,gender:'Kvinde',interest:'Mand',city:'Odense',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Elsker bøger og gåture.',subscriptionActive:true,subscriptionPurchased:purchase,subscriptionExpires:expiry.toISOString(),language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
     {id:'102',name:'Sofie',age:35,gender:'Kvinde',interest:'Mand',city:'Aarhus',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Yoga-entusiast.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
     {id:'103',name:'Emma',age:41,gender:'Kvinde',interest:'Mand',city:'Aalborg',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Musikalsk sjæl.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
     {id:'104',name:'Peter',age:45,gender:'Mand',interest:'Kvinde',city:'København',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Cykler i weekenden.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
