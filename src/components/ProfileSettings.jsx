@@ -293,7 +293,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       Array.from({ length: 3 }).map((_, i) => {
         const clip = (profile.videoClips || [])[i];
         const url = clip && clip.url ? clip.url : clip;
-        return React.createElement('div', { key: i, className: 'w-[30%] flex flex-col items-center justify-center' },
+        return React.createElement('div', { key: i, className: 'w-[30%] flex flex-col items-center justify-end min-h-[160px]' },
           url
             ? React.createElement(VideoPreview, { src: url })
             : React.createElement(CameraIcon, {
