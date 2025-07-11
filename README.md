@@ -10,6 +10,7 @@ and simple profile management powered by Firebase.
 * Option to buy 3 extra clips for the day
 * Monthly subscriptions with visible expiration date
 * Basic chat between matched profiles with option to unmatch
+* Improved chat layout with timestamps for better readability
 * Celebration overlay when two profiles match
 * Calendar for daily reflections
 * Minimal profile settings and admin mode
