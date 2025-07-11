@@ -97,15 +97,14 @@ export default function ChatScreen({ userId }) {
           (active.messages || []).map((m,i) => {
             const fromSelf = m.from === userId;
             const profile = fromSelf ? userProfile : activeProfile;
+            const time = new Date(m.ts).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
             return React.createElement('div', {
               key: i,
-              className: `flex items-end ${fromSelf ? 'justify-end' : 'justify-start'}`
+              className: `space-y-1 ${fromSelf ? 'text-right' : 'text-left'}`
             },
-              !fromSelf && React.createElement(ChatIcon, { className: 'w-6 h-6 text-pink-500 mr-1' }),
-              React.createElement('div', {
-                className: `${fromSelf ? 'bg-pink-100' : 'bg-gray-200'} p-2 rounded-lg max-w-xs`
-              }, m.text),
-              fromSelf && React.createElement(ChatIcon, { className: 'w-6 h-6 text-pink-500 ml-1' })
+              React.createElement('div', { className: 'text-xs text-gray-500' },
+                `${profile.name || ''} • ${time}`),
+              React.createElement('div', null, m.text)
             );
           })
         ),
