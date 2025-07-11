@@ -69,6 +69,7 @@ export default function ChatScreen({ userId }) {
 
   const unmatch = async () => {
     if(!active) return;
+    if(!window.confirm('Er du sikker?')) return;
     const id1 = `${active.userId}-${active.profileId}`;
     const id2 = `${active.profileId}-${active.userId}`;
     await Promise.all([
