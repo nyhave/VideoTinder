@@ -23,6 +23,7 @@ and simple profile management powered by Firebase.
 * Animation med nedtælling viser hvor lang tid der er tilbage under lyd- og videooptagelse
 * Daglige statistikker gemmes automatisk og vises som grafer i adminområdet
 * Statistik over hvor mange gange profiler bliver åbnet
+* Graf over antallet af \u00E5bne fejl pr. dag
 
 
 ## Getting Started
