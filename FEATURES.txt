@@ -11,6 +11,8 @@ Animated countdown shown while recording audio or video
 Offline support via service worker caching
 PWA manifest for standalone installation
 
+Profile view statistics
+
 Profile pictures cached for offline viewing
 
 Admin mode

@@ -11,7 +11,7 @@ import AdminScreen from './components/AdminScreen.jsx';
 import StatsScreen from './components/StatsScreen.jsx';
 import BugReportsScreen from './components/BugReportsScreen.jsx';
 import AboutScreen from './components/AboutScreen.jsx';
-import { useCollection, requestNotificationPermission } from './firebase.js';
+import { useCollection, requestNotificationPermission, db, doc, updateDoc, increment } from './firebase.js';
 
 
 export default function RealDateApp() {
@@ -78,7 +78,15 @@ export default function RealDateApp() {
   if(!loggedIn) return React.createElement(LanguageProvider, { value:{lang,setLang} },
     React.createElement(WelcomeScreen, { profiles, onLogin: id=>{ setUserId(id); setLoggedIn(true); } })
   );
-  const selectProfile=id=>{setViewProfile(id); setTab('discovery');};
+  const selectProfile = async id => {
+    setViewProfile(id);
+    setTab('discovery');
+    try {
+      await updateDoc(doc(db, 'profiles', id), { viewCount: increment(1) });
+    } catch(err) {
+      console.error('Failed to record profile view', err);
+    }
+  };
 
 
 
