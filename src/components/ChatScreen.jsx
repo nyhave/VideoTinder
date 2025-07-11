@@ -101,17 +101,11 @@ export default function ChatScreen({ userId }) {
               key: i,
               className: `flex items-end ${fromSelf ? 'justify-end' : 'justify-start'}`
             },
-              !fromSelf && (profile.photoURL ?
-                React.createElement('img', { src: profile.photoURL, className: 'w-6 h-6 rounded-full mr-1' }) :
-                React.createElement(UserIcon, { className: 'w-6 h-6 text-pink-500 mr-1' })
-              ),
+              !fromSelf && React.createElement(ChatIcon, { className: 'w-6 h-6 text-pink-500 mr-1' }),
               React.createElement('div', {
                 className: `${fromSelf ? 'bg-pink-100' : 'bg-gray-200'} p-2 rounded-lg max-w-xs`
               }, m.text),
-              fromSelf && (profile.photoURL ?
-                React.createElement('img', { src: profile.photoURL, className: 'w-6 h-6 rounded-full ml-1' }) :
-                React.createElement(UserIcon, { className: 'w-6 h-6 text-pink-500 ml-1' })
-              )
+              fromSelf && React.createElement(ChatIcon, { className: 'w-6 h-6 text-pink-500 ml-1' })
             );
           })
         ),
