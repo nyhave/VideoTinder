@@ -40,9 +40,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     expiry.setMonth(expiry.getMonth() + 1);
     await updateDoc(doc(db, 'profiles', userId), {
       subscriptionActive: true,
+      subscriptionPurchased: now.toISOString(),
       subscriptionExpires: expiry.toISOString()
     });
-    setProfile({ ...profile, subscriptionActive: true, subscriptionExpires: expiry.toISOString() });
+    setProfile({ ...profile, subscriptionActive: true, subscriptionPurchased: now.toISOString(), subscriptionExpires: expiry.toISOString() });
     setShowSub(false);
   };
 
@@ -424,6 +425,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       }, subscriptionActive
         ? `Premium abonnement aktivt til ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
         : `Premium abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`),
+      !publicView && profile.subscriptionPurchased && React.createElement('p', {
+        className: 'text-center text-sm text-gray-500'
+      }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`),
       !publicView && React.createElement(Button, {
         className: 'mt-4 bg-gray-200 text-gray-700 px-4 py-2 rounded',
         onClick: onViewPublicProfile
