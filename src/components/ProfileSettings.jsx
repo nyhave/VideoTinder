@@ -486,14 +486,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      !publicView && React.createElement(React.Fragment, null,
-        React.createElement('label', null, 'By'),
-        React.createElement(Input, {
-          value: profile.city || '',
-          onChange: handleCityChange,
-          className: 'border p-2 rounded'
-        })
-      ),
       React.createElement(SectionTitle, { title: t('aboutMe') }),
       React.createElement(Textarea, {
         className: 'mb-4',
