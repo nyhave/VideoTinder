@@ -9,20 +9,20 @@ export default async function seedData() {
   const now = new Date();
   const expiry = new Date(now); expiry.setMonth(now.getMonth() + 1);
   const testUsers = [
-    {id:'101',name:'Maria',age:49,gender:'Kvinde',interest:'Mand',city:'Odense',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Elsker bøger og gåture.',subscriptionActive:true,subscriptionExpires:expiry.toISOString(),language:'da',preferredLanguages:['da']},
-    {id:'102',name:'Sofie',age:35,gender:'Kvinde',interest:'Mand',city:'Aarhus',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Yoga-entusiast.',language:'da',preferredLanguages:['da']},
-    {id:'103',name:'Emma',age:41,gender:'Kvinde',interest:'Mand',city:'Aalborg',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Musikalsk sjæl.',language:'da',preferredLanguages:['da']},
-    {id:'104',name:'Peter',age:45,gender:'Mand',interest:'Kvinde',city:'København',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Cykler i weekenden.',language:'da',preferredLanguages:['da']},
-    {id:'105',name:'Lars',age:52,gender:'Mand',interest:'Kvinde',city:'København',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Madglad iværksætter.',language:'da',preferredLanguages:['da']},
-    {id:'106',name:'Henrik',age:40,gender:'Mand',interest:'Kvinde',city:'Randers',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Naturligvis fotograf.',language:'da',preferredLanguages:['da']},
-    {id:'107',name:'Anders',age:38,gender:'Mand',interest:'Kvinde',city:'Esbjerg',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Løber maraton.',language:'da',preferredLanguages:['da']},
-    {id:'108',name:'Johan',age:42,gender:'Mand',interest:'Kvinde',city:'Odense',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Historieinteresseret.',language:'da',preferredLanguages:['da']},
-    {id:'109',name:'Morten',age:50,gender:'Mand',interest:'Kvinde',city:'Aarhus',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Friluftsmenneske.',language:'da',preferredLanguages:['da']},
-    {id:'110',name:'Ole',age:47,gender:'Mand',interest:'Kvinde',city:'Aalborg',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Nyder god kaffe.',language:'da',preferredLanguages:['da']},
-    {id:'111',name:'Jørgen',age:53,gender:'Mand',interest:'Kvinde',city:'København',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Glad for sejlsport.',language:'da',preferredLanguages:['da']},
-    {id:'112',name:'Frederik',age:39,gender:'Mand',interest:'Kvinde',city:'Odense',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Spiller guitar.',language:'da',preferredLanguages:['da']},
-    {id:'113',name:'Christian',age:44,gender:'Mand',interest:'Kvinde',city:'Aarhus',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Kunstnerisk sjæl.',language:'da',preferredLanguages:['da']},
-    {id:'114',name:'Thomas',age:41,gender:'Mand',interest:'Kvinde',city:'København',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Eventyrlysten.',language:'da',preferredLanguages:['da']}
+    {id:'101',name:'Maria',age:49,gender:'Kvinde',interest:'Mand',city:'Odense',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Elsker bøger og gåture.',subscriptionActive:true,subscriptionExpires:expiry.toISOString(),language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'102',name:'Sofie',age:35,gender:'Kvinde',interest:'Mand',city:'Aarhus',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Yoga-entusiast.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'103',name:'Emma',age:41,gender:'Kvinde',interest:'Mand',city:'Aalborg',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Musikalsk sjæl.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'104',name:'Peter',age:45,gender:'Mand',interest:'Kvinde',city:'København',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Cykler i weekenden.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'105',name:'Lars',age:52,gender:'Mand',interest:'Kvinde',city:'København',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Madglad iværksætter.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'106',name:'Henrik',age:40,gender:'Mand',interest:'Kvinde',city:'Randers',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Naturligvis fotograf.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'107',name:'Anders',age:38,gender:'Mand',interest:'Kvinde',city:'Esbjerg',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Løber maraton.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'108',name:'Johan',age:42,gender:'Mand',interest:'Kvinde',city:'Odense',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Historieinteresseret.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'109',name:'Morten',age:50,gender:'Mand',interest:'Kvinde',city:'Aarhus',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Friluftsmenneske.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'110',name:'Ole',age:47,gender:'Mand',interest:'Kvinde',city:'Aalborg',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Nyder god kaffe.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'111',name:'Jørgen',age:53,gender:'Mand',interest:'Kvinde',city:'København',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Glad for sejlsport.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'112',name:'Frederik',age:39,gender:'Mand',interest:'Kvinde',city:'Odense',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Spiller guitar.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'113',name:'Christian',age:44,gender:'Mand',interest:'Kvinde',city:'Aarhus',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Kunstnerisk sjæl.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true},
+    {id:'114',name:'Thomas',age:41,gender:'Mand',interest:'Kvinde',city:'København',distanceRange:[10,25],audioClips:[],videoClips:[],clip:'Eventyrlysten.',language:'da',preferredLanguages:['da'],allowOtherLanguages:true}
   ];
   await Promise.all(testUsers.map(u => setDoc(doc(db, 'profiles', u.id), u)));
   await Promise.all([
