@@ -94,7 +94,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       'Premium feature: Se hvem der har liket dig'
     ),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Nye klip om ${hoursUntil} timer`),
-    React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Tag dig god tid til at lytte til og se dagens klip`),
+    React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Tag dig god tid til at udforske dagens klip`),
     React.createElement('ul', { className: 'space-y-4' },
       filtered.length ? filtered.map(p => (
         React.createElement('li', {
