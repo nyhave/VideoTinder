@@ -8,6 +8,7 @@ import DailyCheckIn from './components/DailyCheckIn.jsx';
 import ProfileSettings from './components/ProfileSettings.jsx';
 import PremiumFeatures from './components/PremiumFeatures.jsx';
 import AdminScreen from './components/AdminScreen.jsx';
+import StatsScreen from './components/StatsScreen.jsx';
 import AboutScreen from './components/AboutScreen.jsx';
 import { useCollection, requestNotificationPermission } from './firebase.js';
 
@@ -108,7 +109,8 @@ export default function RealDateApp() {
         onViewPublicProfile: viewOwnPublicProfile
       }),
       tab==='premium' && React.createElement(PremiumFeatures, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-      tab==='admin' && React.createElement(AdminScreen, null),
+      tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats') }),
+      tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
       tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
     ),
     React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around fixed bottom-0 left-0 right-0' },

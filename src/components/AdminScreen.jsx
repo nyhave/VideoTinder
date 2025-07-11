@@ -5,7 +5,7 @@ import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
 import { db, collection, getDocs } from '../firebase.js';
 
-export default function AdminScreen() {
+export default function AdminScreen({ onOpenStats }) {
 
   const sendPush = async body => {
     const serverKey = process.env.FCM_SERVER_KEY;
@@ -34,6 +34,8 @@ export default function AdminScreen() {
     React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: seedData }, 'Reset database'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Push notifications'),
     React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
-    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen')
+    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Statistik'),
+    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: onOpenStats }, 'Vis statistik')
   );
 }
