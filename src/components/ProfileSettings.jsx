@@ -355,12 +355,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   return React.createElement(React.Fragment, null,
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       !publicView && React.createElement('div', {
-        className: 'mb-4 flex justify-end gap-2'
+        className: 'mb-4 flex justify-end'
       },
-        React.createElement(Button, {
-          className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
-          onClick: onViewPublicProfile
-        }, 'View public profile'),
         React.createElement('button', {
           className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
           onClick: onLogout
@@ -427,6 +423,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       }, subscriptionActive
         ? `Premium abonnement aktivt til ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
         : `Premium abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`),
+      !publicView && React.createElement(Button, {
+        className: 'mt-4 bg-gray-200 text-gray-700 px-4 py-2 rounded',
+        onClick: onViewPublicProfile
+      }, 'View public profile')
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
