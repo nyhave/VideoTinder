@@ -297,7 +297,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           url
             ? React.createElement(VideoPreview, { src: url })
             : React.createElement(CameraIcon, {
-                className: `w-10 h-10 text-gray-400 ${!publicView ? 'cursor-pointer' : ''}`,
+                className: `w-10 h-10 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
                 onClick: !publicView ? () => setShowSnapVideoRecorder(true) : undefined
               }),
           url && !publicView && React.createElement(Button, {
@@ -337,7 +337,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       Array.from({ length: remainingAudios }).map((_, i) =>
         React.createElement(Mic, {
           key: i,
-          className: `w-8 h-8 text-gray-400 ${!publicView ? 'cursor-pointer' : ''}`,
+          className: `w-8 h-8 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
           onClick: !publicView ? () => setShowSnapRecorder(true) : undefined
         })
       )
@@ -372,7 +372,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             className:`w-24 h-24 rounded bg-gray-200 flex items-center justify-center ${!publicView ? 'cursor-pointer' : ''}`,
             onClick: !publicView ? () => photoRef.current && photoRef.current.click() : undefined
           },
-            React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500' })
+            React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500 blinking-thumb' })
           ),
         publicView && !isOwnProfile && React.createElement(Button, {
           className: 'ml-auto bg-pink-500 text-white',
