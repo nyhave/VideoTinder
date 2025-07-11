@@ -15,7 +15,7 @@ import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
 import { languages, useT } from '../i18n.js';
 
-export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, viewerId, onBack }) {
+export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, onViewPublicProfile = () => {}, viewerId, onBack }) {
   const [profile,setProfile]=useState(null);
   const t = useT();
   const videoRef = useRef();
@@ -361,10 +361,18 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   return React.createElement(React.Fragment, null,
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      !publicView && React.createElement('button', {
-        className: 'mb-4 bg-gray-200 text-gray-700 px-4 py-2 rounded',
-        onClick: onLogout
-      }, 'Logout'),
+      !publicView && React.createElement('div', {
+        className: 'mb-4 flex justify-end gap-2'
+      },
+        React.createElement(Button, {
+          className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
+          onClick: onViewPublicProfile
+        }, 'View public profile'),
+        React.createElement('button', {
+          className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
+          onClick: onLogout
+        }, 'Logout')
+      ),
       publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
       React.createElement('div', { className:'flex items-center mb-4 gap-4' },
         profile.photoURL ?
