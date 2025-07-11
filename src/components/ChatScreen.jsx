@@ -104,6 +104,7 @@ export default function ChatScreen({ userId }) {
           React.createElement(Textarea, {
             className: 'flex-1',
             placeholder: 'Skriv besked...',
+            rows: 8,
             value: text,
             onChange: e => setText(e.target.value)
           }),
