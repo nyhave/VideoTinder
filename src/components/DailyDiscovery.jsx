@@ -61,7 +61,8 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           profileId,
           lastMessage:'',
           unreadByUser:false,
-          unreadByProfile:false
+          unreadByProfile:false,
+          newMatch:false
         };
         const m2 = {
           id:`${profileId}-${userId}`,
@@ -69,7 +70,8 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           profileId:userId,
           lastMessage:'',
           unreadByUser:false,
-          unreadByProfile:false
+          unreadByProfile:false,
+          newMatch:true
         };
         await Promise.all([
           setDoc(doc(db,'matches',m1.id),m1),

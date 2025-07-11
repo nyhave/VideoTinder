@@ -215,7 +215,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           profileId:userId,
           lastMessage:'',
           unreadByUser:false,
-          unreadByProfile:false
+          unreadByProfile:false,
+          newMatch:false
         };
         const m2 = {
           id:`${userId}-${currentUserId}`,
@@ -223,7 +224,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           profileId:currentUserId,
           lastMessage:'',
           unreadByUser:false,
-          unreadByProfile:false
+          unreadByProfile:false,
+          newMatch:true
         };
         await Promise.all([
           setDoc(doc(db,'matches',m1.id),m1),

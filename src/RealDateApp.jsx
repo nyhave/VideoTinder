@@ -27,7 +27,7 @@ export default function RealDateApp() {
   const [ageRange,setAgeRange]=useState([35,55]);
   const [tab,setTab]=useState('discovery');
   const [viewProfile,setViewProfile]=useState(null);
-  const hasUnread = chats.some(c => c.unreadByUser);
+  const hasUnread = chats.some(c => c.unreadByUser || c.newMatch);
 
   const openDailyClips = () => {
     setTab('discovery');

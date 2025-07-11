@@ -20,8 +20,8 @@ export default function ChatScreen({ userId }) {
     if(active){
       const updated = chats.find(c => c.id === active.id);
       if(updated) setActive(updated);
-      if(active.unreadByUser){
-        updateDoc(doc(db,'matches',active.id),{unreadByUser:false});
+      if(active.unreadByUser || active.newMatch){
+        updateDoc(doc(db,'matches',active.id),{unreadByUser:false,newMatch:false});
       }
     }
   }, [chats, active]);
@@ -34,8 +34,8 @@ export default function ChatScreen({ userId }) {
 
   const openChat = chat => {
     setActive(chat);
-    if(chat.unreadByUser){
-      updateDoc(doc(db,'matches',chat.id),{unreadByUser:false});
+    if(chat.unreadByUser || chat.newMatch){
+      updateDoc(doc(db,'matches',chat.id),{unreadByUser:false,newMatch:false});
     }
   };
 
@@ -50,13 +50,15 @@ export default function ChatScreen({ userId }) {
         lastMessage: trimmed,
         unreadByProfile: true,
         unreadByUser: false,
-        messages: arrayUnion(message)
+        messages: arrayUnion(message),
+        newMatch:false
       }),
       updateDoc(doc(db,'matches',id2),{
         lastMessage: trimmed,
         unreadByProfile: false,
         unreadByUser: true,
-        messages: arrayUnion(message)
+        messages: arrayUnion(message),
+        newMatch:false
       })
     ]);
     setText('');

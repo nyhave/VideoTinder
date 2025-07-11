@@ -33,7 +33,8 @@ export default async function seedData() {
       lastMessage:'Hej Peter!',
       messages:[{from:'101',text:'Hej Peter!',ts:Date.now()}],
       unreadByUser:false,
-      unreadByProfile:true
+      unreadByProfile:true,
+      newMatch:false
     }),
     setDoc(doc(db,'matches','104-101'),{
       id:'104-101',
@@ -42,7 +43,8 @@ export default async function seedData() {
       lastMessage:'Hej Peter!',
       messages:[{from:'101',text:'Hej Peter!',ts:Date.now()}],
       unreadByUser:true,
-      unreadByProfile:false
+      unreadByProfile:false,
+      newMatch:false
     })
   ]);
   await Promise.all([
