@@ -45,6 +45,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     const exists = likes.some(l => l.profileId === profileId);
     const ref = doc(db,'likes',likeId);
     if(exists){
+      if(!window.confirm('Er du sikker?')) return;
       await deleteDoc(ref);
       // remove any existing match when unliking
       await Promise.all([

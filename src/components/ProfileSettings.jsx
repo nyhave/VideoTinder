@@ -200,6 +200,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     const exists = likes.some(l => l.profileId === userId);
     const ref = doc(db,'likes',likeId);
     if(exists){
+      if(!window.confirm('Er du sikker?')) return;
       await deleteDoc(ref);
       await Promise.all([
         deleteDoc(doc(db,'matches',`${currentUserId}-${userId}`)),
