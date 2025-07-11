@@ -380,11 +380,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onChange: handleAudioChange,
         className: 'hidden'
       }),
-      React.createElement(Button, {
-        className: `mb-2 flex items-center justify-center ${maxAudios ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
-        onClick: () => { if(!maxAudios) setShowSnapRecorder(true); },
-        disabled: maxAudios
-      }, React.createElement(Mic, { className: 'w-4 h-4' })),
       showSnapRecorder && React.createElement(SnapAudioRecorder, { onCancel: () => setShowSnapRecorder(false), onRecorded: handleSnapRecorded })
     )
   );
