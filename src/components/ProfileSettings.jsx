@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon } from 'lucide-react';
+import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
@@ -26,6 +26,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [showSnapVideoRecorder, setShowSnapVideoRecorder] = useState(false);
   const [showSub, setShowSub] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
+  const [editInfo, setEditInfo] = useState(false);
   const currentUserId = viewerId || userId;
   const likes = useCollection('likes','userId', currentUserId);
   const [matchedProfile, setMatchedProfile] = useState(null);
@@ -164,6 +165,18 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     }
     setShowSnapVideoRecorder(false);
     uploadFile(file, 'videoClips');
+  };
+
+  const handleNameChange = async e => {
+    const name = e.target.value;
+    setProfile({ ...profile, name });
+    await updateDoc(doc(db,'profiles',userId), { name });
+  };
+
+  const handleAgeChange = async e => {
+    const age = parseInt(e.target.value, 10) || '';
+    setProfile({ ...profile, age });
+    await updateDoc(doc(db,'profiles',userId), { age });
   };
 
 
@@ -396,12 +409,41 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           onClick:()=>photoRef.current && photoRef.current.click()
         }, profile.photoURL ? 'Skift billede' : 'Upload billede')
       ),
-      React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` }),
+      editInfo ?
+        React.createElement('div', { className:'space-y-2 mb-2 w-full' },
+          React.createElement(Input, {
+            value: profile.name || '',
+            onChange: handleNameChange,
+            className:'border p-2 rounded w-full',
+            placeholder:'Navn'
+          }),
+          React.createElement(Input, {
+            type:'number',
+            value: profile.age || '',
+            onChange: handleAgeChange,
+            className:'border p-2 rounded w-full',
+            placeholder:'Alder'
+          }),
+          React.createElement(Input, {
+            value: profile.city || '',
+            onChange: handleCityChange,
+            className:'border p-2 rounded w-full',
+            placeholder:'By'
+          }),
+          React.createElement(Button, {
+            className:'bg-pink-500 text-white w-full',
+            onClick: () => setEditInfo(false)
+          }, 'Færdig')
+        ) :
+        React.createElement('div', { className:'flex items-center justify-between w-full' },
+          React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` }),
+          !publicView && React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditInfo(true) })
+        ),
       !publicView && profile.subscriptionExpires && React.createElement('p', {
         className: 'text-center text-sm mt-2 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
       }, subscriptionActive
         ? `Premium abonnement aktivt til ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
-        : `Premium abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`)
+        : `Premium abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`),
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
