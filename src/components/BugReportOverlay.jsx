@@ -21,7 +21,8 @@ export default function BugReportOverlay({ onClose }) {
       id,
       text,
       screenshotURL,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      closed: false
     });
     onClose();
     alert('Tak for din fejlmelding');
