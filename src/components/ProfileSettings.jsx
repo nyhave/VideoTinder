@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon } from 'lucide-react';
+import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
@@ -30,6 +30,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const currentUserId = viewerId || userId;
   const isOwnProfile = viewerId === userId;
   const likes = useCollection('likes','userId', currentUserId);
+  const liked = likes.some(l => l.profileId === userId);
   const [matchedProfile, setMatchedProfile] = useState(null);
 
   const handlePurchase = async () => {
@@ -288,7 +289,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   };
 
   const videoSection = React.createElement(React.Fragment, null,
-    React.createElement(SectionTitle, { title: t('videoClips') }),
+    React.createElement(SectionTitle, {
+      title: t('videoClips'),
+      action: publicView && !isOwnProfile && React.createElement(Heart, {
+        className: `w-6 h-6 cursor-pointer ${liked ? 'text-pink-500' : 'text-gray-400'}`,
+        onClick: toggleLike
+      })
+    }),
     React.createElement('div', { className: 'flex items-center gap-4 mb-4 justify-between' },
       Array.from({ length: 3 }).map((_, i) => {
         const clip = (profile.videoClips || [])[i];
@@ -339,7 +346,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const remainingAudios = Math.max(0, 3 - audioClips.length);
 
   const audioSection = React.createElement(React.Fragment, null,
-    React.createElement(SectionTitle, { title: t('audioClips') }),
+    React.createElement(SectionTitle, {
+      title: t('audioClips'),
+      action: publicView && !isOwnProfile && React.createElement(Heart, {
+        className: `w-6 h-6 cursor-pointer ${liked ? 'text-pink-500' : 'text-gray-400'}`,
+        onClick: toggleLike
+      })
+    }),
     React.createElement('div', { className: 'space-y-2 mb-4' },
       audioClips.map((clip, i) => {
         const url = clip && clip.url ? clip.url : clip;
@@ -398,7 +411,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         publicView && !isOwnProfile && React.createElement(Button, {
           className: 'ml-auto bg-pink-500 text-white',
           onClick: toggleLike
-        }, likes.some(l=>l.profileId===userId) ? 'Unmatch' : 'Match'),
+        }, liked ? 'Unmatch' : 'Match'),
         !publicView && React.createElement('input', {
           type:'file',
           accept:'image/*',
