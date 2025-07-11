@@ -79,6 +79,7 @@ export default function ChatScreen({ userId }) {
   };
 
   const activeProfile = active ? profileMap[active.profileId] || {} : null;
+  const userProfile = profileMap[userId] || {};
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1' },
     React.createElement(SectionTitle, {
@@ -93,12 +94,26 @@ export default function ChatScreen({ userId }) {
           React.createElement(UserIcon, { className: 'w-24 h-24 text-pink-500 self-center mb-2' }),
         React.createElement('p', { className: 'text-center font-medium mb-2' }, `${activeProfile.name || ''}, ${activeProfile.age || ''}, ${activeProfile.city || ''}`),
         React.createElement('div', { ref: messagesRef, className: 'flex-1 overflow-y-auto bg-gray-100 p-4 rounded space-y-3 flex flex-col' },
-          (active.messages || []).map((m,i) => (
-            React.createElement('div', {
+          (active.messages || []).map((m,i) => {
+            const fromSelf = m.from === userId;
+            const profile = fromSelf ? userProfile : activeProfile;
+            return React.createElement('div', {
               key: i,
-              className: `${m.from===userId ? 'bg-pink-100 self-end' : 'bg-gray-200'} p-2 rounded-lg max-w-xs`
-            }, m.text)
-          ))
+              className: `flex items-end ${fromSelf ? 'justify-end' : 'justify-start'}`
+            },
+              !fromSelf && (profile.photoURL ?
+                React.createElement('img', { src: profile.photoURL, className: 'w-6 h-6 rounded-full mr-1' }) :
+                React.createElement(UserIcon, { className: 'w-6 h-6 text-pink-500 mr-1' })
+              ),
+              React.createElement('div', {
+                className: `${fromSelf ? 'bg-pink-100' : 'bg-gray-200'} p-2 rounded-lg max-w-xs`
+              }, m.text),
+              fromSelf && (profile.photoURL ?
+                React.createElement('img', { src: profile.photoURL, className: 'w-6 h-6 rounded-full ml-1' }) :
+                React.createElement(UserIcon, { className: 'w-6 h-6 text-pink-500 ml-1' })
+              )
+            );
+          })
         ),
         React.createElement('div', { className: 'flex flex-col gap-2 mt-2' },
           React.createElement('div', { className: 'flex items-center gap-2' },
