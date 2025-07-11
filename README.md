@@ -21,6 +21,7 @@ and simple profile management powered by Firebase.
 * Video- og lydklip begrænset til 10 sekunder
   (optagelser lidt over 10s accepteres for at håndtere kodningsforsinkelser)
 * Animation med nedtælling viser hvor lang tid der er tilbage under lyd- og videooptagelse
+* Daglige statistikker gemmes automatisk og vises som grafer i adminområdet
 
 
 ## Getting Started
