@@ -304,10 +304,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           url
             ? React.createElement(VideoPreview, { src: url })
             : React.createElement(CameraIcon, {
-                className: `w-10 h-10 ${!publicView ? 'text-pink-500 cursor-pointer' : 'text-gray-400'}`,
-                onClick: !publicView ? () => {
-                  if (videoRef.current) videoRef.current.click();
-                } : undefined
+                className: `w-10 h-10 text-gray-400 ${!publicView ? 'cursor-pointer' : ''}`,
+                onClick: !publicView ? () => setShowSnapVideoRecorder(true) : undefined
               }),
           url && !publicView && React.createElement(Button, {
             className: 'mt-1 bg-pink-500 text-white p-1 rounded-full flex items-center justify-center',
