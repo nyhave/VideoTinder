@@ -22,6 +22,11 @@ import {
   listAll,
   deleteObject
 } from 'firebase/storage';
+import {
+  getMessaging,
+  getToken,
+  onMessage
+} from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -34,6 +39,28 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+export let messaging;
+if (typeof window !== 'undefined') {
+  messaging = getMessaging(app);
+}
+
+export async function requestNotificationPermission(userId) {
+  if (!messaging || Notification.permission === 'denied') return null;
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    const token = await getToken(messaging, {
+      vapidKey: process.env.VAPID_KEY,
+      serviceWorkerRegistration: registration
+    });
+    if (token) {
+      await setDoc(doc(db, 'pushTokens', token), { token, userId }, { merge: true });
+    }
+    return token;
+  } catch (err) {
+    console.error('Failed to get FCM token', err);
+    return null;
+  }
+}
 
 export function useCollection(collectionName, field, value) {
   const [data, setData] = useState([]);
@@ -64,7 +91,10 @@ export {
   uploadBytes,
   getDownloadURL,
   listAll,
-  deleteObject
+  deleteObject,
+  messaging,
+  onMessage,
+  requestNotificationPermission
 };
 
 export { storage };

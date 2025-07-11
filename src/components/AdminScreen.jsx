@@ -8,6 +8,26 @@ import { db, collection, getDocs } from '../firebase.js';
 export default function AdminScreen() {
   const [firestoreInfo, setFirestoreInfo] = useState(null);
 
+  const sendPush = async body => {
+    const serverKey = process.env.FCM_SERVER_KEY;
+    if (!serverKey) {
+      alert('FCM_SERVER_KEY not set');
+      return;
+    }
+    const tokensSnap = await getDocs(collection(db, 'pushTokens'));
+    await Promise.all(tokensSnap.docs.map(d => {
+      const token = d.id;
+      return fetch('https://fcm.googleapis.com/fcm/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'key=' + serverKey
+        },
+        body: JSON.stringify({ to: token, notification: { title: 'RealDate', body } })
+      });
+    }));
+  };
+
   const showFirestoreInfo = async () => {
     const config = {
       apiKey: process.env.FIREBASE_API_KEY,
@@ -34,6 +54,9 @@ export default function AdminScreen() {
       JSON.stringify(firestoreInfo.config, null, 2) + '\nStatus: ' + firestoreInfo.status
     ),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-pink-600' }, 'Reset database'),
-    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: seedData }, 'Reset database')
+    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: seedData }, 'Reset database'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Push notifications'),
+    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
+    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen')
   );
 }

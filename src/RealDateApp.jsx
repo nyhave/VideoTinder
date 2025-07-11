@@ -9,7 +9,7 @@ import ProfileSettings from './components/ProfileSettings.jsx';
 import PremiumFeatures from './components/PremiumFeatures.jsx';
 import AdminScreen from './components/AdminScreen.jsx';
 import AboutScreen from './components/AboutScreen.jsx';
-import { useCollection } from './firebase.js';
+import { useCollection, requestNotificationPermission } from './firebase.js';
 
 
 export default function RealDateApp() {
@@ -55,6 +55,12 @@ export default function RealDateApp() {
       setUserId((defaultProfile || profiles[0]).id);
     }
   },[loggedIn, profiles, userId]);
+
+  useEffect(() => {
+    if (loggedIn && userId) {
+      requestNotificationPermission(userId);
+    }
+  }, [loggedIn, userId]);
 
 
   if(!loggedIn) return React.createElement(LanguageProvider, { value:{lang,setLang} },
