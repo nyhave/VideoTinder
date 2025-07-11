@@ -367,7 +367,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     ),
     remainingAudios > 0 && React.createElement('div', { className: 'flex gap-4 justify-center mb-4' },
       Array.from({ length: remainingAudios }).map((_, i) =>
-        React.createElement(Mic, { key: i, className: 'w-8 h-8 text-gray-400' })
+        React.createElement(Mic, {
+          key: i,
+          className: `w-8 h-8 text-gray-400 ${!publicView ? 'cursor-pointer' : ''}`,
+          onClick: !publicView ? () => setShowSnapRecorder(true) : undefined
+        })
       )
     ),
     !publicView && React.createElement(React.Fragment, null,
@@ -405,7 +409,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement('div', { className:'flex items-center mb-4 gap-4' },
         profile.photoURL ?
           React.createElement('img', { src: profile.photoURL, alt: 'Profil', className:'w-24 h-24 rounded object-cover' }) :
-          React.createElement('div', { className:'w-24 h-24 rounded bg-gray-200 flex items-center justify-center' },
+          React.createElement('div', {
+            className:`w-24 h-24 rounded bg-gray-200 flex items-center justify-center ${!publicView ? 'cursor-pointer' : ''}`,
+            onClick: !publicView ? () => photoRef.current && photoRef.current.click() : undefined
+          },
             React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500' })
           ),
         publicView && !isOwnProfile && React.createElement(Button, {
