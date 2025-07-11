@@ -34,6 +34,16 @@ export default function RealDateApp() {
     setViewProfile(null);
   };
 
+  const openProfileSettings = () => {
+    setTab('profile');
+    setViewProfile(null);
+  };
+
+  const viewOwnPublicProfile = () => {
+    setViewProfile(userId);
+    setTab('discovery');
+  };
+
   // Persist login status between sessions
   useEffect(() => {
     localStorage.setItem('loggedIn', loggedIn ? 'true' : 'false');
@@ -79,11 +89,24 @@ export default function RealDateApp() {
         React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange, onOpenPremium: ()=>setTab('premium') })
       ),
       viewProfile && (
-        React.createElement(ProfileSettings, { userId: viewProfile, viewerId: userId, ageRange, onChangeAgeRange: setAgeRange, publicView: true, onBack: openDailyClips })
+        React.createElement(ProfileSettings, {
+          userId: viewProfile,
+          viewerId: userId,
+          ageRange,
+          onChangeAgeRange: setAgeRange,
+          publicView: true,
+          onBack: viewProfile === userId ? openProfileSettings : openDailyClips
+        })
       ),
       tab==='chat' && React.createElement(ChatScreen, { userId }),
       tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
-      tab==='profile' && React.createElement(ProfileSettings, { userId, ageRange, onChangeAgeRange: setAgeRange, onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);} }),
+      tab==='profile' && React.createElement(ProfileSettings, {
+        userId,
+        ageRange,
+        onChangeAgeRange: setAgeRange,
+        onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);},
+        onViewPublicProfile: viewOwnPublicProfile
+      }),
       tab==='premium' && React.createElement(PremiumFeatures, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
       tab==='admin' && React.createElement(AdminScreen, null),
       tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
