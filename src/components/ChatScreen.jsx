@@ -100,20 +100,22 @@ export default function ChatScreen({ userId }) {
             }, m.text)
           ))
         ),
-        React.createElement('div', { className: 'flex items-center gap-2 mt-2' },
-          React.createElement(Textarea, {
-            className: 'flex-1',
-            placeholder: 'Skriv besked...',
-            rows: 8,
-            value: text,
-            onChange: e => setText(e.target.value)
-          }),
-          React.createElement(Button, {
-            className: 'bg-pink-500 text-white',
-            disabled: !text.trim(),
-            onClick: sendMessage
-          },
-            React.createElement(ChatIcon, null)
+        React.createElement('div', { className: 'flex flex-col gap-2 mt-2' },
+          React.createElement('div', { className: 'flex items-center gap-2' },
+            React.createElement(Textarea, {
+              className: 'flex-1',
+              placeholder: 'Skriv besked...',
+              rows: 3,
+              value: text,
+              onChange: e => setText(e.target.value)
+            }),
+            React.createElement(Button, {
+              className: 'bg-pink-500 text-white',
+              disabled: !text.trim(),
+              onClick: sendMessage
+            },
+              React.createElement(ChatIcon, null)
+            )
           ),
           React.createElement(Button, {
             className: 'btn-outline-red',
