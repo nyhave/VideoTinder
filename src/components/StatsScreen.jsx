@@ -63,6 +63,7 @@ export default function StatsScreen({ onBack }) {
       ),
       React.createElement(StatsChart, { data: history, fields: 'profiles', title: 'Profiler over tid' }),
       React.createElement(StatsChart, { data: history, fields: 'likes', title: 'Likes over tid' }),
+      React.createElement(StatsChart, { data: history, fields: 'bugOpen', title: '\u00C5bne fejl over tid' }),
       React.createElement(StatsChart, { data: history, fields: ['videos','audios'], title: 'Uploads over tid' }),
       React.createElement(StatsChart, { data: history, fields: 'views', title: 'Profilvisninger over tid' })
     ) : React.createElement('p', null, 'Indlæser...')
