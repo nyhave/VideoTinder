@@ -3,6 +3,7 @@ Basic chat between matched profiles
 Unmatch to remove chat from both users
 Calendar interface for daily reflection notes
 Profile settings with age range filtering
+Preferred languages with "allow other languages" option
 Ability to upload or record video clips
 Ability to upload or record audio clips
 Video/audio duration limited to 10 seconds

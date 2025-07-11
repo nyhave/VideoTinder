@@ -13,6 +13,7 @@ and simple profile management powered by Firebase.
 * Celebration overlay when two profiles match
 * Calendar for daily reflections
 * Minimal profile settings and admin mode
+* Preferred languages with option to allow other languages
 * Profile pictures cached for offline viewing
 * Premium page showing who liked you (subscription required)
 * Seed data includes 11 mandlige profiler der matcher standardbrugeren så du kan teste premium og ekstra klip

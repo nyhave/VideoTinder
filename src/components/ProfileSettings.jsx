@@ -441,6 +441,15 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onChange: e => { const opts = Array.from(e.target.selectedOptions).map(o=>o.value); setProfile({ ...profile, preferredLanguages: opts }); updateDoc(doc(db,'profiles',userId), { preferredLanguages: opts }); }
       },
         Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
+      ),
+      React.createElement('label', { className:'mt-2' }, t('allowOtherLanguages')),
+      React.createElement('select', {
+        className:'border p-2 rounded block mb-2',
+        value: profile.allowOtherLanguages !== false ? 'yes' : 'no',
+        onChange: e => { const allowOtherLanguages = e.target.value === 'yes'; setProfile({ ...profile, allowOtherLanguages }); updateDoc(doc(db,'profiles',userId), { allowOtherLanguages }); }
+      },
+        React.createElement('option', { value:'yes' }, t('yes')),
+        React.createElement('option', { value:'no' }, t('no'))
       )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },

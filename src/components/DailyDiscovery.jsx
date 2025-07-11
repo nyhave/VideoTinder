@@ -19,12 +19,16 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const extra = user.extraClipsDate === today ? 3 : 0;
   const limit = (hasSubscription ? 6 : 3) + extra;
   const preferred = user.preferredLanguages || [];
-  const filtered = profiles.filter(p =>
-    p.gender === interest &&
-    p.age >= ageRange[0] &&
-    p.age <= ageRange[1] &&
-    (preferred.length === 0 || preferred.includes(p.language || 'en'))
-  ).slice(0, limit);
+  const allowOther = user.allowOtherLanguages !== false;
+  const filtered = profiles.filter(p => {
+    const matchesLang = preferred.length === 0 || preferred.includes(p.language || 'en');
+    return (
+      p.gender === interest &&
+      p.age >= ageRange[0] &&
+      p.age <= ageRange[1] &&
+      (allowOther || matchesLang)
+    );
+  }).slice(0, limit);
   const likes = useCollection('likes','userId',userId);
 
   const [hoursUntil, setHoursUntil] = useState(0);
