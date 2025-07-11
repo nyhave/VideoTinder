@@ -16,7 +16,6 @@ export default function AboutScreen({ onOpenAdmin }) {
       React.createElement('p', { className: 'text-gray-500 text-sm text-center mb-4' }, `Version ${version}`),
       React.createElement(Button, { className: 'bg-pink-500 text-white w-full mb-2', onClick: () => setShowReport(true) }, 'Fejlmeld'),
       onOpenAdmin && React.createElement(Button, { className: 'bg-blue-500 hover:bg-blue-600 text-white mt-2 w-full', onClick: onOpenAdmin }, 'Admin'),
-      React.createElement('p', { className: 'text-center mt-4 text-gray-700' }, 'Freja')
     ),
     showReport && React.createElement(BugReportOverlay, { onClose: () => setShowReport(false) })
   );
