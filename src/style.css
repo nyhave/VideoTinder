@@ -99,3 +99,13 @@ button.btn-outline-red {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/* Blink animation used for thumbnail icons */
+.blinking-thumb {
+  animation: double-blink 10s infinite;
+}
+
+@keyframes double-blink {
+  0%, 2%, 4%, 100% { opacity: 1; }
+  1%, 3% { opacity: 0; }
+}
