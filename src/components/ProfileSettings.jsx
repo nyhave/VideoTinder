@@ -28,6 +28,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [distanceRange, setDistanceRange] = useState([10,25]);
   const [editInfo, setEditInfo] = useState(false);
   const currentUserId = viewerId || userId;
+  const isOwnProfile = viewerId === userId;
   const likes = useCollection('likes','userId', currentUserId);
   const [matchedProfile, setMatchedProfile] = useState(null);
 
@@ -204,6 +205,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   };
 
   const toggleLike = async () => {
+    if(isOwnProfile) return;
     const likeId = `${currentUserId}-${userId}`;
     const exists = likes.some(l => l.profileId === userId);
     const ref = doc(db,'likes',likeId);
@@ -393,7 +395,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement('div', { className:'w-24 h-24 rounded bg-gray-200 flex items-center justify-center' },
             React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500' })
           ),
-        publicView && React.createElement(Button, {
+        publicView && !isOwnProfile && React.createElement(Button, {
           className: 'ml-auto bg-pink-500 text-white',
           onClick: toggleLike
         }, likes.some(l=>l.profileId===userId) ? 'Unmatch' : 'Match'),
