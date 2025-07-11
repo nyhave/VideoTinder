@@ -18,7 +18,6 @@ import { languages, useT } from '../i18n.js';
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, onViewPublicProfile = () => {}, viewerId, onBack }) {
   const [profile,setProfile]=useState(null);
   const t = useT();
-  const videoRef = useRef();
   const audioRef = useRef();
   const photoRef = useRef();
 
@@ -53,7 +52,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const subscriptionActive = profile.subscriptionExpires && new Date(profile.subscriptionExpires) > new Date();
 
-  const maxVideos = (profile.videoClips || []).length >= 3;
   const maxAudios = (profile.audioClips || []).length >= 3;
 
   const uploadFile = async (file, field) => {
@@ -126,15 +124,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     }
   };
 
-  const handleVideoChange = async e => {
-    const file = e.target.files[0];
-    if(!file) return;
-    if(!(await checkDuration(file))){
-      alert('Video må højest være 10 sekunder');
-      return;
-    }
-    uploadFile(file, 'videoClips');
-  };
 
   const handleAudioChange = async e => {
     const file = e.target.files[0];
@@ -314,31 +303,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         );
       })
     ),
-    !publicView && React.createElement(React.Fragment, null,
-      React.createElement('input', {
-        type: 'file',
-        accept: 'video/*',
-        ref: videoRef,
-        onChange: handleVideoChange,
-        className: 'hidden'
-      }),
-      React.createElement('div', { className:'flex gap-2 mb-4' },
-        React.createElement(Button, {
-          className: `${maxVideos ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
-          onClick: () => {
-            if(!maxVideos && videoRef.current) videoRef.current.click();
-          },
-          disabled: maxVideos
-        }, 'Upload video'),
-        React.createElement(Button, {
-          className: `${maxVideos ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-pink-500 text-white'}`,
-          onClick: () => { if(!maxVideos) setShowSnapVideoRecorder(true); },
-          disabled: maxVideos
-        }, React.createElement(CameraIcon, { className:'w-4 h-4' }))
-      ),
-      showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded }),
-    )
-  );
+      !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded })
+    );
 
   const audioClips = profile.audioClips || [];
   const remainingAudios = Math.max(0, 3 - audioClips.length);
