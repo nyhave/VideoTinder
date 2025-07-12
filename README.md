@@ -62,6 +62,8 @@ FIREBASE_PROJECT_ID
 FIREBASE_STORAGE_BUCKET
 FIREBASE_MESSAGING_SENDER_ID
 FIREBASE_APP_ID
+FCM_SERVER_KEY
+ADMIN_EMAILS
 ```
 
 During the build job, these secrets are written to a `.env` file so Parcel can embed the Firebase config.
@@ -83,6 +85,19 @@ gsutil cors set cors.json gs://<your-storage-bucket>
 
 After this configuration, uploads from your site will succeed without CORS
 errors.
+
+## Admin Access
+
+Only profiles with emails listed in the `ADMIN_EMAILS` environment variable can
+open the admin pages. Provide the addresses as a comma separated list in your
+`.env` file:
+
+```bash
+ADMIN_EMAILS=alice@example.com,bob@example.com
+```
+
+Non‑admin users trying to access admin routes are redirected back to the About
+page.
 
 ## Development Notes
 

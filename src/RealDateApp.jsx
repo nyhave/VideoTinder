@@ -12,6 +12,7 @@ import StatsScreen from './components/StatsScreen.jsx';
 import BugReportsScreen from './components/BugReportsScreen.jsx';
 import AboutScreen from './components/AboutScreen.jsx';
 import { useCollection, requestNotificationPermission, db, doc, updateDoc, increment } from './firebase.js';
+import { isAdminEmail } from './adminConfig.js';
 
 
 export default function RealDateApp() {
@@ -30,6 +31,8 @@ export default function RealDateApp() {
   const [tab,setTab]=useState('about');
   const [viewProfile,setViewProfile]=useState(null);
   const hasUnread = chats.some(c => c.unreadByUser || c.newMatch);
+  const currentUser = profiles.find(p => p.id === userId);
+  const isAdmin = isAdminEmail(currentUser?.email);
 
   const openDailyClips = () => {
     setTab('discovery');
@@ -73,6 +76,12 @@ export default function RealDateApp() {
       requestNotificationPermission(userId);
     }
   }, [loggedIn, userId]);
+
+  useEffect(() => {
+    if (!isAdmin && ['admin', 'stats', 'bugs'].includes(tab)) {
+      setTab('about');
+    }
+  }, [isAdmin, tab]);
 
 
   if(!loggedIn) return React.createElement(LanguageProvider, { value:{lang,setLang} },
@@ -118,10 +127,10 @@ export default function RealDateApp() {
         onViewPublicProfile: viewOwnPublicProfile
       }),
       tab==='premium' && React.createElement(PremiumFeatures, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-      tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs') }),
-      tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
-      tab==='bugs' && React.createElement(BugReportsScreen, { onBack: ()=>setTab('admin') }),
-      tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
+      tab==='admin' && isAdmin && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs') }),
+      tab==='stats' && isAdmin && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
+      tab==='bugs' && isAdmin && React.createElement(BugReportsScreen, { onBack: ()=>setTab('admin') }),
+      tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: isAdmin ? ()=>setTab('admin') : undefined })
     ),
     React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around fixed bottom-0 left-0 right-0' },
       React.createElement(HomeIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('discovery'); setViewProfile(null);} }),
