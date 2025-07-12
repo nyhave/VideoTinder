@@ -116,17 +116,21 @@ export default function WelcomeScreen({ onLogin }) {
         React.createElement(CallToAction, {
           icon: React.createElement(LogIn, { className: 'w-8 h-8 text-pink-600' }),
           title: t('loginCtaTitle'),
-          description: t('loginCtaDesc'),
-          buttonText: t('login'),
-          onClick: () => onLogin()
+          description: t('loginCtaDesc')
         }),
+        React.createElement(Button, {
+          className: 'bg-pink-500 text-white mb-4',
+          onClick: () => onLogin()
+        }, t('login')),
         React.createElement(CallToAction, {
           icon: React.createElement(UserPlus, { className: 'w-8 h-8 text-pink-600' }),
           title: t('registerCtaTitle'),
-          description: t('registerCtaDesc'),
-          buttonText: t('register'),
+          description: t('registerCtaDesc')
+        }),
+        React.createElement(Button, {
+          className: 'bg-pink-500 text-white',
           onClick: () => { setShowRegister(true); setName(''); setCity(''); }
-        })
+        }, t('register'))
       )
     )
   ));
