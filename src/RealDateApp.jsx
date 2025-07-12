@@ -76,7 +76,7 @@ export default function RealDateApp() {
 
 
   if(!loggedIn) return React.createElement(LanguageProvider, { value:{lang,setLang} },
-    React.createElement(WelcomeScreen, { profiles, onLogin: id=>{ setUserId(id); setLoggedIn(true); } })
+    React.createElement(WelcomeScreen, { onLogin: () => setLoggedIn(true) })
   );
   const selectProfile = async id => {
     setViewProfile(id);
@@ -118,7 +118,7 @@ export default function RealDateApp() {
         onViewPublicProfile: viewOwnPublicProfile
       }),
       tab==='premium' && React.createElement(PremiumFeatures, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-      tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs') }),
+      tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), profiles, userId, onSwitchProfile: id=>setUserId(id) }),
       tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
       tab==='bugs' && React.createElement(BugReportsScreen, { onBack: ()=>setTab('admin') }),
       tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })

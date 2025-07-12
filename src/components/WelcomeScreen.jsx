@@ -1,29 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
 import CallToAction from './CallToAction.jsx';
 import { UserPlus, LogIn } from 'lucide-react';
-import { languages, useLang, useT } from '../i18n.js';
+import { useLang, useT } from '../i18n.js';
 import { db, doc, setDoc } from '../firebase.js';
 import { getAge } from '../utils.js';
 
-export default function WelcomeScreen({ profiles = [], onLogin }) {
-  const [selected, setSelected] = useState(profiles[0]?.id || '');
+export default function WelcomeScreen({ onLogin }) {
   const [showRegister, setShowRegister] = useState(false);
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
   const [gender, setGender] = useState('Kvinde');
   const [birthday, setBirthday] = useState('');
   const [showBirthdayOverlay, setShowBirthdayOverlay] = useState(false);
-  const { lang, setLang } = useLang();
+  const { lang } = useLang();
   const t = useT();
-
-  useEffect(() => {
-    if (!selected && profiles.length) {
-      setSelected(profiles[0].id);
-    }
-  }, [profiles, selected]);
 
   const register = async () => {
     const trimmed = name.trim();
@@ -119,30 +112,13 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
           'Her handler det ikke om hurtige swipes.' +
           'RealDate er for dig, der søger noget ægte og meningsfuldt.'
         ),
-        React.createElement('label', { className:'block mb-1' }, t('chooseLanguage')),
-        React.createElement('select', {
-          className: 'border p-2 mb-4 w-full',
-          onChange: e => setLang(e.target.value),
-          value: lang
-        },
-          Object.entries(languages).map(([code,name]) =>
-            React.createElement('option', { key: code, value: code }, name)
-          )
-        ),
-        React.createElement('select', {
-          className: 'border p-2 mb-4 w-full',
-          onChange: e => setSelected(e.target.value),
-          value: selected || ''
-        },
-          React.createElement('option', { value: '' }, `-- ${t('selectUser')} --`),
-          profiles.map(p => React.createElement('option', { key: p.id, value: p.id }, p.name))
-        ),
+        
         React.createElement(CallToAction, {
           icon: React.createElement(LogIn, { className: 'w-8 h-8 text-pink-600' }),
           title: t('loginCtaTitle'),
           description: t('loginCtaDesc'),
           buttonText: t('login'),
-          onClick: () => selected && onLogin(selected)
+          onClick: () => onLogin()
         }),
         React.createElement(CallToAction, {
           icon: React.createElement(UserPlus, { className: 'w-8 h-8 text-pink-600' }),
