@@ -13,6 +13,7 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
   const [city, setCity] = useState('');
   const [gender, setGender] = useState('Kvinde');
   const [birthday, setBirthday] = useState('');
+  const [showBirthdayOverlay, setShowBirthdayOverlay] = useState(false);
   const { lang, setLang } = useLang();
   const t = useT();
 
@@ -44,8 +45,14 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
     await setDoc(doc(db, 'profiles', id), profile);
     onLogin(id);
   };
-  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    showRegister ? (
+  return React.createElement(
+    React.Fragment,
+    null,
+    showBirthdayOverlay && React.createElement('div', {
+      className: 'fixed top-0 left-0 right-0 bg-black/70 text-white text-center p-2 z-50'
+    }, t('chooseBirthday')),
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+      showRegister ? (
       React.createElement(React.Fragment, null,
         React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, t('register')),
         React.createElement('label', { className:'block mb-1' }, t('firstName')),
@@ -72,7 +79,9 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
           type: 'date',
           className: 'border p-2 mb-2 w-full',
           value: birthday,
-          onChange: e => setBirthday(e.target.value),
+          onFocus: () => setShowBirthdayOverlay(true),
+          onBlur: () => setShowBirthdayOverlay(false),
+          onChange: e => { setBirthday(e.target.value); setShowBirthdayOverlay(false); },
           placeholder: 'F\u00f8dselsdag'
         }),
         React.createElement('datalist', { id: 'city-list' },
@@ -138,5 +147,5 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
         }, t('register'))
       )
     )
-  );
+  ));
 }
