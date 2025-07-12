@@ -411,7 +411,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             value: profile.city || '',
             onChange: handleCityChange,
             className:'border p-2 rounded w-full',
-            placeholder:'By'
+            placeholder:'By',
+            name:'city',
+            autoComplete:'address-level2'
           }),
           React.createElement(Button, {
             className:'bg-pink-500 text-white w-full',
