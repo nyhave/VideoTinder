@@ -1,5 +1,7 @@
 // Filtering helper kept separate so it can also run in a Firebase
 // Cloud Function. Cloud Functions support both JavaScript and TypeScript.
+import { getAge } from './utils.js';
+
 export default function selectProfiles(user, profiles, ageRange){
   const interest = user.interest;
   const hasSubscription = user.subscriptionExpires && new Date(user.subscriptionExpires) > new Date();
@@ -12,8 +14,8 @@ export default function selectProfiles(user, profiles, ageRange){
     const matchesLang = preferred.length === 0 || preferred.includes(p.language || 'en');
     return (
       p.gender === interest &&
-      p.age >= ageRange[0] &&
-      p.age <= ageRange[1] &&
+      (p.birthday ? getAge(p.birthday) : p.age) >= ageRange[0] &&
+      (p.birthday ? getAge(p.birthday) : p.age) <= ageRange[1] &&
       (allowOther || matchesLang)
     );
   }).slice(0, limit);

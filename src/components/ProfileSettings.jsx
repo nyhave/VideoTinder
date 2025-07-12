@@ -14,6 +14,7 @@ import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
 import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
 import { languages, useT } from '../i18n.js';
+import { getAge } from '../utils.js';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, onViewPublicProfile = () => {}, viewerId, onBack }) {
   const [profile,setProfile]=useState(null);
@@ -165,10 +166,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await updateDoc(doc(db,'profiles',userId), { name });
   };
 
-  const handleAgeChange = async e => {
-    const age = parseInt(e.target.value, 10) || '';
-    setProfile({ ...profile, age });
-    await updateDoc(doc(db,'profiles',userId), { age });
+  const handleBirthdayChange = async e => {
+    const birthday = e.target.value;
+    setProfile({ ...profile, birthday });
+    const age = birthday ? getAge(birthday) : '';
+    await updateDoc(doc(db,'profiles',userId), { birthday, age });
   };
 
 
@@ -401,11 +403,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           autoComplete:'given-name'
         }),
           React.createElement(Input, {
-            type:'number',
-            value: profile.age || '',
-            onChange: handleAgeChange,
+            type:'date',
+            value: profile.birthday || '',
+            onChange: handleBirthdayChange,
             className:'border p-2 rounded w-full',
-            placeholder:'Alder'
+            placeholder:'F\u00f8dselsdag'
           }),
           React.createElement(Input, {
             value: profile.city || '',
@@ -421,7 +423,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           }, 'Færdig')
         ) :
         React.createElement('div', { className:'flex items-center justify-between w-full' },
-          React.createElement(SectionTitle, { title: `${profile.name}, ${profile.age}${profile.city ? ', ' + profile.city : ''}` }),
+          React.createElement(SectionTitle, { title: `${profile.name}, ${profile.birthday ? getAge(profile.birthday) : profile.age}${profile.city ? ', ' + profile.city : ''}` }),
           !publicView && React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditInfo(true) })
         ),
       !publicView && profile.subscriptionExpires && React.createElement('p', {

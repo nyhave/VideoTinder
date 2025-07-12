@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getAge } from '../utils.js';
 import { User as UserIcon, Smile, MessageCircle as ChatIcon, ArrowLeft } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
@@ -93,7 +94,7 @@ export default function ChatScreen({ userId }) {
         activeProfile.photoURL ?
           React.createElement('img', { src: activeProfile.photoURL, className: 'w-24 h-24 rounded-full object-cover self-center mb-2' }) :
           React.createElement(UserIcon, { className: 'w-24 h-24 text-pink-500 self-center mb-2' }),
-        React.createElement('p', { className: 'text-center font-medium mb-2' }, `${activeProfile.name || ''}, ${activeProfile.age || ''}, ${activeProfile.city || ''}`),
+        React.createElement('p', { className: 'text-center font-medium mb-2' }, `${activeProfile.name || ''}, ${activeProfile.birthday ? getAge(activeProfile.birthday) : activeProfile.age || ''}, ${activeProfile.city || ''}`),
         React.createElement('div', { ref: messagesRef, className: 'flex-1 overflow-y-auto bg-gray-100 p-4 rounded space-y-3 flex flex-col' },
           (active.messages || []).map((m,i) => {
             const fromSelf = m.from === userId;
@@ -147,7 +148,7 @@ export default function ChatScreen({ userId }) {
               p.photoURL ?
                 React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
                 React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
-              React.createElement('span', null, `${p.name || ''}, ${p.age || ''}, ${p.city || ''}`)
+              React.createElement('span', null, `${p.name || ''}, ${p.birthday ? getAge(p.birthday) : p.age || ''}, ${p.city || ''}`)
             );
           })
         ) :
