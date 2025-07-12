@@ -5,6 +5,7 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
 import { useCollection, db, doc, setDoc, deleteDoc, getDoc, updateDoc } from '../firebase.js';
+import selectProfiles from '../selectProfiles.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
@@ -13,22 +14,9 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const profiles = useCollection('profiles');
   const t = useT();
   const user = profiles.find(p => p.id === userId) || {};
-  const interest = user.interest;
   const hasSubscription = user.subscriptionExpires && new Date(user.subscriptionExpires) > new Date();
   const today = new Date().toISOString().split('T')[0];
-  const extra = user.extraClipsDate === today ? 3 : 0;
-  const limit = (hasSubscription ? 6 : 3) + extra;
-  const preferred = user.preferredLanguages || [];
-  const allowOther = user.allowOtherLanguages !== false;
-  const filtered = profiles.filter(p => {
-    const matchesLang = preferred.length === 0 || preferred.includes(p.language || 'en');
-    return (
-      p.gender === interest &&
-      p.age >= ageRange[0] &&
-      p.age <= ageRange[1] &&
-      (allowOther || matchesLang)
-    );
-  }).slice(0, limit);
+  const filtered = selectProfiles(user, profiles, ageRange);
   const likes = useCollection('likes','userId',userId);
 
   const [hoursUntil, setHoursUntil] = useState(0);
