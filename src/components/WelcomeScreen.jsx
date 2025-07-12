@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
+import CallToAction from './CallToAction.jsx';
+import { UserPlus, LogIn } from 'lucide-react';
 import { languages, useLang, useT } from '../i18n.js';
 import { db, doc, setDoc } from '../firebase.js';
 import { getAge } from '../utils.js';
@@ -135,16 +137,20 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
           React.createElement('option', { value: '' }, `-- ${t('selectUser')} --`),
           profiles.map(p => React.createElement('option', { key: p.id, value: p.id }, p.name))
         ),
-        React.createElement(Button, {
-          onClick: () => selected && onLogin(selected),
-          className: 'bg-pink-500 hover:bg-pink-600 text-white mt-4',
-          disabled: !selected
-        }, t('login')),
-        React.createElement(Button, {
-          className: 'mt-2 w-full',
-          variant: 'outline',
+        React.createElement(CallToAction, {
+          icon: React.createElement(LogIn, { className: 'w-12 h-12 text-pink-600' }),
+          title: t('loginCtaTitle'),
+          description: t('loginCtaDesc'),
+          buttonText: t('login'),
+          onClick: () => selected && onLogin(selected)
+        }),
+        React.createElement(CallToAction, {
+          icon: React.createElement(UserPlus, { className: 'w-12 h-12 text-pink-600' }),
+          title: t('registerCtaTitle'),
+          description: t('registerCtaDesc'),
+          buttonText: t('register'),
           onClick: () => { setShowRegister(true); setName(''); setCity(''); }
-        }, t('register'))
+        })
       )
     )
   ));
