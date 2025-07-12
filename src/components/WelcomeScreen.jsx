@@ -138,14 +138,14 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
           profiles.map(p => React.createElement('option', { key: p.id, value: p.id }, p.name))
         ),
         React.createElement(CallToAction, {
-          icon: React.createElement(LogIn, { className: 'w-12 h-12 text-pink-600' }),
+          icon: React.createElement(LogIn, { className: 'w-8 h-8 text-pink-600' }),
           title: t('loginCtaTitle'),
           description: t('loginCtaDesc'),
           buttonText: t('login'),
           onClick: () => selected && onLogin(selected)
         }),
         React.createElement(CallToAction, {
-          icon: React.createElement(UserPlus, { className: 'w-12 h-12 text-pink-600' }),
+          icon: React.createElement(UserPlus, { className: 'w-8 h-8 text-pink-600' }),
           title: t('registerCtaTitle'),
           description: t('registerCtaDesc'),
           buttonText: t('register'),
