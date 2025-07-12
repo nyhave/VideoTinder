@@ -49,9 +49,9 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
           className: 'border p-2 mb-2 w-full',
           value: name,
           onChange: e => setName(e.target.value),
-          placeholder: 'Navn',
-          name: 'name',
-          autoComplete: 'name'
+          placeholder: 'Fornavn',
+          name: 'given-name',
+          autoComplete: 'given-name'
         }),
         React.createElement('input', {
           list: 'city-list',

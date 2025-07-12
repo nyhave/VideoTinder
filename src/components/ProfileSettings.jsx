@@ -392,12 +392,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       ),
       editInfo ?
         React.createElement('div', { className:'space-y-2 mb-2 w-full' },
-          React.createElement(Input, {
-            value: profile.name || '',
-            onChange: handleNameChange,
-            className:'border p-2 rounded w-full',
-            placeholder:'Navn'
-          }),
+        React.createElement(Input, {
+          value: profile.name || '',
+          onChange: handleNameChange,
+          className:'border p-2 rounded w-full',
+          placeholder:'Fornavn',
+          name:'given-name',
+          autoComplete:'given-name'
+        }),
           React.createElement(Input, {
             type:'number',
             value: profile.age || '',
