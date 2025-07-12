@@ -48,6 +48,7 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
     showRegister ? (
       React.createElement(React.Fragment, null,
         React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, t('register')),
+        React.createElement('label', { className:'block mb-1' }, t('firstName')),
         React.createElement(Input, {
           className: 'border p-2 mb-2 w-full',
           value: name,
@@ -56,6 +57,7 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
           name: 'given-name',
           autoComplete: 'given-name'
         }),
+        React.createElement('label', { className:'block mb-1' }, t('city')),
         React.createElement('input', {
           list: 'city-list',
           className: 'border p-2 mb-2 w-full',
@@ -65,6 +67,7 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
           name: 'cityname',
           autoComplete: 'address-level2'
         }),
+        React.createElement('label', { className:'block mb-1' }, t('birthday')),
         React.createElement(Input, {
           type: 'date',
           className: 'border p-2 mb-2 w-full',
@@ -77,6 +80,7 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
             React.createElement('option', { key: c, value: c })
           )
         ),
+        React.createElement('label', { className:'block mb-1' }, t('gender')),
         React.createElement('select', {
           className: 'border p-2 mb-4 w-full',
           value: gender,
