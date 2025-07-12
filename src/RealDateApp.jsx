@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LanguageProvider } from './i18n.js';
-import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays } from 'lucide-react';
+import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays, Heart } from 'lucide-react';
 import WelcomeScreen from './components/WelcomeScreen.jsx';
 import DailyDiscovery from './components/DailyDiscovery.jsx';
 import LikesScreen from './components/LikesScreen.jsx';
@@ -149,6 +149,7 @@ export default function RealDateApp() {
         React.createElement(ChatIcon, { className: 'w-8 h-8 text-pink-600' }),
         hasUnread && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center' }, '1')
       ),
+      React.createElement(Heart, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('likes'); setViewProfile(null);} }),
       React.createElement(CalendarDays, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} })
       )
   ));
