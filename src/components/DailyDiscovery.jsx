@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAge } from '../utils.js';
-import { User, PlayCircle, Heart, Star } from 'lucide-react';
+import { User, PlayCircle, Heart } from 'lucide-react';
 import VideoOverlay from './VideoOverlay.jsx';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
@@ -12,7 +12,7 @@ import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
 
-export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOpenPremium, onOpenProfile }) {
+export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOpenProfile }) {
   const profiles = useCollection('profiles');
   const t = useT();
   const user = profiles.find(p => p.id === userId) || {};
@@ -85,13 +85,6 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: t('dailyClips') }),
-    React.createElement(Button, {
-      className: 'mb-4 w-full bg-yellow-400 text-white flex items-center gap-2',
-      onClick: onOpenPremium
-    },
-      React.createElement(Star, { className: 'w-4 h-4' }),
-      'Dine likes'
-    ),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Nye klip om ${hoursUntil} timer`),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Tag dig god tid til at udforske dagens klip`),
     React.createElement('ul', { className: 'space-y-4' },

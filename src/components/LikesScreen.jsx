@@ -9,7 +9,7 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useCollection, db, doc, setDoc, deleteDoc, getDoc } from '../firebase.js';
 
-export default function LikesScreen({ userId, onSelectProfile, onBack }) {
+export default function LikesScreen({ userId, onSelectProfile }) {
   const profiles = useCollection('profiles');
   const likes = useCollection('likes', 'profileId', userId);
   const likedProfiles = profiles.filter(p => likes.some(l => l.userId === p.id));
@@ -61,7 +61,8 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
   };
 
   return React.createElement(Card,{className:'p-6 m-4 shadow-xl bg-white/90 flex flex-col'},
-    React.createElement(SectionTitle,{title:'Dine likes', action: React.createElement(Button,{onClick:onBack},'Tilbage')}),
+    React.createElement(SectionTitle,{title:'Du er blevet liket'}),
+    React.createElement('p',{className:'mb-4 text-gray-500'},`${likedProfiles.length} profiler`),
     React.createElement('div',{className: hasSubscription ? 'flex-1' : 'flex-1 filter blur-sm pointer-events-none'},
       React.createElement('ul',{className:'space-y-4'},
         likedProfiles.length ? likedProfiles.map(p => (
