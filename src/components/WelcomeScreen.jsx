@@ -59,7 +59,7 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
           value: city,
           onChange: e => setCity(e.target.value),
           placeholder: 'By',
-          name: 'city',
+          name: 'cityname',
           autoComplete: 'address-level2'
         }),
         React.createElement('datalist', { id: 'city-list' },
