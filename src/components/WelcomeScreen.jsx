@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
-import CallToAction from './CallToAction.jsx';
 import { UserPlus, LogIn } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
 import { db, doc, setDoc } from '../firebase.js';
@@ -113,20 +112,10 @@ export default function WelcomeScreen({ onLogin }) {
           'RealDate er for dig, der søger noget ægte og meningsfuldt.'
         ),
         
-        React.createElement(CallToAction, {
-          icon: React.createElement(LogIn, { className: 'w-8 h-8 text-pink-600' }),
-          title: t('loginCtaTitle'),
-          description: t('loginCtaDesc')
-        }),
         React.createElement(Button, {
           className: 'bg-pink-500 text-white mb-4',
           onClick: () => onLogin()
         }, t('login')),
-        React.createElement(CallToAction, {
-          icon: React.createElement(UserPlus, { className: 'w-8 h-8 text-pink-600' }),
-          title: t('registerCtaTitle'),
-          description: t('registerCtaDesc')
-        }),
         React.createElement(Button, {
           className: 'bg-pink-500 text-white',
           onClick: () => { setShowRegister(true); setName(''); setCity(''); }
