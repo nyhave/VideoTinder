@@ -93,7 +93,10 @@ export default function RealDateApp() {
   return React.createElement(LanguageProvider, { value:{lang,setLang} },
     React.createElement('div', { className: 'flex flex-col min-h-screen w-screen bg-gradient-to-br from-pink-100 to-white pb-24' },
 
-    React.createElement('div', { className: 'p-4 bg-pink-600 text-white text-center font-bold fixed top-0 left-0 right-0 z-10' }, 'RealDate'),
+    React.createElement('div', {
+      className: 'p-4 bg-pink-600 text-white text-center font-bold fixed top-0 left-0 right-0 z-10',
+      style: { paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }
+    }, 'RealDate'),
 
     React.createElement('div', { className: 'flex-1 mt-16' },
 
@@ -125,7 +128,10 @@ export default function RealDateApp() {
       tab==='bugs' && React.createElement(BugReportsScreen, { onBack: ()=>setTab('admin') }),
       tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
     ),
-    React.createElement('div', { className: 'p-4 bg-white shadow-inner flex justify-around fixed bottom-0 left-0 right-0 z-10' },
+    React.createElement('div', {
+      className: 'p-4 bg-white shadow-inner flex justify-around fixed bottom-0 left-0 right-0 z-10',
+      style: { paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }
+    },
       React.createElement(HomeIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('discovery'); setViewProfile(null);} }),
       React.createElement('div', { className: 'relative', onClick: ()=>{setTab('chat'); setViewProfile(null);} },
         React.createElement(ChatIcon, { className: 'w-8 h-8 text-pink-600' }),
