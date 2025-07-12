@@ -13,7 +13,6 @@ import PurchaseOverlay from './PurchaseOverlay.jsx';
 import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
 import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
-import CallToAction from './CallToAction.jsx';
 import { languages, useT } from '../i18n.js';
 import { getAge } from '../utils.js';
 
@@ -440,17 +439,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onClick: onViewPublicProfile
       }, 'View public profile')
     ),
-    React.createElement(CallToAction, {
-      icon: React.createElement(CameraIcon, { className: 'w-8 h-8 text-pink-600' }),
-      title: t('videoCtaTitle'),
-      description: t('videoCtaDesc')
-    }),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
-    React.createElement(CallToAction, {
-      icon: React.createElement(Mic, { className: 'w-8 h-8 text-pink-600' }),
-      title: t('audioCtaTitle'),
-      description: t('audioCtaDesc')
-    }),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
     !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: t('interestedIn') }),
