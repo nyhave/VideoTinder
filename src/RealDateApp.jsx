@@ -3,10 +3,10 @@ import { LanguageProvider } from './i18n.js';
 import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays } from 'lucide-react';
 import WelcomeScreen from './components/WelcomeScreen.jsx';
 import DailyDiscovery from './components/DailyDiscovery.jsx';
+import LikesScreen from './components/LikesScreen.jsx';
 import ChatScreen from './components/ChatScreen.jsx';
 import DailyCheckIn from './components/DailyCheckIn.jsx';
 import ProfileSettings from './components/ProfileSettings.jsx';
-import PremiumFeatures from './components/PremiumFeatures.jsx';
 import AdminScreen from './components/AdminScreen.jsx';
 import StatsScreen from './components/StatsScreen.jsx';
 import BugReportsScreen from './components/BugReportsScreen.jsx';
@@ -112,7 +112,7 @@ export default function RealDateApp() {
     React.createElement('div', { className: 'flex-1 mt-16' },
 
       tab==='discovery' && !viewProfile && (
-        React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange, onOpenPremium: ()=>setTab('premium'), onOpenProfile: openProfileSettings })
+        React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange, onOpenPremium: ()=>setTab('likes'), onOpenProfile: openProfileSettings })
       ),
       viewProfile && (
         React.createElement(ProfileSettings, {
@@ -134,7 +134,7 @@ export default function RealDateApp() {
         onViewPublicProfile: viewOwnPublicProfile,
         onOpenAbout: ()=>setTab('about')
       }),
-      tab==='premium' && React.createElement(PremiumFeatures, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
+      tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
       tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), profiles, userId, onSwitchProfile: id=>setUserId(id) }),
       tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
       tab==='bugs' && React.createElement(BugReportsScreen, { onBack: ()=>setTab('admin') }),
