@@ -80,3 +80,8 @@ gsutil cors set cors.json gs://<your-storage-bucket>
 
 After this configuration, uploads from your site will succeed without CORS
 errors.
+
+## Development Notes
+
+The profile filtering logic used on the Daily Discovery page lives in `src/selectProfiles.js`. Keeping this code in its own module makes it easy to move the same logic to a Firebase Cloud Function when needed. Cloud Functions for Firebase can run JavaScript or TypeScript, so the helper can be reused on the server with minimal changes.
+
