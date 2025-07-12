@@ -93,7 +93,9 @@ export default function RealDateApp() {
   return React.createElement(LanguageProvider, { value:{lang,setLang} },
     React.createElement('div', { className: 'flex flex-col min-h-screen w-screen bg-gradient-to-br from-pink-100 to-white pb-24' },
 
-    React.createElement('div', { className: 'flex-1' },
+    React.createElement('div', { className: 'p-4 bg-pink-600 text-white text-center font-bold fixed top-0 left-0 right-0 z-10' }, 'RealDate'),
+
+    React.createElement('div', { className: 'flex-1 mt-16' },
 
       tab==='discovery' && !viewProfile && (
         React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange, onOpenPremium: ()=>setTab('premium'), onOpenProfile: openProfileSettings })
