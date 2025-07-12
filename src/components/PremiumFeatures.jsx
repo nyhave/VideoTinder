@@ -1,4 +1,5 @@
 import React from 'react';
+import { getAge } from '../utils.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
@@ -24,7 +25,7 @@ export default function PremiumFeatures({ userId, onBack, onSelectProfile }) {
           p.photoURL ?
             React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
             React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
-          React.createElement('span', null, `${p.name} (${p.age})`)
+          React.createElement('span', null, `${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`)
         )
       )) :
         React.createElement('li', { className: 'text-gray-500 text-center' }, 'Ingen har liket dig endnu')

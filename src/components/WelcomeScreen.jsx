@@ -4,6 +4,7 @@ import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
 import { languages, useLang, useT } from '../i18n.js';
 import { db, doc, setDoc } from '../firebase.js';
+import { getAge } from '../utils.js';
 
 export default function WelcomeScreen({ profiles = [], onLogin }) {
   const [selected, setSelected] = useState(profiles[0]?.id || '');
@@ -11,6 +12,7 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
   const [gender, setGender] = useState('Kvinde');
+  const [birthday, setBirthday] = useState('');
   const { lang, setLang } = useLang();
   const t = useT();
 
@@ -30,7 +32,8 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
       city: city.trim(),
       gender,
       interest: gender === 'Kvinde' ? 'Mand' : 'Kvinde',
-      age: 18,
+      birthday,
+      age: birthday ? getAge(birthday) : 18,
       language: lang,
       preferredLanguages: [lang],
       allowOtherLanguages: true,
@@ -61,6 +64,13 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
           placeholder: 'By',
           name: 'cityname',
           autoComplete: 'address-level2'
+        }),
+        React.createElement(Input, {
+          type: 'date',
+          className: 'border p-2 mb-2 w-full',
+          value: birthday,
+          onChange: e => setBirthday(e.target.value),
+          placeholder: 'F\u00f8dselsdag'
         }),
         React.createElement('datalist', { id: 'city-list' },
           ['København','Aarhus','Odense','Aalborg','Esbjerg','Randers'].map(c =>

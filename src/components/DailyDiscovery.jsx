@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getAge } from '../utils.js';
 import { User, PlayCircle, Heart, Star } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
@@ -107,7 +108,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
               React.createElement(User, { className: 'w-10 h-10 text-pink-500' })
             ),
             React.createElement('div', null,
-              React.createElement('p', { className: 'font-medium' }, `${p.name} (${p.age})`),
+              React.createElement('p', { className: 'font-medium' }, `${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`),
               p.clip && React.createElement('p', { className: 'text-sm text-gray-500' }, `“${p.clip}”`)
             )
           ),
