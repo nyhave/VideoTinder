@@ -30,6 +30,7 @@ export default function RealDateApp() {
   const [tab,setTab]=useState('about');
   const [viewProfile,setViewProfile]=useState(null);
   const hasUnread = chats.some(c => c.unreadByUser || c.newMatch);
+  const currentUser = profiles.find(p => p.id === userId) || {};
 
   const openDailyClips = () => {
     setTab('discovery');
@@ -94,9 +95,19 @@ export default function RealDateApp() {
     React.createElement('div', { className: 'flex flex-col min-h-screen w-screen bg-gradient-to-br from-pink-100 to-white pb-24' },
 
     React.createElement('div', {
-      className: 'p-4 bg-pink-600 text-white text-center font-bold fixed top-0 left-0 right-0 z-10',
+      className: 'p-4 bg-pink-600 text-white text-center font-bold fixed top-0 left-0 right-0 z-10 relative',
       style: { paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }
-    }, 'RealDate'),
+    },
+      'RealDate',
+      userId && React.createElement('div', {
+        className: 'absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer',
+        onClick: openProfileSettings
+      },
+        currentUser.photoURL ?
+          React.createElement('img', { src: currentUser.photoURL, alt: 'Profil', className: 'w-8 h-8 rounded-full object-cover' }) :
+          React.createElement(UserIcon, { className: 'w-8 h-8 text-white' })
+      )
+    ),
 
     React.createElement('div', { className: 'flex-1 mt-16' },
 
@@ -138,7 +149,6 @@ export default function RealDateApp() {
         hasUnread && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center' }, '1')
       ),
       React.createElement(CalendarDays, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} }),
-      React.createElement(UserIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('profile'); setViewProfile(null);} }),
       React.createElement(InfoIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('about'); setViewProfile(null);} })
       )
   ));
