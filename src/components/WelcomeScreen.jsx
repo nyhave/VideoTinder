@@ -13,6 +13,7 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
   const [city, setCity] = useState('');
   const [gender, setGender] = useState('Kvinde');
   const [birthday, setBirthday] = useState('');
+  const [birthdayFocus, setBirthdayFocus] = useState(false);
   const { lang, setLang } = useLang();
   const t = useT();
 
@@ -68,11 +69,14 @@ export default function WelcomeScreen({ profiles = [], onLogin }) {
           autoComplete: 'address-level2'
         }),
         React.createElement('label', { className:'block mb-1' }, t('birthday')),
+        birthdayFocus && React.createElement('div', { className:'fixed top-0 left-0 right-0 bg-black/70 text-white text-center py-2 z-50' }, t('selectBirthday')),
         React.createElement(Input, {
           type: 'date',
           className: 'border p-2 mb-2 w-full',
           value: birthday,
           onChange: e => setBirthday(e.target.value),
+          onFocus: () => setBirthdayFocus(true),
+          onBlur: () => setBirthdayFocus(false),
           placeholder: 'F\u00f8dselsdag'
         }),
         React.createElement('datalist', { id: 'city-list' },

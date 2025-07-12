@@ -27,6 +27,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [showSub, setShowSub] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
   const [editInfo, setEditInfo] = useState(false);
+  const [showBirthdayOverlay, setShowBirthdayOverlay] = useState(false);
   const currentUserId = viewerId || userId;
   const isOwnProfile = viewerId === userId;
   const likes = useCollection('likes','userId', currentUserId);
@@ -402,13 +403,19 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           name:'given-name',
           autoComplete:'given-name'
         }),
-          React.createElement(Input, {
-            type:'date',
-            value: profile.birthday || '',
-            onChange: handleBirthdayChange,
-            className:'border p-2 rounded w-full',
-            placeholder:'F\u00f8dselsdag'
-          }),
+          React.createElement('label', { className:'sr-only' }, 'birthday'),
+          React.createElement('div', null,
+            showBirthdayOverlay && React.createElement('div', { className:'fixed top-0 left-0 right-0 bg-black/70 text-white text-center py-2 z-50' }, t('selectBirthday')),
+            React.createElement(Input, {
+              type:'date',
+              value: profile.birthday || '',
+              onChange: handleBirthdayChange,
+              onFocus: () => setShowBirthdayOverlay(true),
+              onBlur: () => setShowBirthdayOverlay(false),
+              className:'border p-2 rounded w-full',
+              placeholder:'F\u00f8dselsdag'
+            })
+          ),
           React.createElement(Input, {
             value: profile.city || '',
             onChange: handleCityChange,
