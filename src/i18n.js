@@ -34,6 +34,7 @@ const messages = {
   firstName:{ en:'First name', da:'Fornavn', sv:'Förnamn', es:'Nombre', fr:'Prénom', de:'Vorname' },
   city:{ en:'City', da:'By', sv:'Stad', es:'Ciudad', fr:'Ville', de:'Stadt' },
   birthday:{ en:'Birthday', da:'Fødselsdag', sv:'Födelsedag', es:'Cumpleaños', fr:'Anniversaire', de:'Geburtstag' },
+  chooseBirthday:{ en:'Select your birthday', da:'Vælg din fødselsdag', sv:'Välj din födelsedag', es:'Selecciona tu cumpleaños', fr:'Sélectionnez votre anniversaire', de:'Wähle deinen Geburtstag' },
   gender:{ en:'Gender', da:'Køn', sv:'Kön', es:'Género', fr:'Genre', de:'Geschlecht' },
   uploadVideoPrompt:{ en:'Please upload at least one video before browsing profiles', da:'Upload mindst et videoklip før du kan se profiler', sv:'Ladda upp minst ett videoklipp innan du kan se profiler', es:'Sube al menos un video antes de ver perfiles', fr:'Téléversez au moins une vidéo avant de voir les profils', de:'Lade zuerst mindestens ein Video hoch, bevor du Profile ansehen kannst' },
   uploadVideoButton:{ en:'Upload video', da:'Upload video', sv:'Ladda upp video', es:'Subir video', fr:'Téléverser une vidéo', de:'Video hochladen' }
