@@ -5,6 +5,7 @@ Calendar interface for daily reflection notes
 Profile settings with age range filtering
 Preferred languages with "allow other languages" option
 Ability to upload or record video clips
+Must upload at least one video before seeing candidate profiles
 Ability to upload or record audio clips
 Video/audio duration limited to 10 seconds
 Animated countdown shown while recording audio or video
