@@ -85,12 +85,12 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: t('dailyClips') }),
-    hasSubscription && React.createElement(Button, {
+    React.createElement(Button, {
       className: 'mb-4 w-full bg-yellow-400 text-white flex items-center gap-2',
       onClick: onOpenPremium
     },
       React.createElement(Star, { className: 'w-4 h-4' }),
-      'Premium feature: Se hvem der har liket dig'
+      'Dine likes'
     ),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Nye klip om ${hoursUntil} timer`),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Tag dig god tid til at udforske dagens klip`),
