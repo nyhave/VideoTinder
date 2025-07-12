@@ -16,7 +16,7 @@ import MatchOverlay from './MatchOverlay.jsx';
 import { languages, useT } from '../i18n.js';
 import { getAge } from '../utils.js';
 
-export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, onViewPublicProfile = () => {}, viewerId, onBack }) {
+export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, onViewPublicProfile = () => {}, onOpenAbout = () => {}, viewerId, onBack }) {
   const [profile,setProfile]=useState(null);
   const t = useT();
   const audioRef = useRef();
@@ -527,6 +527,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement('li', null, '🎙️ Profilbooster: Få dit klip vist tidligere på dagen')
         )
       ),
+    !publicView && React.createElement('div', { className: 'text-center mt-4' },
+      React.createElement('a', {
+        href: '#',
+        className: 'text-pink-600 underline',
+        onClick: e => { e.preventDefault(); onOpenAbout(); }
+      }, t('about'))
+    ),
     matchedProfile && React.createElement(MatchOverlay, {
         name: matchedProfile.name,
         onClose: () => setMatchedProfile(null)

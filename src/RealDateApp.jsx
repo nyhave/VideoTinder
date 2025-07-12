@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LanguageProvider } from './i18n.js';
-import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays, Info as InfoIcon } from 'lucide-react';
+import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays } from 'lucide-react';
 import WelcomeScreen from './components/WelcomeScreen.jsx';
 import DailyDiscovery from './components/DailyDiscovery.jsx';
 import ChatScreen from './components/ChatScreen.jsx';
@@ -131,7 +131,8 @@ export default function RealDateApp() {
         ageRange,
         onChangeAgeRange: setAgeRange,
         onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);},
-        onViewPublicProfile: viewOwnPublicProfile
+        onViewPublicProfile: viewOwnPublicProfile,
+        onOpenAbout: ()=>setTab('about')
       }),
       tab==='premium' && React.createElement(PremiumFeatures, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
       tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), profiles, userId, onSwitchProfile: id=>setUserId(id) }),
@@ -148,8 +149,7 @@ export default function RealDateApp() {
         React.createElement(ChatIcon, { className: 'w-8 h-8 text-pink-600' }),
         hasUnread && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center' }, '1')
       ),
-      React.createElement(CalendarDays, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} }),
-      React.createElement(InfoIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('about'); setViewProfile(null);} })
+      React.createElement(CalendarDays, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} })
       )
   ));
 }
