@@ -386,11 +386,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           ref:photoRef,
           onChange:handlePhotoChange,
           className:'hidden'
-        }),
-        !publicView && React.createElement(Button, {
-          className:'ml-4 bg-pink-500 text-white',
-          onClick:()=>photoRef.current && photoRef.current.click()
-        }, profile.photoURL ? 'Skift billede' : 'Upload billede')
+        })
       ),
       editInfo ?
         React.createElement('div', { className:'space-y-2 mb-2 w-full' },
