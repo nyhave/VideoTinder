@@ -11,13 +11,20 @@ import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
 
-export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOpenPremium }) {
+export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOpenPremium, onOpenProfile }) {
   const profiles = useCollection('profiles');
   const t = useT();
   const user = profiles.find(p => p.id === userId) || {};
   const hasSubscription = user.subscriptionExpires && new Date(user.subscriptionExpires) > new Date();
   const today = new Date().toISOString().split('T')[0];
   const filtered = selectProfiles(user, profiles, ageRange);
+
+  if(!(user.videoClips && user.videoClips.length)){
+    return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
+      React.createElement('p', { className:'mb-4 text-center' }, t('uploadVideoPrompt')),
+      React.createElement(Button, { className:'w-full bg-pink-500 text-white', onClick:onOpenProfile }, t('uploadVideoButton'))
+    );
+  }
   const likes = useCollection('likes','userId',userId);
 
   const [hoursUntil, setHoursUntil] = useState(0);

@@ -16,6 +16,7 @@ and simple profile management powered by Firebase.
 * Minimal profile settings and admin mode
 * Preferred languages with option to allow other languages
 * Profile pictures cached for offline viewing
+* Users must upload at least one video before viewing candidate profiles
 * Premium page showing who liked you (subscription required)
 * Seed data includes 11 mandlige profiler der matcher standardbrugeren så du kan teste premium og ekstra klip
 * Video- og lydklip begrænset til 10 sekunder
