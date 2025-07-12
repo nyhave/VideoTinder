@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAge } from '../utils.js';
 import { User, PlayCircle, Heart, Star } from 'lucide-react';
+import VideoOverlay from './VideoOverlay.jsx';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
@@ -31,6 +32,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const [showPurchase, setShowPurchase] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
+  const [activeVideo, setActiveVideo] = useState(null);
   const handleExtraPurchase = async () => {
     const todayStr = new Date().toISOString().split('T')[0];
     await updateDoc(doc(db, 'profiles', userId), { extraClipsDate: todayStr });
@@ -120,7 +122,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
             )
           ),
           React.createElement('div', { className: 'flex gap-2 mt-2' },
-            React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1' },
+            React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1', onClick:e=>{e.stopPropagation(); const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null; if(url) setActiveVideo(url); } },
               React.createElement(PlayCircle, { className: 'w-5 h-5' }), 'Afspil'
             )
           )
@@ -155,6 +157,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     matchedProfile && React.createElement(MatchOverlay, {
       name: matchedProfile.name,
       onClose: () => setMatchedProfile(null)
-    })
+    }),
+    activeVideo && React.createElement(VideoOverlay, { src: activeVideo, onClose: () => setActiveVideo(null) })
   );
 }
