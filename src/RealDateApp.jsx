@@ -96,7 +96,7 @@ export default function RealDateApp() {
     React.createElement('div', { className: 'flex-1' },
 
       tab==='discovery' && !viewProfile && (
-        React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange, onOpenPremium: ()=>setTab('premium') })
+        React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange, onOpenPremium: ()=>setTab('premium'), onOpenProfile: openProfileSettings })
       ),
       viewProfile && (
         React.createElement(ProfileSettings, {

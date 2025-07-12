@@ -11,13 +11,14 @@ import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
 
-export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOpenPremium }) {
+export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOpenPremium, onOpenProfile }) {
   const profiles = useCollection('profiles');
   const t = useT();
   const user = profiles.find(p => p.id === userId) || {};
   const hasSubscription = user.subscriptionExpires && new Date(user.subscriptionExpires) > new Date();
   const today = new Date().toISOString().split('T')[0];
   const filtered = selectProfiles(user, profiles, ageRange);
+  const hasVideo = user.videoClips && user.videoClips.length;
   const likes = useCollection('likes','userId',userId);
 
   const [hoursUntil, setHoursUntil] = useState(0);
@@ -92,8 +93,9 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Nye klip om ${hoursUntil} timer`),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Tag dig god tid til at udforske dagens klip`),
     React.createElement('ul', { className: 'space-y-4' },
-      filtered.length ? filtered.map(p => (
-        React.createElement('li', {
+      hasVideo ? (
+        filtered.length ? filtered.map(p => (
+          React.createElement('li', {
           key: p.id,
           className: 'p-4 bg-pink-50 rounded-lg cursor-pointer shadow flex flex-col relative',
           onClick: () => onSelectProfile(p.id)
@@ -118,10 +120,16 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
             )
           )
         )
-      )) :
+        )) :
         React.createElement('li', { className: 'text-center text-gray-500' }, t('noProfiles'))
+      ) : (
+        React.createElement('li', { className:'text-center flex flex-col gap-2 items-center text-gray-500' },
+          React.createElement('p', null, t('uploadVideoPrompt')),
+          React.createElement(Button, { className:'bg-pink-500 text-white', onClick:onOpenProfile }, t('uploadVideoButton'))
+        )
+      )
     ),
-    React.createElement(Button, {
+    hasVideo && React.createElement(Button, {
       className: 'mt-4 w-full bg-pink-500 text-white',
       onClick: () => {
         if(user.extraClipsDate === today){
