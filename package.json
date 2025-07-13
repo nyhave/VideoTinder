@@ -1,6 +1,6 @@
 {
   "name": "realdate",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "A minimal React PWA for swiping short videos and speed dating.",
   "scripts": {
     "start": "npx serve .",

@@ -6,7 +6,7 @@ import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
 import { db, collection, getDocs } from '../firebase.js';
 
-export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, profiles = [], userId, onSwitchProfile }) {
+export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, profiles = [], userId, onSwitchProfile }) {
 
   const { lang, setLang } = useLang();
   const t = useT();
@@ -63,6 +63,8 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2', onClick: onOpenMatchLog }, 'Se matchlog'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Score log'),
     React.createElement(Button, { className: 'mt-2', onClick: onOpenScoreLog }, 'Se score log'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Anmeldt indhold'),
+    React.createElement(Button, { className: 'mt-2', onClick: onOpenReports }, 'Se anmeldt indhold'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Fejlmeldinger'),
     React.createElement(Button, { className: 'mt-2', onClick: onOpenBugReports }, 'Se alle fejlmeldinger')
   );
