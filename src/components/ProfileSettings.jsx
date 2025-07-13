@@ -180,6 +180,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await updateDoc(doc(db,'profiles',userId), { city });
   };
 
+  const handleEmailChange = async e => {
+    const email = e.target.value;
+    setProfile({ ...profile, email });
+    await updateDoc(doc(db,'profiles',userId), { email });
+  };
+
   const handleInterestChange = async e => {
     const interest = e.target.value;
     setProfile({ ...profile, interest });
@@ -405,23 +411,33 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             className:'border p-2 rounded w-full',
             placeholder:'F\u00f8dselsdag'
           }),
-          React.createElement(Input, {
-            value: profile.city || '',
-            onChange: handleCityChange,
-            className:'border p-2 rounded w-full',
-            placeholder:'By',
-            name:'city',
-            autoComplete:'address-level2'
-          }),
-          React.createElement(Button, {
-            className:'bg-pink-500 text-white w-full',
-            onClick: () => setEditInfo(false)
-          }, 'Færdig')
+        React.createElement(Input, {
+          value: profile.city || '',
+          onChange: handleCityChange,
+          className:'border p-2 rounded w-full',
+          placeholder:'By',
+          name:'city',
+          autoComplete:'address-level2'
+        }),
+        React.createElement(Input, {
+          type:'email',
+          value: profile.email || '',
+          onChange: handleEmailChange,
+          className:'border p-2 rounded w-full',
+          placeholder:'you@example.com',
+          name:'email',
+          autoComplete:'email'
+        }),
+        React.createElement(Button, {
+          className:'bg-pink-500 text-white w-full',
+          onClick: () => setEditInfo(false)
+        }, 'Færdig')
         ) :
         React.createElement('div', { className:'flex items-center justify-between w-full' },
           React.createElement(SectionTitle, { title: `${profile.name}, ${profile.birthday ? getAge(profile.birthday) : profile.age}${profile.city ? ', ' + profile.city : ''}` }),
           !publicView && React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditInfo(true) })
         ),
+      isOwnProfile && !publicView && profile.email && React.createElement('p', { className:'text-center text-sm text-gray-600 mt-1' }, profile.email),
       !publicView && profile.subscriptionExpires && React.createElement('p', {
         className: 'text-center text-sm mt-2 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
       }, subscriptionActive
