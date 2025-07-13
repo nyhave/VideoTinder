@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { getAge } from '../utils.js';
 import { User, PlayCircle, Heart } from 'lucide-react';
 import VideoOverlay from './VideoOverlay.jsx';
-import ReportOverlay from './ReportOverlay.jsx';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
@@ -44,7 +43,6 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const [showInfo, setShowInfo] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [activeVideo, setActiveVideo] = useState(null);
-  const [reportProfile, setReportProfile] = useState(null);
   const handleExtraPurchase = async () => {
     const todayStr = new Date().toISOString().split('T')[0];
     await updateDoc(doc(db, 'profiles', userId), { extraClipsDate: todayStr });
@@ -129,8 +127,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           React.createElement('div', { className: 'flex gap-2 mt-2' },
             React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1', onClick:e=>{e.stopPropagation(); const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null; if(url) setActiveVideo(url); } },
               React.createElement(PlayCircle, { className: 'w-5 h-5' }), 'Afspil'
-            ),
-            React.createElement(Button, { size: 'sm', variant: 'outline', onClick:e=>{e.stopPropagation(); setReportProfile(p);} }, 'Anmeld')
+            )
           )
         )
       )) :
@@ -164,12 +161,6 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       name: matchedProfile.name,
       onClose: () => setMatchedProfile(null)
     }),
-    activeVideo && React.createElement(VideoOverlay, { src: activeVideo, onClose: () => setActiveVideo(null) }),
-    reportProfile && React.createElement(ReportOverlay, {
-      userId,
-      profileId: reportProfile.id,
-      clipURL: (reportProfile.videoClips && reportProfile.videoClips[0]) ? (reportProfile.videoClips[0].url || reportProfile.videoClips[0]) : '',
-      onClose: () => setReportProfile(null)
-    })
+    activeVideo && React.createElement(VideoOverlay, { src: activeVideo, onClose: () => setActiveVideo(null) })
   );
 }

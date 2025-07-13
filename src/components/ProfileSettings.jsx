@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart } from 'lucide-react';
+import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart, Flag } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
+import ReportOverlay from './ReportOverlay.jsx';
 import { useCollection, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
@@ -32,6 +33,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const likes = useCollection('likes','userId', currentUserId);
   const liked = likes.some(l => l.profileId === userId);
   const [matchedProfile, setMatchedProfile] = useState(null);
+  const [reportMode, setReportMode] = useState(false);
+  const [reportItem, setReportItem] = useState(null);
 
   const handlePurchase = async () => {
     const now = new Date();
@@ -301,7 +304,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       Array.from({ length: 3 }).map((_, i) => {
         const clip = (profile.videoClips || [])[i];
         const url = clip && clip.url ? clip.url : clip;
-        return React.createElement('div', { key: i, className: 'w-[30%] flex flex-col items-center justify-end min-h-[160px]' },
+        return React.createElement('div', { key: i, className: 'w-[30%] flex flex-col items-center justify-end min-h-[160px] relative' },
           url
             ? React.createElement(VideoPreview, { src: url })
             : React.createElement(CameraIcon, {
@@ -311,7 +314,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           url && !publicView && React.createElement(Button, {
             className: 'mt-1 bg-pink-500 text-white p-1 rounded-full flex items-center justify-center',
             onClick: () => deleteFile('videoClips', i)
-          }, React.createElement(TrashIcon, { className: 'w-4 h-4' }))
+          }, React.createElement(TrashIcon, { className: 'w-4 h-4' })),
+          url && publicView && reportMode && React.createElement(Flag, {
+            className: 'w-5 h-5 text-red-500 absolute top-1 right-1 cursor-pointer',
+            onClick: () => setReportItem({ clipURL: url })
+          })
         );
       })
     ),
@@ -332,12 +339,16 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     React.createElement('div', { className: 'space-y-2 mb-4' },
       audioClips.map((clip, i) => {
         const url = clip && clip.url ? clip.url : clip;
-        return React.createElement('div', { key: i, className: 'flex items-center' },
+        return React.createElement('div', { key: i, className: 'flex items-center relative' },
           React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' }),
           !publicView && React.createElement(Button, {
             className: 'ml-2 bg-pink-500 text-white p-1 rounded w-[20%] flex items-center justify-center',
             onClick: () => deleteFile('audioClips', i)
-          }, React.createElement(TrashIcon, { className: 'w-4 h-4' }))
+          }, React.createElement(TrashIcon, { className: 'w-4 h-4' })),
+          publicView && reportMode && React.createElement(Flag, {
+            className: 'w-5 h-5 text-red-500 absolute top-1 right-1 cursor-pointer',
+            onClick: () => setReportItem({ clipURL: url })
+          })
         )
       })
     ),
@@ -386,6 +397,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           className: 'ml-auto bg-pink-500 text-white',
           onClick: toggleLike
         }, liked ? 'Unmatch' : 'Match'),
+        publicView && !isOwnProfile && React.createElement(Button, {
+          className: 'ml-2 bg-red-500 text-white',
+          onClick: () => setReportMode(m => !m)
+        }, reportMode ? 'Annuller' : 'Anmeld'),
         !publicView && React.createElement('input', {
           type:'file',
           accept:'image/*',
@@ -515,6 +530,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         readOnly: publicView,
         value: profile.clip || '',
         onChange: publicView ? undefined : handleClipChange
+      }),
+      publicView && reportMode && profile.clip && React.createElement(Flag, {
+        className: 'w-5 h-5 text-red-500 cursor-pointer ml-auto',
+        onClick: () => setReportItem({ text: profile.clip })
       })
     ),
     !publicView && React.createElement(Button, {
@@ -549,6 +568,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     matchedProfile && React.createElement(MatchOverlay, {
         name: matchedProfile.name,
         onClose: () => setMatchedProfile(null)
+      }),
+    reportItem && React.createElement(ReportOverlay, {
+        userId: currentUserId,
+        profileId: userId,
+        clipURL: reportItem.clipURL || '',
+        text: reportItem.text || '',
+        onClose: () => { setReportItem(null); setReportMode(false); }
       })
   );
 }
