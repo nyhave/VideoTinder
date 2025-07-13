@@ -4,7 +4,7 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
-import { db, collection, getDocs } from '../firebase.js';
+
 
 export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, profiles = [], userId, onSwitchProfile }) {
 
@@ -12,23 +12,15 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   const t = useT();
 
   const sendPush = async body => {
-    const serverKey = process.env.FCM_SERVER_KEY;
-    if (!serverKey) {
-      alert('FCM_SERVER_KEY not set');
-      return;
+    const resp = await fetch('/.netlify/functions/send-push', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ body })
+    });
+    if (!resp.ok) {
+      const text = await resp.text();
+      alert('Failed: ' + text);
     }
-    const tokensSnap = await getDocs(collection(db, 'pushTokens'));
-    await Promise.all(tokensSnap.docs.map(d => {
-      const token = d.id;
-      return fetch('https://fcm.googleapis.com/fcm/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'key=' + serverKey
-        },
-        body: JSON.stringify({ to: token, notification: { title: 'RealDate', body } })
-      });
-    }));
   };
 
 
