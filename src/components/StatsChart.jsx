@@ -101,9 +101,10 @@ export default function StatsChart({ data = [], fields = [], title }) {
       className: 'fixed inset-0 z-50 bg-black/80 flex items-center justify-center',
       onClick: () => setExpanded(false)
     },
-      React.createElement('div', { className: 'bg-white p-4 rounded shadow-xl max-w-screen-lg overflow-auto' },
-        React.createElement('h3', { className: 'font-semibold mb-2 text-center' }, title),
-        renderSvg(80, 200)
+      React.createElement('div', { className: 'bg-white p-4 rounded shadow-xl w-full h-full overflow-auto' },
+        React.createElement('h3', { className: 'font-semibold mb-2 text-center text-lg' }, title),
+        legend,
+        renderSvg(100, 300)
       )
     )
   );
