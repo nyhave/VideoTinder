@@ -83,7 +83,7 @@ export default function ChatScreen({ userId }) {
   const activeProfile = active ? profileMap[active.profileId] || {} : null;
   const userProfile = profileMap[userId] || {};
 
-  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1' },
+  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1 overflow-y-auto', style:{maxHeight:'calc(100vh - 10rem)'} },
     React.createElement(SectionTitle, {
       title: t('chat'),
       action: active && React.createElement(Button, { className: 'flex items-center gap-1', onClick: () => setActive(null) },
