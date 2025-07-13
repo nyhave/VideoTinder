@@ -60,6 +60,7 @@ FIREBASE_PROJECT_ID
 FIREBASE_STORAGE_BUCKET
 FIREBASE_MESSAGING_SENDER_ID
 FIREBASE_APP_ID
+GOOGLE_APPLICATION_CREDENTIALS
 ```
 
 During the build job, these secrets are written to a `.env` file so Parcel can embed the Firebase config.
@@ -85,4 +86,12 @@ errors.
 ## Development Notes
 
 The profile filtering logic used on the Daily Discovery page lives in `src/selectProfiles.js`. Keeping this code in its own module makes it easy to move the same logic to a Firebase Cloud Function when needed. Cloud Functions for Firebase can run JavaScript or TypeScript, so the helper can be reused on the server with minimal changes.
+
+## Push Notifications
+
+This project uses Firebase Cloud Messaging to deliver updates. Notifications are
+sent using the HTTP **v1** API, authenticated with a service account. Provide
+the path to your service account JSON in the `GOOGLE_APPLICATION_CREDENTIALS`
+environment variable when sending messages from the server. The legacy
+`FCM_SERVER_KEY` is no longer used.
 
