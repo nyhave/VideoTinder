@@ -24,6 +24,7 @@ and simple profile management powered by Firebase.
 * Daglige statistikker gemmes automatisk og vises som grafer i adminområdet
 * Statistik over hvor mange gange profiler bliver åbnet
 * Graf over antallet af \u00E5bne fejl pr. dag
+* Matchlog kan åbnes fra adminområdet
 
 
 ## Getting Started
