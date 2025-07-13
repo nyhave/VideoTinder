@@ -11,6 +11,7 @@ export default function WelcomeScreen({ onLogin }) {
   const [showRegister, setShowRegister] = useState(false);
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
+  const [email, setEmail] = useState('');
   const [gender, setGender] = useState('Kvinde');
   const [birthday, setBirthday] = useState('');
   const [showBirthdayOverlay, setShowBirthdayOverlay] = useState(false);
@@ -25,6 +26,7 @@ export default function WelcomeScreen({ onLogin }) {
       id,
       name: trimmed,
       city: city.trim(),
+      email: email.trim(),
       gender,
       interest: gender === 'Kvinde' ? 'Mand' : 'Kvinde',
       birthday,
@@ -77,6 +79,16 @@ export default function WelcomeScreen({ onLogin }) {
           onBlur: () => setShowBirthdayOverlay(false),
           onChange: e => { setBirthday(e.target.value); setShowBirthdayOverlay(false); },
           placeholder: 'F\u00f8dselsdag'
+        }),
+        React.createElement('label', { className:'block mb-1' }, t('email')),
+        React.createElement(Input, {
+          type: 'email',
+          className: 'border p-2 mb-2 w-full',
+          value: email,
+          onChange: e => setEmail(e.target.value),
+          placeholder: 'you@example.com',
+          name: 'email',
+          autoComplete: 'email'
         }),
         React.createElement('datalist', { id: 'city-list' },
           ['København','Aarhus','Odense','Aalborg','Esbjerg','Randers'].map(c =>
