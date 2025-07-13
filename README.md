@@ -85,7 +85,7 @@ errors.
 
 ## Development Notes
 
-The profile filtering logic used on the Daily Discovery page lives in `src/selectProfiles.js`. Keeping this code in its own module makes it easy to move the same logic to a Firebase Cloud Function when needed. Cloud Functions for Firebase can run JavaScript or TypeScript, so the helper can be reused on the server with minimal changes.
+The profile filtering logic used on the Daily Discovery page lives in `src/selectProfiles.js`. Keeping this code in its own module makes it easy to reuse the same logic in a Netlify Function when needed. Netlify Functions run on Node.js with a generous free plan, so the helper can be moved to the server with minimal changes. An example implementation lives in `netlify/functions/select-profiles.js`.
 
 ## Push Notifications
 
