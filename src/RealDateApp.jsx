@@ -10,6 +10,7 @@ import ProfileSettings from './components/ProfileSettings.jsx';
 import AdminScreen from './components/AdminScreen.jsx';
 import StatsScreen from './components/StatsScreen.jsx';
 import BugReportsScreen from './components/BugReportsScreen.jsx';
+import MatchLogScreen from './components/MatchLogScreen.jsx';
 import AboutScreen from './components/AboutScreen.jsx';
 import { useCollection, requestNotificationPermission, db, doc, updateDoc, increment } from './firebase.js';
 
@@ -135,8 +136,9 @@ export default function RealDateApp() {
         onOpenAbout: ()=>setTab('about')
       }),
       tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-      tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), profiles, userId, onSwitchProfile: id=>setUserId(id) }),
+      tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), profiles, userId, onSwitchProfile: id=>setUserId(id) }),
       tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
+      tab==='matchlog' && React.createElement(MatchLogScreen, { onBack: ()=>setTab('admin') }),
       tab==='bugs' && React.createElement(BugReportsScreen, { onBack: ()=>setTab('admin') }),
       tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
     ),
