@@ -12,7 +12,11 @@ export default function ScoreLogScreen({ onBack }) {
   const sortedLogs = logs.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const formatName = id => profileMap[id]?.name || id;
-  const formatScore = s => typeof s.score === 'number' ? s.score.toFixed(1) : s.score;
+  const formatScore = s => {
+    if (typeof s.score === 'number') return s.score.toFixed(1);
+    if (s.score && typeof s.score.score === 'number') return s.score.score.toFixed(1);
+    return s.score;
+  };
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: 'Score log', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
@@ -26,12 +30,20 @@ export default function ScoreLogScreen({ onBack }) {
             ),
             React.createElement('details', { className: 'text-xs mt-1' },
               React.createElement('summary', null, 'Alle scorer'),
-              React.createElement('ul', { className: 'list-disc list-inside' },
-                (log.potential || []).map(p =>
-                  React.createElement('li', { key: p.id }, `${formatName(p.id)}: ${formatScore(p)}`)
+                React.createElement('ul', { className: 'list-disc list-inside' },
+                  (log.potential || []).map(p =>
+                    React.createElement('li', { key: p.id },
+                      `${formatName(p.id)}: ${formatScore(p)}`,
+                      p.score && p.score.breakdown &&
+                        React.createElement('ul', { className: 'ml-4 list-disc' },
+                          Object.entries(p.score.breakdown).map(([k, v]) =>
+                            React.createElement('li', { key: k }, `${k}: ${typeof v === 'number' ? v.toFixed(1) : v}`)
+                          )
+                        )
+                    )
+                  )
                 )
               )
-            )
           )
         )
       ) :
