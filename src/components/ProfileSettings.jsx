@@ -536,10 +536,16 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onClick: () => setReportItem({ text: profile.clip })
       })
     ),
-    !publicView && React.createElement(Button, {
-        className: 'mt-2 bg-blue-500 text-white w-full',
+    !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col gap-2' },
+      React.createElement(Button, {
+        className: 'bg-blue-500 text-white w-full',
         onClick: recoverMissing
       }, 'Hent mistet fra DB'),
+      React.createElement(Button, {
+        className: 'bg-pink-500 text-white w-full',
+        onClick: onOpenAbout
+      }, t('about'))
+    ),
     !publicView && !subscriptionActive && React.createElement(Button, {
         className: 'mt-2 w-full bg-pink-500 text-white',
         onClick: () => setShowSub(true)
@@ -558,13 +564,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement('li', null, '🎙️ Profilbooster: Få dit klip vist tidligere på dagen')
         )
       ),
-    !publicView && React.createElement('div', { className: 'text-center mt-4' },
-      React.createElement('a', {
-        href: '#',
-        className: 'text-pink-600 underline',
-        onClick: e => { e.preventDefault(); onOpenAbout(); }
-      }, t('about'))
-    ),
     matchedProfile && React.createElement(MatchOverlay, {
         name: matchedProfile.name,
         onClose: () => setMatchedProfile(null)
