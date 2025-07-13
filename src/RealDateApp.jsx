@@ -27,7 +27,7 @@ export default function RealDateApp() {
   const profiles = useCollection('profiles');
   const chats = useCollection('matches', 'userId', userId);
   const [ageRange,setAgeRange]=useState([35,55]);
-  const [tab,setTab]=useState('about');
+  const [tab,setTab]=useState('discovery');
   const [viewProfile,setViewProfile]=useState(null);
   const hasUnread = chats.some(c => c.unreadByUser || c.newMatch);
   const currentUser = profiles.find(p => p.id === userId) || {};
