@@ -95,3 +95,9 @@ the path to your service account JSON in the `GOOGLE_APPLICATION_CREDENTIALS`
 environment variable when sending messages from the server. The legacy
 `FCM_SERVER_KEY` is no longer used.
 
+In this repository, a Netlify Function (`netlify/functions/send-push.js`) handles
+delivery. The function reads stored push tokens from Firestore and uses the
+Firebase Admin SDK to send notifications via the v1 API. Trigger it by making a
+`POST` request to `/.netlify/functions/send-push` with a JSON body containing a
+`body` field and optional `title`.
+

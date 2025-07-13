@@ -35,7 +35,6 @@ jobs:
             FIREBASE_MESSAGING_SENDER_ID=${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
             FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}
             VAPID_KEY=${{ secrets.VAPID_KEY }}
-            FCM_SERVER_KEY=${{ secrets.FCM_SERVER_KEY }}
             EOF
       - run: npm ci
       - run: npm run build
