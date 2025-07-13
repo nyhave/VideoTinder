@@ -26,10 +26,10 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     const log = {
       userId,
       date: new Date().toISOString(),
-      potential: scored.map(p => ({ id: p.id, score: p.score })),
+      potential: scored.map(p => ({ id: p.id, score: { score: p.score, breakdown: p.breakdown } })),
       selected: scored
         .filter(p => selectedIds.includes(p.id))
-        .map(p => ({ id: p.id, score: p.score }))
+        .map(p => ({ id: p.id, score: { score: p.score, breakdown: p.breakdown } }))
     };
     setDoc(doc(collection(db, 'matchLogs')), log).catch(err =>
       console.error('Failed to log match scores', err)
