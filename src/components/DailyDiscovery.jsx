@@ -6,8 +6,8 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
-import { useCollection, db, doc, setDoc, deleteDoc, getDoc, updateDoc } from '../firebase.js';
-import selectProfiles from '../selectProfiles.js';
+import { useCollection, db, doc, setDoc, deleteDoc, getDoc, updateDoc, collection } from '../firebase.js';
+import selectProfiles, { scoreProfiles } from '../selectProfiles.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
@@ -19,6 +19,22 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const hasSubscription = user.subscriptionExpires && new Date(user.subscriptionExpires) > new Date();
   const today = new Date().toISOString().split('T')[0];
   const filtered = selectProfiles(user, profiles, ageRange);
+  useEffect(() => {
+    if(!userId || !profiles.length) return;
+    const scored = scoreProfiles(user, profiles, ageRange);
+    const selectedIds = filtered.map(p => p.id);
+    const log = {
+      userId,
+      date: new Date().toISOString(),
+      potential: scored.map(p => ({ id: p.id, score: p.score })),
+      selected: scored
+        .filter(p => selectedIds.includes(p.id))
+        .map(p => ({ id: p.id, score: p.score }))
+    };
+    setDoc(doc(collection(db, 'matchLogs')), log).catch(err =>
+      console.error('Failed to log match scores', err)
+    );
+  }, [userId, profiles, ageRange]);
 
   const likes = useCollection('likes','userId',userId);
 
