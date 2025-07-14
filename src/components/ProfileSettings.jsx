@@ -219,6 +219,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await updateDoc(doc(db,'profiles',userId), { interests: opts });
   };
 
+  const handleRemoveInterest = async interest => {
+    const updated = (profile.interests || []).filter(i => i !== interest);
+    setProfile({ ...profile, interests: updated });
+    await updateDoc(doc(db,'profiles',userId), { interests: updated });
+  };
+
   const handleDistanceRangeChange = async range => {
     setDistanceRange(range);
     await updateDoc(doc(db,'profiles',userId), { distanceRange: range });
@@ -538,15 +544,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
-    publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: t('interests') }),
-      React.createElement('div', { className: 'flex flex-wrap gap-2' },
+      React.createElement('div', { className: 'flex flex-wrap gap-2 mb-2' },
         (profile.interests || []).map(i => {
           const cat = getInterestCategory(i);
           const exact = viewerInterests.includes(i);
           const sameCat = !exact && viewerCategories.has(cat);
           const cls = 'px-2 py-1 rounded text-sm ' + (exact ? 'bg-pink-500 text-white' : sameCat ? 'bg-pink-100 text-pink-800' : 'bg-gray-100');
-          return React.createElement('span', { key: i, className: cls }, i);
+          const sharedProps = { key: i, className: cls + (!publicView ? ' cursor-pointer' : '') };
+          const elProps = publicView ? {} : { onClick: () => handleRemoveInterest(i) };
+          return React.createElement(publicView ? 'span' : 'button', { ...sharedProps, ...elProps }, i);
         })
       )
     ),
