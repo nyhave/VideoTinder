@@ -1,6 +1,7 @@
 // Filtering helper kept separate so it can also run in a Netlify
 // Function. Netlify Functions support both JavaScript and TypeScript.
 import { getAge } from './utils.js';
+import { getInterestCategory } from './interests.js';
 
 // Calculate a detailed match score for a single profile. Missing data is handled
 // gracefully so the function can run both on the client and as a Netlify Function.
@@ -52,9 +53,16 @@ export function calculateMatchScoreDetailed(user, profile, ageRange) {
   // 4. Shared interests (max 15)
   const userInt = user.interests || [];
   const profInt = profile.interests || [];
-  const shared = userInt.filter(i => profInt.includes(i)).length;
-  breakdown.interests = Math.min(shared, 5) / 5 * 15;
-  score += breakdown.interests;
+  const sharedExact = userInt.filter(i => profInt.includes(i));
+  const exactCount = sharedExact.length;
+  const categoriesOfExact = new Set(sharedExact.map(getInterestCategory));
+  const userCats = new Set(userInt.map(getInterestCategory));
+  const profCats = new Set(profInt.map(getInterestCategory));
+  const sharedCats = [...userCats].filter(c => profCats.has(c));
+  const catCount = sharedCats.filter(c => !categoriesOfExact.has(c)).length;
+  const interestScore = Math.min(15, exactCount * 3 + catCount * 1.5);
+  breakdown.interests = interestScore;
+  score += interestScore;
 
   // 5. Activity level (max 10)
   if (profile.lastActive) {

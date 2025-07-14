@@ -10,6 +10,8 @@ const getAge = birthday => {
   return age;
 };
 
+const { getInterestCategory } = require('../../src/interests.js');
+
 function calculateMatchScoreDetailed(user, profile, ageRange) {
   const breakdown = {};
   let score = 0;
@@ -48,9 +50,16 @@ function calculateMatchScoreDetailed(user, profile, ageRange) {
   }
   const userInt = user.interests || [];
   const profInt = profile.interests || [];
-  const shared = userInt.filter(i => profInt.includes(i)).length;
-  breakdown.interests = Math.min(shared, 5) / 5 * 15;
-  score += breakdown.interests;
+  const sharedExact = userInt.filter(i => profInt.includes(i));
+  const exactCount = sharedExact.length;
+  const categoriesOfExact = new Set(sharedExact.map(getInterestCategory));
+  const userCats = new Set(userInt.map(getInterestCategory));
+  const profCats = new Set(profInt.map(getInterestCategory));
+  const sharedCats = [...userCats].filter(c => profCats.has(c));
+  const catCount = sharedCats.filter(c => !categoriesOfExact.has(c)).length;
+  const interestScore = Math.min(15, exactCount * 3 + catCount * 1.5);
+  breakdown.interests = interestScore;
+  score += interestScore;
   if (profile.lastActive) {
     const hours = (Date.now() - new Date(profile.lastActive)) / 36e5;
     if (hours <= 24) breakdown.activity = 10;
