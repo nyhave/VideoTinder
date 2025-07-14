@@ -48,7 +48,13 @@ export const interestOptions = [
   'Tegneserier',
   'Anime',
   'Manga',
-  'DIY-projekter'
+  'DIY-projekter',
+  'Opera',
+  'Hip-hop',
+  'Triatlon',
+  'Bage',
+  'Vin',
+  '\u00d8lbrygning'
 ];
 
 export const interestCategories = {
@@ -100,7 +106,13 @@ export const interestCategories = {
   'Sprog': 'Uddannelse',
   'Historie': 'Uddannelse',
   'Astrologi': 'Uddannelse',
-  'Fester': 'Socialt'
+  'Fester': 'Socialt',
+  'Opera': 'Musik',
+  'Hip-hop': 'Musik',
+  'Triatlon': 'Sport & Fitness',
+  'Bage': 'Mad & Gastronomi',
+  'Vin': 'Mad & Gastronomi',
+  '\u00d8lbrygning': 'Mad & Gastronomi'
 };
 
 export const getInterestCategory = i => interestCategories[i] || 'Andet';
