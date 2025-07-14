@@ -495,11 +495,47 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       }, subscriptionActive
         ? `Premium abonnement aktivt til ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
         : `Premium abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`),
-      !publicView && profile.subscriptionPurchased && React.createElement('p', {
-        className: 'text-center text-sm text-gray-500'
-      }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`),
-      null
-    ),
+        !publicView && profile.subscriptionPurchased && React.createElement('p', {
+          className: 'text-center text-sm text-gray-500'
+        }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`),
+        !publicView && React.createElement('label', { className:'mt-2' }, t('interests')),
+        !publicView && React.createElement('select', {
+          multiple: true,
+          className: 'border p-2 rounded w-full mb-2 h-40',
+          value: profile.interests || [],
+          onChange: handleInterestsChange
+        },
+          interestOptions.map(i => React.createElement('option', { key:i, value:i }, i))
+        ),
+        !publicView && React.createElement('p', { className:'text-sm text-gray-500 mb-2' }, t('chooseInterests')),
+        !publicView && React.createElement('label', { className:'mt-2' }, t('language')),
+        !publicView && React.createElement('select', {
+          className:'border p-2 rounded block mb-2',
+          value: profile.language || 'en',
+          onChange: e => { const language = e.target.value; setProfile({ ...profile, language }); updateDoc(doc(db,'profiles',userId), { language }); }
+        },
+          Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
+        ),
+        !publicView && React.createElement('label', { className:'mt-2' }, t('preferredLanguages')),
+        !publicView && React.createElement('select', {
+          multiple: true,
+          className:'border p-2 rounded w-full',
+          value: profile.preferredLanguages || [],
+          onChange: e => { const opts = Array.from(e.target.selectedOptions).map(o=>o.value); setProfile({ ...profile, preferredLanguages: opts }); updateDoc(doc(db,'profiles',userId), { preferredLanguages: opts }); }
+        },
+          Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
+        ),
+        !publicView && React.createElement('label', { className:'mt-2' }, t('allowOtherLanguages')),
+        !publicView && React.createElement('select', {
+          className:'border p-2 rounded block mb-2',
+          value: profile.allowOtherLanguages !== false ? 'yes' : 'no',
+          onChange: e => { const allowOtherLanguages = e.target.value === 'yes'; setProfile({ ...profile, allowOtherLanguages }); updateDoc(doc(db,'profiles',userId), { allowOtherLanguages }); }
+        },
+          React.createElement('option', { value:'yes' }, t('yes')),
+          React.createElement('option', { value:'no' }, t('no'))
+        ),
+        null
+      ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
     publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
@@ -524,16 +560,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement('option', { value: 'Mand' }, 'Mænd'),
         React.createElement('option', { value: 'Kvinde' }, 'Kvinder')
       ),
-      React.createElement('label', { className:'mt-2' }, t('interests')),
-      React.createElement('select', {
-        multiple: true,
-        className: 'border p-2 rounded w-full mb-2 h-40',
-        value: profile.interests || [],
-        onChange: handleInterestsChange
-      },
-        interestOptions.map(i => React.createElement('option', { key:i, value:i }, i))
-      ),
-      React.createElement('p', { className:'text-sm text-gray-500 mb-2' }, t('chooseInterests')),
       React.createElement('label', { className: 'mt-2' }, `Alder: ${ageRange[0]} - ${ageRange[1]}`),
       React.createElement(Slider, {
         range: true,
@@ -551,33 +577,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         value: distanceRange,
         onChange: handleDistanceRangeChange,
         className: 'w-full'
-      }),
-      React.createElement('label', { className:'mt-2' }, t('language')),
-      React.createElement('select', {
-        className:'border p-2 rounded block mb-2',
-        value: profile.language || 'en',
-        onChange: e => { const language = e.target.value; setProfile({ ...profile, language }); updateDoc(doc(db,'profiles',userId), { language }); }
-      },
-        Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
-      ),
-      React.createElement('label', { className:'mt-2' }, t('preferredLanguages')),
-      React.createElement('select', {
-        multiple: true,
-        className:'border p-2 rounded w-full',
-        value: profile.preferredLanguages || [],
-        onChange: e => { const opts = Array.from(e.target.selectedOptions).map(o=>o.value); setProfile({ ...profile, preferredLanguages: opts }); updateDoc(doc(db,'profiles',userId), { preferredLanguages: opts }); }
-      },
-        Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
-      ),
-      React.createElement('label', { className:'mt-2' }, t('allowOtherLanguages')),
-      React.createElement('select', {
-        className:'border p-2 rounded block mb-2',
-        value: profile.allowOtherLanguages !== false ? 'yes' : 'no',
-        onChange: e => { const allowOtherLanguages = e.target.value === 'yes'; setProfile({ ...profile, allowOtherLanguages }); updateDoc(doc(db,'profiles',userId), { allowOtherLanguages }); }
-      },
-        React.createElement('option', { value:'yes' }, t('yes')),
-        React.createElement('option', { value:'no' }, t('no'))
-      )
+      })
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: t('aboutMe') }),
