@@ -379,14 +379,18 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   return React.createElement(React.Fragment, null,
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      !publicView && React.createElement('div', {
-        className: 'mb-4 flex justify-end'
-      },
-        React.createElement('button', {
-          className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
-          onClick: onLogout
-        }, 'Logout')
-      ),
+        !publicView && React.createElement('div', {
+          className: 'mb-4 flex justify-end gap-2'
+        },
+          React.createElement(Button, {
+            className: 'bg-pink-500 text-white',
+            onClick: onOpenAbout
+          }, t('about')),
+          React.createElement('button', {
+            className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
+            onClick: onLogout
+          }, 'Logout')
+        ),
       publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
       React.createElement('div', { className:'flex items-center mb-4 gap-4' },
         profile.photoURL ?
@@ -540,16 +544,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onClick: () => setReportItem({ text: profile.clip })
       })
     ),
-    !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col gap-2' },
-      React.createElement(Button, {
-        className: 'bg-blue-500 text-white w-full',
-        onClick: recoverMissing
-      }, 'Hent mistet fra DB'),
-      React.createElement(Button, {
-        className: 'bg-pink-500 text-white w-full',
-        onClick: onOpenAbout
-      }, t('about'))
-    ),
+      !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col gap-2' },
+        React.createElement(Button, {
+          className: 'bg-blue-500 text-white w-full',
+          onClick: recoverMissing
+        }, 'Hent mistet fra DB')
+      ),
     !publicView && !subscriptionActive && React.createElement(Button, {
         className: 'mt-2 w-full bg-pink-500 text-white',
         onClick: () => setShowSub(true)
