@@ -100,7 +100,6 @@ export default function WelcomeScreen({ onLogin }) {
           className: 'border p-2 mb-2 w-full',
           value: birthday,
           onFocus: () => setShowBirthdayOverlay(true),
-          onBlur: handleBirthdayBlur,
           onChange: e => { setBirthday(e.target.value); setShowBirthdayOverlay(false); },
           placeholder: 'F\u00f8dselsdag'
         }),
