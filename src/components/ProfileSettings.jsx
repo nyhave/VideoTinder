@@ -171,6 +171,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const handleBirthdayChange = async e => {
     const birthday = e.target.value;
+    if(birthday && getAge(birthday) < 18){
+      alert('Du skal v\u00e6re mindst 18 \u00e5r for at bruge appen');
+      return;
+    }
     setProfile({ ...profile, birthday });
     const age = birthday ? getAge(birthday) : '';
     await updateDoc(doc(db,'profiles',userId), { birthday, age });

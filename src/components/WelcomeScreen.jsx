@@ -21,6 +21,11 @@ export default function WelcomeScreen({ onLogin }) {
   const register = async () => {
     const trimmed = name.trim();
     if (!trimmed) return;
+    // Require a valid birthday confirming the user is at least 18
+    if (!birthday || getAge(birthday) < 18) {
+      alert('Du skal v\u00e6re mindst 18 \u00e5r for at bruge appen');
+      return;
+    }
     const id = Date.now().toString();
     const profile = {
       id,
