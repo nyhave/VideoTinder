@@ -378,6 +378,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   );
 
   return React.createElement(React.Fragment, null,
+    !publicView && React.createElement(Card, { className: 'p-4 m-4 shadow-xl bg-white/90' },
+      React.createElement('h2', { className: 'text-xl font-semibold text-pink-600 text-center' }, 'Din profil')
+    ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
         !publicView && React.createElement('div', {
           className: 'mb-4 flex justify-end gap-2'
