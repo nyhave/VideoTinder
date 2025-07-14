@@ -514,6 +514,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           name:'email',
           autoComplete:'email'
         }),
+        React.createElement('label', { className:'mt-2 block' }, t('language')),
+        React.createElement('select', {
+          className:'border p-2 rounded w-full mb-2',
+          value: profile.language || 'en',
+          onChange: e => { const language = e.target.value; setProfile({ ...profile, language }); updateDoc(doc(db,'profiles',userId), { language }); }
+        },
+          Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
+        ),
         React.createElement(Button, {
           className:'bg-pink-500 text-white w-full',
           onClick: () => setEditInfo(false)
@@ -523,6 +531,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement(SectionTitle, { title: `${profile.name}, ${profile.birthday ? getAge(profile.birthday) : profile.age}${profile.city ? ', ' + profile.city : ''}` }),
           !publicView && React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditInfo(true) })
         ),
+      React.createElement('p', { className:'text-center text-sm mt-1' }, languages[profile.language] || profile.language),
       isOwnProfile && !publicView && profile.email && React.createElement('p', { className:'text-center text-sm text-gray-600 mt-1' }, profile.email),
       !publicView && profile.subscriptionExpires && React.createElement('p', {
         className: 'text-center text-sm mt-2 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
@@ -633,19 +642,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         value: profile.clip || '',
         onChange: (publicView || !editAbout) ? undefined : handleClipChange
       }),
-      publicView ?
-        React.createElement('p', { className:'mt-2' }, languages[profile.language] || profile.language) :
-        React.createElement(React.Fragment, null,
-          React.createElement('label', { className:'mt-2' }, t('language')),
-          React.createElement('select', {
-            className:'border p-2 rounded block mb-2',
-            value: profile.language || 'en',
-            onChange: editAbout ? e => { const language = e.target.value; setProfile({ ...profile, language }); updateDoc(doc(db,'profiles',userId), { language }); } : undefined,
-            disabled: !editAbout
-          },
-            Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
-          )
-        ),
+      publicView && React.createElement('p', { className:'mt-2' }, languages[profile.language] || profile.language),
       publicView && reportMode && profile.clip && React.createElement(Flag, {
         className: 'w-5 h-5 text-red-500 cursor-pointer ml-auto',
         onClick: () => setReportItem({ text: profile.clip })
