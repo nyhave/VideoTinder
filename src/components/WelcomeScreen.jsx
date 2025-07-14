@@ -58,11 +58,19 @@ export default function WelcomeScreen({ onLogin }) {
     React.Fragment,
     null,
     showBirthdayOverlay && React.createElement('div', {
-      className: 'fixed top-0 left-0 right-0 bg-black/70 p-2 z-50'
+      className: 'fixed inset-0 flex flex-col items-center justify-center bg-black/80 z-50'
     },
       React.createElement('h1', {
-        className: 'text-3xl font-bold text-pink-600 text-center'
-      }, t('chooseBirthday'))
+        className: 'text-3xl font-bold text-pink-600 text-center mb-4 mt-10'
+      }, t('chooseBirthday')),
+      React.createElement(Input, {
+        type: 'date',
+        className: 'border p-2',
+        value: birthday,
+        onChange: e => { setBirthday(e.target.value); setShowBirthdayOverlay(false); },
+        onBlur: handleBirthdayBlur,
+        autoFocus: true
+      })
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       showRegister ? (
