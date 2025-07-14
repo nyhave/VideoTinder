@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Calculate simple moving average for an array of numbers
 function movingAverage(arr, window) {
@@ -12,9 +12,21 @@ function movingAverage(arr, window) {
 
 export default function StatsChart({ data = [], fields = [], title }) {
   const [expanded, setExpanded] = useState(false);
+  const [screen, setScreen] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const update = () => {
+      setScreen({ width: window.innerWidth, height: window.innerHeight });
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
   if (!Array.isArray(fields)) fields = [fields];
   if (!data.length || !fields.length) return null;
   const colors = ['#ec4899', '#3b82f6', '#10b981'];
+
+  const AXIS = 30; // space for y-axis labels
 
   // Prepare data series including moving averages
   const series = [];
@@ -28,12 +40,11 @@ export default function StatsChart({ data = [], fields = [], title }) {
   const max = Math.max(...series.flatMap(s => s.values), 1);
 
   const renderSvg = (step = 40, h = 100) => {
-    const axis = 30; // space for y-axis labels
-    const w = Math.max((data.length - 1) * step, 1) + axis + 10;
+    const w = Math.max((data.length - 1) * step, 1) + AXIS + 10;
     const y = v => h - v / max * h;
 
     const polylines = series.map((s, idx) => {
-      const points = s.values.map((v, i) => `${axis + i * step},${y(v)}`).join(' ');
+      const points = s.values.map((v, i) => `${AXIS + i * step},${y(v)}`).join(' ');
       return React.createElement('polyline', {
         key: `${s.label}-${idx}`,
         fill: 'none',
@@ -46,7 +57,7 @@ export default function StatsChart({ data = [], fields = [], title }) {
 
     const xlabels = data.map((d, i) => React.createElement('text', {
       key: d.date,
-      x: axis + i * step,
+      x: AXIS + i * step,
       y: h + 12,
       textAnchor: 'middle',
       fontSize: 10
@@ -59,15 +70,15 @@ export default function StatsChart({ data = [], fields = [], title }) {
       const yy = y(val);
       yticks.push(React.createElement('line', {
         key: `t-${i}`,
-        x1: axis - 3,
-        x2: axis,
+        x1: AXIS - 3,
+        x2: AXIS,
         y1: yy,
         y2: yy,
         stroke: '#888'
       }));
       yticks.push(React.createElement('text', {
         key: `l-${i}`,
-        x: axis - 5,
+        x: AXIS - 5,
         y: yy + 3,
         textAnchor: 'end',
         fontSize: 10
@@ -75,7 +86,7 @@ export default function StatsChart({ data = [], fields = [], title }) {
     }
 
     return React.createElement('svg', { width: w, height: h + 20 },
-      React.createElement('line', { x1: axis, x2: axis, y1: 0, y2: h, stroke: '#ccc' }),
+      React.createElement('line', { x1: AXIS, x2: AXIS, y1: 0, y2: h, stroke: '#ccc' }),
       polylines,
       yticks,
       xlabels
@@ -91,6 +102,9 @@ export default function StatsChart({ data = [], fields = [], title }) {
     ))
   );
 
+  const expandedStep = Math.max(20, Math.floor((screen.width - 60 - AXIS) / Math.max(data.length - 1, 1)));
+  const expandedHeight = Math.max(screen.height - 160, 200);
+
   return React.createElement(React.Fragment, null,
     React.createElement('div', { className: 'mb-4', onClick: () => setExpanded(true) },
       React.createElement('h3', { className: 'font-semibold mb-1' }, title),
@@ -104,7 +118,7 @@ export default function StatsChart({ data = [], fields = [], title }) {
       React.createElement('div', { className: 'bg-white p-4 rounded shadow-xl w-full h-full overflow-auto' },
         React.createElement('h3', { className: 'font-semibold mb-2 text-center text-lg' }, title),
         legend,
-        renderSvg(100, 300)
+        renderSvg(expandedStep, expandedHeight)
       )
     )
   );
