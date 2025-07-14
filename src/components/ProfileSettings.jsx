@@ -575,15 +575,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement(SectionTitle, { title: t('interestedIn'), action: editPrefs ?
         React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditPrefs(false) }, 'Gem ændringer') :
         React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditPrefs(true) }) }),
-        React.createElement('select', {
-          value: profile.interest || 'Mand',
-          onChange: editPrefs ? handleInterestChange : undefined,
-          className: 'border p-2 rounded block mb-2',
-          disabled: !editPrefs
-        },
-          React.createElement('option', { value: 'Mand' }, 'Mænd'),
-        React.createElement('option', { value: 'Kvinde' }, 'Kvinder')
-      ),
+        editPrefs
+          ? React.createElement('select', {
+              value: profile.interest || 'Mand',
+              onChange: handleInterestChange,
+              className: 'border p-2 rounded block mb-2'
+            },
+              React.createElement('option', { value: 'Mand' }, 'Mænd'),
+              React.createElement('option', { value: 'Kvinde' }, 'Kvinder')
+            )
+          : React.createElement('p', { className: 'mb-2' }, profile.interest || 'Mand'),
+      
       React.createElement('label', { className: 'mt-2' }, `Alder: ${ageRange[0]} - ${ageRange[1]}`),
       React.createElement(Slider, {
         range: true,
@@ -603,25 +605,31 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'w-full'
       }),
       React.createElement('label', { className:'mt-2' }, t('preferredLanguages')),
-      React.createElement('select', {
-        multiple: true,
-        className:'border p-2 rounded w-full',
-        value: profile.preferredLanguages || [],
-        onChange: editPrefs ? e => { const opts = Array.from(e.target.selectedOptions).map(o=>o.value); setProfile({ ...profile, preferredLanguages: opts }); updateDoc(doc(db,'profiles',userId), { preferredLanguages: opts }); } : undefined,
-        disabled: !editPrefs
-      },
-        Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
-      ),
+      editPrefs
+        ? React.createElement('select', {
+            multiple: true,
+            className:'border p-2 rounded w-full',
+            value: profile.preferredLanguages || [],
+            onChange: e => { const opts = Array.from(e.target.selectedOptions).map(o=>o.value); setProfile({ ...profile, preferredLanguages: opts }); updateDoc(doc(db,'profiles',userId), { preferredLanguages: opts }); }
+          },
+            Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
+          )
+        : React.createElement('p', { className:'mb-2' },
+            (profile.preferredLanguages || []).map(c => languages[c] || c).join(', ')
+          ),
       React.createElement('label', { className:'mt-2' }, t('allowOtherLanguages')),
-      React.createElement('select', {
-        className:'border p-2 rounded block mb-2',
-        value: profile.allowOtherLanguages !== false ? 'yes' : 'no',
-        onChange: editPrefs ? e => { const allowOtherLanguages = e.target.value === 'yes'; setProfile({ ...profile, allowOtherLanguages }); updateDoc(doc(db,'profiles',userId), { allowOtherLanguages }); } : undefined,
-        disabled: !editPrefs
-      },
-        React.createElement('option', { value:'yes' }, t('yes')),
-        React.createElement('option', { value:'no' }, t('no'))
-      )
+      editPrefs
+        ? React.createElement('select', {
+            className:'border p-2 rounded block mb-2',
+            value: profile.allowOtherLanguages !== false ? 'yes' : 'no',
+            onChange: e => { const allowOtherLanguages = e.target.value === 'yes'; setProfile({ ...profile, allowOtherLanguages }); updateDoc(doc(db,'profiles',userId), { allowOtherLanguages }); }
+          },
+            React.createElement('option', { value:'yes' }, t('yes')),
+            React.createElement('option', { value:'no' }, t('no'))
+          )
+        : React.createElement('p', { className:'mb-2' },
+            profile.allowOtherLanguages !== false ? t('yes') : t('no')
+          )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: t('aboutMe'), action: !publicView && (editAbout ?
@@ -635,16 +643,18 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       }),
       publicView ?
         React.createElement('p', { className:'mt-2' }, languages[profile.language] || profile.language) :
-        React.createElement(React.Fragment, null,
-          React.createElement('label', { className:'mt-2' }, t('language')),
-          React.createElement('select', {
-            className:'border p-2 rounded block mb-2',
-            value: profile.language || 'en',
-            onChange: editAbout ? e => { const language = e.target.value; setProfile({ ...profile, language }); updateDoc(doc(db,'profiles',userId), { language }); } : undefined,
-            disabled: !editAbout
-          },
-            Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
-          )
+        (editAbout
+          ? React.createElement(React.Fragment, null,
+              React.createElement('label', { className:'mt-2' }, t('language')),
+              React.createElement('select', {
+                className:'border p-2 rounded block mb-2',
+                value: profile.language || 'en',
+                onChange: e => { const language = e.target.value; setProfile({ ...profile, language }); updateDoc(doc(db,'profiles',userId), { language }); }
+              },
+                Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
+              )
+            )
+          : React.createElement('p', { className:'mt-2 mb-2' }, languages[profile.language] || profile.language)
         ),
       publicView && reportMode && profile.clip && React.createElement(Flag, {
         className: 'w-5 h-5 text-red-500 cursor-pointer ml-auto',
