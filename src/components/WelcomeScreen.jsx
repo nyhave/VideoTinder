@@ -50,8 +50,12 @@ export default function WelcomeScreen({ onLogin }) {
     React.Fragment,
     null,
     showBirthdayOverlay && React.createElement('div', {
-      className: 'fixed top-0 left-0 right-0 bg-black/70 text-white text-center p-2 z-50'
-    }, t('chooseBirthday')),
+      className: 'fixed top-0 left-0 right-0 bg-black/70 p-2 z-50'
+    },
+      React.createElement('h1', {
+        className: 'text-3xl font-bold text-pink-600 text-center'
+      }, t('chooseBirthday'))
+    ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       showRegister ? (
       React.createElement(React.Fragment, null,
