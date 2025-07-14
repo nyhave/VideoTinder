@@ -31,6 +31,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [showInterests, setShowInterests] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
   const [editInfo, setEditInfo] = useState(false);
+  const [editVideos, setEditVideos] = useState(false);
+  const [editAudios, setEditAudios] = useState(false);
+  const [editInterests, setEditInterests] = useState(false);
+  const [editPrefs, setEditPrefs] = useState(false);
+  const [editAbout, setEditAbout] = useState(false);
   const profiles = useCollection('profiles');
   const viewerProfile = viewerId ? profiles.find(p => p.id === viewerId) : null;
   const viewerInterests = viewerProfile ? viewerProfile.interests || [] : [];
@@ -332,10 +337,18 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const videoSection = React.createElement(React.Fragment, null,
     React.createElement(SectionTitle, {
       title: t('videoClips'),
-      action: publicView && !isOwnProfile && React.createElement(Heart, {
+      action: publicView && !isOwnProfile ? React.createElement(Heart, {
         className: `w-6 h-6 cursor-pointer ${liked ? 'text-pink-500' : 'text-gray-400'}`,
         onClick: toggleLike
-      })
+      }) : !publicView && (editVideos ?
+        React.createElement(Button, {
+          className:'bg-pink-500 text-white',
+          onClick: () => setEditVideos(false)
+        }, 'Gem ændringer') :
+        React.createElement(EditIcon, {
+          className:'w-5 h-5 text-gray-500 cursor-pointer',
+          onClick: () => setEditVideos(true)
+        }) )
     }),
     React.createElement('div', { className: 'flex items-center gap-4 mb-4 justify-between' },
       Array.from({ length: 3 }).map((_, i) => {
@@ -345,10 +358,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           url
             ? React.createElement(VideoPreview, { src: url })
             : React.createElement(CameraIcon, {
-                className: `w-10 h-10 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
-                onClick: !publicView ? () => setShowSnapVideoRecorder(true) : undefined
+                className: `w-10 h-10 text-gray-400 blinking-thumb ${(!publicView && editVideos) ? 'cursor-pointer' : ''}`,
+                onClick: (!publicView && editVideos) ? () => setShowSnapVideoRecorder(true) : undefined
               }),
-          url && !publicView && React.createElement(Button, {
+          url && !publicView && editVideos && React.createElement(Button, {
             className: 'mt-1 bg-pink-500 text-white p-1 rounded-full flex items-center justify-center',
             onClick: () => deleteFile('videoClips', i)
           }, React.createElement(TrashIcon, { className: 'w-4 h-4' })),
@@ -359,7 +372,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         );
       })
     ),
-      !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded })
+      !publicView && editVideos && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded })
     );
 
   const audioClips = profile.audioClips || [];
@@ -368,17 +381,25 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const audioSection = React.createElement(React.Fragment, null,
     React.createElement(SectionTitle, {
       title: t('audioClips'),
-      action: publicView && !isOwnProfile && React.createElement(Heart, {
+      action: publicView && !isOwnProfile ? React.createElement(Heart, {
         className: `w-6 h-6 cursor-pointer ${liked ? 'text-pink-500' : 'text-gray-400'}`,
         onClick: toggleLike
-      })
+      }) : !publicView && (editAudios ?
+        React.createElement(Button, {
+          className:'bg-pink-500 text-white',
+          onClick: () => setEditAudios(false)
+        }, 'Gem ændringer') :
+        React.createElement(EditIcon, {
+          className:'w-5 h-5 text-gray-500 cursor-pointer',
+          onClick: () => setEditAudios(true)
+        }) )
     }),
     React.createElement('div', { className: 'space-y-2 mb-4' },
       audioClips.map((clip, i) => {
         const url = clip && clip.url ? clip.url : clip;
         return React.createElement('div', { key: i, className: 'flex items-center relative' },
           React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' }),
-          !publicView && React.createElement(Button, {
+          !publicView && editAudios && React.createElement(Button, {
             className: 'ml-2 bg-pink-500 text-white p-1 rounded w-[20%] flex items-center justify-center',
             onClick: () => deleteFile('audioClips', i)
           }, React.createElement(TrashIcon, { className: 'w-4 h-4' })),
@@ -389,16 +410,16 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         )
       })
     ),
-    remainingAudios > 0 && React.createElement('div', { className: 'flex gap-4 justify-center mb-4' },
+    remainingAudios > 0 && editAudios && React.createElement('div', { className: 'flex gap-4 justify-center mb-4' },
       Array.from({ length: remainingAudios }).map((_, i) =>
         React.createElement(Mic, {
           key: i,
-          className: `w-8 h-8 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
-          onClick: !publicView ? () => setShowSnapRecorder(true) : undefined
+          className: `w-8 h-8 text-gray-400 blinking-thumb ${(!publicView && editAudios) ? 'cursor-pointer' : ''}`,
+          onClick: (!publicView && editAudios) ? () => setShowSnapRecorder(true) : undefined
         })
       )
     ),
-    !publicView && React.createElement(React.Fragment, null,
+    !publicView && editAudios && React.createElement(React.Fragment, null,
       React.createElement('input', {
         type: 'file',
         accept: 'audio/*',
@@ -496,7 +517,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         React.createElement(Button, {
           className:'bg-pink-500 text-white w-full',
           onClick: () => setEditInfo(false)
-        }, 'Færdig')
+        }, 'Gem ændringer')
         ) :
         React.createElement('div', { className:'flex items-center justify-between w-full' },
           React.createElement(SectionTitle, { title: `${profile.name}, ${profile.birthday ? getAge(profile.birthday) : profile.age}${profile.city ? ', ' + profile.city : ''}` }),
@@ -527,25 +548,33 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: t('interests'), action: !publicView && React.createElement(Plus, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setShowInterests(true) }) }),
+      React.createElement(SectionTitle, { title: t('interests'), action: !publicView && (editInterests ?
+        React.createElement('div', { className:'flex items-center gap-2' },
+          React.createElement(Plus, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setShowInterests(true) }),
+          React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditInterests(false) }, 'Gem ændringer')
+        ) :
+        React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditInterests(true) }) ) }),
       React.createElement('div', { className: 'flex flex-wrap gap-2 mb-2' },
         (profile.interests || []).map(i => {
           const cat = getInterestCategory(i);
           const exact = viewerInterests.includes(i);
           const sameCat = !exact && viewerCategories.has(cat);
           const cls = 'px-2 py-1 rounded text-sm ' + (exact ? 'bg-pink-500 text-white' : sameCat ? 'bg-pink-100 text-pink-800' : 'bg-gray-100');
-          const sharedProps = { key: i, className: cls + (!publicView ? ' cursor-pointer' : '') };
-          const elProps = publicView ? {} : { onClick: () => handleRemoveInterest(i) };
+          const sharedProps = { key: i, className: cls + (!publicView && editInterests ? ' cursor-pointer' : '') };
+          const elProps = publicView || !editInterests ? {} : { onClick: () => handleRemoveInterest(i) };
           return React.createElement(publicView ? 'span' : 'button', { ...sharedProps, ...elProps }, i);
         })
       )
     ),
     !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: t('interestedIn') }),
+      React.createElement(SectionTitle, { title: t('interestedIn'), action: editPrefs ?
+        React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditPrefs(false) }, 'Gem ændringer') :
+        React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditPrefs(true) }) }),
         React.createElement('select', {
           value: profile.interest || 'Mand',
-          onChange: handleInterestChange,
-          className: 'border p-2 rounded block mb-2'
+          onChange: editPrefs ? handleInterestChange : undefined,
+          className: 'border p-2 rounded block mb-2',
+          disabled: !editPrefs
         },
           React.createElement('option', { value: 'Mand' }, 'Mænd'),
         React.createElement('option', { value: 'Kvinde' }, 'Kvinder')
@@ -556,7 +585,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         min: 18,
         max: 80,
         value: ageRange,
-        onChange: handleAgeRangeChange,
+        onChange: editPrefs ? handleAgeRangeChange : undefined,
         className: 'w-full'
       }),
       React.createElement('label', { className: 'mt-2' }, `Afstand: ${distanceRange[0]} - ${distanceRange[1]} km`),
@@ -565,7 +594,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         min: 0,
         max: 100,
         value: distanceRange,
-        onChange: handleDistanceRangeChange,
+        onChange: editPrefs ? handleDistanceRangeChange : undefined,
         className: 'w-full'
       }),
       React.createElement('label', { className:'mt-2' }, t('preferredLanguages')),
@@ -573,7 +602,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         multiple: true,
         className:'border p-2 rounded w-full',
         value: profile.preferredLanguages || [],
-        onChange: e => { const opts = Array.from(e.target.selectedOptions).map(o=>o.value); setProfile({ ...profile, preferredLanguages: opts }); updateDoc(doc(db,'profiles',userId), { preferredLanguages: opts }); }
+        onChange: editPrefs ? e => { const opts = Array.from(e.target.selectedOptions).map(o=>o.value); setProfile({ ...profile, preferredLanguages: opts }); updateDoc(doc(db,'profiles',userId), { preferredLanguages: opts }); } : undefined,
+        disabled: !editPrefs
       },
         Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
       ),
@@ -581,19 +611,22 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement('select', {
         className:'border p-2 rounded block mb-2',
         value: profile.allowOtherLanguages !== false ? 'yes' : 'no',
-        onChange: e => { const allowOtherLanguages = e.target.value === 'yes'; setProfile({ ...profile, allowOtherLanguages }); updateDoc(doc(db,'profiles',userId), { allowOtherLanguages }); }
+        onChange: editPrefs ? e => { const allowOtherLanguages = e.target.value === 'yes'; setProfile({ ...profile, allowOtherLanguages }); updateDoc(doc(db,'profiles',userId), { allowOtherLanguages }); } : undefined,
+        disabled: !editPrefs
       },
         React.createElement('option', { value:'yes' }, t('yes')),
         React.createElement('option', { value:'no' }, t('no'))
       )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: t('aboutMe') }),
+      React.createElement(SectionTitle, { title: t('aboutMe'), action: !publicView && (editAbout ?
+        React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditAbout(false) }, 'Gem ændringer') :
+        React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditAbout(true) }) ) }),
       React.createElement(Textarea, {
         className: 'mb-4',
-        readOnly: publicView,
+        readOnly: publicView || !editAbout,
         value: profile.clip || '',
-        onChange: publicView ? undefined : handleClipChange
+        onChange: (publicView || !editAbout) ? undefined : handleClipChange
       }),
       publicView ?
         React.createElement('p', { className:'mt-2' }, languages[profile.language] || profile.language) :
@@ -602,7 +635,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement('select', {
             className:'border p-2 rounded block mb-2',
             value: profile.language || 'en',
-            onChange: e => { const language = e.target.value; setProfile({ ...profile, language }); updateDoc(doc(db,'profiles',userId), { language }); }
+            onChange: editAbout ? e => { const language = e.target.value; setProfile({ ...profile, language }); updateDoc(doc(db,'profiles',userId), { language }); } : undefined,
+            disabled: !editAbout
           },
             Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
           )
