@@ -532,8 +532,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         !publicView && profile.subscriptionPurchased && React.createElement('p', {
           className: 'text-center text-sm text-gray-500'
         }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`),
-        !publicView && React.createElement('label', { className:'mt-2' }, t('interests')),
-        !publicView && React.createElement('select', {
+        editInfo && !publicView && React.createElement('label', { className:'mt-2' }, t('interests')),
+        editInfo && !publicView && React.createElement('select', {
           multiple: true,
           className: 'border p-2 rounded w-full mb-2 h-40',
           value: profile.interests || [],
@@ -541,8 +541,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         },
           interestOptions.map(i => React.createElement('option', { key:i, value:i }, i))
         ),
-        !publicView && React.createElement('p', { className:'text-sm text-gray-500 mb-2' }, t('chooseInterests')),
-        
+        editInfo && !publicView && React.createElement('p', { className:'text-sm text-gray-500 mb-2' }, t('chooseInterests')),
+        !editInfo && React.createElement('p', { className:'mt-2 mb-2 text-sm' }, (profile.interests || []).join(', ')),
+
         null
       ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
