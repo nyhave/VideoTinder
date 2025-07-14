@@ -79,7 +79,6 @@ export default function WelcomeScreen({ onLogin }) {
         }),
         React.createElement('label', { className:'block mb-1' }, t('city')),
         React.createElement('input', {
-          list: 'city-list',
           className: 'border p-2 mb-2 w-full',
           value: city,
           onChange: e => setCity(e.target.value),
@@ -107,11 +106,6 @@ export default function WelcomeScreen({ onLogin }) {
           name: 'email',
           autoComplete: 'email'
         }),
-        React.createElement('datalist', { id: 'city-list' },
-          ['København','Aarhus','Odense','Aalborg','Esbjerg','Randers'].map(c =>
-            React.createElement('option', { key: c, value: c })
-          )
-        ),
         React.createElement('label', { className:'block mb-1' }, t('gender')),
         React.createElement('select', {
           className: 'border p-2 mb-4 w-full',
