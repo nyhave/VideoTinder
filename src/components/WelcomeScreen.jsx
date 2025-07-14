@@ -18,6 +18,13 @@ export default function WelcomeScreen({ onLogin }) {
   const { lang } = useLang();
   const t = useT();
 
+  const handleBirthdayBlur = () => {
+    setShowBirthdayOverlay(false);
+    if (birthday && getAge(birthday) < 18) {
+      alert('Du skal v\u00e6re mindst 18 \u00e5r for at bruge appen');
+    }
+  };
+
   const register = async () => {
     const trimmed = name.trim();
     if (!trimmed) return;
@@ -81,7 +88,7 @@ export default function WelcomeScreen({ onLogin }) {
           className: 'border p-2 mb-2 w-full',
           value: birthday,
           onFocus: () => setShowBirthdayOverlay(true),
-          onBlur: () => setShowBirthdayOverlay(false),
+          onBlur: handleBirthdayBlur,
           onChange: e => { setBirthday(e.target.value); setShowBirthdayOverlay(false); },
           placeholder: 'F\u00f8dselsdag'
         }),
