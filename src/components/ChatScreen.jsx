@@ -83,7 +83,7 @@ export default function ChatScreen({ userId }) {
   const activeProfile = active ? profileMap[active.profileId] || {} : null;
   const userProfile = profileMap[userId] || {};
 
-  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1 overflow-hidden', style:{maxHeight:'calc(100vh - 10rem)'} },
+  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1', style:{maxHeight:'calc(100vh - 10rem)', overflow:'hidden'} },
     React.createElement(SectionTitle, {
       title: t('chat'),
       action: active && React.createElement(Button, { className: 'flex items-center gap-1', onClick: () => setActive(null) },
@@ -95,7 +95,7 @@ export default function ChatScreen({ userId }) {
           React.createElement('img', { src: activeProfile.photoURL, className: 'w-24 h-24 rounded-full object-cover self-center mb-2' }) :
           React.createElement(UserIcon, { className: 'w-24 h-24 text-pink-500 self-center mb-2' }),
         React.createElement('p', { className: 'text-center font-medium mb-2' }, `${activeProfile.name || ''}, ${activeProfile.birthday ? getAge(activeProfile.birthday) : activeProfile.age || ''}, ${activeProfile.city || ''}`),
-        React.createElement('div', { ref: messagesRef, className: 'flex-1 overflow-y-auto bg-gray-100 p-4 rounded space-y-3 flex flex-col' },
+        React.createElement('div', { ref: messagesRef, className: 'flex-1 bg-gray-100 p-4 rounded space-y-3 flex flex-col' },
           (active.messages || []).map((m,i) => {
             const fromSelf = m.from === userId;
             const time = new Date(m.ts).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
@@ -137,7 +137,7 @@ export default function ChatScreen({ userId }) {
       )
     ) : (
       chats.length ?
-        React.createElement('ul', { className: 'space-y-4 overflow-y-auto flex-1' },
+        React.createElement('ul', { className: 'space-y-4 flex-1' },
           chats.map(m => {
             const p = profileMap[m.profileId] || {};
             return React.createElement('li', {
