@@ -15,6 +15,7 @@ import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
 import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
 import { languages, useT } from '../i18n.js';
+import { interestOptions } from '../interests.js';
 import { getAge } from '../utils.js';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, onViewPublicProfile = () => {}, onOpenAbout = () => {}, viewerId, onBack }) {
@@ -202,6 +203,16 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     const interest = e.target.value;
     setProfile({ ...profile, interest });
     await updateDoc(doc(db,'profiles',userId), { interest });
+  };
+
+  const handleInterestsChange = async e => {
+    const opts = Array.from(e.target.selectedOptions).map(o => o.value);
+    if (opts.length > 5) {
+      alert(t('maxInterests'));
+      return;
+    }
+    setProfile({ ...profile, interests: opts });
+    await updateDoc(doc(db,'profiles',userId), { interests: opts });
   };
 
   const handleDistanceRangeChange = async range => {
@@ -495,8 +506,18 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           className: 'border p-2 rounded block mb-2'
         },
           React.createElement('option', { value: 'Mand' }, 'Mænd'),
-          React.createElement('option', { value: 'Kvinde' }, 'Kvinder')
-        ),
+        React.createElement('option', { value: 'Kvinde' }, 'Kvinder')
+      ),
+      React.createElement('label', { className:'mt-2' }, t('interests')),
+      React.createElement('select', {
+        multiple: true,
+        className: 'border p-2 rounded w-full mb-2 h-40',
+        value: profile.interests || [],
+        onChange: handleInterestsChange
+      },
+        interestOptions.map(i => React.createElement('option', { key:i, value:i }, i))
+      ),
+      React.createElement('p', { className:'text-sm text-gray-500 mb-2' }, t('chooseInterests')),
       React.createElement('label', { className: 'mt-2' }, `Alder: ${ageRange[0]} - ${ageRange[1]}`),
       React.createElement(Slider, {
         range: true,

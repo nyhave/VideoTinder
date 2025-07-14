@@ -15,6 +15,7 @@ and simple profile management powered by Firebase.
 * Calendar for daily reflections
 * Minimal profile settings and admin mode
 * Preferred languages with option to allow other languages
+* Choose up to five personal interests in profile settings
 * Profile pictures cached for offline viewing
 * Premium page showing who liked you (subscription required)
 * Seed data includes 11 mandlige profiler der matcher standardbrugeren så du kan teste premium og ekstra klip
