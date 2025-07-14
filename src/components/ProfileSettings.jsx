@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart, Flag } from 'lucide-react';
+import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart, Flag, Plus } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
@@ -11,6 +11,7 @@ import VideoPreview from './VideoPreview.jsx';
 import ReportOverlay from './ReportOverlay.jsx';
 import { useCollection, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
+import InterestsOverlay from './InterestsOverlay.jsx';
 import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
 import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
@@ -27,6 +28,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [showSnapRecorder, setShowSnapRecorder] = useState(false);
   const [showSnapVideoRecorder, setShowSnapVideoRecorder] = useState(false);
   const [showSub, setShowSub] = useState(false);
+  const [showInterests, setShowInterests] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
   const [editInfo, setEditInfo] = useState(false);
   const profiles = useCollection('profiles');
@@ -223,6 +225,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     const updated = (profile.interests || []).filter(i => i !== interest);
     setProfile({ ...profile, interests: updated });
     await updateDoc(doc(db,'profiles',userId), { interests: updated });
+  };
+
+  const handleSaveInterests = async interests => {
+    setProfile({ ...profile, interests });
+    await updateDoc(doc(db,'profiles',userId), { interests });
   };
 
   const handleDistanceRangeChange = async range => {
@@ -545,7 +552,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: t('interests') }),
+      React.createElement(SectionTitle, { title: t('interests'), action: !publicView && React.createElement(Plus, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setShowInterests(true) }) }),
       React.createElement('div', { className: 'flex flex-wrap gap-2 mb-2' },
         (profile.interests || []).map(i => {
           const cat = getInterestCategory(i);
@@ -624,6 +631,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement('li', null, '🎙️ Profilbooster: Få dit klip vist tidligere på dagen')
         )
       ),
+    showInterests && React.createElement(InterestsOverlay, {
+        current: profile.interests || [],
+        onSave: handleSaveInterests,
+        onClose: () => setShowInterests(false)
+      }),
     matchedProfile && React.createElement(MatchOverlay, {
         name: matchedProfile.name,
         onClose: () => setMatchedProfile(null)
