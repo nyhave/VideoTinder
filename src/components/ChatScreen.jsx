@@ -16,6 +16,15 @@ export default function ChatScreen({ userId }) {
   const [active, setActive] = useState(null);
   const [text, setText] = useState('');
   const messagesRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if(textareaRef.current){
+      const el = textareaRef.current;
+      el.style.height = 'auto';
+      el.style.height = `${el.scrollHeight}px`;
+    }
+  }, [text]);
 
   useEffect(() => {
     if(active){
@@ -119,7 +128,8 @@ export default function ChatScreen({ userId }) {
               placeholder: 'Skriv besked...',
               rows: 3,
               value: text,
-              onChange: e => setText(e.target.value)
+              onChange: e => setText(e.target.value),
+              ref: textareaRef
             }),
             React.createElement(Button, {
               className: 'bg-pink-500 text-white',
