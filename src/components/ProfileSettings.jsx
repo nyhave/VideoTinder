@@ -384,7 +384,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   return React.createElement(React.Fragment, null,
     !publicView && React.createElement(Card, { className: 'p-4 m-4 shadow-xl bg-white/90' },
-      React.createElement('h2', { className: 'text-xl font-semibold text-pink-600 text-center' }, 'Din profil')
+      React.createElement('div', { className: 'flex items-center justify-between' },
+        React.createElement(Button, {
+          className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
+          onClick: onViewPublicProfile
+        }, 'View public profile'),
+        React.createElement('h2', { className: 'text-xl font-semibold text-pink-600 text-center flex-grow' }, 'Din profil'),
+        React.createElement('button', {
+          className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
+          onClick: onLogout
+        }, 'Logout')
+      )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
         !publicView && React.createElement('div', {
@@ -393,11 +403,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement(Button, {
             className: 'bg-pink-500 text-white',
             onClick: onOpenAbout
-          }, t('about')),
-          React.createElement('button', {
-            className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
-            onClick: onLogout
-          }, 'Logout')
+          }, t('about'))
         ),
       publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
       React.createElement('div', { className:'flex items-center mb-4 gap-4' },
@@ -477,10 +483,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       !publicView && profile.subscriptionPurchased && React.createElement('p', {
         className: 'text-center text-sm text-gray-500'
       }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`),
-      !publicView && React.createElement(Button, {
-        className: 'mt-4 bg-gray-200 text-gray-700 px-4 py-2 rounded',
-        onClick: onViewPublicProfile
-      }, 'View public profile')
+      null
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
