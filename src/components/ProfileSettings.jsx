@@ -389,7 +389,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
           onClick: onViewPublicProfile
         }, 'View public profile'),
-        React.createElement('h2', { className: 'text-xl font-semibold text-pink-600 text-center flex-grow' }, 'Din profil'),
         React.createElement('button', {
           className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
           onClick: onLogout
@@ -397,6 +396,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+        React.createElement('h2', { className: 'text-xl font-semibold text-pink-600 text-center mb-4' }, 'Din profil'),
         !publicView && React.createElement('div', {
           className: 'mb-4 flex justify-end gap-2'
         },
