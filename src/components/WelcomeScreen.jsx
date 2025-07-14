@@ -48,7 +48,8 @@ export default function WelcomeScreen({ onLogin }) {
       allowOtherLanguages: true,
       distanceRange: [10, 25],
       audioClips: [],
-      videoClips: []
+      videoClips: [],
+      interests: []
     };
     await setDoc(doc(db, 'profiles', id), profile);
     onLogin(id);
