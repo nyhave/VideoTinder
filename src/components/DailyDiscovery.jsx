@@ -108,7 +108,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       filtered.length ? filtered.map(p => (
         React.createElement('li', {
           key: p.id,
-          className: 'p-4 bg-pink-50 rounded-lg cursor-pointer shadow flex flex-col relative',
+          className: 'p-4 bg-white rounded-lg cursor-pointer shadow-lg border border-gray-200 flex flex-col relative',
           onClick: () => onSelectProfile(p.id)
         },
           React.createElement(Heart, {
@@ -122,7 +122,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
             ),
             React.createElement('div', null,
               React.createElement('p', { className: 'font-medium' }, `${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`),
-              p.clip && React.createElement('p', { className: 'text-sm text-gray-500' }, `“${p.clip}”`)
+              p.clip && React.createElement('p', { className: 'text-sm text-gray-700' }, `“${p.clip}”`)
             )
           ),
         React.createElement('div', { className: 'flex gap-2 mt-2' },
@@ -138,7 +138,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       scoreProfiles(user, profiles, ageRange).slice(0,3).map(p => (
         React.createElement('li', {
           key: 'best-' + p.id,
-          className: 'p-4 bg-purple-50 rounded-lg cursor-pointer shadow flex flex-col relative',
+          className: 'p-4 bg-white rounded-lg cursor-pointer shadow-lg border border-gray-200 flex flex-col relative',
           onClick: () => onSelectProfile(p.id)
         },
           React.createElement(Heart, {
@@ -152,7 +152,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
             ),
             React.createElement('div', null,
               React.createElement('p', { className: 'font-medium' }, `${p.name}(${p.birthday ? getAge(p.birthday) : p.age})`),
-              p.clip && React.createElement('p', { className: 'text-sm text-gray-500' }, `“${p.clip}”`)
+              p.clip && React.createElement('p', { className: 'text-sm text-gray-700' }, `“${p.clip}”`)
             )
           ),
           React.createElement('div', { className: 'flex gap-2 mt-2' },

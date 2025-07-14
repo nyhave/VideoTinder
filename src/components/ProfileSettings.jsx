@@ -559,10 +559,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           const cat = getInterestCategory(i);
           const exact = viewerInterests.includes(i);
           const sameCat = !exact && viewerCategories.has(cat);
-          const cls = 'px-2 py-1 rounded text-sm ' + (exact ? 'bg-pink-500 text-white' : sameCat ? 'bg-pink-100 text-pink-800' : 'bg-gray-100');
-          const sharedProps = { key: i, className: cls + (!publicView && editInterests ? ' cursor-pointer' : '') };
-          const elProps = publicView || !editInterests ? {} : { onClick: () => handleRemoveInterest(i) };
-          return React.createElement(publicView ? 'span' : 'button', { ...sharedProps, ...elProps }, i);
+          const base = exact ? 'bg-pink-500 text-white' : sameCat ? 'bg-pink-200 text-pink-800' : 'bg-gray-200 text-gray-800';
+          if(publicView || !editInterests){
+            return React.createElement('span', { key:i, className:`px-2 py-1 rounded text-sm ${base}` }, i);
+          }
+          return React.createElement('div', { key:i, className:`px-2 py-1 rounded text-sm flex items-center gap-1 ${base}` },
+            React.createElement('span', null, i),
+            React.createElement(TrashIcon, { className:'w-4 h-4 cursor-pointer', onClick: () => handleRemoveInterest(i) })
+          );
         })
       )
     ),
