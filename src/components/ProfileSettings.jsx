@@ -521,32 +521,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           interestOptions.map(i => React.createElement('option', { key:i, value:i }, i))
         ),
         !publicView && React.createElement('p', { className:'text-sm text-gray-500 mb-2' }, t('chooseInterests')),
-        !publicView && React.createElement('label', { className:'mt-2' }, t('language')),
-        !publicView && React.createElement('select', {
-          className:'border p-2 rounded block mb-2',
-          value: profile.language || 'en',
-          onChange: e => { const language = e.target.value; setProfile({ ...profile, language }); updateDoc(doc(db,'profiles',userId), { language }); }
-        },
-          Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
-        ),
-        !publicView && React.createElement('label', { className:'mt-2' }, t('preferredLanguages')),
-        !publicView && React.createElement('select', {
-          multiple: true,
-          className:'border p-2 rounded w-full',
-          value: profile.preferredLanguages || [],
-          onChange: e => { const opts = Array.from(e.target.selectedOptions).map(o=>o.value); setProfile({ ...profile, preferredLanguages: opts }); updateDoc(doc(db,'profiles',userId), { preferredLanguages: opts }); }
-        },
-          Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
-        ),
-        !publicView && React.createElement('label', { className:'mt-2' }, t('allowOtherLanguages')),
-        !publicView && React.createElement('select', {
-          className:'border p-2 rounded block mb-2',
-          value: profile.allowOtherLanguages !== false ? 'yes' : 'no',
-          onChange: e => { const allowOtherLanguages = e.target.value === 'yes'; setProfile({ ...profile, allowOtherLanguages }); updateDoc(doc(db,'profiles',userId), { allowOtherLanguages }); }
-        },
-          React.createElement('option', { value:'yes' }, t('yes')),
-          React.createElement('option', { value:'no' }, t('no'))
-        ),
+        
         null
       ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
@@ -592,7 +567,25 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         value: distanceRange,
         onChange: handleDistanceRangeChange,
         className: 'w-full'
-      })
+      }),
+      React.createElement('label', { className:'mt-2' }, t('preferredLanguages')),
+      React.createElement('select', {
+        multiple: true,
+        className:'border p-2 rounded w-full',
+        value: profile.preferredLanguages || [],
+        onChange: e => { const opts = Array.from(e.target.selectedOptions).map(o=>o.value); setProfile({ ...profile, preferredLanguages: opts }); updateDoc(doc(db,'profiles',userId), { preferredLanguages: opts }); }
+      },
+        Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
+      ),
+      React.createElement('label', { className:'mt-2' }, t('allowOtherLanguages')),
+      React.createElement('select', {
+        className:'border p-2 rounded block mb-2',
+        value: profile.allowOtherLanguages !== false ? 'yes' : 'no',
+        onChange: e => { const allowOtherLanguages = e.target.value === 'yes'; setProfile({ ...profile, allowOtherLanguages }); updateDoc(doc(db,'profiles',userId), { allowOtherLanguages }); }
+      },
+        React.createElement('option', { value:'yes' }, t('yes')),
+        React.createElement('option', { value:'no' }, t('no'))
+      )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: t('aboutMe') }),
@@ -602,6 +595,18 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         value: profile.clip || '',
         onChange: publicView ? undefined : handleClipChange
       }),
+      publicView ?
+        React.createElement('p', { className:'mt-2' }, languages[profile.language] || profile.language) :
+        React.createElement(React.Fragment, null,
+          React.createElement('label', { className:'mt-2' }, t('language')),
+          React.createElement('select', {
+            className:'border p-2 rounded block mb-2',
+            value: profile.language || 'en',
+            onChange: e => { const language = e.target.value; setProfile({ ...profile, language }); updateDoc(doc(db,'profiles',userId), { language }); }
+          },
+            Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
+          )
+        ),
       publicView && reportMode && profile.clip && React.createElement(Flag, {
         className: 'w-5 h-5 text-red-500 cursor-pointer ml-auto',
         onClick: () => setReportItem({ text: profile.clip })
