@@ -82,7 +82,7 @@ export default function ReportedContentScreen({ onBack }) {
   );
 
   return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title:'Anmeldt indhold', action: React.createElement(Button, { onClick:onBack }, 'Tilbage') }),
+    React.createElement(SectionTitle, { title:'Anmeldt indhold', colorClass:'text-blue-600', action: React.createElement(Button, { onClick:onBack }, 'Tilbage') }),
     openReports.length ? (selectedProfile ? detailView : listView)
       : React.createElement('p', { className:'text-center mt-4 text-gray-500' }, 'Ingen anmeldelser')
   );

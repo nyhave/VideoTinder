@@ -49,7 +49,7 @@ export default function StatsScreen({ onBack }) {
   }, []);
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title: 'Statistik', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
+    React.createElement(SectionTitle, { title: 'Statistik', colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
     stats ? React.createElement(React.Fragment, null,
       React.createElement('ul', { className: 'space-y-2 mt-4' },
         React.createElement('li', null, `Profiler: ${stats.profiles}`),

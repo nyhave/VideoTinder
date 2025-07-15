@@ -25,7 +25,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
 
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title: 'Administration' }),
+    React.createElement(SectionTitle, { title: 'Administration', colorClass: 'text-blue-600' }),
     React.createElement('label', { className: 'block mb-1' }, t('chooseLanguage')),
     React.createElement('select', {
       className: 'border p-2 mb-4 w-full',
@@ -44,20 +44,20 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     },
       profiles.map(p => React.createElement('option', { key: p.id, value: p.id }, p.name))
     ),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-pink-600' }, 'Reset database'),
-    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: () => seedData().then(() => alert('Databasen er nulstillet')) }, 'Reset database'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Push notifications'),
-    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
-    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Statistik'),
-    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: onOpenStats }, 'Vis statistik'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Matchlog'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, 'Reset database'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => seedData().then(() => alert('Databasen er nulstillet')) }, 'Reset database'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Push notifications'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Statistik'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenStats }, 'Vis statistik'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Matchlog'),
     React.createElement(Button, { className: 'mt-2', onClick: onOpenMatchLog }, 'Se matchlog'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Score log'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Score log'),
     React.createElement(Button, { className: 'mt-2', onClick: onOpenScoreLog }, 'Se score log'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Anmeldt indhold'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Anmeldt indhold'),
     React.createElement(Button, { className: 'mt-2', onClick: onOpenReports }, 'Se anmeldt indhold'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, 'Fejlmeldinger'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Fejlmeldinger'),
     React.createElement(Button, { className: 'mt-2', onClick: onOpenBugReports }, 'Se alle fejlmeldinger')
   );
 }

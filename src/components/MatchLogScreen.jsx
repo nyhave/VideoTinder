@@ -14,7 +14,7 @@ export default function MatchLogScreen({ onBack }) {
     .sort((a, b) => a.id.localeCompare(b.id));
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title: 'Matchlog', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
+    React.createElement(SectionTitle, { title: 'Matchlog', colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
     uniqueMatches.length ?
       React.createElement('ul', { className: 'space-y-2 mt-4 overflow-y-auto max-h-[70vh]' },
         uniqueMatches.map(m =>
