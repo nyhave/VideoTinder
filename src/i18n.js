@@ -39,6 +39,7 @@ const messages = {
   city:{ en:'City', da:'By', sv:'Stad', es:'Ciudad', fr:'Ville', de:'Stadt' },
   birthday:{ en:'Birthday', da:'Fødselsdag', sv:'Födelsedag', es:'Cumpleaños', fr:'Anniversaire', de:'Geburtstag' },
   email:{ en:'Email', da:'E-mail', sv:'E-post', es:'Correo', fr:'E-mail', de:'E-Mail' },
+  emailPrivate:{ en:'Your email address is only visible to you', da:'Din e-mailadresse kan kun ses af dig selv', sv:'Din e-postadress kan bara ses av dig själv', es:'Tu correo electrónico solo es visible para ti', fr:"Votre adresse e-mail n'est visible que par vous", de:'Deine E-Mail-Adresse ist nur für dich sichtbar' },
   chooseBirthday:{ en:'Select your birthday', da:'Vælg din fødselsdag', sv:'Välj din födelsedag', es:'Selecciona tu cumpleaños', fr:'Sélectionnez votre anniversaire', de:'Wähle deinen Geburtstag' },
   gender:{ en:'Gender', da:'Køn', sv:'Kön', es:'Género', fr:'Genre', de:'Geschlecht' },
   loginCtaTitle:{ en:"Already have a profile?", da:"Har du en profil?", sv:"Har du en profil?", es:"¿Ya tienes perfil?", fr:"Vous avez déjà un profil ?", de:"Hast du ein Profil?" },
