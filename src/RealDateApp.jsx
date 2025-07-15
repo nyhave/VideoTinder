@@ -15,6 +15,7 @@ import ScoreLogScreen from './components/ScoreLogScreen.jsx';
 import ReportedContentScreen from './components/ReportedContentScreen.jsx';
 import AboutScreen from './components/AboutScreen.jsx';
 import { useCollection, requestNotificationPermission, db, doc, updateDoc, increment } from './firebase.js';
+import { cacheMediaIfNewer } from './cacheMedia.js';
 
 
 export default function RealDateApp() {
@@ -77,6 +78,24 @@ export default function RealDateApp() {
       requestNotificationPermission(userId);
     }
   }, [loggedIn, userId]);
+
+  useEffect(() => {
+    profiles.forEach(p => {
+      if (p.photoURL && p.photoUploadedAt) {
+        cacheMediaIfNewer(p.photoURL, p.photoUploadedAt);
+      }
+      (p.audioClips || []).forEach(a => {
+        const url = a && a.url ? a.url : a;
+        const ts = a && a.uploadedAt;
+        if (url && ts) cacheMediaIfNewer(url, ts);
+      });
+      (p.videoClips || []).forEach(v => {
+        const url = v && v.url ? v.url : v;
+        const ts = v && v.uploadedAt;
+        if (url && ts) cacheMediaIfNewer(url, ts);
+      });
+    });
+  }, [profiles]);
 
 
   if(!loggedIn) return React.createElement(LanguageProvider, { value:{lang,setLang} },

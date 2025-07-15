@@ -81,7 +81,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     const storageRef = ref(storage, `profiles/${userId}/${field}-${Date.now()}-${file.name}`);
     await uploadBytes(storageRef, file);
     const url = await getDownloadURL(storageRef);
-    const clip = { url, lang: profile.language || 'en' };
+    const clip = { url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() };
     const updated = [...(profile[field] || []), clip];
     await updateDoc(doc(db,'profiles',userId), { [field]: updated });
     setProfile({ ...profile, [field]: updated });
@@ -93,8 +93,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     const storageRef = ref(storage, `profiles/${userId}/photo-${Date.now()}-${file.name}`);
     await uploadBytes(storageRef, file);
     const url = await getDownloadURL(storageRef);
-    await updateDoc(doc(db,'profiles',userId), { photoURL: url });
-    setProfile({...profile, photoURL: url});
+    const uploadedAt = new Date().toISOString();
+    await updateDoc(doc(db,'profiles',userId), { photoURL: url, photoUploadedAt: uploadedAt });
+    setProfile({...profile, photoURL: url, photoUploadedAt: uploadedAt});
   };
 
   const handlePhotoChange = e => uploadPhoto(e.target.files[0]);
@@ -125,7 +126,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await uploadBytes(storageRef, file);
     const url = await getDownloadURL(storageRef);
     const updated = [...(profile[field] || [])];
-    updated[index] = { url, lang: profile.language || 'en' };
+    updated[index] = { url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() };
     await updateDoc(doc(db,'profiles',userId), { [field]: updated });
     setProfile({...profile, [field]: updated});
   };
@@ -315,15 +316,16 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         if (!photoURL) {
           photoURL = url;
           updates.photoURL = url;
+          updates.photoUploadedAt = new Date().toISOString();
         }
       } else if (name.startsWith('videoClips-')) {
         if (!videoClips.some(v => v.url === url)) {
-          videoClips.push({ url, lang: profile.language || 'en' });
+          videoClips.push({ url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() });
           updates.videoClips = videoClips;
         }
       } else if (name.startsWith('audioClips-')) {
         if (!audioClips.some(a => a.url === url)) {
-          audioClips.push({ url, lang: profile.language || 'en' });
+          audioClips.push({ url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() });
           updates.audioClips = audioClips;
         }
       }
