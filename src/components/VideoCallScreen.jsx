@@ -23,12 +23,21 @@ export default function VideoCallScreen({ matchId, userId, onEnd }) {
     const init = async () => {
       const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       localVideoRef.current.srcObject = localStream;
+      if (localVideoRef.current?.play) {
+        try { localVideoRef.current.play(); } catch(e) { /* ignore autoplay errors */ }
+      }
       localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
 
       const remoteStream = new MediaStream();
       remoteVideoRef.current.srcObject = remoteStream;
+      if (remoteVideoRef.current?.play) {
+        try { remoteVideoRef.current.play(); } catch(e) { /* ignore autoplay errors */ }
+      }
       pc.ontrack = event => {
         event.streams[0].getTracks().forEach(track => remoteStream.addTrack(track));
+        if (remoteVideoRef.current?.play) {
+          try { remoteVideoRef.current.play(); } catch(e) { /* ignore */ }
+        }
       };
 
       const snap = await getDoc(callDoc);
