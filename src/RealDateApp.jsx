@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LanguageProvider } from './i18n.js';
-import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays, Heart } from 'lucide-react';
+import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays, Heart, Shield } from 'lucide-react';
 import WelcomeScreen from './components/WelcomeScreen.jsx';
 import DailyDiscovery from './components/DailyDiscovery.jsx';
 import LikesScreen from './components/LikesScreen.jsx';
@@ -124,6 +124,12 @@ export default function RealDateApp() {
       className: 'p-4 bg-pink-600 text-white text-center font-bold fixed top-0 left-0 right-0 z-10',
       style: { paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }
     },
+      userId && React.createElement('div', {
+        className: 'absolute top-1/2 left-4 -translate-y-1/2 cursor-pointer',
+        onClick: () => setTab('admin')
+      },
+        React.createElement(Shield, { className: 'w-6 h-6 text-white' })
+      ),
       'RealDate',
       userId && React.createElement('div', {
         className: 'absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer',
@@ -171,7 +177,7 @@ export default function RealDateApp() {
           tab==='reports' && React.createElement(ReportedContentScreen, { onBack: ()=>setTab('admin') }),
           tab==='bugs' && React.createElement(BugReportsScreen, { onBack: ()=>setTab('admin') }),
           tab==='functiontest' && React.createElement(FunctionTestScreen, { onBack: ()=>setTab('admin') }),
-          tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
+          tab==='about' && React.createElement(AboutScreen, null)
         )
     ),
     React.createElement('div', {
