@@ -116,9 +116,12 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
             onClick: e => { e.stopPropagation(); toggleLike(p.id); }
           }),
           React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
-            (p.photoURL ?
-              React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
-              React.createElement(User, { className: 'w-10 h-10 text-pink-500' })
+            React.createElement('div', { className:'flex flex-col items-center' },
+              (p.photoURL ?
+                React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
+                React.createElement(User, { className: 'w-10 h-10 text-pink-500' })
+              ),
+              p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
             ),
             React.createElement('div', null,
               React.createElement('p', { className: 'font-medium' }, `${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`),
@@ -146,9 +149,12 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
             onClick: e => { e.stopPropagation(); toggleLike(p.id); }
           }),
           React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
-            (p.photoURL ?
-              React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
-              React.createElement(User, { className: 'w-10 h-10 text-pink-500' })
+            React.createElement('div', { className:'flex flex-col items-center' },
+              (p.photoURL ?
+                React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
+                React.createElement(User, { className: 'w-10 h-10 text-pink-500' })
+              ),
+              p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
             ),
             React.createElement('div', null,
               React.createElement('p', { className: 'font-medium' }, `${p.name}(${p.birthday ? getAge(p.birthday) : p.age})`),
