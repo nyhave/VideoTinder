@@ -90,6 +90,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const uploadPhoto = async file => {
     if(!file) return;
+    if(profile.photoURL){
+      alert(t('deleteOldPhotoFirst'));
+      return;
+    }
     const storageRef = ref(storage, `profiles/${userId}/photo-${Date.now()}-${file.name}`);
     await uploadBytes(storageRef, file);
     const url = await getDownloadURL(storageRef);
@@ -132,16 +136,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     };
   });
 
-  const replaceFile = async (file, field, index) => {
-    if(!file) return;
-    const storageRef = ref(storage, `profiles/${userId}/${field}-${Date.now()}-${file.name}`);
-    await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
-    const updated = [...(profile[field] || [])];
-    updated[index] = { url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() };
-    await updateDoc(doc(db,'profiles',userId), { [field]: updated });
-    setProfile({...profile, [field]: updated});
-  };
 
   const deleteFile = async (field, index) => {
     const updated = [...(profile[field] || [])];
