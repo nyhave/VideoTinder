@@ -6,7 +6,7 @@ import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
-import { useCollection, db, doc, updateDoc, deleteDoc, arrayUnion } from '../firebase.js';
+import { useCollection, db, doc, updateDoc, deleteDoc, arrayUnion, onSnapshot } from '../firebase.js';
 import VideoCallScreen from './VideoCallScreen.jsx';
 
 export default function ChatScreen({ userId }) {
@@ -17,6 +17,7 @@ export default function ChatScreen({ userId }) {
   const [active, setActive] = useState(null);
   const [text, setText] = useState('');
   const [inCall, setInCall] = useState(false);
+  const [incomingCall, setIncomingCall] = useState(false);
   const messagesRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -43,6 +44,20 @@ export default function ChatScreen({ userId }) {
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
     }
   }, [active?.messages?.length]);
+
+  useEffect(() => {
+    if (!active) {
+      setIncomingCall(false);
+      return;
+    }
+    const id = [userId, active.profileId].sort().join('-');
+    const callRef = doc(db, 'calls', id);
+    const unsub = onSnapshot(callRef, snap => {
+      const data = snap.data();
+      setIncomingCall(snap.exists() && data?.from !== userId && !data?.answer);
+    });
+    return () => unsub();
+  }, [active, userId]);
 
   const openChat = chat => {
     setActive(chat);
@@ -108,7 +123,10 @@ export default function ChatScreen({ userId }) {
           React.createElement('img', { src: activeProfile.photoURL, className: 'w-24 h-24 rounded-full object-cover self-center mb-2' }) :
           React.createElement(UserIcon, { className: 'w-24 h-24 text-pink-500 self-center mb-2' }),
         React.createElement('p', { className: 'text-center font-medium mb-2' }, `${activeProfile.name || ''}, ${activeProfile.birthday ? getAge(activeProfile.birthday) : activeProfile.age || ''}, ${activeProfile.city || ''}`),
-        React.createElement(Button, { className: 'bg-pink-500 text-white mb-2 self-center', onClick: () => setInCall(true) }, 'Foretag opkald'),
+        React.createElement(Button, {
+          className: 'bg-pink-500 text-white mb-2 self-center',
+          onClick: () => setInCall(true)
+        }, incomingCall ? 'Deltag i opkald' : 'Foretag opkald'),
         React.createElement('div', { ref: messagesRef, className: 'flex-1 bg-gray-100 p-4 rounded space-y-3 flex flex-col overflow-y-auto' },
           (active.messages || []).map((m,i) => {
             const fromSelf = m.from === userId;
