@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
+import { Input } from './ui/input.js';
 import SectionTitle from './SectionTitle.jsx';
+import { db, storage, doc, setDoc, ref, uploadBytes, getDownloadURL } from '../firebase.js';
 
 const features = [
   'Daily discovery of short video clips (up to 3 or 6 with subscription)',
@@ -27,11 +29,35 @@ const features = [
 
 export default function FunctionTestScreen({ onBack }) {
   const [results, setResults] = useState(() =>
-    Object.fromEntries(features.map((_, i) => [i, { status: '', comment: '' }]))
+    Object.fromEntries(features.map((_, i) => [i, { status: '', comment: '', file: null }]))
   );
 
   const update = (index, field, value) => {
     setResults(r => ({ ...r, [index]: { ...r[index], [field]: value } }));
+  };
+
+  const submit = async () => {
+    const entries = Object.entries(results);
+    for (const [i, res] of entries) {
+      if (res.status === 'fail') {
+        const id = Date.now().toString() + '-' + i;
+        let screenshotURL = '';
+        if (res.file) {
+          const storageRef = ref(storage, `bugReports/${id}-${res.file.name}`);
+          await uploadBytes(storageRef, res.file);
+          screenshotURL = await getDownloadURL(storageRef);
+        }
+        await setDoc(doc(db, 'bugReports', id), {
+          id,
+          text: `[FunctionTest] ${features[i]} ${res.comment || ''}`.trim(),
+          screenshotURL,
+          createdAt: new Date().toISOString(),
+          closed: false
+        });
+      }
+    }
+    alert('Resultater sendt');
+    onBack();
   };
 
   return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
@@ -44,9 +70,11 @@ export default function FunctionTestScreen({ onBack }) {
             React.createElement(Button, { className:`px-2 py-1 rounded ${results[i].status==='ok' ? 'bg-green-500 text-white' : 'bg-gray-200'}`, onClick:() => update(i,'status',results[i].status==='ok'?'':'ok') }, 'OK'),
             React.createElement(Button, { className:`px-2 py-1 rounded ${results[i].status==='fail' ? 'bg-red-500 text-white' : 'bg-gray-200'}`, onClick:() => update(i,'status',results[i].status==='fail'?'':'fail') }, 'Fejl')
           ),
-          React.createElement('textarea', { className:'w-full border p-1 text-sm', placeholder:'Kommentar', value:results[i].comment, onChange:e=>update(i,'comment',e.target.value) })
+          React.createElement('textarea', { className:'w-full border p-1 text-sm mb-1', placeholder:'Kommentar', value:results[i].comment, onChange:e=>update(i,'comment',e.target.value) }),
+          React.createElement(Input, { type:'file', accept:'image/*', className:'mb-1 w-full', onChange:e=>update(i,'file',e.target.files[0]) })
         )
       )
-    )
+    ),
+    React.createElement(Button, { className:'mt-4 bg-blue-500 text-white px-4 py-2 rounded w-full', onClick: submit }, 'Send rapport')
   );
 }
