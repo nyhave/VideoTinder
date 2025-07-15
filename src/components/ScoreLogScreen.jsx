@@ -19,7 +19,7 @@ export default function ScoreLogScreen({ onBack }) {
   };
 
   return React.createElement(Card, { className: 'fixed inset-0 p-6 shadow-xl bg-white/90 overflow-y-auto' },
-    React.createElement(SectionTitle, { title: 'Score log', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
+    React.createElement(SectionTitle, { title: 'Score log', colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
     sortedLogs.length ?
       React.createElement('ul', { className: 'space-y-4 mt-4 overflow-y-auto max-h-[70vh]' },
         sortedLogs.map(log =>

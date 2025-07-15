@@ -668,7 +668,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         }, 'Hent mistet fra DB')
       ),
     !publicView && !subscriptionActive && React.createElement(Button, {
-        className: 'mt-2 w-full bg-pink-500 text-white',
+        className: 'mt-2 w-full bg-yellow-500 text-white',
         onClick: () => setShowSub(true)
       }, 'Køb abonnement'),
     showSub && React.createElement(PurchaseOverlay, {

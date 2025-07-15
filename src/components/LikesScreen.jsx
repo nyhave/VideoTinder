@@ -61,24 +61,24 @@ export default function LikesScreen({ userId, onSelectProfile }) {
   };
 
   return React.createElement(Card,{className:'p-6 m-4 shadow-xl bg-white/90 flex flex-col'},
-    React.createElement(SectionTitle,{title:'Du er blevet liket'}),
+    React.createElement(SectionTitle,{title:'Du er blevet liket', colorClass:'text-yellow-600'}),
     React.createElement('p',{className:'mb-4 text-gray-500'},`${likedProfiles.length} profiler`),
     React.createElement('div',{className: hasSubscription ? 'flex-1' : 'flex-1 filter blur-sm pointer-events-none'},
       React.createElement('ul',{className:'space-y-4'},
         likedProfiles.length ? likedProfiles.map(p => (
           React.createElement('li',{
             key:p.id,
-            className:'p-4 bg-pink-50 rounded-lg cursor-pointer shadow flex flex-col relative',
+            className:'p-4 bg-yellow-50 rounded-lg cursor-pointer shadow flex flex-col relative',
             onClick:()=>onSelectProfile(p.id)
           },
             React.createElement(Heart,{
-              className:`w-8 h-8 absolute top-2 right-2 ${likes.some(l=>l.profileId===p.id)?'text-pink-500':'text-gray-400'}`,
+              className:`w-8 h-8 absolute top-2 right-2 ${likes.some(l=>l.profileId===p.id)?'text-yellow-500':'text-gray-400'}`,
               onClick:e=>{e.stopPropagation(); toggleLike(p.id);}
             }),
             React.createElement('div',{className:'flex items-center gap-4 mb-2'},
               p.photoURL ?
                 React.createElement('img',{src:p.photoURL,className:'w-10 h-10 rounded object-cover'}) :
-                React.createElement(UserIcon,{className:'w-10 h-10 text-pink-500'}),
+                React.createElement(UserIcon,{className:'w-10 h-10 text-yellow-500'}),
               React.createElement('div',null,
                 React.createElement('p',{className:'font-medium'},`${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`),
                 p.clip && React.createElement('p',{className:'text-sm text-gray-500'},`“${p.clip}”`)
@@ -94,7 +94,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
           React.createElement('li',{className:'text-center text-gray-500'},'Ingen har liket dig endnu')
       )
     ),
-    !hasSubscription && React.createElement(Button,{className:'mt-4 w-full bg-pink-500 text-white',onClick:()=>setShowPurchase(true)},'Køb premium'),
+    !hasSubscription && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb premium'),
     showPurchase && React.createElement(PurchaseOverlay,{title:'Månedligt abonnement', price:'59 kr/md', onClose:()=>setShowPurchase(false), onBuy:handlePurchase},
       React.createElement('ul',{className:'list-disc list-inside text-sm space-y-1'},
         React.createElement('li',null,'🎞️ Flere daglige klip: Se fx 6 i stedet for 3 kandidater om dagen'),
