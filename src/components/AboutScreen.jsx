@@ -4,7 +4,7 @@ import { Button } from './ui/button.js';
 import BugReportOverlay from './BugReportOverlay.jsx';
 import version from '../version.js';
 
-export default function AboutScreen({ onOpenAdmin }) {
+export default function AboutScreen() {
   const [showReport, setShowReport] = useState(false);
   return React.createElement(React.Fragment, null,
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
@@ -14,8 +14,7 @@ export default function AboutScreen({ onOpenAdmin }) {
         + 'RealDate er for dig, der søger noget ægte og meningsfuldt. Tag det stille og roligt, og find den forbindelse, der virkelig betyder noget.'
       ),
       React.createElement('p', { className: 'text-gray-500 text-sm text-center mb-4' }, `Version ${version}`),
-      React.createElement(Button, { className: 'bg-pink-500 text-white w-full mb-2', onClick: () => setShowReport(true) }, 'Fejlmeld'),
-      onOpenAdmin && React.createElement(Button, { className: 'bg-blue-500 hover:bg-blue-600 text-white mt-2 w-full', onClick: onOpenAdmin }, 'Admin'),
+      React.createElement(Button, { className: 'bg-pink-500 text-white w-full mb-2', onClick: () => setShowReport(true) }, 'Fejlmeld')
     ),
     showReport && React.createElement(BugReportOverlay, { onClose: () => setShowReport(false) })
   );
