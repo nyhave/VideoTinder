@@ -442,6 +442,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
           onClick: onLogout
         }, 'Logout')
+      ),
+      React.createElement('div', { className: 'mt-4 flex justify-end' },
+        React.createElement(Button, {
+          className: 'bg-pink-500 text-white',
+          onClick: onOpenAbout
+        }, t('about'))
       )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
@@ -452,14 +458,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             onClick: () => setEditInfo(true)
           })
         ) }),
-        !publicView && React.createElement('div', {
-          className: 'mb-4 flex justify-end gap-2'
-        },
-          React.createElement(Button, {
-            className: 'bg-pink-500 text-white',
-            onClick: onOpenAbout
-          }, t('about'))
-        ),
       publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
       React.createElement('div', { className:'flex items-center mb-4 gap-4' },
         profile.photoURL ?
