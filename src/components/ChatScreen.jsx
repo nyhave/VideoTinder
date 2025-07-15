@@ -101,7 +101,7 @@ export default function ChatScreen({ userId }) {
         React.createElement(ArrowLeft, { className: 'w-4 h-4' }), 'Tilbage')
     }),
     inCall ? (
-      React.createElement(VideoCallScreen, { matchId: active.id, userId, onEnd: () => setInCall(false) })
+      React.createElement(VideoCallScreen, { matchId: [userId, active.profileId].sort().join('-'), userId, onEnd: () => setInCall(false) })
     ) : active ? (
       React.createElement(React.Fragment, null,
         activeProfile.photoURL ?
