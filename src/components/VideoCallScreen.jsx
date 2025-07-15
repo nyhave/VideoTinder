@@ -76,7 +76,11 @@ export default function VideoCallScreen({ matchId, userId, onEnd }) {
 
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
-        await setDoc(callDoc, { offer: { type: offer.type, sdp: offer.sdp }, from: userId });
+        await setDoc(callDoc, {
+          offer: { type: offer.type, sdp: offer.sdp },
+          from: userId,
+          createdAt: new Date().toISOString()
+        });
 
         unsubOffer = onSnapshot(callDoc, snapshot => {
           const data = snapshot.data();

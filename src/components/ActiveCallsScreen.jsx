@@ -16,18 +16,31 @@ export default function ActiveCallsScreen({ onBack }) {
     return acc;
   }, {});
 
-  const formatName = id => profileMap[id]?.name || id;
-  const renderToken = id => tokensByUser[id]?.join(', ') || 'N/A';
+    const formatName = id => profileMap[id]?.name || id;
+    const renderToken = id => tokensByUser[id]?.join(', ') || 'N/A';
+    const formatDate = iso => {
+      if (!iso) return 'Ukendt';
+      try {
+        return new Date(iso).toLocaleString('da-DK', {
+          dateStyle: 'short',
+          timeStyle: 'short'
+        });
+      } catch {
+        return iso;
+      }
+    };
 
-  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+    const sortedCalls = [...calls].sort((a,b)=> new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+    return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, {
       title: 'Aktive opkald',
       colorClass: 'text-blue-600',
       action: React.createElement(Button, { onClick: onBack }, 'Tilbage')
     }),
-    calls.length ? (
-      React.createElement('ul', { className: 'space-y-4 mt-4 overflow-y-auto max-h-[70vh]' },
-        calls.map(call => {
+      sortedCalls.length ? (
+        React.createElement('ul', { className: 'space-y-4 mt-4 overflow-y-auto max-h-[70vh]' },
+        sortedCalls.map(call => {
           const ids = call.id.split('-');
           const [id1, id2] = ids;
           return React.createElement('li', { key: call.id, className: 'border p-2 rounded' },
@@ -35,7 +48,8 @@ export default function ActiveCallsScreen({ onBack }) {
             React.createElement('div', { className: 'text-xs text-gray-600 break-all' }, 'Token: ' + renderToken(id1)),
             React.createElement('div', { className: 'mt-2' }, `${formatName(id2)} (${id2})`),
             React.createElement('div', { className: 'text-xs text-gray-600 break-all' }, 'Token: ' + renderToken(id2)),
-            call.from && React.createElement('div', { className: 'text-xs text-gray-500 mt-1' }, `Startet af: ${formatName(call.from)}`)
+            call.from && React.createElement('div', { className: 'text-xs text-gray-500 mt-1' }, `Startet af: ${formatName(call.from)}`),
+            React.createElement('div', { className: 'text-xs text-gray-500' }, 'Startet: ' + formatDate(call.createdAt))
           );
         })
       )
