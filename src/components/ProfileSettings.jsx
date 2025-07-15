@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart, Flag, Plus } from 'lucide-react';
+import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart, Flag } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
@@ -546,11 +546,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: t('interests'), action: !publicView && (editInterests ?
-        React.createElement('div', { className:'flex items-center gap-2' },
-          React.createElement(Plus, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setShowInterests(true) }),
-          React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditInterests(false) }, 'Gem ændringer')
-        ) :
+        React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditInterests(false) }, 'Gem ændringer') :
         React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditInterests(true) }) ) }),
+      editInterests && !publicView && React.createElement(Button, {
+        className:'bg-blue-500 text-white mt-2 mb-2',
+        onClick: () => setShowInterests(true)
+      }, 'Tilføj interesse'),
       React.createElement('div', { className: 'flex flex-wrap gap-2 mb-2' },
         (profile.interests || []).map(i => {
           const cat = getInterestCategory(i);
