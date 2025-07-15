@@ -22,9 +22,12 @@ export default function PremiumFeatures({ userId, onBack, onSelectProfile }) {
           className: 'flex items-center gap-4 bg-yellow-50 p-2 rounded cursor-pointer',
           onClick: () => onSelectProfile(p.id)
         },
-          p.photoURL ?
-            React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
-            React.createElement(UserIcon, { className: 'w-10 h-10 text-yellow-500' }),
+          React.createElement('div', { className:'flex flex-col items-center' },
+            p.photoURL ?
+              React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
+              React.createElement(UserIcon, { className: 'w-10 h-10 text-yellow-500' }),
+            p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
+          ),
           React.createElement('span', null, `${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`)
         )
       )) :

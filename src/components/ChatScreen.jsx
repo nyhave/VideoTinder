@@ -114,9 +114,12 @@ export default function ChatScreen({ userId, onStartCall }) {
     }),
       active ? (
       React.createElement(React.Fragment, null,
-        activeProfile.photoURL ?
-          React.createElement('img', { src: activeProfile.photoURL, className: 'w-24 h-24 rounded-full object-cover self-center mb-2' }) :
-          React.createElement(UserIcon, { className: 'w-24 h-24 text-pink-500 self-center mb-2' }),
+        React.createElement('div', { className:'flex flex-col items-center' },
+          activeProfile.photoURL ?
+            React.createElement('img', { src: activeProfile.photoURL, className: 'w-24 h-24 rounded-full object-cover self-center mb-2' }) :
+            React.createElement(UserIcon, { className: 'w-24 h-24 text-pink-500 self-center mb-2' }),
+          activeProfile.verified && React.createElement('span', { className:'text-green-600 text-sm' }, 'Verified')
+        ),
         React.createElement('p', { className: 'text-center font-medium mb-2' }, `${activeProfile.name || ''}, ${activeProfile.birthday ? getAge(activeProfile.birthday) : activeProfile.age || ''}, ${activeProfile.city || ''}`),
         React.createElement(Button, {
           className: 'bg-pink-500 text-white mb-2 self-center',
@@ -173,9 +176,12 @@ export default function ChatScreen({ userId, onStartCall }) {
               className: 'flex items-center gap-4 bg-pink-50 p-2 rounded cursor-pointer',
               onClick: () => openChat(m)
             },
-              p.photoURL ?
-                React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
-                React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
+              React.createElement('div', { className:'flex flex-col items-center' },
+                p.photoURL ?
+                  React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
+                  React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
+                p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
+              ),
               React.createElement('span', null, `${p.name || ''}, ${p.birthday ? getAge(p.birthday) : p.age || ''}, ${p.city || ''}`)
             );
           })

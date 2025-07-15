@@ -474,19 +474,22 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         ) }),
       publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
       React.createElement('div', { className:'flex items-center mb-4 gap-4' },
-        profile.photoURL ?
-          React.createElement('img', {
-            src: profile.photoURL,
-            alt: 'Profil',
-            className:`w-24 h-24 rounded object-cover ${!publicView ? 'cursor-pointer' : ''}`,
-            onClick: !publicView ? () => photoRef.current && photoRef.current.click() : undefined
-          }) :
-          React.createElement('div', {
-            className:`w-24 h-24 rounded bg-gray-200 flex items-center justify-center ${!publicView ? 'cursor-pointer' : ''}`,
-            onClick: !publicView ? () => photoRef.current && photoRef.current.click() : undefined
-          },
-            React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500 blinking-thumb' })
-          ),
+        React.createElement('div', { className:'flex flex-col items-center' },
+          profile.photoURL ?
+            React.createElement('img', {
+              src: profile.photoURL,
+              alt: 'Profil',
+              className:`w-24 h-24 rounded object-cover ${!publicView ? 'cursor-pointer' : ''}`,
+              onClick: !publicView ? () => photoRef.current && photoRef.current.click() : undefined
+            }) :
+            React.createElement('div', {
+              className:`w-24 h-24 rounded bg-gray-200 flex items-center justify-center ${!publicView ? 'cursor-pointer' : ''}`,
+              onClick: !publicView ? () => photoRef.current && photoRef.current.click() : undefined
+            },
+              React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500 blinking-thumb' })
+            ),
+          profile.verified && React.createElement('span', { className:'text-green-600 text-sm mt-1' }, 'Verified')
+        ),
         !publicView && editInfo && profile.photoURL && React.createElement(Button, {
           className: 'bg-pink-500 text-white p-1 rounded flex items-center justify-center',
           onClick: deletePhoto
