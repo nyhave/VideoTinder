@@ -1,7 +1,8 @@
 // Bump the cache name whenever cached files change to ensure
 // clients receive the latest versions.
 const CACHE_NAME = 'videotinder-v2';
-const IMAGE_CACHE = 'image-cache-v1';
+// Cache for images, audio and video so large media files work offline
+const MEDIA_CACHE = 'media-cache-v1';
 const URLS_TO_CACHE = [
   '/',
   '/public/index.html',
@@ -31,9 +32,10 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  if (event.request.destination === 'image') {
+  const dest = event.request.destination;
+  if (['image', 'video', 'audio'].includes(dest)) {
     event.respondWith(
-      caches.open(IMAGE_CACHE).then(cache =>
+      caches.open(MEDIA_CACHE).then(cache =>
         cache.match(event.request).then(response => {
           if (response) return response;
           return fetch(event.request)

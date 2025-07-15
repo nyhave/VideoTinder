@@ -14,7 +14,7 @@ PWA manifest for standalone installation
 
 Profile view statistics
 
-Profile pictures cached for offline viewing
+Profile pictures, audio clips and video clips cached for offline viewing
 
 Admin mode
 Seed data loader for test profiles with sample clips
