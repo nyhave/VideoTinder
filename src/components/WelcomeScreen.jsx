@@ -113,6 +113,9 @@ export default function WelcomeScreen({ onLogin }) {
           name: 'email',
           autoComplete: 'email'
         }),
+        React.createElement('p', {
+          className:'text-xs text-gray-500 mb-2'
+        }, t('emailPrivate')),
         React.createElement('label', { className:'block mb-1' }, t('gender')),
         React.createElement('select', {
           className: 'border p-2 mb-4 w-full',

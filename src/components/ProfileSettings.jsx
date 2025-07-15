@@ -552,6 +552,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             name:'email',
             autoComplete:'email'
           }),
+          React.createElement('p', { className:'text-xs text-gray-500 mt-1 mb-2' }, t('emailPrivate')),
           React.createElement(Button, {
             className:'bg-pink-500 text-white w-full',
             onClick: () => setEditInfo(false)
