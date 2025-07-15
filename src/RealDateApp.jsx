@@ -13,6 +13,7 @@ import StatsScreen from './components/StatsScreen.jsx';
 import BugReportsScreen from './components/BugReportsScreen.jsx';
 import MatchLogScreen from './components/MatchLogScreen.jsx';
 import ScoreLogScreen from './components/ScoreLogScreen.jsx';
+import ActiveCallsScreen from './components/ActiveCallsScreen.jsx';
 import ReportedContentScreen from './components/ReportedContentScreen.jsx';
 import AboutScreen from './components/AboutScreen.jsx';
 import { useCollection, requestNotificationPermission, db, doc, updateDoc, increment } from './firebase.js';
@@ -161,10 +162,11 @@ export default function RealDateApp() {
             onOpenAbout: ()=>setTab('about')
           }),
           tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), profiles, userId, onSwitchProfile: id=>setUserId(id) }),
+          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), profiles, userId, onSwitchProfile: id=>setUserId(id) }),
           tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
           tab==='matchlog' && React.createElement(MatchLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='scorelog' && React.createElement(ScoreLogScreen, { onBack: ()=>setTab('admin') }),
+          tab==='calllog' && React.createElement(ActiveCallsScreen, { onBack: ()=>setTab('admin') }),
           tab==='reports' && React.createElement(ReportedContentScreen, { onBack: ()=>setTab('admin') }),
           tab==='bugs' && React.createElement(BugReportsScreen, { onBack: ()=>setTab('admin') }),
           tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
