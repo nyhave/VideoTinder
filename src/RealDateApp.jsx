@@ -5,6 +5,7 @@ import WelcomeScreen from './components/WelcomeScreen.jsx';
 import DailyDiscovery from './components/DailyDiscovery.jsx';
 import LikesScreen from './components/LikesScreen.jsx';
 import ChatScreen from './components/ChatScreen.jsx';
+import VideoCallPage from './components/VideoCallPage.jsx';
 import DailyCheckIn from './components/DailyCheckIn.jsx';
 import ProfileSettings from './components/ProfileSettings.jsx';
 import AdminScreen from './components/AdminScreen.jsx';
@@ -33,6 +34,7 @@ export default function RealDateApp() {
   const [ageRange,setAgeRange]=useState([35,55]);
   const [tab,setTab]=useState('discovery');
   const [viewProfile,setViewProfile]=useState(null);
+  const [videoCallId,setVideoCallId]=useState(null);
   const hasUnread = chats.some(c => c.unreadByUser || c.newMatch);
   const currentUser = profiles.find(p => p.id === userId) || {};
 
@@ -132,38 +134,41 @@ export default function RealDateApp() {
     ),
 
     React.createElement('div', { className: 'flex-1 mt-16' },
-
-      tab==='discovery' && !viewProfile && (
-        React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange, onOpenProfile: openProfileSettings })
-      ),
-      viewProfile && (
-        React.createElement(ProfileSettings, {
-          userId: viewProfile,
-          viewerId: userId,
-          ageRange,
-          onChangeAgeRange: setAgeRange,
-          publicView: true,
-          onBack: viewProfile === userId ? openProfileSettings : openDailyClips
-        })
-      ),
-      tab==='chat' && React.createElement(ChatScreen, { userId }),
-      tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
-      tab==='profile' && React.createElement(ProfileSettings, {
-        userId,
-        ageRange,
-        onChangeAgeRange: setAgeRange,
-        onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);},
-        onViewPublicProfile: viewOwnPublicProfile,
-        onOpenAbout: ()=>setTab('about')
-      }),
-      tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-      tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), profiles, userId, onSwitchProfile: id=>setUserId(id) }),
-      tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
-      tab==='matchlog' && React.createElement(MatchLogScreen, { onBack: ()=>setTab('admin') }),
-      tab==='scorelog' && React.createElement(ScoreLogScreen, { onBack: ()=>setTab('admin') }),
-      tab==='reports' && React.createElement(ReportedContentScreen, { onBack: ()=>setTab('admin') }),
-      tab==='bugs' && React.createElement(BugReportsScreen, { onBack: ()=>setTab('admin') }),
-      tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
+      videoCallId ?
+        React.createElement(VideoCallPage, { matchId: videoCallId, userId, onBack: () => setVideoCallId(null) }) :
+        React.createElement(React.Fragment, null,
+          tab==='discovery' && !viewProfile && (
+            React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange, onOpenProfile: openProfileSettings })
+          ),
+          viewProfile && (
+            React.createElement(ProfileSettings, {
+              userId: viewProfile,
+              viewerId: userId,
+              ageRange,
+              onChangeAgeRange: setAgeRange,
+              publicView: true,
+              onBack: viewProfile === userId ? openProfileSettings : openDailyClips
+            })
+          ),
+          tab==='chat' && React.createElement(ChatScreen, { userId, onStartCall: id => setVideoCallId(id) }),
+          tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
+          tab==='profile' && React.createElement(ProfileSettings, {
+            userId,
+            ageRange,
+            onChangeAgeRange: setAgeRange,
+            onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);},
+            onViewPublicProfile: viewOwnPublicProfile,
+            onOpenAbout: ()=>setTab('about')
+          }),
+          tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
+          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), profiles, userId, onSwitchProfile: id=>setUserId(id) }),
+          tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
+          tab==='matchlog' && React.createElement(MatchLogScreen, { onBack: ()=>setTab('admin') }),
+          tab==='scorelog' && React.createElement(ScoreLogScreen, { onBack: ()=>setTab('admin') }),
+          tab==='reports' && React.createElement(ReportedContentScreen, { onBack: ()=>setTab('admin') }),
+          tab==='bugs' && React.createElement(BugReportsScreen, { onBack: ()=>setTab('admin') }),
+          tab==='about' && React.createElement(AboutScreen, { onOpenAdmin: ()=>setTab('admin') })
+        )
     ),
     React.createElement('div', {
       className: 'p-4 bg-white shadow-inner flex justify-around fixed bottom-0 left-0 right-0 z-10',

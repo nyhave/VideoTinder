@@ -7,16 +7,14 @@ import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
 import { useCollection, db, doc, updateDoc, deleteDoc, arrayUnion, onSnapshot } from '../firebase.js';
-import VideoCallScreen from './VideoCallScreen.jsx';
 
-export default function ChatScreen({ userId }) {
+export default function ChatScreen({ userId, onStartCall }) {
   const profiles = useCollection('profiles');
   const chats = useCollection('matches', 'userId', userId);
   const t = useT();
   const profileMap = Object.fromEntries(profiles.map(p => [p.id, p]));
   const [active, setActive] = useState(null);
   const [text, setText] = useState('');
-  const [inCall, setInCall] = useState(false);
   const [incomingCall, setIncomingCall] = useState(false);
   const messagesRef = useRef(null);
   const textareaRef = useRef(null);
@@ -103,7 +101,6 @@ export default function ChatScreen({ userId }) {
       deleteDoc(doc(db,'matches',id1)),
       deleteDoc(doc(db,'matches',id2))
     ]);
-    setInCall(false);
     setActive(null);
   };
 
@@ -112,12 +109,10 @@ export default function ChatScreen({ userId }) {
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1 touch-none', style:{maxHeight:'calc(100vh - 10rem)', overflow:'hidden', touchAction:'none'} },
     React.createElement(SectionTitle, {
       title: t('chat'),
-      action: active && React.createElement(Button, { className: 'flex items-center gap-1', onClick: () => { setInCall(false); setActive(null); } },
+      action: active && React.createElement(Button, { className: 'flex items-center gap-1', onClick: () => { setActive(null); } },
         React.createElement(ArrowLeft, { className: 'w-4 h-4' }), 'Tilbage')
     }),
-    inCall ? (
-      React.createElement(VideoCallScreen, { matchId: [userId, active.profileId].sort().join('-'), userId, onEnd: () => setInCall(false) })
-    ) : active ? (
+      active ? (
       React.createElement(React.Fragment, null,
         activeProfile.photoURL ?
           React.createElement('img', { src: activeProfile.photoURL, className: 'w-24 h-24 rounded-full object-cover self-center mb-2' }) :
@@ -125,7 +120,7 @@ export default function ChatScreen({ userId }) {
         React.createElement('p', { className: 'text-center font-medium mb-2' }, `${activeProfile.name || ''}, ${activeProfile.birthday ? getAge(activeProfile.birthday) : activeProfile.age || ''}, ${activeProfile.city || ''}`),
         React.createElement(Button, {
           className: 'bg-pink-500 text-white mb-2 self-center',
-          onClick: () => setInCall(true)
+          onClick: () => onStartCall && onStartCall([userId, active.profileId].sort().join('-'))
         }, incomingCall ? 'Deltag i opkald' : 'Foretag opkald'),
         React.createElement('div', { ref: messagesRef, className: 'flex-1 bg-gray-100 p-4 rounded space-y-3 flex flex-col overflow-y-auto' },
           (active.messages || []).map((m,i) => {
