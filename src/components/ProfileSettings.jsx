@@ -100,6 +100,18 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const handlePhotoChange = e => uploadPhoto(e.target.files[0]);
 
+  const deletePhoto = async () => {
+    if(!profile.photoURL) return;
+    const url = profile.photoURL;
+    await updateDoc(doc(db,'profiles',userId), { photoURL: '', photoUploadedAt: '' });
+    setProfile({ ...profile, photoURL: '', photoUploadedAt: '' });
+    try {
+      await deleteObject(ref(storage, url));
+    } catch(err){
+      console.error('Failed to delete photo', err);
+    }
+  };
+
   // Allow a small tolerance when validating clip length because the
   // MediaRecorder output can be slightly longer than the requested
   // duration due to encoding overhead.
@@ -463,13 +475,26 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
       React.createElement('div', { className:'flex items-center mb-4 gap-4' },
         profile.photoURL ?
-          React.createElement('img', { src: profile.photoURL, alt: 'Profil', className:'w-24 h-24 rounded object-cover' }) :
+          React.createElement('img', {
+            src: profile.photoURL,
+            alt: 'Profil',
+            className:`w-24 h-24 rounded object-cover ${!publicView ? 'cursor-pointer' : ''}`,
+            onClick: !publicView ? () => photoRef.current && photoRef.current.click() : undefined
+          }) :
           React.createElement('div', {
             className:`w-24 h-24 rounded bg-gray-200 flex items-center justify-center ${!publicView ? 'cursor-pointer' : ''}`,
             onClick: !publicView ? () => photoRef.current && photoRef.current.click() : undefined
           },
             React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500 blinking-thumb' })
           ),
+        !publicView && editInfo && profile.photoURL && React.createElement(Button, {
+          className: 'bg-pink-500 text-white p-1 rounded flex items-center justify-center',
+          onClick: deletePhoto
+        }, React.createElement(TrashIcon, { className:'w-4 h-4' })),
+        !publicView && editInfo && !profile.photoURL && React.createElement(Button, {
+          className: 'bg-pink-500 text-white',
+          onClick: () => photoRef.current && photoRef.current.click()
+        }, 'Upload billede'),
         publicView && !isOwnProfile && React.createElement(Button, {
           className: 'ml-auto bg-pink-500 text-white',
           onClick: toggleLike
