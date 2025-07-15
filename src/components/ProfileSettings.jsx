@@ -16,7 +16,7 @@ import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
 import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
 import { languages, useT } from '../i18n.js';
-import { interestOptions, getInterestCategory } from '../interests.js';
+import { getInterestCategory } from '../interests.js';
 import { getAge } from '../utils.js';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, onViewPublicProfile = () => {}, onOpenAbout = () => {}, viewerId, onBack }) {
@@ -445,7 +445,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-        React.createElement('h2', { className: 'text-xl font-semibold text-pink-600 text-center mb-4' }, 'Din profil'),
+        React.createElement(SectionTitle, { title: 'Din profil', action: !publicView && (
+          editInfo ? null :
+          React.createElement(EditIcon, {
+            className:'w-5 h-5 text-gray-500 cursor-pointer',
+            onClick: () => setEditInfo(true)
+          })
+        ) }),
         !publicView && React.createElement('div', {
           className: 'mb-4 flex justify-end gap-2'
         },
@@ -520,8 +526,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         }, 'Gem ændringer')
         ) :
         React.createElement('div', { className:'flex items-center justify-between w-full' },
-          React.createElement(SectionTitle, { title: `${profile.name}, ${profile.birthday ? getAge(profile.birthday) : profile.age}${profile.city ? ', ' + profile.city : ''}` }),
-          !publicView && React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditInfo(true) })
+          React.createElement(SectionTitle, { title: `${profile.name}, ${profile.birthday ? getAge(profile.birthday) : profile.age}${profile.city ? ', ' + profile.city : ''}` })
         ),
       isOwnProfile && !publicView && profile.email && React.createElement('p', { className:'text-center text-sm text-gray-600 mt-1' }, profile.email),
       !publicView && profile.subscriptionExpires && React.createElement('p', {
@@ -531,20 +536,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         : `Premium abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`),
         !publicView && profile.subscriptionPurchased && React.createElement('p', {
           className: 'text-center text-sm text-gray-500'
-        }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`),
-        editInfo && !publicView && React.createElement('label', { className:'mt-2' }, t('interests')),
-        editInfo && !publicView && React.createElement('select', {
-          multiple: true,
-          className: 'border p-2 rounded w-full mb-2 h-40',
-          value: profile.interests || [],
-          onChange: handleInterestsChange
-        },
-          interestOptions.map(i => React.createElement('option', { key:i, value:i }, i))
-        ),
-        editInfo && !publicView && React.createElement('p', { className:'text-sm text-gray-500 mb-2' }, t('chooseInterests')),
-        !editInfo && React.createElement('p', { className:'mt-2 mb-2 text-sm' }, (profile.interests || []).join(', ')),
-
-        null
+        }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`)
       ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
