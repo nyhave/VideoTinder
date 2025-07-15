@@ -28,6 +28,10 @@ and simple profile management powered by Firebase.
 * Matchlog kan åbnes fra adminområdet
 
 
+## Farvetema
+
+Appen bruger generelt en rød/lyserød farveskala. Adminknapperne er blå, mens premium-funktioner er gule.
+
 ## Getting Started
 
 1. Copy `.env.example` to `.env` and fill in your Firebase credentials.
