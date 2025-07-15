@@ -81,18 +81,18 @@ export default function RealDateApp() {
 
   useEffect(() => {
     profiles.forEach(p => {
-      if (p.photoURL && p.photoUploadedAt) {
+      if (p.photoURL) {
         cacheMediaIfNewer(p.photoURL, p.photoUploadedAt);
       }
       (p.audioClips || []).forEach(a => {
         const url = a && a.url ? a.url : a;
         const ts = a && a.uploadedAt;
-        if (url && ts) cacheMediaIfNewer(url, ts);
+        if (url) cacheMediaIfNewer(url, ts);
       });
       (p.videoClips || []).forEach(v => {
         const url = v && v.url ? v.url : v;
         const ts = v && v.uploadedAt;
-        if (url && ts) cacheMediaIfNewer(url, ts);
+        if (url) cacheMediaIfNewer(url, ts);
       });
     });
   }, [profiles]);
