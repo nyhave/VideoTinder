@@ -486,42 +486,46 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       ),
       editInfo ?
         React.createElement('div', { className:'space-y-2 mb-2 w-full' },
-        React.createElement(Input, {
-          value: profile.name || '',
-          onChange: handleNameChange,
-          className:'border p-2 rounded w-full',
-          placeholder:'Fornavn',
-          name:'given-name',
-          autoComplete:'given-name'
-        }),
+          React.createElement('label', { className:'block text-sm font-medium' }, t('firstName')),
+          React.createElement(Input, {
+            value: profile.name || '',
+            onChange: handleNameChange,
+            className:'border p-2 rounded w-full',
+            placeholder: t('firstName'),
+            name:'given-name',
+            autoComplete:'given-name'
+          }),
+          React.createElement('label', { className:'block text-sm font-medium' }, t('birthday')),
           React.createElement(Input, {
             type:'date',
             value: profile.birthday || '',
             onChange: handleBirthdayChange,
             className:'border p-2 rounded w-full',
-            placeholder:'F\u00f8dselsdag'
+            placeholder: t('chooseBirthday')
           }),
-        React.createElement(Input, {
-          value: profile.city || '',
-          onChange: handleCityChange,
-          className:'border p-2 rounded w-full',
-          placeholder:'By',
-          name:'city',
-          autoComplete:'address-level2'
-        }),
-        React.createElement(Input, {
-          type:'email',
-          value: profile.email || '',
-          onChange: handleEmailChange,
-          className:'border p-2 rounded w-full',
-          placeholder:'you@example.com',
-          name:'email',
-          autoComplete:'email'
-        }),
-        React.createElement(Button, {
-          className:'bg-pink-500 text-white w-full',
-          onClick: () => setEditInfo(false)
-        }, 'Gem ændringer')
+          React.createElement('label', { className:'block text-sm font-medium' }, t('city')),
+          React.createElement(Input, {
+            value: profile.city || '',
+            onChange: handleCityChange,
+            className:'border p-2 rounded w-full',
+            placeholder: t('city'),
+            name:'city',
+            autoComplete:'address-level2'
+          }),
+          React.createElement('label', { className:'block text-sm font-medium' }, t('email')),
+          React.createElement(Input, {
+            type:'email',
+            value: profile.email || '',
+            onChange: handleEmailChange,
+            className:'border p-2 rounded w-full',
+            placeholder:'you@example.com',
+            name:'email',
+            autoComplete:'email'
+          }),
+          React.createElement(Button, {
+            className:'bg-pink-500 text-white w-full',
+            onClick: () => setEditInfo(false)
+          }, 'Gem ændringer')
         ) :
         React.createElement('div', { className:'flex items-center justify-between w-full' },
           React.createElement(SectionTitle, { title: `${profile.name}, ${profile.birthday ? getAge(profile.birthday) : profile.age}${profile.city ? ', ' + profile.city : ''}` })
