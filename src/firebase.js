@@ -47,6 +47,16 @@ if (typeof window !== 'undefined') {
 
 export async function requestNotificationPermission(userId) {
   if (!messaging || Notification.permission === 'denied') return null;
+  let permission = Notification.permission;
+  if (permission === 'default') {
+    try {
+      permission = await Notification.requestPermission();
+    } catch (err) {
+      console.error('Failed to request notification permission', err);
+      return null;
+    }
+  }
+  if (permission !== 'granted') return null;
   try {
     const registration = await navigator.serviceWorker.ready;
     const token = await getToken(messaging, {
