@@ -10,7 +10,7 @@ const getAge = birthday => {
   return age;
 };
 
-const { getInterestCategory } = require('../../src/interests.js');
+const { getInterestCategory } = require('./interests.js');
 
 function calculateMatchScoreDetailed(user, profile, ageRange) {
   const breakdown = {};
