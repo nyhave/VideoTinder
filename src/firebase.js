@@ -65,7 +65,8 @@ export async function subscribeToWebPush(userId) {
         applicationServerKey: appKey
       });
     }
-    await setDoc(doc(db, 'webPushSubscriptions', sub.endpoint), {
+    const safeId = btoa(sub.endpoint);
+    await setDoc(doc(db, 'webPushSubscriptions', safeId), {
       ...sub.toJSON(),
       userId
     });
