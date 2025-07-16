@@ -28,6 +28,7 @@ import {
   getToken,
   onMessage
 } from 'firebase/messaging';
+import { fcmReg } from './swRegistration.js';
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -46,6 +47,7 @@ if (typeof window !== 'undefined') {
 }
 
 export async function requestNotificationPermission(userId) {
+
   if (!messaging || Notification.permission === 'denied') return null;
   let permission = Notification.permission;
   if (permission === 'default') {
@@ -57,11 +59,11 @@ export async function requestNotificationPermission(userId) {
     }
   }
   if (permission !== 'granted') return null;
+
   try {
-    const registration = await navigator.serviceWorker.ready;
     const token = await getToken(messaging, {
       vapidKey: process.env.VAPID_KEY,
-      serviceWorkerRegistration: registration
+      serviceWorkerRegistration: fcmReg
     });
     if (token) {
       await setDoc(doc(db, 'pushTokens', token), { token, userId }, { merge: true });
