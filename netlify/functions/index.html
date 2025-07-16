@@ -32,7 +32,9 @@ button{margin-top:1em;padding:0.5em 1em;}
         const text = await resp.text();
         document.getElementById('status').textContent = 'Failed: ' + text;
       } else {
-        document.getElementById('status').textContent = 'Notification sent!';
+        const data = await resp.json().catch(() => ({}));
+        document.getElementById('status').textContent =
+          'Notification sent to ' + (data.count ?? '?') + ' tokens';
       }
     } catch (err) {
       document.getElementById('status').textContent = 'Error: ' + err.message;
