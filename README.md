@@ -1,8 +1,10 @@
-# RealDate
+# Videotpush
 
-RealDate is a small prototype for experimenting with a slower approach to online dating.
-The **RealDateApp** demonstrates daily video discovery, chat, reflection notes
-and simple profile management powered by Firebase.
+Videotpush is a small prototype for experimenting with a slower approach to online dating.
+The **VideotpushApp** demonstrates daily video discovery, chat, reflection notes
+and simple profile management powered by Firebase. The code is hosted on
+[GitHub](https://github.com/nyhave/videotpush) and a live demo is available at
+[https://videotpush.netlify.app](https://videotpush.netlify.app/).
 
 ## Features
 
@@ -50,13 +52,13 @@ To create a production build run:
 ```bash
 npm run build
 ```
-The compiled files will be placed in the `dist` folder. When changes are pushed to `main`, a GitHub Actions workflow builds the project and deploys the contents of `dist` to GitHub Pages automatically.
+The compiled files will be placed in the `dist` folder. When changes are pushed to `main`, Netlify automatically builds the project and deploys the site to [https://videotpush.netlify.app](https://videotpush.netlify.app/).
 
 Dette er en test af workflow.
 
-## GitHub Pages Deployment
+## Netlify Deployment
 
-Before the workflow can build the site, you must provide your Firebase credentials as repository secrets. Define these secrets in **Settings > Secrets and variables**:
+Before Netlify can build the site, you must provide your Firebase credentials as environment variables under **Site settings > Environment variables**:
 
 ```
 FIREBASE_API_KEY
@@ -72,7 +74,7 @@ During the build job, these secrets are written to a `.env` file so Parcel can e
 
 ## Configuring CORS for Firebase Storage
 
-If you host the app on a domain like GitHub Pages, the browser uploads directly
+If you host the app on your own domain, the browser uploads directly
 to Firebase Storage. The bucket must allow cross‑origin requests from your
 site. If you see errors about CORS or failed preflight requests during video or
 audio uploads, update the bucket's CORS rules:

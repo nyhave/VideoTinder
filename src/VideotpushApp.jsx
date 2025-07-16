@@ -21,7 +21,7 @@ import { useCollection, requestNotificationPermission, db, doc, updateDoc, incre
 import { cacheMediaIfNewer } from './cacheMedia.js';
 
 
-export default function RealDateApp() {
+export default function VideotpushApp() {
   const [lang, setLang] = useState(() =>
     localStorage.getItem('lang') || 'en'
   );
@@ -130,7 +130,7 @@ export default function RealDateApp() {
       },
         React.createElement(Shield, { className: 'w-6 h-6 text-white' })
       ),
-      'RealDate',
+      'Videotpush',
       userId && React.createElement('div', {
         className: 'absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer',
         onClick: openProfileSettings

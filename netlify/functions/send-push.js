@@ -16,7 +16,7 @@ exports.handler = async function(event) {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
   try {
-    const { title = 'RealDate', body } = JSON.parse(event.body || '{}');
+    const { title = 'Videotpush', body } = JSON.parse(event.body || '{}');
     if (!body) {
       return { statusCode: 400, body: 'Invalid payload' };
     }
