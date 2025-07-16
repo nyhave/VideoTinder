@@ -311,40 +311,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     });
   };
 
-  const recoverMissing = async () => {
-    const profileRef = doc(db, 'profiles', userId);
-    const snap = await getDoc(profileRef);
-    if (!snap.exists()) return;
-    let { photoURL = '', audioClips = [], videoClips = [] } = snap.data();
-    const listRef = ref(storage, `profiles/${userId}`);
-    const { items } = await listAll(listRef);
-    const updates = {};
-    for (const item of items) {
-      const url = await getDownloadURL(item);
-      const name = item.name;
-      if (name.startsWith('photo-')) {
-        if (!photoURL) {
-          photoURL = url;
-          updates.photoURL = url;
-          updates.photoUploadedAt = new Date().toISOString();
-        }
-      } else if (name.startsWith('videoClips-')) {
-        if (!videoClips.some(v => v.url === url)) {
-          videoClips.push({ url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() });
-          updates.videoClips = videoClips;
-        }
-      } else if (name.startsWith('audioClips-')) {
-        if (!audioClips.some(a => a.url === url)) {
-          audioClips.push({ url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() });
-          updates.audioClips = audioClips;
-        }
-      }
-    }
-    if (Object.keys(updates).length) {
-      await updateDoc(profileRef, updates);
-      setProfile({ ...profile, ...updates });
-    }
-  };
 
   const videoSection = React.createElement(React.Fragment, null,
     React.createElement(SectionTitle, {
@@ -669,12 +635,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onClick: () => setReportItem({ text: profile.clip })
       })
     ),
-      !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col gap-2' },
-        React.createElement(Button, {
-          className: 'bg-blue-500 text-white w-full',
-          onClick: recoverMissing
-        }, 'Hent mistet fra DB')
-      ),
     !publicView && !subscriptionActive && React.createElement(Button, {
         className: 'mt-2 w-full bg-yellow-500 text-white',
         onClick: () => setShowSub(true)
