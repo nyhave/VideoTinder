@@ -7,17 +7,10 @@ import { useCollection } from '../firebase.js';
 export default function ActiveCallsScreen({ onBack }) {
   const calls = useCollection('calls');
   const profiles = useCollection('profiles');
-  const tokens = useCollection('pushTokens');
 
   const profileMap = Object.fromEntries(profiles.map(p => [p.id, p]));
-  const tokensByUser = tokens.reduce((acc, t) => {
-    if (!acc[t.userId]) acc[t.userId] = [];
-    acc[t.userId].push(t.id);
-    return acc;
-  }, {});
 
     const formatName = id => profileMap[id]?.name || id;
-    const renderToken = id => tokensByUser[id]?.join(', ') || 'N/A';
     const formatDate = iso => {
       if (!iso) return 'Ukendt';
       try {
@@ -45,9 +38,7 @@ export default function ActiveCallsScreen({ onBack }) {
           const [id1, id2] = ids;
           return React.createElement('li', { key: call.id, className: 'border p-2 rounded' },
             React.createElement('div', null, `${formatName(id1)} (${id1})`),
-            React.createElement('div', { className: 'text-xs text-gray-600 break-all' }, 'Token: ' + renderToken(id1)),
             React.createElement('div', { className: 'mt-2' }, `${formatName(id2)} (${id2})`),
-            React.createElement('div', { className: 'text-xs text-gray-600 break-all' }, 'Token: ' + renderToken(id2)),
             call.from && React.createElement('div', { className: 'text-xs text-gray-500 mt-1' }, `Startet af: ${formatName(call.from)}`),
             React.createElement('div', { className: 'text-xs text-gray-500' }, 'Startet: ' + formatDate(call.createdAt))
           );
