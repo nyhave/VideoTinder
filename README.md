@@ -68,6 +68,15 @@ FIREBASE_STORAGE_BUCKET
 FIREBASE_MESSAGING_SENDER_ID
 FIREBASE_APP_ID
 GOOGLE_APPLICATION_CREDENTIALS
+WEB_PUSH_PUBLIC_KEY
+WEB_PUSH_PRIVATE_KEY
+```
+
+Example values for the VAPID keys:
+
+```
+WEB_PUSH_PUBLIC_KEY=BBEqVE7NHz0GV-hLpS5057_Txhn1YMvDutBAfRS4mBwFb7JIV-BJGhUbNedFRWhVXeYhkU-fAPH25ZLOlKHBxXk
+WEB_PUSH_PRIVATE_KEY=6NCE6tcVeb6maHj6RtfiXPR5owid3lhxrPq4puqwZ_A
 ```
 
 During the build job, these secrets are written to a `.env` file so Parcel can embed the Firebase config.
@@ -96,16 +105,10 @@ The profile filtering logic used on the Daily Discovery page lives in `src/selec
 
 ## Push Notifications
 
-This project uses Firebase Cloud Messaging to deliver updates. Notifications are
-sent using the HTTP **v1** API, authenticated with a service account. On
-Netlify you can either provide the path to your service account JSON via the
-`GOOGLE_APPLICATION_CREDENTIALS` environment variable or store the JSON itself in
-`FIREBASE_SERVICE_ACCOUNT_JSON`. The legacy `FCM_SERVER_KEY` is no longer used.
+Firebase Cloud Messaging delivers updates on Android and desktop browsers. Notifications are sent using the HTTP **v1** API authenticated with a service account. Provide the service account path via `GOOGLE_APPLICATION_CREDENTIALS` or store the JSON in `FIREBASE_SERVICE_ACCOUNT_JSON`.
 
-In this repository, a Netlify Function (`netlify/functions/send-push.js`) handles
-delivery. The function reads stored push tokens from Firestore and uses the
-Firebase Admin SDK to send notifications via the v1 API. Trigger it by making a
-`POST` request to `/.netlify/functions/send-push` with a JSON body containing a
-`body` field and optional `title`.
+`netlify/functions/send-push.js` sends FCM messages to tokens stored in Firestore. Trigger it with a `POST` request containing a `body` and optional `title`.
 
-A small helper page (`netlify/functions/index.html`) lets you trigger a test notification directly from the deployed site. It posts the title and body to `/.netlify/functions/send-push` and shows the result.
+For iOS PWAs, Safari only supports the standard Web Push API. A separate function (`netlify/functions/send-webpush.js`) sends notifications using VAPID keys defined in `WEB_PUSH_PUBLIC_KEY` and `WEB_PUSH_PRIVATE_KEY`. Subscriptions are stored in the `webPushSubscriptions` collection.
+
+The helper page (`netlify/functions/index.html`) posts data to `/.netlify/functions/send-push` for FCM tokens. To test Web Push on iOS, post to `/.netlify/functions/send-webpush` instead.
