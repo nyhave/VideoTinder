@@ -31,8 +31,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [showInterests, setShowInterests] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
   const [editInfo, setEditInfo] = useState(false);
-  const [editVideos, setEditVideos] = useState(false);
-  const [editAudios, setEditAudios] = useState(false);
   const [editInterests, setEditInterests] = useState(false);
   const [editPrefs, setEditPrefs] = useState(false);
   const [editAbout, setEditAbout] = useState(false);
@@ -354,15 +352,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       action: publicView && !isOwnProfile ? React.createElement(Heart, {
         className: `w-6 h-6 cursor-pointer ${liked ? 'text-pink-500' : 'text-gray-400'}`,
         onClick: toggleLike
-      }) : !publicView && (editVideos ?
-        React.createElement(Button, {
-          className:'bg-pink-500 text-white',
-          onClick: () => setEditVideos(false)
-        }, 'Gem ændringer') :
-        React.createElement(EditIcon, {
-          className:'w-5 h-5 text-gray-500 cursor-pointer',
-          onClick: () => setEditVideos(true)
-        }) )
+      }) : null
     }),
     React.createElement('div', { className: 'flex items-center gap-4 mb-4 justify-between' },
       Array.from({ length: 3 }).map((_, i) => {
@@ -372,10 +362,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           url
             ? React.createElement(VideoPreview, { src: url })
             : React.createElement(CameraIcon, {
-                className: `w-10 h-10 text-gray-400 blinking-thumb ${(!publicView && editVideos) ? 'cursor-pointer' : ''}`,
-                onClick: (!publicView && editVideos) ? () => setShowSnapVideoRecorder(true) : undefined
+                className: `w-10 h-10 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
+                onClick: !publicView ? () => setShowSnapVideoRecorder(true) : undefined
               }),
-          url && !publicView && editVideos && React.createElement(Button, {
+          url && !publicView && React.createElement(Button, {
             className: 'mt-1 bg-pink-500 text-white p-1 rounded-full flex items-center justify-center',
             onClick: () => deleteFile('videoClips', i)
           }, React.createElement(TrashIcon, { className: 'w-4 h-4' })),
@@ -386,7 +376,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         );
       })
     ),
-      !publicView && editVideos && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded })
+      !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded })
     );
 
   const audioClips = profile.audioClips || [];
@@ -398,22 +388,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       action: publicView && !isOwnProfile ? React.createElement(Heart, {
         className: `w-6 h-6 cursor-pointer ${liked ? 'text-pink-500' : 'text-gray-400'}`,
         onClick: toggleLike
-      }) : !publicView && (editAudios ?
-        React.createElement(Button, {
-          className:'bg-pink-500 text-white',
-          onClick: () => setEditAudios(false)
-        }, 'Gem ændringer') :
-        React.createElement(EditIcon, {
-          className:'w-5 h-5 text-gray-500 cursor-pointer',
-          onClick: () => setEditAudios(true)
-        }) )
+      }) : null
     }),
     React.createElement('div', { className: 'space-y-2 mb-4' },
       audioClips.map((clip, i) => {
         const url = clip && clip.url ? clip.url : clip;
         return React.createElement('div', { key: i, className: 'flex items-center relative' },
           React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' }),
-          !publicView && editAudios && React.createElement(Button, {
+          !publicView && React.createElement(Button, {
             className: 'ml-2 bg-pink-500 text-white p-1 rounded w-[20%] flex items-center justify-center',
             onClick: () => deleteFile('audioClips', i)
           }, React.createElement(TrashIcon, { className: 'w-4 h-4' })),
@@ -424,16 +406,16 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         )
       })
     ),
-    remainingAudios > 0 && editAudios && React.createElement('div', { className: 'flex gap-4 justify-center mb-4' },
+    remainingAudios > 0 && !publicView && React.createElement('div', { className: 'flex gap-4 justify-center mb-4' },
       Array.from({ length: remainingAudios }).map((_, i) =>
         React.createElement(Mic, {
           key: i,
-          className: `w-8 h-8 text-gray-400 blinking-thumb ${(!publicView && editAudios) ? 'cursor-pointer' : ''}`,
-          onClick: (!publicView && editAudios) ? () => setShowSnapRecorder(true) : undefined
+          className: `w-8 h-8 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
+          onClick: !publicView ? () => setShowSnapRecorder(true) : undefined
         })
       )
     ),
-    !publicView && editAudios && React.createElement(React.Fragment, null,
+    !publicView && React.createElement(React.Fragment, null,
       React.createElement('input', {
         type: 'file',
         accept: 'audio/*',
