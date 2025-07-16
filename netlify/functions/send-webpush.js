@@ -28,7 +28,8 @@ exports.handler = async function(event) {
     await Promise.all(subs.map(sub =>
       webPush.sendNotification(sub, payload).catch(err => {
         if (err.statusCode === 410 || err.statusCode === 404) {
-          db.collection('webPushSubscriptions').doc(sub.endpoint).delete().catch(() => {});
+          const safeId = Buffer.from(sub.endpoint).toString('base64');
+          db.collection('webPushSubscriptions').doc(safeId).delete().catch(() => {});
         }
       })
     ));
