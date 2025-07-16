@@ -4,7 +4,7 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
-import { db, updateDoc, doc, messaging } from '../firebase.js';
+import { db, updateDoc, doc, getDoc, storage, listAll, ref, getDownloadURL, messaging } from '../firebase.js';
 import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
 
@@ -42,6 +42,41 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     }
   };
 
+  const recoverMissing = async () => {
+    const profileRef = doc(db, 'profiles', userId);
+    const snap = await getDoc(profileRef);
+    if (!snap.exists()) return;
+    let { photoURL = '', audioClips = [], videoClips = [], language = 'en' } = snap.data();
+    const listRef = ref(storage, `profiles/${userId}`);
+    const { items } = await listAll(listRef);
+    const updates = {};
+    for (const item of items) {
+      const url = await getDownloadURL(item);
+      const name = item.name;
+      if (name.startsWith('photo-')) {
+        if (!photoURL) {
+          photoURL = url;
+          updates.photoURL = url;
+          updates.photoUploadedAt = new Date().toISOString();
+        }
+      } else if (name.startsWith('videoClips-')) {
+        if (!videoClips.some(v => v.url === url)) {
+          videoClips.push({ url, lang: language, uploadedAt: new Date().toISOString() });
+          updates.videoClips = videoClips;
+        }
+      } else if (name.startsWith('audioClips-')) {
+        if (!audioClips.some(a => a.url === url)) {
+          audioClips.push({ url, lang: language, uploadedAt: new Date().toISOString() });
+          updates.audioClips = audioClips;
+        }
+      }
+    }
+    if (Object.keys(updates).length) {
+      await updateDoc(profileRef, updates);
+      alert('Gendannede manglende filer');
+    }
+  };
+
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: 'Administration', colorClass: 'text-blue-600' }),
@@ -71,8 +106,10 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         await updateDoc(doc(db, 'profiles', userId), { verified: !prof.verified });
       }
     }, (profiles.find(p => p.id === userId) || {}).verified ? 'Fjern verificering' : 'Verificer profil'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, 'Reset database'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => seedData().then(() => alert('Databasen er nulstillet')) }, 'Reset database'),
+  React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, 'Reset database'),
+  React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => seedData().then(() => alert('Databasen er nulstillet')) }, 'Reset database'),
+  React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Hent mistet fra DB'),
+  React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: recoverMissing }, 'Hent mistet fra DB'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Push notifications'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
