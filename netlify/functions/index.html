@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Send Push</title>
+<style>
+body{font-family:Arial, sans-serif;margin:2em;}
+label{display:block;margin-top:1em;}
+button{margin-top:1em;padding:0.5em 1em;}
+#status{margin-top:1em;font-weight:bold;}
+</style>
+</head>
+<body>
+<h1>Send Test Push</h1>
+<label>Title <input id="title" type="text" placeholder="Optional" /></label>
+<label>Body <input id="body" type="text" placeholder="Notification text" /></label>
+<button id="send">Send</button>
+<div id="status"></div>
+<script>
+  document.getElementById('send').addEventListener('click', async () => {
+    const title = document.getElementById('title').value;
+    const body = document.getElementById('body').value;
+    document.getElementById('status').textContent = 'Sending...';
+    try {
+      const resp = await fetch('/.netlify/functions/send-push', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, body })
+      });
+      if (!resp.ok) {
+        const text = await resp.text();
+        document.getElementById('status').textContent = 'Failed: ' + text;
+      } else {
+        document.getElementById('status').textContent = 'Notification sent!';
+      }
+    } catch (err) {
+      document.getElementById('status').textContent = 'Error: ' + err.message;
+    }
+  });
+</script>
+</body>
+</html>

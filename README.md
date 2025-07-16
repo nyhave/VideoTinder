@@ -108,3 +108,4 @@ Firebase Admin SDK to send notifications via the v1 API. Trigger it by making a
 `POST` request to `/.netlify/functions/send-push` with a JSON body containing a
 `body` field and optional `title`.
 
+A small helper page (`netlify/functions/index.html`) lets you trigger a test notification directly from the deployed site. It posts the title and body to `/.netlify/functions/send-push` and shows the result.
