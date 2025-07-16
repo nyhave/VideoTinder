@@ -8,7 +8,7 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 webPush.setVapidDetails(
-  'mailto:example@example.com',
+  'mailto:nyhave@gmail.com',
   process.env.WEB_PUSH_PUBLIC_KEY,
   process.env.WEB_PUSH_PRIVATE_KEY
 );
