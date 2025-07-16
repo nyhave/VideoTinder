@@ -114,17 +114,19 @@ export default function ChatScreen({ userId, onStartCall }) {
     }),
       active ? (
       React.createElement(React.Fragment, null,
-        React.createElement('div', { className:'flex flex-col items-center' },
-          activeProfile.photoURL ?
-            React.createElement('img', { src: activeProfile.photoURL, className: 'w-24 h-24 rounded-full object-cover self-center mb-2' }) :
-            React.createElement(UserIcon, { className: 'w-24 h-24 text-pink-500 self-center mb-2' }),
-          activeProfile.verified && React.createElement('span', { className:'text-green-600 text-sm' }, 'Verified')
+        React.createElement('div', { className: 'flex items-center gap-2 mb-2' },
+          React.createElement('div', { className: 'flex flex-col items-center' },
+            activeProfile.photoURL ?
+              React.createElement('img', { src: activeProfile.photoURL, className: 'w-16 h-16 rounded-full object-cover' }) :
+              React.createElement(UserIcon, { className: 'w-16 h-16 text-pink-500' }),
+            activeProfile.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
+          ),
+          React.createElement('p', { className: 'flex-1 font-medium' }, `${activeProfile.name || ''}, ${activeProfile.birthday ? getAge(activeProfile.birthday) : activeProfile.age || ''}, ${activeProfile.city || ''}`),
+          React.createElement(Button, {
+            className: 'bg-pink-500 text-white',
+            onClick: () => onStartCall && onStartCall([userId, active.profileId].sort().join('-'))
+          }, incomingCall ? 'Deltag i opkald' : 'Foretag opkald')
         ),
-        React.createElement('p', { className: 'text-center font-medium mb-2' }, `${activeProfile.name || ''}, ${activeProfile.birthday ? getAge(activeProfile.birthday) : activeProfile.age || ''}, ${activeProfile.city || ''}`),
-        React.createElement(Button, {
-          className: 'bg-pink-500 text-white mb-2 self-center',
-          onClick: () => onStartCall && onStartCall([userId, active.profileId].sort().join('-'))
-        }, incomingCall ? 'Deltag i opkald' : 'Foretag opkald'),
         React.createElement('div', { ref: messagesRef, className: 'flex-1 bg-gray-100 p-4 rounded space-y-3 flex flex-col overflow-y-auto' },
           (active.messages || []).map((m,i) => {
             const fromSelf = m.from === userId;
