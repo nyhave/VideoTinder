@@ -30,6 +30,52 @@ import {
 } from 'firebase/messaging';
 import { fcmReg } from './swRegistration.js';
 
+function urlB64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+export async function subscribeToWebPush(userId) {
+  if (typeof window === 'undefined') return null;
+  if (Notification.permission === 'denied') return null;
+  let permission = Notification.permission;
+  if (permission === 'default') {
+    try {
+      permission = await Notification.requestPermission();
+    } catch (err) {
+      console.error('Failed to request notification permission', err);
+      return null;
+    }
+  }
+  if (permission !== 'granted') return null;
+
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) {
+      const appKey = urlB64ToUint8Array(process.env.WEB_PUSH_PUBLIC_KEY);
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: appKey
+      });
+    }
+    await setDoc(doc(db, 'webPushSubscriptions', sub.endpoint), {
+      ...sub.toJSON(),
+      userId
+    });
+    return sub;
+  } catch (err) {
+    console.error('Failed to subscribe to web push', err);
+    return null;
+  }
+}
+
 export const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -108,7 +154,8 @@ export {
   deleteObject,
   messaging,
   onMessage,
-  requestNotificationPermission
+  requestNotificationPermission,
+  subscribeToWebPush
 };
 
 export { storage };

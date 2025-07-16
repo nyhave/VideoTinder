@@ -1,6 +1,6 @@
 {
   "name": "videotpush",
-  "version": "1.0.31",
+  "version": "1.0.32",
   "description": "A minimal React PWA for swiping short videos and speed dating.",
   "scripts": {
     "start": "npx serve .",
@@ -14,7 +14,8 @@
     "lucide-react": "^0.322.0",
     "rc-slider": "^11.1.8",
     "react": "^17.0.0",
-    "react-dom": "^17.0.0"
+    "react-dom": "^17.0.0",
+    "web-push": "^3.5.4"
   },
   "devDependencies": {
     "@parcel/packager-raw-url": "^2.15.4",

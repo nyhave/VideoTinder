@@ -17,7 +17,7 @@ import ActiveCallsScreen from './components/ActiveCallsScreen.jsx';
 import ReportedContentScreen from './components/ReportedContentScreen.jsx';
 import AboutScreen from './components/AboutScreen.jsx';
 import FunctionTestScreen from './components/FunctionTestScreen.jsx';
-import { useCollection, requestNotificationPermission, db, doc, updateDoc, increment } from './firebase.js';
+import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment } from './firebase.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 
 
@@ -80,6 +80,7 @@ export default function VideotpushApp() {
   useEffect(() => {
     if (loggedIn && userId) {
       requestNotificationPermission(userId);
+      subscribeToWebPush(userId);
     }
   }, [loggedIn, userId]);
 
