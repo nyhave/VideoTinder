@@ -141,7 +141,7 @@ export default function RealDateApp() {
       )
     ),
 
-    React.createElement('div', { className: 'flex-1 mt-16' },
+    React.createElement('div', { className: 'flex-1', style: { marginTop: 'calc(env(safe-area-inset-top, 0px) + 4rem)' } },
       videoCallId ?
         React.createElement(VideoCallPage, { matchId: videoCallId, userId, onBack: () => setVideoCallId(null) }) :
         React.createElement(React.Fragment, null,
