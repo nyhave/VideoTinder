@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import RealDateApp from './RealDateApp.jsx';
+import VideotpushApp from './VideotpushApp.jsx';
 
-ReactDOM.render(React.createElement(RealDateApp), document.getElementById('root'));
+ReactDOM.render(React.createElement(VideotpushApp), document.getElementById('root'));
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
