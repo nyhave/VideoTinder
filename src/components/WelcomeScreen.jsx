@@ -67,7 +67,7 @@ export default function WelcomeScreen({ onLogin }) {
         type: 'date',
         className: 'border p-2',
         value: birthday,
-        onChange: e => { setBirthday(e.target.value); setShowBirthdayOverlay(false); },
+        onChange: e => setBirthday(e.target.value),
         onBlur: handleBirthdayBlur,
         autoFocus: true
       })
@@ -100,7 +100,7 @@ export default function WelcomeScreen({ onLogin }) {
           className: 'border p-2 mb-2 w-full',
           value: birthday,
           onFocus: () => setShowBirthdayOverlay(true),
-          onChange: e => { setBirthday(e.target.value); setShowBirthdayOverlay(false); },
+          onChange: e => setBirthday(e.target.value),
           placeholder: 'F\u00f8dselsdag'
         }),
         React.createElement('label', { className:'block mb-1' }, t('email')),
