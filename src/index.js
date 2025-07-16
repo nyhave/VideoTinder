@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import VideotpushApp from './VideotpushApp.jsx';
 import { setFcmReg } from './swRegistration.js';
+import { firebaseConfig } from './firebase.js';
 
 ReactDOM.render(React.createElement(VideotpushApp), document.getElementById('root'));
 
@@ -10,9 +11,11 @@ if ('serviceWorker' in navigator) {
     // Register the main service worker generated in the production build
     await navigator.serviceWorker.register(new URL('../public/service-worker.js', import.meta.url));
 
-    // Register the Firebase messaging service worker bundled under the public
-    // directory
-    const fcmReg = await navigator.serviceWorker.register(new URL('../public/firebase-messaging-sw.js', import.meta.url));
+    // Register the Firebase messaging service worker now located under src
+    const fcmReg = await navigator.serviceWorker.register(new URL('./firebase-messaging-sw.js', import.meta.url));
+    // Send Firebase config to the service worker so it can initialize
+    const sw = fcmReg.active || fcmReg.waiting || fcmReg.installing;
+    sw?.postMessage({ type: 'INIT_FIREBASE', config: firebaseConfig });
     setFcmReg(fcmReg);
   });
 }
