@@ -4,10 +4,13 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { db, collection, getDocs, setDoc, doc } from '../firebase.js';
 import StatsChart from './StatsChart.jsx';
+import AgeDistributionChart from './AgeDistributionChart.jsx';
+import { getAge } from '../utils.js';
 
 export default function StatsScreen({ onBack }) {
   const [stats, setStats] = useState(null);
   const [history, setHistory] = useState([]);
+  const [ageDist, setAgeDist] = useState(null);
 
   useEffect(() => {
     const loadStats = async () => {
@@ -25,6 +28,20 @@ export default function StatsScreen({ onBack }) {
       const videoCount = profilesSnap.docs.reduce((acc, d) => acc + ((d.data().videoClips || []).length), 0);
       const audioCount = profilesSnap.docs.reduce((acc, d) => acc + ((d.data().audioClips || []).length), 0);
       const viewCount = profilesSnap.docs.reduce((acc, d) => acc + (d.data().viewCount || 0), 0);
+
+      const dist = { '18-25': 0, '26-35': 0, '36-45': 0, '46-55': 0, '56+': 0 };
+      profilesSnap.docs.forEach(d => {
+        const p = d.data();
+        let age = p.age;
+        if (age == null && p.birthday) age = getAge(p.birthday);
+        if (age == null) return;
+        if (age <= 25) dist['18-25']++;
+        else if (age <= 35) dist['26-35']++;
+        else if (age <= 45) dist['36-45']++;
+        else if (age <= 55) dist['46-55']++;
+        else dist['56+']++;
+      });
+      setAgeDist(dist);
       const data = {
         profiles: profilesSnap.size,
         likes: likesSnap.size,
@@ -65,7 +82,8 @@ export default function StatsScreen({ onBack }) {
       React.createElement(StatsChart, { data: history, fields: 'likes', title: 'Likes over tid' }),
       React.createElement(StatsChart, { data: history, fields: 'bugOpen', title: '\u00C5bne fejl over tid' }),
       React.createElement(StatsChart, { data: history, fields: ['videos','audios'], title: 'Uploads over tid' }),
-      React.createElement(StatsChart, { data: history, fields: 'views', title: 'Profilvisninger over tid' })
+      React.createElement(StatsChart, { data: history, fields: 'views', title: 'Profilvisninger over tid' }),
+      ageDist && React.createElement(AgeDistributionChart, { distribution: ageDist, title: 'Aldersfordeling' })
     ) : React.createElement('p', null, 'Indlæser...')
   );
 }
