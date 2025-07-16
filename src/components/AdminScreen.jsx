@@ -33,12 +33,12 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         serviceWorkerRegistration: fcmReg
       });
       if (token) {
-        console.log('Client token:', token);
+        alert('Client token: ' + token);
       } else {
-        console.warn('No registration token available.');
+        alert('No registration token available.');
       }
     } catch (err) {
-      console.error('Error getting token', err);
+      alert('Error getting token: ' + err);
     }
   };
 
