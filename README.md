@@ -95,10 +95,10 @@ The profile filtering logic used on the Daily Discovery page lives in `src/selec
 ## Push Notifications
 
 This project uses Firebase Cloud Messaging to deliver updates. Notifications are
-sent using the HTTP **v1** API, authenticated with a service account. Provide
-the path to your service account JSON in the `GOOGLE_APPLICATION_CREDENTIALS`
-environment variable when sending messages from the server. The legacy
-`FCM_SERVER_KEY` is no longer used.
+sent using the HTTP **v1** API, authenticated with a service account. On
+Netlify you can either provide the path to your service account JSON via the
+`GOOGLE_APPLICATION_CREDENTIALS` environment variable or store the JSON itself in
+`FIREBASE_SERVICE_ACCOUNT_JSON`. The legacy `FCM_SERVER_KEY` is no longer used.
 
 In this repository, a Netlify Function (`netlify/functions/send-push.js`) handles
 delivery. The function reads stored push tokens from Firestore and uses the
