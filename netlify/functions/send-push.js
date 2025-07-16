@@ -1,11 +1,10 @@
 const admin = require('firebase-admin');
 
 if (!admin.apps.length) {
-  const cred = process.env.FIREBASE_SERVICE_ACCOUNT_JSON
-    ? admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON))
-    : admin.credential.applicationDefault();
+  const serviceAccount = require('../../videotinder-38b8b-firebase-adminsdk-fbsvc-5f3bef3136.json');
+
   admin.initializeApp({
-    credential: cred
+    credential: admin.credential.cert(serviceAccount)
   });
 }
 
