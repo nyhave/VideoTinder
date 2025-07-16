@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 if (!admin.apps.length) {
   const serviceAccount = require('../../videotinder-38b8b-firebase-adminsdk-fbsvc-5f3bef3136.json');
 
-  admin.initializeApp({
+  admin.initializeApp({ 
     credential: admin.credential.cert(serviceAccount)
   });
 }
