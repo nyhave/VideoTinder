@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { db } from '../firebase.js';
-import { collection, doc, setDoc, getDoc, updateDoc, addDoc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, updateDoc, addDoc, onSnapshot, getDocs, deleteDoc } from 'firebase/firestore';
 
 export default function VideoCallScreen({ matchId, userId, onEnd }) {
   const localVideoRef = useRef(null);
@@ -98,7 +98,19 @@ export default function VideoCallScreen({ matchId, userId, onEnd }) {
       pc.close();
       unsubAnsCand && unsubAnsCand();
       unsubOffer && unsubOffer();
-      onEnd && onEnd();
+      (async () => {
+        try {
+          const offerSnap = await getDocs(offerCandidates);
+          await Promise.all(offerSnap.docs.map(d => deleteDoc(d.ref)));
+          const answerSnap = await getDocs(answerCandidates);
+          await Promise.all(answerSnap.docs.map(d => deleteDoc(d.ref)));
+          await deleteDoc(callDoc);
+        } catch (err) {
+          console.error('Failed to clean up call', err);
+        } finally {
+          onEnd && onEnd();
+        }
+      })();
     };
   }, [matchId, userId, onEnd]);
 
