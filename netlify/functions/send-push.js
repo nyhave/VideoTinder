@@ -29,7 +29,7 @@ exports.handler = async function(event) {
       tokens,
       notification: { title, body }
     });
-    return { statusCode: 200, body: JSON.stringify({ success: true }) };
+    return { statusCode: 200, body: JSON.stringify({ success: true, count: tokens.length }) };
   } catch (err) {
     console.error(err);
     return { statusCode: 500, body: 'Server error' };
