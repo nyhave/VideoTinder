@@ -4,7 +4,9 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
-import { db, updateDoc, doc } from '../firebase.js';
+import { db, updateDoc, doc, messaging } from '../firebase.js';
+import { getToken } from 'firebase/messaging';
+import { fcmReg } from '../swRegistration.js';
 
 
 export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenFunctionTest, profiles = [], userId, onSwitchProfile }) {
@@ -21,6 +23,22 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     if (!resp.ok) {
       const text = await resp.text();
       alert('Failed: ' + text);
+    }
+  };
+
+  const logClientToken = async () => {
+    try {
+      const token = await getToken(messaging, {
+        vapidKey: process.env.VAPID_KEY,
+        serviceWorkerRegistration: fcmReg
+      });
+      if (token) {
+        console.log('Client token:', token);
+      } else {
+        console.warn('No registration token available.');
+      }
+    } catch (err) {
+      console.error('Error getting token', err);
     }
   };
 
@@ -57,7 +75,8 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => seedData().then(() => alert('Databasen er nulstillet')) }, 'Reset database'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Push notifications'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: logClientToken }, 'Log client token'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Statistik'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenStats }, 'Vis statistik'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Matchlog'),
