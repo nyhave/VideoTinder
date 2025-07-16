@@ -12,7 +12,11 @@ import { useCollection, db, doc, setDoc, deleteDoc, getDoc } from '../firebase.j
 export default function LikesScreen({ userId, onSelectProfile }) {
   const profiles = useCollection('profiles');
   const likes = useCollection('likes', 'profileId', userId);
-  const likedProfiles = profiles.filter(p => likes.some(l => l.userId === p.id));
+  const matches = useCollection('matches', 'userId', userId);
+  const matchedIds = matches.map(m => m.profileId);
+  const likedProfiles = profiles.filter(p =>
+    likes.some(l => l.userId === p.id) && !matchedIds.includes(p.id)
+  );
   const currentUser = profiles.find(p => p.id === userId) || {};
   const hasSubscription = currentUser.subscriptionExpires && new Date(currentUser.subscriptionExpires) > new Date();
 
@@ -61,7 +65,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
   };
 
   return React.createElement(Card,{className:'p-6 m-4 shadow-xl bg-white/90 flex flex-col'},
-    React.createElement(SectionTitle,{title:'Du er blevet liket', colorClass:'text-yellow-600'}),
+    React.createElement(SectionTitle,{title:'Nye personer har liket dig', colorClass:'text-yellow-600'}),
     React.createElement('p',{className:'mb-4 text-gray-500'},`${likedProfiles.length} profiler`),
     React.createElement('div',{className: hasSubscription ? 'flex-1' : 'flex-1 filter blur-sm pointer-events-none'},
       React.createElement('ul',{className:'space-y-4'},
