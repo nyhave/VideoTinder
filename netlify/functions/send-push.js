@@ -1,3 +1,10 @@
+// POST payload example:
+// {
+//   "body": "Hello there",
+//   "title": "RealDate",
+//   "tokens": ["token1", "token2"] // optional
+// }
+
 const admin = require('firebase-admin');
 const fs = require('fs');
 const path = require('path');
@@ -37,12 +44,15 @@ exports.handler = async function(event) {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
   try {
-    const { title = 'RealDate', body } = JSON.parse(event.body || '{}');
+    const { title = 'RealDate', body, tokens: bodyTokens } = JSON.parse(event.body || '{}');
     if (!body) {
       return { statusCode: 400, body: 'Invalid payload' };
     }
-    const tokensSnap = await db.collection('pushTokens').get();
-    const tokens = tokensSnap.docs.map(d => d.id);
+    let tokens = bodyTokens;
+    if (!Array.isArray(tokens) || tokens.length === 0) {
+      const tokensSnap = await db.collection('pushTokens').get();
+      tokens = tokensSnap.docs.map(d => d.id);
+    }
     if (tokens.length === 0) {
       await db.collection('serverLogs').add({
         timestamp: new Date().toISOString(),

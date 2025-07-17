@@ -105,7 +105,7 @@ The profile filtering logic used on the Daily Discovery page lives in `src/selec
 Firebase Cloud Messaging delivers updates on Android and desktop browsers. Notifications are sent using the HTTP **v1** API authenticated with a service account. Provide the service account path via `GOOGLE_APPLICATION_CREDENTIALS` or store the JSON in `FIREBASE_SERVICE_ACCOUNT_JSON`.
 The Netlify functions automatically read these variables and initialize the Firebase Admin SDK if present.
 
-`netlify/functions/send-push.js` sends FCM messages to tokens stored in Firestore. Trigger it with a `POST` request containing a `body` and optional `title`.
+`netlify/functions/send-push.js` sends FCM messages to tokens stored in Firestore. Trigger it with a `POST` request containing a `body` and optional `title`. You can also pass a `tokens` array to send to specific devices instead of using the stored tokens.
 
 For iOS PWAs, Safari only supports the standard Web Push API. A separate function (`netlify/functions/send-webpush.js`) sends notifications using VAPID keys defined in `WEB_PUSH_PUBLIC_KEY` and `WEB_PUSH_PRIVATE_KEY`. Subscriptions are stored in the `webPushSubscriptions` collection.
 
@@ -132,7 +132,9 @@ netlify dev
 The functions will be available at `http://localhost:8888`. You can send a test push with a `POST` request:
 
 ```bash
-curl -X POST http://localhost:8888/.netlify/functions/send-push -H "Content-Type: application/json" -d '{"body":"Hello from local"}'
+curl -X POST http://localhost:8888/.netlify/functions/send-push \
+  -H "Content-Type: application/json" \
+  -d '{"body":"Hello from local","tokens":["YOUR_TOKEN"]}'
 ```
 
 Make sure the Firebase credentials (`FIREBASE_*`) and VAPID keys (`WEB_PUSH_PUBLIC_KEY` and `WEB_PUSH_PRIVATE_KEY`) are set in your `.env` file so the functions can authenticate.
