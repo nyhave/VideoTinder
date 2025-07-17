@@ -23,7 +23,7 @@ button{margin-top:1em;padding:0.5em 1em;}
     const body = document.getElementById('body').value;
     document.getElementById('status').textContent = 'Sending...';
     try {
-      const resp = await fetch('/.netlify/functions/send-push', {
+      const resp = await fetch('/.netlify/functions/send-webpush', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title, body })
