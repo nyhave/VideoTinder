@@ -3,8 +3,8 @@
 Videotpush is a small prototype for experimenting with a slower approach to online dating.
 The **VideotpushApp** demonstrates daily video discovery, chat, reflection notes
 and simple profile management powered by Firebase. The code is hosted on
-[GitHub](https://github.com/nyhave/videotpush) and a live demo is available at
-[https://videotpush.netlify.app](https://videotpush.netlify.app/).
+[GitHub](https://github.com/nyhave/videotpush) and the live demo is served from
+GitHub Pages. Serverless functions for push notifications and scoring run on Netlify.
 
 ## Features
 
@@ -52,13 +52,13 @@ To create a production build run:
 ```bash
 npm run build
 ```
-The compiled files will be placed in the `dist` folder. When changes are pushed to `main`, Netlify automatically builds the project and deploys the site to [https://videotpush.netlify.app](https://videotpush.netlify.app/).
+The compiled files will be placed in the `dist` folder. When changes are pushed to `main`, a GitHub Actions workflow builds the project and publishes the site to **GitHub Pages**. The workflow lives in `.github/workflows/build.yml` where the necessary secrets are written to a `.env` file during the build step.
 
 Dette er en test af workflow.
 
-## Netlify Deployment
+## Netlify Functions
 
-Before Netlify can build the site, you must provide your Firebase credentials as environment variables under **Site settings > Environment variables**:
+Push notifications and scoring logic run as Netlify Functions. These functions are hosted on Netlify while the rest of the site lives on GitHub Pages. Configure the following environment variables in **Site settings > Environment variables** on Netlify:
 
 ```
 FIREBASE_API_KEY
@@ -70,7 +70,10 @@ FIREBASE_APP_ID
 GOOGLE_APPLICATION_CREDENTIALS
 WEB_PUSH_PUBLIC_KEY
 WEB_PUSH_PRIVATE_KEY
+FUNCTIONS_BASE_URL
 ```
+
+`FUNCTIONS_BASE_URL` should point to your Netlify site URL (for example `https://videotpush.netlify.app`). It allows the GitHub Pages site to call the functions hosted on Netlify.
 
 Example values for the VAPID keys:
 
@@ -79,7 +82,7 @@ WEB_PUSH_PUBLIC_KEY=BBEqVE7NHz0GV-hLpS5057_Txhn1YMvDutBAfRS4mBwFb7JIV-BJGhUbNedF
 WEB_PUSH_PRIVATE_KEY=6NCE6tcVeb6maHj6RtfiXPR5owid3lhxrPq4puqwZ_A
 ```
 
-During the build job, these secrets are written to a `.env` file so Parcel can embed the Firebase config.
+During the GitHub Pages build job, these secrets are written to a `.env` file so Parcel can embed the Firebase config.
 
 ## Configuring CORS for Firebase Storage
 
