@@ -28,7 +28,11 @@ exports.handler = async function(event) {
     await Promise.all(subs.map(sub =>
       webPush.sendNotification(sub, payload).catch(err => {
         if (err.statusCode === 410 || err.statusCode === 404) {
-          const safeId = Buffer.from(sub.endpoint).toString('base64');
+          const safeId = Buffer.from(sub.endpoint)
+            .toString('base64')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
           db.collection('webPushSubscriptions').doc(safeId).delete().catch(() => {});
         }
       })
