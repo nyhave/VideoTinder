@@ -4,13 +4,27 @@ const path = require('path');
 const webPush = require('web-push');
 
 if (!admin.apps.length) {
-  const credPath = path.join(__dirname, '../../videotinder-38b8b-firebase-adminsdk-fbsvc-5f3bef3136.json');
   try {
-    if (!fs.existsSync(credPath)) {
-      console.error('Firebase credential file missing:', credPath);
+    let serviceAccount = null;
+    if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+      serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
     } else {
-      const serviceAccount = require(credPath);
-      admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+      const credPath =
+        process.env.GOOGLE_APPLICATION_CREDENTIALS ||
+        path.join(
+          __dirname,
+          '../../videotinder-38b8b-firebase-adminsdk-fbsvc-5f3bef3136.json'
+        );
+      if (fs.existsSync(credPath)) {
+        serviceAccount = require(credPath);
+      } else {
+        console.error('Firebase credential file missing:', credPath);
+      }
+    }
+    if (serviceAccount) {
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount)
+      });
     }
   } catch (err) {
     console.error('Failed to load Firebase credentials:', err);
