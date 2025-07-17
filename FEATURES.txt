@@ -22,3 +22,4 @@ Switch between user profiles
 Reset database from 
 Show Firestore credentials status
 Reusable profile filtering helper for Netlify Functions
+Track logs for individual users from admin

@@ -28,6 +28,7 @@ GitHub Pages. Serverless functions for push notifications and scoring run on Net
 * Statistik over hvor mange gange profiler bliver åbnet
 * Graf over antallet af \u00E5bne fejl pr. dag
 * Matchlog kan åbnes fra adminområdet
+* Mulighed for at følge log for en specifik bruger
 
 
 ## Farvetema
