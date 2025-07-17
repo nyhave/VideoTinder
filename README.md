@@ -114,3 +114,26 @@ The helper page (`netlify/functions/index.html`) posts data to `/.netlify/functi
 When notifications are received in the browser, the service worker now broadcasts a `PUSH_RECEIVED` message. The app listens for this event and stores a log entry in the `textLogs` collection when extended logging is enabled. This makes it easier to confirm that pushes arrive on the device.
 
 From the admin screen you can send a notification that triggers **both** functions so that users receive updates regardless of whether they registered for FCM or standard Web Push.
+
+## Local Push Testing
+
+To try push notifications locally, run the Netlify functions on your machine. First install the Netlify CLI:
+
+```bash
+npm install -g netlify-cli
+```
+
+Then start the dev server:
+
+```bash
+netlify dev
+```
+
+The functions will be available at `http://localhost:8888`. You can send a test push with a `POST` request:
+
+```bash
+curl -X POST http://localhost:8888/.netlify/functions/send-push -H "Content-Type: application/json" -d '{"body":"Hello from local"}'
+```
+
+Make sure the Firebase credentials (`FIREBASE_*`) and VAPID keys (`WEB_PUSH_PUBLIC_KEY` and `WEB_PUSH_PRIVATE_KEY`) are set in your `.env` file so the functions can authenticate.
+
