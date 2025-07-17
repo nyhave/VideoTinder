@@ -10,6 +10,7 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
   const [userId, setUserId] = useState(profiles[0]?.id || '');
   const logs = useCollection('textLogs', 'details.userId', userId);
   const sorted = logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  const hasReceivedNotification = logs.some(l => l.event === 'push received');
 
   const [checkResult, setCheckResult] = useState({});
 
@@ -78,6 +79,9 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
       ),
       React.createElement('li', { className: checkResult.fcmToken ? 'text-green-600' : 'text-red-600' },
         (checkResult.fcmToken ? '✔' : '✖') + ' FCM token tilg\u00e6ngelig'
+      ),
+      React.createElement('li', { className: hasReceivedNotification ? 'text-green-600' : 'text-red-600' },
+        (hasReceivedNotification ? '✔' : '✖') + ' Har modtaget mindst en notifikation'
       ),
       React.createElement('li', { className: checkResult.online ? 'text-green-600' : 'text-red-600' },
         (checkResult.online ? '✔' : '✖') + ' Browseren er online'
