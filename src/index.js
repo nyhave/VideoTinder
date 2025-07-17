@@ -11,7 +11,10 @@ if ('serviceWorker' in navigator) {
     // Register the main service worker generated in the production build
     await navigator.serviceWorker
       .register(new URL('../public/service-worker.js', import.meta.url))
-      .then(reg => console.log('SW registered', reg))
+      .then(reg => {
+        console.log('SW registered', reg);
+        logEvent('main service worker registered');
+      })
       .catch(err => console.error('SW registration failed', err));
 
     // Register the Firebase messaging service worker now located under src
@@ -19,6 +22,7 @@ if ('serviceWorker' in navigator) {
       .register(new URL('./firebase-messaging-sw.js', import.meta.url))
       .then(reg => {
         console.log('SW registered', reg);
+        logEvent('firebase messaging service worker registered');
         return reg;
       })
       .catch(err => {
