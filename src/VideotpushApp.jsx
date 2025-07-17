@@ -81,6 +81,9 @@ export default function VideotpushApp() {
   useEffect(() => {
     if(loggedIn && userId){
       logEvent('active user', { userId });
+      updateDoc(doc(db, 'profiles', userId), {
+        lastActive: new Date().toISOString()
+      }).catch(err => console.error('Failed to update lastActive', err));
     }
   }, [loggedIn, userId]);
 
