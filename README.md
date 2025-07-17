@@ -109,6 +109,7 @@ The profile filtering logic used on the Daily Discovery page lives in `src/selec
 ## Push Notifications
 
 Firebase Cloud Messaging delivers updates on Android and desktop browsers. Notifications are sent using the HTTP **v1** API authenticated with a service account. Provide the service account path via `GOOGLE_APPLICATION_CREDENTIALS` or store the JSON in `FIREBASE_SERVICE_ACCOUNT_JSON`.
+The Netlify functions automatically read these variables and initialize the Firebase Admin SDK if present.
 
 `netlify/functions/send-push.js` sends FCM messages to tokens stored in Firestore. Trigger it with a `POST` request containing a `body` and optional `title`.
 
