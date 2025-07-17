@@ -24,11 +24,25 @@ exports.handler = async function(event) {
     if (tokens.length === 0) {
       return { statusCode: 200, body: 'No tokens' };
     }
-    await admin.messaging().sendEachForMulticast({
+    const res = await admin.messaging().sendEachForMulticast({
       tokens,
       notification: { title, body }
     });
-    return { statusCode: 200, body: JSON.stringify({ success: true, count: tokens.length }) };
+
+    const badTokens = res.responses
+      .map((r, i) => (!r.success ? tokens[i] : null))
+      .filter(Boolean);
+
+    if (badTokens.length) {
+      const batch = db.batch();
+      badTokens.forEach(t => batch.delete(db.collection('pushTokens').doc(t)));
+      await batch.commit();
+    }
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ successCount: res.successCount, removedCount: badTokens.length })
+    };
   } catch (err) {
     console.error(err);
     return { statusCode: 500, body: 'Server error' };
