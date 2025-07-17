@@ -72,17 +72,7 @@ function urlB64ToUint8Array(base64String) {
 
 export async function subscribeToWebPush(userId) {
   if (typeof window === 'undefined') return null;
-  if (Notification.permission === 'denied') return null;
-  let permission = Notification.permission;
-  if (permission === 'default') {
-    try {
-      permission = await Notification.requestPermission();
-    } catch (err) {
-      console.error('Failed to request notification permission', err);
-      return null;
-    }
-  }
-  if (permission !== 'granted') return null;
+  if (Notification.permission !== 'granted') return null;
 
   try {
     logEvent('subscribeToWebPush start', { userId });

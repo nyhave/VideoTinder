@@ -89,8 +89,10 @@ export default function VideotpushApp() {
 
   useEffect(() => {
     if (loggedIn && userId) {
-      requestNotificationPermission(userId);
-      subscribeToWebPush(userId);
+      (async () => {
+        await requestNotificationPermission(userId);
+        await subscribeToWebPush(userId);
+      })();
     }
   }, [loggedIn, userId]);
 
