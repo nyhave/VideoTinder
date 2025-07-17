@@ -32,6 +32,7 @@ export default function VideotpushApp() {
     return stored === 'true';
   });
   const DEFAULT_USER_ID = '101';
+  const LAST_USER_KEY = 'preferredUserId';
   const [userId, setUserId] = useState(null);
   const profiles = useCollection('profiles');
   const chats = useCollection('matches', 'userId', userId);
@@ -49,6 +50,15 @@ export default function VideotpushApp() {
 
   const openProfileSettings = () => {
     setTab('profile');
+    setViewProfile(null);
+  };
+
+  const saveUserAndLogout = () => {
+    if (userId) {
+      localStorage.setItem(LAST_USER_KEY, userId);
+    }
+    setLoggedIn(false);
+    setTab('discovery');
     setViewProfile(null);
   };
 
@@ -74,8 +84,12 @@ export default function VideotpushApp() {
       return;
     }
     if(!userId && profiles.length){
-      const defaultProfile = profiles.find(p => p.id === DEFAULT_USER_ID);
-      setUserId((defaultProfile || profiles[0]).id);
+      const savedId = localStorage.getItem(LAST_USER_KEY);
+      const defaultProfile =
+        (savedId && profiles.find(p => p.id === savedId)) ||
+        profiles.find(p => p.id === DEFAULT_USER_ID) ||
+        profiles[0];
+      if (defaultProfile) setUserId(defaultProfile.id);
     }
   },[loggedIn, profiles, userId]);
 
@@ -179,6 +193,7 @@ export default function VideotpushApp() {
             ageRange,
             onChangeAgeRange: setAgeRange,
             onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);},
+            onSaveUserLogout: saveUserAndLogout,
             onViewPublicProfile: viewOwnPublicProfile,
             onOpenAbout: ()=>setTab('about')
           }),
