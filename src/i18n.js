@@ -17,7 +17,7 @@ const messages = {
   chat: { en:'Chat', da:'Samtale', sv:'Chat', es:'Chat', fr:'Discussion', de:'Chat' },
   checkInTitle:{ en:'Daily reflection', da:'Dagens refleksion', sv:'Dagens reflektion', es:'Reflexión diaria', fr:'Réflexion du jour', de:'Tägliche Reflexion' },
   profile:{ en:'Profile', da:'Profil', sv:'Profil', es:'Perfil', fr:'Profil', de:'Profil' },
-  about:{ en:'About Videotpush', da:'Om Videotpush', sv:'Om Videotpush', es:'Acerca de Videotpush', fr:'À propos de Videotpush', de:'Über Videotpush' },
+  about:{ en:'About RealDate', da:'Om RealDate', sv:'Om RealDate', es:'Acerca de RealDate', fr:'À propos de RealDate', de:'Über RealDate' },
   loadMore:{ en:'Load more', da:'Hent flere...', sv:'Hämta fler...', es:'Cargar más', fr:'Charger plus', de:'Mehr laden' },
   revealBestMatch:{ en:'Reveal best match', da:'Afslør bedste match', sv:'Visa bästa matchen', es:'Revelar mejor pareja', fr:'Révéler le meilleur match', de:'Bestes Match anzeigen' },
   noProfiles:{ en:'No profiles found', da:'Ingen profiler fundet', sv:'Inga profiler', es:'No hay perfiles', fr:'Aucun profil', de:'Keine Profile gefunden'},

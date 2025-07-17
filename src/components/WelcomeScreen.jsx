@@ -138,11 +138,11 @@ export default function WelcomeScreen({ onLogin }) {
       )
     ) : (
       React.createElement(React.Fragment, null,
-        React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, 'Om Videotpush'),
+        React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, 'Om RealDate'),
         React.createElement('p', { className: 'mb-4 text-gray-700' },
           'Velkommen til en ny måde at date på. Her er fokus på at finde den personen med den rigtige energi. Det gør vi gennem lyd og video fremfor billeder.' +
           'Her handler det ikke om hurtige swipes.' +
-          'Videotpush er for dig, der søger noget ægte og meningsfuldt.'
+          'RealDate er for dig, der søger noget ægte og meningsfuldt.'
         ),
         
         React.createElement(Button, {

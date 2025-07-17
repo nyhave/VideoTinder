@@ -1,6 +1,6 @@
-# Videotpush
+# RealDate
 
-Videotpush is a small prototype for experimenting with a slower approach to online dating.
+RealDate is a small prototype for experimenting with a slower approach to online dating.
 The **VideotpushApp** demonstrates daily video discovery, chat, reflection notes
 and simple profile management powered by Firebase. The code is hosted on
 [GitHub](https://github.com/nyhave/videotpush) and the live demo is served from
