@@ -44,7 +44,15 @@ exports.handler = async function(event) {
       }
     })
   );
-  return { statusCode: 200, body: JSON.stringify({ success: true, count: subs.length, errors: failed.length }) };
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      success: true,
+      count: subs.length,
+      errors: failed.length,
+      subscriptions: subs
+    })
+  };
   } catch (err) {
     console.error(err);
     return { statusCode: 500, body: 'Server error!' };
