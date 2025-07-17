@@ -42,6 +42,12 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     }
   };
 
+  const showVapidKeys = () => {
+    const pub = process.env.WEB_PUSH_PUBLIC_KEY || '';
+    const priv = process.env.WEB_PUSH_PRIVATE_KEY || '';
+    alert('Public: ' + pub + '\nPrivate: ' + priv);
+  };
+
   const recoverMissing = async () => {
     const profileRef = doc(db, 'profiles', userId);
     const snap = await getDoc(profileRef);
@@ -114,6 +120,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: logClientToken }, 'Log client token'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showVapidKeys }, 'Show VAPID keys'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Statistik'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenStats }, 'Vis statistik'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Matchlog'),
