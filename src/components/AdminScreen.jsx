@@ -23,14 +23,24 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
 
   const sendPush = async body => {
     const base = process.env.FUNCTIONS_BASE_URL || '';
-    const resp = await fetch(`${base}/.netlify/functions/send-push`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ body })
-    });
-    if (!resp.ok) {
-      const text = await resp.text();
-      alert('Failed: ' + text);
+
+    const send = async endpoint => {
+      const resp = await fetch(`${base}/.netlify/functions/${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ body })
+      });
+      if (!resp.ok) {
+        const text = await resp.text();
+        throw new Error(text);
+      }
+    };
+
+    try {
+      await send('send-push');
+      await send('send-webpush');
+    } catch (err) {
+      alert('Failed: ' + err.message);
     }
   };
 
