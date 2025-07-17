@@ -33,8 +33,9 @@ button{margin-top:1em;padding:0.5em 1em;}
         document.getElementById('status').textContent = 'Failed: ' + text;
       } else {
         const data = await resp.json().catch(() => ({}));
-        document.getElementById('status').textContent =
-          'Notification sent to ' + (data.count ?? '?') + ' tokens';
+        let msg = 'Notification sent to ' + (data.count ?? '?') + ' subscriptions';
+        if (data.errors) msg += ' (' + data.errors + ' failed)';
+        document.getElementById('status').textContent = msg;
       }
     } catch (err) {
       document.getElementById('status').textContent = 'Error: ' + err.message;

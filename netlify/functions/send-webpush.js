@@ -22,11 +22,16 @@ exports.handler = async function(event) {
     if (!body) {
       return { statusCode: 400, body: 'Invalid payload' };
     }
-    const subsSnap = await db.collection('webPushSubscriptions').get();
-    const subs = subsSnap.docs.map(d => d.data());
-    const payload = JSON.stringify({ title, body });
-    await Promise.all(subs.map(sub =>
-      webPush.sendNotification(sub, payload).catch(err => {
+  const subsSnap = await db.collection('webPushSubscriptions').get();
+  const subs = subsSnap.docs.map(d => d.data());
+  const payload = JSON.stringify({ title, body });
+  const failed = [];
+  await Promise.all(
+    subs.map(async sub => {
+      try {
+        await webPush.sendNotification(sub, payload);
+      } catch (err) {
+        console.error('Failed to send push to', sub.endpoint, err);
         if (err.statusCode === 410 || err.statusCode === 404) {
           const safeId = Buffer.from(sub.endpoint)
             .toString('base64')
@@ -35,9 +40,11 @@ exports.handler = async function(event) {
             .replace(/=+$/, '');
           db.collection('webPushSubscriptions').doc(safeId).delete().catch(() => {});
         }
-      })
-    ));
-    return { statusCode: 200, body: JSON.stringify({ success: true, count: subs.length }) };
+        failed.push(sub.endpoint);
+      }
+    })
+  );
+  return { statusCode: 200, body: JSON.stringify({ success: true, count: subs.length, errors: failed.length }) };
   } catch (err) {
     console.error(err);
     return { statusCode: 500, body: 'Server error!' };
