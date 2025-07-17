@@ -112,3 +112,5 @@ Firebase Cloud Messaging delivers updates on Android and desktop browsers. Notif
 For iOS PWAs, Safari only supports the standard Web Push API. A separate function (`netlify/functions/send-webpush.js`) sends notifications using VAPID keys defined in `WEB_PUSH_PUBLIC_KEY` and `WEB_PUSH_PRIVATE_KEY`. Subscriptions are stored in the `webPushSubscriptions` collection.
 
 The helper page (`netlify/functions/index.html`) posts data to `/.netlify/functions/send-push` for FCM tokens. To test Web Push on iOS, post to `/.netlify/functions/send-webpush` instead.
+
+When notifications are received in the browser, the service worker now broadcasts a `PUSH_RECEIVED` message. The app listens for this event and stores a log entry in the `textLogs` collection when extended logging is enabled. This makes it easier to confirm that pushes arrive on the device.

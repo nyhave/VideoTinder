@@ -28,12 +28,16 @@ self.addEventListener('push', event => {
     try { data = event.data.json(); } catch { data = { body: event.data.text() }; }
   }
   const title = data.title || 'Videotpush';
-  event.waitUntil(
-    self.registration.showNotification(title, {
+  event.waitUntil((async () => {
+    await self.registration.showNotification(title, {
       body: data.body,
       icon: 'icon-192.png'
-    })
-  );
+    });
+    const clientsArr = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const client of clientsArr) {
+      client.postMessage({ type: 'PUSH_RECEIVED', payload: data });
+    }
+  })());
 });
 
 self.addEventListener('notificationclick', event => {
