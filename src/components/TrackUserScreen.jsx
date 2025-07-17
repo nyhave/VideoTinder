@@ -61,30 +61,45 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
     ),
     React.createElement(Button, { className: 'mb-4 bg-blue-500 text-white px-4 py-2 rounded', onClick: resetLogs }, 'Reset log'),
     React.createElement('h3', { className: 'text-lg font-semibold mb-2' }, 'Tjekliste for push notifikationer'),
-    React.createElement('ul', { className: 'list-disc ml-5 mb-4 text-sm' },
-      React.createElement('li', { className: checkResult.installed ? 'text-green-600' : 'text-red-600' },
-        (checkResult.installed ? '✔' : '✖') + ' App installeret p\u00e5 hjemmesk\u00e6rm'
+    React.createElement('div', { className: 'space-y-2 mb-4 text-sm' },
+      React.createElement('div', null,
+        React.createElement('h4', { className: 'font-medium' }, 'F\u00e6lles'),
+        React.createElement('ul', { className: 'list-disc ml-5' },
+          React.createElement('li', { className: checkResult.installed ? 'text-green-600' : 'text-red-600' },
+            (checkResult.installed ? '✔' : '✖') + ' App installeret p\u00e5 hjemmesk\u00e6rm'
+          ),
+          React.createElement('li', { className: checkResult.permission === 'granted' ? 'text-green-600' : 'text-red-600' },
+            (checkResult.permission === 'granted' ? '✔' : '✖') + ' Tilladelse til notifikationer'
+          ),
+          React.createElement('li', { className: checkResult.dbConn ? 'text-green-600' : 'text-red-600' },
+            (checkResult.dbConn ? '✔' : '✖') + ' Forbindelse til databasen'
+          ),
+          React.createElement('li', { className: checkResult.serviceWorkerActive ? 'text-green-600' : 'text-red-600' },
+            (checkResult.serviceWorkerActive ? '✔' : '✖') + ' Service worker aktiv'
+          ),
+          React.createElement('li', { className: hasReceivedNotification ? 'text-green-600' : 'text-red-600' },
+            (hasReceivedNotification ? '✔' : '✖') + ' Har modtaget mindst en notifikation'
+          ),
+          React.createElement('li', { className: checkResult.online ? 'text-green-600' : 'text-red-600' },
+            (checkResult.online ? '✔' : '✖') + ' Browseren er online'
+          )
+        )
       ),
-      React.createElement('li', { className: checkResult.permission === 'granted' ? 'text-green-600' : 'text-red-600' },
-        (checkResult.permission === 'granted' ? '✔' : '✖') + ' Tilladelse til notifikationer'
+      React.createElement('div', null,
+        React.createElement('h4', { className: 'font-medium' }, 'iOS (Web Push)'),
+        React.createElement('ul', { className: 'list-disc ml-5' },
+          React.createElement('li', { className: checkResult.webPushSub ? 'text-green-600' : 'text-red-600' },
+            (checkResult.webPushSub ? '✔' : '✖') + ' Web Push subscription registreret'
+          )
+        )
       ),
-      React.createElement('li', { className: checkResult.dbConn ? 'text-green-600' : 'text-red-600' },
-        (checkResult.dbConn ? '✔' : '✖') + ' Forbindelse til databasen'
-      ),
-      React.createElement('li', { className: checkResult.serviceWorkerActive ? 'text-green-600' : 'text-red-600' },
-        (checkResult.serviceWorkerActive ? '✔' : '✖') + ' Service worker aktiv'
-      ),
-      React.createElement('li', { className: checkResult.webPushSub ? 'text-green-600' : 'text-red-600' },
-        (checkResult.webPushSub ? '✔' : '✖') + ' Web Push subscription registreret'
-      ),
-      React.createElement('li', { className: checkResult.fcmToken ? 'text-green-600' : 'text-red-600' },
-        (checkResult.fcmToken ? '✔' : '✖') + ' FCM token tilg\u00e6ngelig'
-      ),
-      React.createElement('li', { className: hasReceivedNotification ? 'text-green-600' : 'text-red-600' },
-        (hasReceivedNotification ? '✔' : '✖') + ' Har modtaget mindst en notifikation'
-      ),
-      React.createElement('li', { className: checkResult.online ? 'text-green-600' : 'text-red-600' },
-        (checkResult.online ? '✔' : '✖') + ' Browseren er online'
+      React.createElement('div', null,
+        React.createElement('h4', { className: 'font-medium' }, 'Android/desktop (FCM)'),
+        React.createElement('ul', { className: 'list-disc ml-5' },
+          React.createElement('li', { className: checkResult.fcmToken ? 'text-green-600' : 'text-red-600' },
+            (checkResult.fcmToken ? '✔' : '✖') + ' FCM token tilg\u00e6ngelig'
+          )
+        )
       )
     ),
     sorted.length ?
