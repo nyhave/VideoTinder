@@ -146,9 +146,8 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         await updateDoc(doc(db, 'profiles', userId), { verified: !prof.verified });
       }
     }, (profiles.find(p => p.id === userId) || {}).verified ? 'Fjern verificering' : 'Verificer profil'),
-  React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, 'Reset database'),
+  React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, 'Database'),
   React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => seedData().then(() => alert('Databasen er nulstillet')) }, 'Reset database'),
-  React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Hent mistet fra DB'),
   React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: recoverMissing }, 'Hent mistet fra DB'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Logging'),
     React.createElement('label', { className: 'flex items-center mb-2' },
