@@ -56,6 +56,32 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     alert('Public: ' + pub + '\nPrivate: ' + priv);
   };
 
+  const showPushInfo = async () => {
+    const values = {
+      FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
+      FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
+      FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+      FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
+      FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
+      FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
+      WEB_PUSH_PUBLIC_KEY: process.env.WEB_PUSH_PUBLIC_KEY,
+      WEB_PUSH_PRIVATE_KEY: process.env.WEB_PUSH_PRIVATE_KEY,
+      GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+      FUNCTIONS_BASE_URL: process.env.FUNCTIONS_BASE_URL
+    };
+    let permission = Notification.permission;
+    try {
+      if (permission === 'default') {
+        permission = await Notification.requestPermission();
+      }
+    } catch (err) {
+      permission = 'error:' + err.message;
+    }
+    const lines = Object.entries(values).map(([k, v]) => `${k}: ${v}`);
+    lines.push('Notification permission: ' + permission);
+    alert(lines.join('\n'));
+  };
+
   const recoverMissing = async () => {
     const profileRef = doc(db, 'profiles', userId);
     const snap = await getDoc(profileRef);
@@ -135,6 +161,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: logClientToken }, 'Log client token'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showVapidKeys }, 'Show VAPID keys'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showPushInfo }, 'Show push info'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Statistik'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenStats }, 'Vis statistik'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Matchlog'),
