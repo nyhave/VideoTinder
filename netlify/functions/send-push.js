@@ -44,6 +44,13 @@ exports.handler = async function(event) {
     const tokensSnap = await db.collection('pushTokens').get();
     const tokens = tokensSnap.docs.map(d => d.id);
     if (tokens.length === 0) {
+      await db.collection('serverLogs').add({
+        timestamp: new Date().toISOString(),
+        type: 'send-push',
+        body,
+        tokens: 0,
+        note: 'no tokens'
+      }).catch(() => {});
       return { statusCode: 200, body: 'No tokens' };
     }
     const res = await admin.messaging().sendEachForMulticast({
@@ -61,12 +68,26 @@ exports.handler = async function(event) {
       await batch.commit();
     }
 
+    await db.collection('serverLogs').add({
+      timestamp: new Date().toISOString(),
+      type: 'send-push',
+      body,
+      tokens: tokens.length,
+      successCount: res.successCount,
+      removedCount: badTokens.length
+    }).catch(() => {});
+
     return {
       statusCode: 200,
       body: JSON.stringify({ successCount: res.successCount, removedCount: badTokens.length })
     };
   } catch (err) {
     console.error(err);
+    await db.collection('serverLogs').add({
+      timestamp: new Date().toISOString(),
+      type: 'send-push',
+      error: err.message
+    }).catch(() => {});
     return { statusCode: 500, body: 'Server error' };
   }
 };

@@ -9,7 +9,7 @@ import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
 
 
-export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenFunctionTest, onOpenTextLog, onOpenUserLog, profiles = [], userId, onSwitchProfile }) {
+export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenFunctionTest, onOpenTextLog, onOpenUserLog, onOpenServerLog, profiles = [], userId, onSwitchProfile }) {
 
   const { lang, setLang } = useLang();
   const t = useT();
@@ -189,6 +189,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: logClientToken }, 'Log client token'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showVapidKeys }, 'Show VAPID keys'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showPushInfo }, 'Show push info'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenServerLog }, 'Server log'),
 
 
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Aktive opkald'),

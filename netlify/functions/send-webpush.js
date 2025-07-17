@@ -89,6 +89,14 @@ exports.handler = async function(event) {
       }
     })
   );
+
+  await db.collection('serverLogs').add({
+    timestamp: new Date().toISOString(),
+    type: 'send-webpush',
+    body,
+    subscriptions: subs.length,
+    failed: failed.length
+  }).catch(() => {});
   return {
     statusCode: 200,
     body: JSON.stringify({
@@ -100,6 +108,11 @@ exports.handler = async function(event) {
   };
   } catch (err) {
     console.error(err);
+    await db.collection('serverLogs').add({
+      timestamp: new Date().toISOString(),
+      type: 'send-webpush',
+      error: err.message
+    }).catch(() => {});
     return { statusCode: 500, body: 'Server error!' };
   }
 };

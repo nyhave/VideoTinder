@@ -19,6 +19,7 @@ import AboutScreen from './components/AboutScreen.jsx';
 import FunctionTestScreen from './components/FunctionTestScreen.jsx';
 import TextLogScreen from './components/TextLogScreen.jsx';
 import TrackUserScreen from './components/TrackUserScreen.jsx';
+import ServerLogScreen from './components/ServerLogScreen.jsx';
 import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment, logEvent } from './firebase.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 
@@ -183,7 +184,7 @@ export default function VideotpushApp() {
             onOpenAbout: ()=>setTab('about')
           }),
           tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenTextLog: ()=>setTab('textlog'), onOpenUserLog: ()=>setTab('trackuser'), profiles, userId, onSwitchProfile: id=>setUserId(id) }),
+          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenTextLog: ()=>setTab('textlog'), onOpenUserLog: ()=>setTab('trackuser'), onOpenServerLog: ()=>setTab('serverlog'), profiles, userId, onSwitchProfile: id=>setUserId(id) }),
           tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
           tab==='matchlog' && React.createElement(MatchLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='scorelog' && React.createElement(ScoreLogScreen, { onBack: ()=>setTab('admin') }),
@@ -193,6 +194,7 @@ export default function VideotpushApp() {
           tab==='functiontest' && React.createElement(FunctionTestScreen, { onBack: ()=>setTab('admin') }),
           tab==='textlog' && React.createElement(TextLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='trackuser' && React.createElement(TrackUserScreen, { onBack: ()=>setTab('admin'), profiles }),
+          tab==='serverlog' && React.createElement(ServerLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='about' && React.createElement(AboutScreen, null)
         )
     ),
