@@ -15,37 +15,50 @@ button{margin-top:1em;padding:0.5em 1em;}
 <h1>Send Test Push</h1>
 <label>Title <input id="title" type="text" placeholder="Optional" /></label>
 <label>Body <input id="body" type="text" placeholder="Notification text" /></label>
+<fieldset style="margin-top:1em;">
+  <legend>Send to</legend>
+  <label><input type="radio" name="target" value="ios" checked /> iOS</label>
+  <label><input type="radio" name="target" value="other" /> Andre</label>
+  <label><input type="radio" name="target" value="both" /> Begge</label>
+</fieldset>
 <button id="send">Send</button>
 <div id="status"></div>
 <pre id="subs" style="white-space: pre-wrap;"></pre>
 <script>
+  const post = async (endpoint, payload) => {
+    const resp = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!resp.ok) throw new Error(await resp.text());
+    return resp.json().catch(() => ({}));
+  };
+
   document.getElementById('send').addEventListener('click', async () => {
     const title = document.getElementById('title').value;
     const body = document.getElementById('body').value;
-    document.getElementById('status').textContent = 'Sending...';
+    const target = document.querySelector('input[name="target"]:checked').value;
+    const statusEl = document.getElementById('status');
+    const subsEl = document.getElementById('subs');
+    statusEl.textContent = 'Sending...';
+    subsEl.textContent = '';
     try {
-      const resp = await fetch('/.netlify/functions/send-webpush', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, body })
-      });
-      if (!resp.ok) {
-        const text = await resp.text();
-        document.getElementById('status').textContent = 'Failed: ' + text;
-        document.getElementById('subs').textContent = '';
-      } else {
-        const data = await resp.json().catch(() => ({}));
-        let msg = 'Notification sent to ' + (data.count ?? '?') + ' subscriptions';
-        if (data.errors) msg += ' (' + data.errors + ' failed)';
-        document.getElementById('status').textContent = msg;
+      const parts = [];
+      if (target === 'ios' || target === 'both') {
+        const data = await post('/.netlify/functions/send-webpush', { title, body });
+        parts.push('iOS: ' + (data.count ?? '?') + ' subscriptions');
         if (Array.isArray(data.subscriptions)) {
-          document.getElementById('subs').textContent = JSON.stringify(data.subscriptions, null, 2);
-        } else {
-          document.getElementById('subs').textContent = '';
+          subsEl.textContent = JSON.stringify(data.subscriptions, null, 2);
         }
       }
+      if (target === 'other' || target === 'both') {
+        const data = await post('/.netlify/functions/send-push', { title, body });
+        parts.push('Andre: ' + (data.successCount ?? '?') + ' sent');
+      }
+      statusEl.textContent = parts.join(' | ');
     } catch (err) {
-      document.getElementById('status').textContent = 'Error: ' + err.message;
+      statusEl.textContent = 'Error: ' + err.message;
     }
   });
 </script>
