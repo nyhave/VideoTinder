@@ -19,7 +19,7 @@ import { languages, useT } from '../i18n.js';
 import { getInterestCategory } from '../interests.js';
 import { getAge } from '../utils.js';
 
-export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, onViewPublicProfile = () => {}, onOpenAbout = () => {}, viewerId, onBack }) {
+export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, onSaveUserLogout, onViewPublicProfile = () => {}, onOpenAbout = () => {}, viewerId, onBack }) {
   const [profile,setProfile]=useState(null);
   const t = useT();
   const audioRef = useRef();
@@ -395,15 +395,21 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   return React.createElement('div', { className:'mt-8' },
     !publicView && React.createElement(Card, { className: 'p-4 m-4 shadow-xl bg-white/90' },
-      React.createElement('div', { className: 'flex items-center justify-between' },
+      React.createElement('div', { className: 'flex items-center justify-between gap-2' },
         React.createElement(Button, {
           className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
           onClick: onViewPublicProfile
         }, 'View public profile'),
-        React.createElement('button', {
-          className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
-          onClick: onLogout
-        }, 'Logout')
+        React.createElement('div', { className: 'flex gap-2' },
+          React.createElement('button', {
+            className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
+            onClick: onLogout
+          }, 'Logout'),
+          onSaveUserLogout && React.createElement('button', {
+            className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
+            onClick: onSaveUserLogout
+          }, 'Save & Logout')
+        )
       ),
       React.createElement('div', { className: 'mt-4 flex justify-end' },
         React.createElement(Button, {
