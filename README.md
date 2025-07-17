@@ -117,3 +117,5 @@ For iOS PWAs, Safari only supports the standard Web Push API. A separate functio
 The helper page (`netlify/functions/index.html`) posts data to `/.netlify/functions/send-push` for FCM tokens. To test Web Push on iOS, post to `/.netlify/functions/send-webpush` instead.
 
 When notifications are received in the browser, the service worker now broadcasts a `PUSH_RECEIVED` message. The app listens for this event and stores a log entry in the `textLogs` collection when extended logging is enabled. This makes it easier to confirm that pushes arrive on the device.
+
+From the admin screen you can send a notification that triggers **both** functions so that users receive updates regardless of whether they registered for FCM or standard Web Push.
