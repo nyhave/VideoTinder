@@ -17,7 +17,8 @@ import ActiveCallsScreen from './components/ActiveCallsScreen.jsx';
 import ReportedContentScreen from './components/ReportedContentScreen.jsx';
 import AboutScreen from './components/AboutScreen.jsx';
 import FunctionTestScreen from './components/FunctionTestScreen.jsx';
-import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment } from './firebase.js';
+import TextLogScreen from './components/TextLogScreen.jsx';
+import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment, logEvent } from './firebase.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 
 
@@ -78,6 +79,12 @@ export default function VideotpushApp() {
   },[loggedIn, profiles, userId]);
 
   useEffect(() => {
+    if(loggedIn && userId){
+      logEvent('active user', { userId });
+    }
+  }, [loggedIn, userId]);
+
+  useEffect(() => {
     if (loggedIn && userId) {
       requestNotificationPermission(userId);
       subscribeToWebPush(userId);
@@ -104,7 +111,7 @@ export default function VideotpushApp() {
 
 
   if(!loggedIn) return React.createElement(LanguageProvider, { value:{lang,setLang} },
-    React.createElement(WelcomeScreen, { onLogin: () => setLoggedIn(true) })
+    React.createElement(WelcomeScreen, { onLogin: () => { setLoggedIn(true); logEvent('login'); } })
   );
   const selectProfile = async id => {
     setViewProfile(id);
@@ -170,7 +177,7 @@ export default function VideotpushApp() {
             onOpenAbout: ()=>setTab('about')
           }),
           tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenFunctionTest: ()=>setTab('functiontest'), profiles, userId, onSwitchProfile: id=>setUserId(id) }),
+          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenTextLog: ()=>setTab('textlog'), profiles, userId, onSwitchProfile: id=>setUserId(id) }),
           tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
           tab==='matchlog' && React.createElement(MatchLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='scorelog' && React.createElement(ScoreLogScreen, { onBack: ()=>setTab('admin') }),
@@ -178,6 +185,7 @@ export default function VideotpushApp() {
           tab==='reports' && React.createElement(ReportedContentScreen, { onBack: ()=>setTab('admin') }),
           tab==='bugs' && React.createElement(BugReportsScreen, { onBack: ()=>setTab('admin') }),
           tab==='functiontest' && React.createElement(FunctionTestScreen, { onBack: ()=>setTab('admin') }),
+          tab==='textlog' && React.createElement(TextLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='about' && React.createElement(AboutScreen, null)
         )
     ),

@@ -1,6 +1,6 @@
 {
   "name": "videotpush",
-  "version": "1.0.32",
+  "version": "1.0.34",
   "description": "A minimal React PWA for swiping short videos and speed dating.",
   "scripts": {
     "start": "npx serve .",
