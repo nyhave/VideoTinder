@@ -22,7 +22,8 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   };
 
   const sendPush = async body => {
-    const resp = await fetch('/.netlify/functions/send-push', {
+    const base = process.env.FUNCTIONS_BASE_URL || '';
+    const resp = await fetch(`${base}/.netlify/functions/send-push`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ body })
