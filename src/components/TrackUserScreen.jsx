@@ -1,13 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
-import { useCollection, db, collection, query, where, getDocs, deleteDoc } from '../firebase.js';
+import { useCollection, db, collection, query, where, getDocs, deleteDoc, messaging } from '../firebase.js';
+import { getToken } from 'firebase/messaging';
+import { fcmReg } from '../swRegistration.js';
 
 export default function TrackUserScreen({ profiles = [], onBack }) {
   const [userId, setUserId] = useState(profiles[0]?.id || '');
   const logs = useCollection('textLogs', 'details.userId', userId);
   const sorted = logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  const [checkResult, setCheckResult] = useState({});
+
+  useEffect(() => {
+    async function runChecks() {
+      if (typeof window === 'undefined') return;
+      const installed = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      const permission = Notification.permission;
+      const online = navigator.onLine;
+      let serviceWorkerActive = false;
+      let pushSubscription = false;
+      let fcmToken = false;
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        serviceWorkerActive = !!reg;
+        const sub = await reg.pushManager.getSubscription();
+        pushSubscription = !!sub;
+      } catch {}
+      if (messaging && permission === 'granted') {
+        try {
+          const tok = await getToken(messaging, { vapidKey: process.env.VAPID_KEY, serviceWorkerRegistration: fcmReg });
+          fcmToken = !!tok;
+        } catch {}
+      }
+      let dbConn = false;
+      try {
+        await getDocs(collection(db, 'profiles'));
+        dbConn = true;
+      } catch {}
+      setCheckResult({ installed, permission, online, serviceWorkerActive, pushSubscription, fcmToken, dbConn });
+    }
+    runChecks();
+  }, []);
 
   const resetLogs = async () => {
     const q = query(collection(db, 'textLogs'), where('details.userId', '==', userId));
@@ -22,6 +57,30 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
       profiles.map(p => React.createElement('option', { key: p.id, value: p.id }, p.name))
     ),
     React.createElement(Button, { className: 'mb-4 bg-blue-500 text-white px-4 py-2 rounded', onClick: resetLogs }, 'Reset log'),
+    React.createElement('h3', { className: 'text-lg font-semibold mb-2' }, 'Tjekliste for push notifikationer'),
+    React.createElement('ul', { className: 'list-disc ml-5 mb-4 text-sm' },
+      React.createElement('li', { className: checkResult.installed ? 'text-green-600' : 'text-red-600' },
+        (checkResult.installed ? '✔' : '✖') + ' App installeret p\u00e5 hjemmesk\u00e6rm'
+      ),
+      React.createElement('li', { className: checkResult.permission === 'granted' ? 'text-green-600' : 'text-red-600' },
+        (checkResult.permission === 'granted' ? '✔' : '✖') + ' Tilladelse til notifikationer'
+      ),
+      React.createElement('li', { className: checkResult.dbConn ? 'text-green-600' : 'text-red-600' },
+        (checkResult.dbConn ? '✔' : '✖') + ' Forbindelse til databasen'
+      ),
+      React.createElement('li', { className: checkResult.serviceWorkerActive ? 'text-green-600' : 'text-red-600' },
+        (checkResult.serviceWorkerActive ? '✔' : '✖') + ' Service worker aktiv'
+      ),
+      React.createElement('li', { className: checkResult.pushSubscription ? 'text-green-600' : 'text-red-600' },
+        (checkResult.pushSubscription ? '✔' : '✖') + ' Push subscription registreret'
+      ),
+      React.createElement('li', { className: checkResult.fcmToken ? 'text-green-600' : 'text-red-600' },
+        (checkResult.fcmToken ? '✔' : '✖') + ' FCM token tilg\u00e6ngelig'
+      ),
+      React.createElement('li', { className: checkResult.online ? 'text-green-600' : 'text-red-600' },
+        (checkResult.online ? '✔' : '✖') + ' Browseren er online'
+      )
+    ),
     sorted.length ?
       React.createElement('ul', { className: 'space-y-2' },
         sorted.map(l =>
