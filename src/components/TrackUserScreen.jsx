@@ -20,13 +20,15 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
       const permission = Notification.permission;
       const online = navigator.onLine;
       let serviceWorkerActive = false;
-      let pushSubscription = false;
+      let webPushSub = false;
       let fcmToken = false;
       try {
         const reg = await navigator.serviceWorker.ready;
         serviceWorkerActive = !!reg;
         const sub = await reg.pushManager.getSubscription();
-        pushSubscription = !!sub;
+        if (sub && sub.endpoint) {
+          webPushSub = sub.endpoint.includes('apple.com');
+        }
       } catch {}
       if (messaging && permission === 'granted') {
         try {
@@ -39,7 +41,7 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
         await getDocs(collection(db, 'profiles'));
         dbConn = true;
       } catch {}
-      setCheckResult({ installed, permission, online, serviceWorkerActive, pushSubscription, fcmToken, dbConn });
+      setCheckResult({ installed, permission, online, serviceWorkerActive, webPushSub, fcmToken, dbConn });
     }
     runChecks();
   }, []);
@@ -71,8 +73,8 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
       React.createElement('li', { className: checkResult.serviceWorkerActive ? 'text-green-600' : 'text-red-600' },
         (checkResult.serviceWorkerActive ? '✔' : '✖') + ' Service worker aktiv'
       ),
-      React.createElement('li', { className: checkResult.pushSubscription ? 'text-green-600' : 'text-red-600' },
-        (checkResult.pushSubscription ? '✔' : '✖') + ' Push subscription registreret'
+      React.createElement('li', { className: checkResult.webPushSub ? 'text-green-600' : 'text-red-600' },
+        (checkResult.webPushSub ? '✔' : '✖') + ' Web Push subscription registreret'
       ),
       React.createElement('li', { className: checkResult.fcmToken ? 'text-green-600' : 'text-red-600' },
         (checkResult.fcmToken ? '✔' : '✖') + ' FCM token tilg\u00e6ngelig'
