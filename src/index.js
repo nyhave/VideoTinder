@@ -9,10 +9,22 @@ ReactDOM.render(React.createElement(VideotpushApp), document.getElementById('roo
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     // Register the main service worker generated in the production build
-    await navigator.serviceWorker.register(new URL('../public/service-worker.js', import.meta.url));
+    await navigator.serviceWorker
+      .register(new URL('../public/service-worker.js', import.meta.url))
+      .then(reg => console.log('SW registered', reg))
+      .catch(err => console.error('SW registration failed', err));
 
     // Register the Firebase messaging service worker now located under src
-    const fcmReg = await navigator.serviceWorker.register(new URL('./firebase-messaging-sw.js', import.meta.url));
+    const fcmReg = await navigator.serviceWorker
+      .register(new URL('./firebase-messaging-sw.js', import.meta.url))
+      .then(reg => {
+        console.log('SW registered', reg);
+        return reg;
+      })
+      .catch(err => {
+        console.error('SW registration failed', err);
+        throw err;
+      });
     // Send Firebase config to the service worker so it can initialize
     const sw = fcmReg.active || fcmReg.waiting || fcmReg.installing;
     sw?.postMessage({ type: 'INIT_FIREBASE', config: firebaseConfig });
