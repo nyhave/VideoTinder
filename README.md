@@ -75,15 +75,8 @@ FUNCTIONS_BASE_URL
 
 `FUNCTIONS_BASE_URL` should point to your Netlify site URL (for example `https://videotpush.netlify.app`). It allows the GitHub Pages site to call the functions hosted on Netlify.
 
-Example values for the VAPID keys:
-
-```
-WEB_PUSH_PUBLIC_KEY=BBEqVE7NHz0GV-hLpS5057_Txhn1YMvDutBAfRS4mBwFb7JIV-BJGhUbNedFRWhVXeYhkU-fAPH25ZLOlKHBxXk
-WEB_PUSH_PRIVATE_KEY=6NCE6tcVeb6maHj6RtfiXPR5owid3lhxrPq4puqwZ_A
-```
-
-During the GitHub Pages build job, these secrets are written to a `.env` file so Parcel can embed the Firebase config.
-
+VAPID KEYS are used on both Github Pages and Netlify in both environments that are created as secrets. During the GitHub Pages build job, these secrets are written to a `.env` file so Parcel can embed the Firebase config.
+  
 ## Configuring CORS for Firebase Storage
 
 If you host the app on your own domain, the browser uploads directly
