@@ -17,6 +17,7 @@ button{margin-top:1em;padding:0.5em 1em;}
 <label>Body <input id="body" type="text" placeholder="Notification text" /></label>
 <button id="send">Send</button>
 <div id="status"></div>
+<pre id="subs" style="white-space: pre-wrap;"></pre>
 <script>
   document.getElementById('send').addEventListener('click', async () => {
     const title = document.getElementById('title').value;
@@ -31,11 +32,17 @@ button{margin-top:1em;padding:0.5em 1em;}
       if (!resp.ok) {
         const text = await resp.text();
         document.getElementById('status').textContent = 'Failed: ' + text;
+        document.getElementById('subs').textContent = '';
       } else {
         const data = await resp.json().catch(() => ({}));
         let msg = 'Notification sent to ' + (data.count ?? '?') + ' subscriptions';
         if (data.errors) msg += ' (' + data.errors + ' failed)';
         document.getElementById('status').textContent = msg;
+        if (Array.isArray(data.subscriptions)) {
+          document.getElementById('subs').textContent = JSON.stringify(data.subscriptions, null, 2);
+        } else {
+          document.getElementById('subs').textContent = '';
+        }
       }
     } catch (err) {
       document.getElementById('status').textContent = 'Error: ' + err.message;
