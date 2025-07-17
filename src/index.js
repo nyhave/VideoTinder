@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import VideotpushApp from './VideotpushApp.jsx';
 import { setFcmReg } from './swRegistration.js';
-import { firebaseConfig } from './firebase.js';
+import { firebaseConfig, logEvent } from './firebase.js';
 
 ReactDOM.render(React.createElement(VideotpushApp), document.getElementById('root'));
 
@@ -17,5 +17,10 @@ if ('serviceWorker' in navigator) {
     const sw = fcmReg.active || fcmReg.waiting || fcmReg.installing;
     sw?.postMessage({ type: 'INIT_FIREBASE', config: firebaseConfig });
     setFcmReg(fcmReg);
+    navigator.serviceWorker.addEventListener('message', event => {
+      if (event.data && event.data.type === 'PUSH_RECEIVED') {
+        logEvent('push received', event.data.payload);
+      }
+    });
   });
 }
