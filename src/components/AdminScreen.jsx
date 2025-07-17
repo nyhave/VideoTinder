@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { languages, useLang, useT } from '../i18n.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
-import { db, updateDoc, doc, getDoc, storage, listAll, ref, getDownloadURL, messaging } from '../firebase.js';
+import { db, updateDoc, doc, getDoc, storage, listAll, ref, getDownloadURL, messaging, setExtendedLogging, isExtendedLogging } from '../firebase.js';
 import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
 
 
-export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenFunctionTest, profiles = [], userId, onSwitchProfile }) {
+export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenFunctionTest, onOpenTextLog, profiles = [], userId, onSwitchProfile }) {
 
   const { lang, setLang } = useLang();
   const t = useT();
+  const [logEnabled, setLogEnabled] = useState(isExtendedLogging());
+
+  const toggleLog = () => {
+    const val = !logEnabled;
+    setLogEnabled(val);
+    setExtendedLogging(val);
+  };
 
   const sendPush = async body => {
     const resp = await fetch('/.netlify/functions/send-push', {
@@ -116,6 +123,12 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => seedData().then(() => alert('Databasen er nulstillet')) }, 'Reset database'),
   React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Hent mistet fra DB'),
   React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: recoverMissing }, 'Hent mistet fra DB'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Logging'),
+    React.createElement('label', { className: 'flex items-center mb-2' },
+      React.createElement('input', { type: 'checkbox', className: 'mr-2', checked: logEnabled, onChange: toggleLog }),
+      'Udvidet logning'
+    ),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenTextLog }, 'Se log'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Push notifications'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),

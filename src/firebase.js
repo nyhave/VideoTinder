@@ -30,6 +30,35 @@ import {
 } from 'firebase/messaging';
 import { fcmReg } from './swRegistration.js';
 
+let extendedLogging = false;
+if (typeof window !== 'undefined') {
+  extendedLogging = localStorage.getItem('extendedLogging') === 'true';
+}
+
+export function setExtendedLogging(val) {
+  extendedLogging = val;
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('extendedLogging', val ? 'true' : 'false');
+  }
+}
+
+export function isExtendedLogging() {
+  return extendedLogging;
+}
+
+export async function logEvent(event, details = {}) {
+  if (!extendedLogging) return;
+  try {
+    await setDoc(doc(collection(db, 'textLogs')), {
+      timestamp: new Date().toISOString(),
+      event,
+      details
+    });
+  } catch (err) {
+    console.error('Failed to log event', err);
+  }
+}
+
 function urlB64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -56,6 +85,7 @@ export async function subscribeToWebPush(userId) {
   if (permission !== 'granted') return null;
 
   try {
+    logEvent('subscribeToWebPush start', { userId });
     const reg = await navigator.serviceWorker.ready;
     let sub = await reg.pushManager.getSubscription();
     if (!sub) {
@@ -74,8 +104,10 @@ export async function subscribeToWebPush(userId) {
       ...sub.toJSON(),
       userId
     });
+    logEvent('subscribeToWebPush success', { userId });
     return sub;
   } catch (err) {
+    logEvent('subscribeToWebPush error', { error: err.message });
     console.error('Failed to subscribe to web push', err);
     return null;
   }
@@ -112,6 +144,7 @@ export async function requestNotificationPermission(userId) {
   if (permission !== 'granted') return null;
 
   try {
+    logEvent('requestNotificationPermission start', { userId });
     const token = await getToken(messaging, {
       vapidKey: process.env.VAPID_KEY,
       serviceWorkerRegistration: fcmReg
@@ -119,8 +152,10 @@ export async function requestNotificationPermission(userId) {
     if (token) {
       await setDoc(doc(db, 'pushTokens', token), { token, userId }, { merge: true });
     }
+    logEvent('requestNotificationPermission success', { userId });
     return token;
   } catch (err) {
+    logEvent('requestNotificationPermission error', { error: err.message });
     console.error('Failed to get FCM token', err);
     return null;
   }
@@ -160,7 +195,10 @@ export {
   messaging,
   onMessage,
   requestNotificationPermission,
-  subscribeToWebPush
+  subscribeToWebPush,
+  setExtendedLogging,
+  isExtendedLogging,
+  logEvent
 };
 
 export { storage };
