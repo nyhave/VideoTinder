@@ -38,14 +38,34 @@ webPush.setVapidDetails(
   process.env.WEB_PUSH_PRIVATE_KEY
 );
 
+function checkEnv() {
+  if (!process.env.WEB_PUSH_PUBLIC_KEY || !process.env.WEB_PUSH_PRIVATE_KEY) {
+    console.error('WEB_PUSH_* environment variables are not set');
+    return false;
+  }
+  return true;
+}
+
 exports.handler = async function(event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
+  if (!checkEnv()) {
+    return { statusCode: 500, body: 'Server configuration error' };
+  }
+
+  let parsedBody;
   try {
-    const { title = 'RealDate', body } = JSON.parse(event.body || '{}');
+    parsedBody = JSON.parse(event.body || '{}');
+  } catch (err) {
+    console.error('Failed to parse request body:', event.body, err);
+    return { statusCode: 400, body: 'Invalid JSON payload' };
+  }
+
+  try {
+    const { title = 'RealDate', body } = parsedBody;
     if (!body) {
-      return { statusCode: 400, body: 'Invalid payload' };
+      return { statusCode: 400, body: 'Invalid payload: body required' };
     }
   const subsSnap = await db.collection('webPushSubscriptions').get();
   const subs = subsSnap.docs.map(d => d.data());
