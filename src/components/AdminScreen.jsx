@@ -157,9 +157,6 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenReports }, 'Se anmeldt indhold'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Statistik'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenStats }, 'Vis statistik'),
-
-    // Troubleshooting section
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Fejlsøgning og test'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, 'Verificering'),
     React.createElement(Button, {
       className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded',
@@ -168,6 +165,9 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         await updateDoc(doc(db, 'profiles', userId), { verified: !prof.verified });
       }
     }, (profiles.find(p => p.id === userId) || {}).verified ? 'Fjern verificering' : 'Verificer profil'),
+
+    // Troubleshooting section
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Fejlsøgning og test'),
 
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, 'Database'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => seedData().then(() => alert('Databasen er nulstillet')) }, 'Reset database'),
