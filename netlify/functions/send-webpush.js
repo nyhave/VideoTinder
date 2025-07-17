@@ -1,9 +1,20 @@
 const admin = require('firebase-admin');
+const fs = require('fs');
+const path = require('path');
 const webPush = require('web-push');
 
 if (!admin.apps.length) {
-  const serviceAccount = require('../../videotinder-38b8b-firebase-adminsdk-fbsvc-5f3bef3136.json');
-  admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+  const credPath = path.join(__dirname, '../../videotinder-38b8b-firebase-adminsdk-fbsvc-5f3bef3136.json');
+  try {
+    if (!fs.existsSync(credPath)) {
+      console.error('Firebase credential file missing:', credPath);
+    } else {
+      const serviceAccount = require(credPath);
+      admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+    }
+  } catch (err) {
+    console.error('Failed to load Firebase credentials:', err);
+  }
 }
 const db = admin.firestore();
 
