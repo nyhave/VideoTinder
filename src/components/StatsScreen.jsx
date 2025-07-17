@@ -28,6 +28,11 @@ export default function StatsScreen({ onBack }) {
       const videoCount = profilesSnap.docs.reduce((acc, d) => acc + ((d.data().videoClips || []).length), 0);
       const audioCount = profilesSnap.docs.reduce((acc, d) => acc + ((d.data().audioClips || []).length), 0);
       const viewCount = profilesSnap.docs.reduce((acc, d) => acc + (d.data().viewCount || 0), 0);
+      const activeSince = Date.now() - 30 * 24 * 60 * 60 * 1000;
+      const activeUsers = profilesSnap.docs.filter(d => {
+        const last = d.data().lastActive;
+        return last && new Date(last).getTime() >= activeSince;
+      }).length;
 
       const dist = { '18-25': 0, '26-35': 0, '36-45': 0, '46-55': 0, '56+': 0 };
       profilesSnap.docs.forEach(d => {
@@ -52,7 +57,8 @@ export default function StatsScreen({ onBack }) {
         bugClosed: closedBugs,
         videos: videoCount,
         audios: audioCount,
-        views: viewCount
+        views: viewCount,
+        activeUsers
       };
       setStats(data);
 
@@ -77,6 +83,7 @@ export default function StatsScreen({ onBack }) {
       React.createElement(StatsChart, { data: history, fields: 'bugClosed', title: 'Lukkede fejl over tid' }),
       React.createElement(StatsChart, { data: history, fields: ['videos','audios'], title: 'Uploads over tid' }),
       React.createElement(StatsChart, { data: history, fields: 'views', title: 'Profilvisninger over tid' }),
+      React.createElement(StatsChart, { data: history, fields: 'activeUsers', title: 'Aktive brugere over tid' }),
       ageDist && React.createElement(AgeDistributionChart, { distribution: ageDist, title: 'Aldersfordeling' })
     ) : React.createElement('p', null, 'Indlæser...')
   );
