@@ -12,7 +12,7 @@ GitHub Pages. Serverless functions for push notifications and scoring run on Net
 * Option to buy 3 extra clips for the day
 * Monthly subscriptions with visible expiration date and stored purchase date
 * Basic chat between matched profiles with option to unmatch
-* Improved chat layout with timestamps for better readability
+* Improved chat layout with timestamps for better readability 
 * Celebration overlay when two profiles match
 * Calendar for daily reflections
 * Minimal profile settings and admin mode
