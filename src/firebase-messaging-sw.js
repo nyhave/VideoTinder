@@ -27,7 +27,7 @@ self.addEventListener('push', event => {
   if (event.data) {
     try { data = event.data.json(); } catch { data = { body: event.data.text() }; }
   }
-  const title = data.title || 'Videotpush';
+  const title = data.title || 'RealDate';
   event.waitUntil((async () => {
     await self.registration.showNotification(title, {
       body: data.body,

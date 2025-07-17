@@ -138,7 +138,7 @@ export default function VideotpushApp() {
       },
         React.createElement(Shield, { className: 'w-6 h-6 text-white' })
       ),
-      'Videotpush',
+      'RealDate',
       userId && React.createElement('div', {
         className: 'absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer',
         onClick: openProfileSettings
