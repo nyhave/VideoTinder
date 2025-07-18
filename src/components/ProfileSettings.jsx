@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart, Flag } from 'lucide-react';
+import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart, Flag, CalendarClock } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
@@ -348,6 +348,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
                 className: `w-10 h-10 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
                 onClick: !publicView ? () => setShowSnapVideoRecorder(true) : undefined
               }),
+          locked && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-8 h-8 text-pink-500' }),
           url && !publicView && React.createElement(Button, {
             className: 'mt-1 bg-pink-500 text-white p-1 rounded-full flex items-center justify-center',
             onClick: () => deleteFile('videoClips', i)
@@ -379,6 +380,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         const locked = i >= stage;
         return React.createElement('div', { key: i, className: `flex items-center relative ${locked ? 'filter blur-sm pointer-events-none' : ''}` },
           React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' }),
+          locked && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-6 h-6 text-pink-500' }),
           !publicView && React.createElement(Button, {
             className: 'ml-2 bg-pink-500 text-white p-1 rounded w-[20%] flex items-center justify-center',
             onClick: () => deleteFile('audioClips', i)
@@ -464,10 +466,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           className: 'bg-pink-500 text-white',
           onClick: () => photoRef.current && photoRef.current.click()
         }, 'Upload billede'),
-        publicView && !isOwnProfile && React.createElement(Button, {
-          className: `ml-auto bg-pink-500 text-white ${stage < 3 ? 'filter blur-sm pointer-events-none' : ''}`,
-          onClick: stage >= 3 ? toggleLike : undefined
-        }, liked ? 'Unmatch' : 'Match'),
+        publicView && !isOwnProfile && React.createElement('div', { className:'relative ml-auto' },
+          React.createElement(Button, {
+            className: `bg-pink-500 text-white ${stage < 3 ? 'filter blur-sm pointer-events-none' : ''}`,
+            onClick: stage >= 3 ? toggleLike : undefined
+          }, liked ? 'Unmatch' : 'Match'),
+          stage < 3 && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-8 h-8 text-pink-500' })
+        ),
         publicView && !isOwnProfile && React.createElement(Button, {
           className: 'ml-2 bg-red-500 text-white',
           onClick: () => setReportMode(m => !m)
