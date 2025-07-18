@@ -8,7 +8,7 @@ import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
 import ProfileSettings from './ProfileSettings.jsx';
 import VideoPreview from './VideoPreview.jsx';
-import { Star } from 'lucide-react';
+import { Star, CalendarClock } from 'lucide-react';
 
 export default function ProfileEpisode({ userId, profileId, onBack }) {
   const progressId = `${userId}-${profileId}`;
@@ -87,8 +87,9 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         const clip = (profile.videoClips || [])[i];
         const url = clip && clip.url ? clip.url : clip;
         const locked = i >= stage;
-        return React.createElement('div', { key: i, className:`w-[30%] flex flex-col items-center justify-end min-h-[160px] ${locked ? 'filter blur-sm pointer-events-none' : ''}` },
-          url && React.createElement(VideoPreview, { src: url })
+        return React.createElement('div', { key: i, className:`w-[30%] flex flex-col items-center justify-end min-h-[160px] relative ${locked ? 'filter blur-sm pointer-events-none' : ''}` },
+          url && React.createElement(VideoPreview, { src: url }),
+          locked && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-8 h-8 text-pink-500' })
         );
       })
     ),
@@ -98,11 +99,15 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         const url = clip && clip.url ? clip.url : clip;
         const locked = i >= stage;
         return React.createElement('div', { key: i, className:`flex items-center relative ${locked ? 'filter blur-sm pointer-events-none' : ''}` },
-          React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' })
+          React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' }),
+          locked && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-6 h-6 text-pink-500' })
         );
       })
     ),
-    React.createElement(Button, { className:`mt-2 w-full bg-pink-500 text-white ${stage < 3 ? 'filter blur-sm pointer-events-none' : ''}` }, t('episodeMatchPrompt')),
+    React.createElement('div', { className:'relative' },
+      React.createElement(Button, { className:`mt-2 w-full bg-pink-500 text-white ${stage < 3 ? 'filter blur-sm pointer-events-none' : ''}` }, t('episodeMatchPrompt')),
+      stage < 3 && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-8 h-8 text-pink-500' })
+    ),
     stage === 1 && React.createElement(React.Fragment, null,
       React.createElement('div', { className: 'flex justify-center gap-1 mb-2' },
         [1,2,3].map(n => (
