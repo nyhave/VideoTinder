@@ -16,7 +16,9 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const profiles = useCollection('profiles');
   const t = useT();
   const user = profiles.find(p => p.id === userId) || {};
-  const hasSubscription = user.subscriptionExpires && new Date(user.subscriptionExpires) > new Date();
+  const hasSubscription =
+    user.subscriptionExpires &&
+    new Date(user.subscriptionExpires) > getCurrentDate();
   const expiryDays = hasSubscription ? 10 : 5;
   const today = getTodayStr();
   const filtered = selectProfiles(user, profiles, ageRange);
