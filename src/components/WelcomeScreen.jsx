@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
+import InfoOverlay from './InfoOverlay.jsx';
 import { UserPlus, LogIn } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
 import { db, doc, setDoc, updateDoc, increment } from '../firebase.js';
@@ -15,6 +16,8 @@ export default function WelcomeScreen({ onLogin }) {
   const [gender, setGender] = useState('Kvinde');
   const [birthday, setBirthday] = useState('');
   const [showBirthdayOverlay, setShowBirthdayOverlay] = useState(false);
+  const [showMissingFields, setShowMissingFields] = useState(false);
+  const [triedSubmit, setTriedSubmit] = useState(false);
   const { lang } = useLang();
   const t = useT();
 
@@ -26,8 +29,14 @@ export default function WelcomeScreen({ onLogin }) {
   };
 
   const register = async () => {
-    const trimmed = name.trim();
-    if (!trimmed) return;
+    const trimmedName = name.trim();
+    const trimmedCity = city.trim();
+    const trimmedEmail = email.trim();
+    if (!trimmedName || !trimmedCity || !trimmedEmail || !birthday) {
+      setTriedSubmit(true);
+      setShowMissingFields(true);
+      return;
+    }
     // Require a valid birthday confirming the user is at least 18
     if (!birthday || getAge(birthday) < 18) {
       alert('Du skal v\u00e6re mindst 18 \u00e5r for at bruge appen');
@@ -38,9 +47,9 @@ export default function WelcomeScreen({ onLogin }) {
     const giftFrom = params.get('gift');
     const profile = {
       id,
-      name: trimmed,
-      city: city.trim(),
-      email: email.trim(),
+      name: trimmedName,
+      city: trimmedCity,
+      email: trimmedEmail,
       gender,
       interest: gender === 'Kvinde' ? 'Mand' : 'Kvinde',
       birthday,
@@ -89,46 +98,56 @@ export default function WelcomeScreen({ onLogin }) {
         autoFocus: true
       })
     ),
+    showMissingFields && React.createElement(InfoOverlay, {
+      title: t('missingFieldsTitle'),
+      onClose: () => setShowMissingFields(false)
+    },
+      React.createElement('p', null, t('missingFieldsDesc'))
+    ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       showRegister ? (
       React.createElement(React.Fragment, null,
         React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, t('register')),
         React.createElement('label', { className:'block mb-1' }, t('firstName')),
         React.createElement(Input, {
-          className: 'border p-2 mb-2 w-full',
+          className: `border p-2 mb-2 w-full ${triedSubmit && !name.trim() ? 'border-red-500' : ''}`,
           value: name,
           onChange: e => setName(e.target.value),
           placeholder: 'Fornavn',
           name: 'given-name',
-          autoComplete: 'given-name'
+          autoComplete: 'given-name',
+          required: true
         }),
         React.createElement('label', { className:'block mb-1' }, t('city')),
         React.createElement('input', {
-          className: 'border p-2 mb-2 w-full',
+          className: `border p-2 mb-2 w-full ${triedSubmit && !city.trim() ? 'border-red-500' : ''}`,
           value: city,
           onChange: e => setCity(e.target.value),
           placeholder: 'By',
           name: 'cityname',
-          autoComplete: 'address-level2'
+          autoComplete: 'address-level2',
+          required: true
         }),
         React.createElement('label', { className:'block mb-1' }, t('birthday')),
         React.createElement(Input, {
           type: 'date',
-          className: 'border p-2 mb-2 w-full',
+          className: `border p-2 mb-2 w-full ${triedSubmit && !birthday ? 'border-red-500' : ''}`,
           value: birthday,
           onFocus: () => setShowBirthdayOverlay(true),
           onChange: e => setBirthday(e.target.value),
-          placeholder: 'F\u00f8dselsdag'
+          placeholder: 'F\u00f8dselsdag',
+          required: true
         }),
         React.createElement('label', { className:'block mb-1' }, t('email')),
         React.createElement(Input, {
           type: 'email',
-          className: 'border p-2 mb-2 w-full',
+          className: `border p-2 mb-2 w-full ${triedSubmit && !email.trim() ? 'border-red-500' : ''}`,
           value: email,
           onChange: e => setEmail(e.target.value),
           placeholder: 'you@example.com',
           name: 'email',
-          autoComplete: 'email'
+          autoComplete: 'email',
+          required: true
         }),
         React.createElement('p', {
           className:'text-xs text-gray-500 mb-2'
