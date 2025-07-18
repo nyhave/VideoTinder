@@ -15,8 +15,11 @@ self.addEventListener('message', event => {
 function handleBackgroundMessages() {
   if (!messaging) return;
   messaging.onBackgroundMessage(payload => {
-    self.registration.showNotification(payload.notification.title, {
-      body: payload.notification.body,
+    const n = payload.notification || {};
+    const title = n.title || 'RealDate';
+    const body = n.body || title;
+    self.registration.showNotification(title, {
+      body,
       icon: 'icon-192.png'
     });
   });
@@ -28,9 +31,10 @@ self.addEventListener('push', event => {
     try { data = event.data.json(); } catch { data = { body: event.data.text() }; }
   }
   const title = data.title || 'RealDate';
+  const body = data.body || title;
   event.waitUntil((async () => {
     await self.registration.showNotification(title, {
-      body: data.body,
+      body,
       icon: 'icon-192.png'
     });
     const clientsArr = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
