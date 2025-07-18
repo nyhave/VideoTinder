@@ -121,6 +121,9 @@ Firebase Cloud Messaging delivers updates on Android and desktop browsers. Notif
 The Netlify functions automatically read these variables and initialize the Firebase Admin SDK if present.
 
 `netlify/functions/send-push.js` sends FCM messages to tokens stored in Firestore. Trigger it with a `POST` request containing a `body` and optional `title`. You can also pass a `tokens` array to send to specific devices instead of using the stored tokens. Include `"silent": true` to suppress notification sounds.
+Any token that FCM reports as **unregistered** or **invalid** will automatically
+be removed from the `pushTokens` collection. Temporary failures no longer delete
+tokens so testing with multiple recipients does not break subsequent sends.
 
 For iOS PWAs, Safari only supports the standard Web Push API. A separate function (`netlify/functions/send-webpush.js`) sends notifications using VAPID keys defined in `WEB_PUSH_PUBLIC_KEY` and `WEB_PUSH_PRIVATE_KEY`. Subscriptions are stored in the `webPushSubscriptions` collection. Pass `silent: true` to send a Web Push notification without sound.
 

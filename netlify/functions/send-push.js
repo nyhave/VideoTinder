@@ -87,7 +87,17 @@ exports.handler = async function(event) {
     const res = await admin.messaging().sendEachForMulticast(message);
 
     const badTokens = res.responses
-      .map((r, i) => (!r.success ? tokens[i] : null))
+      .map((r, i) => {
+        if (!r.success) {
+          const code = r.error && r.error.code;
+          if (code === 'messaging/registration-token-not-registered' ||
+              code === 'messaging/invalid-registration-token' ||
+              code === 'messaging/invalid-argument') {
+            return tokens[i];
+          }
+        }
+        return null;
+      })
       .filter(Boolean);
 
     if (badTokens.length) {
