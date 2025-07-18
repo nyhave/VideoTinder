@@ -1,4 +1,5 @@
 Daily discovery of short video clips or sound clips
+Three-day episodic flow for each profile (reflection, reaction, connection)
 Basic chat between matched profiles
 Unmatch to remove chat from both users
 Calendar interface for daily reflection notes
