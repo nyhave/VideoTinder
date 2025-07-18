@@ -120,6 +120,13 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     ),
     React.createElement('p', { className:'text-center text-sm text-gray-600 mb-2' }, stepLabels[stage-1]),
     React.createElement('p', { className:'text-center text-xs text-yellow-600 mb-2' }, t('expiresIn').replace('{days}', daysLeft)),
+    stage === 1 && React.createElement('ul', { className:'list-disc list-inside text-sm mb-4' },
+      [
+        showWatchLine && React.createElement('li', { key:'watch' }, t('level2Watch')),
+        showRatingLine && React.createElement('li', { key:'rate' }, t('level2Rate')),
+        React.createElement('li', { key:'reflect' }, t('level2Reflect'))
+      ].filter(Boolean)
+    ),
     React.createElement(SectionTitle, { title: t('episodeIntro') }),
     profile.clip && React.createElement('p', { className: 'mb-4' }, `"${profile.clip}"`),
     React.createElement(SectionTitle, { title: t('videoClips') }),
