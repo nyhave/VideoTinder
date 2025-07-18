@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getAge } from '../utils.js';
-import { User as UserIcon, PlayCircle, Heart, CalendarClock } from 'lucide-react';
+import { User as UserIcon, PlayCircle, Heart } from 'lucide-react';
 import VideoOverlay from './VideoOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import { Card } from './ui/card.js';
@@ -101,7 +101,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
           React.createElement('li',{className:'text-center text-gray-500'},'Ingen har liket dig endnu')
       )
     ),
-    !hasSubscription && React.createElement(CalendarClock,{className:'absolute inset-0 m-auto w-12 h-12 text-yellow-500 pointer-events-none'}),
+    !hasSubscription && React.createElement('span',{className:'absolute inset-0 m-auto text-yellow-500 text-sm font-semibold pointer-events-none flex items-center justify-center text-center px-2'},'Unlocks at higher levels'),
     !hasSubscription && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb premium'),
     showPurchase && React.createElement(PurchaseOverlay,{title:'Månedligt abonnement', price:'59 kr/md', onClose:()=>setShowPurchase(false), onBuy:handlePurchase},
       React.createElement('ul',{className:'list-disc list-inside text-sm space-y-1'},

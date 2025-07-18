@@ -8,7 +8,7 @@ import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
 import ProfileSettings from './ProfileSettings.jsx';
 import VideoPreview from './VideoPreview.jsx';
-import { Star, CalendarClock } from 'lucide-react';
+import { Star } from 'lucide-react';
 
 export default function ProfileEpisode({ userId, profileId, onBack }) {
   const progressId = `${userId}-${profileId}`;
@@ -148,8 +148,8 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         return React.createElement('div', { key: i, className:`w-[30%] flex flex-col items-center justify-end min-h-[160px] relative ${locked ? 'pointer-events-none' : ''}` },
           url && React.createElement(VideoPreview, { src: url, onEnded: () => handleClipEnd(i) }),
           !locked && i === stage - 1 && React.createElement('span', { className:'absolute top-1 right-1 bg-green-100 text-green-600 text-xs font-semibold px-1 rounded' }, t('newLabel')),
-          locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded' },
-            React.createElement(CalendarClock, { className:'w-8 h-8 text-pink-500' })
+          locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2' },
+            React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('unlockHigherLevels'))
           )
         );
       })
@@ -162,15 +162,15 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         return React.createElement('div', { key: i, className:`flex items-center relative ${locked ? 'pointer-events-none' : ''}` },
           React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' }),
           !locked && i === stage - 1 && React.createElement('span', { className:'absolute top-1 right-1 bg-green-100 text-green-600 text-xs font-semibold px-1 rounded' }, t('newLabel')),
-          locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded' },
-            React.createElement(CalendarClock, { className:'w-6 h-6 text-pink-500' })
+          locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2' },
+            React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('unlockHigherLevels'))
           )
         );
       })
     ),
     React.createElement('div', { className:'relative' },
-      React.createElement(Button, { className:`mt-2 w-full bg-pink-500 text-white ${stage < 3 ? 'filter blur-sm pointer-events-none' : ''}` }, t('episodeMatchPrompt')),
-      stage < 3 && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-8 h-8 text-pink-500' })
+      React.createElement(Button, { className:`mt-2 w-full bg-pink-500 text-white ${stage < 3 ? 'opacity-50 pointer-events-none' : ''}` }, t('episodeMatchPrompt')),
+      stage < 3 && React.createElement('span', { className:'absolute inset-0 m-auto text-pink-500 text-xs font-semibold flex items-center justify-center text-center px-2' }, t('unlockHigherLevels'))
     ),
     stage === 1 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
       React.createElement('div', { className: 'flex justify-center gap-1 mb-2' },
