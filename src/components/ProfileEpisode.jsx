@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDoc, db, doc, setDoc } from '../firebase.js';
-import { getTodayStr, getCurrentDate } from '../utils.js';
+import { getTodayStr, getCurrentDate, getAge } from '../utils.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
@@ -127,6 +127,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         React.createElement('li', { key:'reflect' }, t('level2Reflect'))
       ].filter(Boolean)
     ),
+    React.createElement(SectionTitle, { title: `${profile.name || ''}, ${profile.birthday ? getAge(profile.birthday) : profile.age || ''}${profile.city ? ', ' + profile.city : ''}` }),
     React.createElement(SectionTitle, { title: t('episodeIntro') }),
     profile.clip && React.createElement('p', { className: 'mb-4' }, `"${profile.clip}"`),
     React.createElement(SectionTitle, { title: t('videoClips') }),
