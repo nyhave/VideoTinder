@@ -154,3 +154,8 @@ curl -X POST http://localhost:8888/.netlify/functions/send-push \
 
 Make sure the Firebase credentials (`FIREBASE_*`) and VAPID keys (`WEB_PUSH_PUBLIC_KEY` and `WEB_PUSH_PRIVATE_KEY`) are set in your `.env` file so the functions can authenticate.
 
+
+## Planned Payment Integration
+
+Payment processing is not yet active while testers explore the current prototype. When we enable payments, we expect to handle transactions through [Stripe](https://dashboard.stripe.com/register). For now, please ignore any payment flows.
+
