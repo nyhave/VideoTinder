@@ -20,6 +20,7 @@ GitHub Pages. Serverless functions for push notifications and scoring run on Net
 * Choose up to five personal interests in profile settings
 * Profile pictures, audio clips and video clips cached for offline viewing
 * Premium page showing who liked you (subscription required)
+* Invite friends with a shareable link
 * Seed data includes 11 mandlige profiler der matcher standardbrugeren så du kan teste premium og ekstra klip
 * Video- og lydklip begrænset til 10 sekunder
   (optagelser lidt over 10s accepteres for at håndtere kodningsforsinkelser)
