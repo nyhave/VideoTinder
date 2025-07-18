@@ -38,7 +38,7 @@ Appen bruger generelt en rød/lyserød farveskala. Adminknapperne er blå, mens 
 
 ## Designretningslinjer
 
-* Profilbilleder er firkantede med afrundede hjørner for et blødt udtryk
+* Profilbilleder og ikoner er firkantede med let afrundede hjørner for et blødt udtryk
 * Layoutet holdes simpelt med brug af Tailwind CSS utility-klasser
 * Farverne følger temaet med pink som primær accentfarve
 * Komponenter bør have god luft omkring sig for at sikre læsbarhed
