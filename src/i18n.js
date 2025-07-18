@@ -77,6 +77,7 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   level2Watch:{ en:'Watch the new video or sound clip', da:'Se det nye video- eller lydklip', sv:'Titta på det nya video- eller ljudklippet', es:'Mira el nuevo vídeo o clip de sonido', fr:'Regardez la nouvelle vidéo ou le nouveau clip audio', de:'Sieh dir den neuen Video- oder Audioclip an' },
   level2Rate:{ en:'Give a private rating', da:'Giv en privat vurdering', sv:'Ge ett privat betyg', es:'Da una calificación privada', fr:'Donnez une évaluation privée', de:'Gib eine private Bewertung ab' },
   level2Reflect:{ en:'Write a private reflection', da:'Skriv en privat refleksion', sv:'Skriv en privat reflektion', es:'Escribe una reflexión privada', fr:'Écrivez une réflexion privée', de:'Schreibe eine private Reflexion' },
+  level2Intro:{ en:'Get to level 2 with {name}', da:'Kom til niveau 2 med {name}', sv:'Kom till nivå 2 med {name}', es:'Llega al nivel 2 con {name}', fr:'Atteignez le niveau 2 avec {name}', de:'Erreiche Level 2 mit {name}' },
   newLabel:{ en:'New!', da:'Nyt!', sv:'Nytt!', es:'¡Nuevo!', fr:'Nouveau !', de:'Neu!' },
 };
 
