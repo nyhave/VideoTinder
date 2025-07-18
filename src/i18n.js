@@ -62,6 +62,9 @@ linkCopied:{ en:'Link copied to clipboard', da:'Link kopieret', sv:'Länk kopier
   episodeReactionPrompt:{ en:'Send a reaction', da:'Send en reaktion', sv:'Skicka en reaktion', es:'Envía una reacción', fr:'Envoyer une réaction', de:'Sende eine Reaktion' },
   episodeReturnTomorrow:{ en:'Come back tomorrow to continue', da:'Kom tilbage i morgen for at fortsætte', sv:'Kom tillbaka i morgon för att fortsätta', es:'Vuelve mañana para continuar', fr:'Revenez demain pour continuer', de:'Komm morgen zurück, um fortzufahren' },
   episodeMatchPrompt:{ en:'Start conversation', da:'Start samtale', sv:'Starta samtal', es:'Iniciar conversación', fr:'Commencer la conversation', de:'Gespräch starten' },
+  episodeStageReflection:{ en:'Reflection', da:'Refleksion', sv:'Reflektion', es:'Reflexión', fr:'Réflexion', de:'Reflexion' },
+  episodeStageReaction:{ en:'Reaction', da:'Reaktion', sv:'Reaktion', es:'Reacción', fr:'Réaction', de:'Reaktion' },
+  episodeStageConnect:{ en:'Connect', da:'Forbind', sv:'Anslut', es:'Conectar', fr:'Connecter', de:'Verbinden' },
   missingFieldsTitle:{ en:'Missing information', da:'Mangler information', sv:'Saknar information', es:'Falta información', fr:'Informations manquantes', de:'Fehlende Angaben' },
   missingFieldsDesc:{ en:'Please fill out all required fields', da:'Udfyld venligst alle obligatoriske felter', sv:'Vänligen fyll i alla obligatoriska fält', es:'Por favor, completa todos los campos obligatorios', fr:'Veuillez remplir tous les champs obligatoires', de:'Bitte fülle alle Pflichtfelder aus' },
 };
