@@ -9,6 +9,7 @@ import { useT } from '../i18n.js';
 import ProfileSettings from './ProfileSettings.jsx';
 import VideoPreview from './VideoPreview.jsx';
 import { Star } from 'lucide-react';
+import InfoOverlay from './InfoOverlay.jsx';
 
 export default function ProfileEpisode({ userId, profileId, onBack }) {
   const progressId = `${userId}-${profileId}`;
@@ -21,6 +22,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const [reflection, setReflection] = useState('');
   const [reaction, setReaction] = useState('');
   const [rating, setRating] = useState(0);
+  const [showHelp, setShowHelp] = useState(false);
   const extendExpiry = (current) => {
     const base = current && new Date(current) > getCurrentDate()
       ? new Date(current) : getCurrentDate();
@@ -118,7 +120,8 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     });
   }
 
-  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+  return React.createElement(React.Fragment, null,
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
     React.createElement('div', { className:'w-[300px] mx-auto text-left border border-gray-300 rounded p-4 mb-4' },
       React.createElement('div', { className: 'flex justify-start gap-2 mb-2' },
@@ -135,7 +138,11 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
           showRatingLine && React.createElement('li', { key:'rate' }, t('level2Rate')),
           React.createElement('li', { key:'reflect' }, t('level2Reflect'))
         ].filter(Boolean)
-      )
+      ),
+      stage === 1 && React.createElement('p', {
+        className:'text-right text-xs text-blue-500 underline cursor-pointer mt-1',
+        onClick: ()=>setShowHelp(true)
+      }, 'Need help?')
     ),
     React.createElement(SectionTitle, { title: `${profile.name || ''}, ${profile.birthday ? getAge(profile.birthday) : profile.age || ''}${profile.city ? ', ' + profile.city : ''}` }),
     React.createElement('p', { className:'text-left text-xs text-yellow-600 mb-2' }, t('expiresIn').replace('{days}', daysLeft)),
@@ -215,5 +222,19 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       }),
       React.createElement(Button, { className: 'bg-pink-500 text-white', onClick: saveReaction }, 'Gem')
     )
-  );
+  ),
+  showHelp && React.createElement(InfoOverlay, {
+    title: 'Need help?',
+    onClose: ()=>setShowHelp(false)
+  },
+    React.createElement('div', { className:'space-y-2 text-sm' },
+      React.createElement('p', null, t('level2Intro').replace('{name}', profile.name || '')),
+      React.createElement('ul', { className:'list-disc list-inside' },
+        React.createElement('li', null, t('level2Watch')),
+        React.createElement('li', null, t('level2Rate')),
+        React.createElement('li', null, t('level2Reflect'))
+      )
+    )
+  )
+);
 }
