@@ -10,12 +10,18 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     // Register the main service worker generated in the production build
     await navigator.serviceWorker
-      .register(new URL('../public/service-worker.js', import.meta.url))
+      .register(
+        new URL('../public/service-worker.js', import.meta.url),
+        { scope: '/VideoTinder/' }
+      )
       .catch(err => console.error('SW registration failed', err));
 
     // Register the Firebase messaging service worker now located under src
     const fcmReg = await navigator.serviceWorker
-      .register(new URL('./firebase-messaging-sw.js', import.meta.url))
+      .register(
+        new URL('./firebase-messaging-sw.js', import.meta.url),
+        { scope: '/VideoTinder/' }
+      )
       .catch(err => {
         console.error('SW registration failed', err);
         throw err;
