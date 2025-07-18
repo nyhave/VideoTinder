@@ -5,21 +5,24 @@ import SectionTitle from './SectionTitle.jsx';
 import { db, collection, getDocs, setDoc, doc } from '../firebase.js';
 import StatsChart from './StatsChart.jsx';
 import AgeDistributionChart from './AgeDistributionChart.jsx';
+import PieChart from './PieChart.jsx';
 import { getAge, getTodayStr } from '../utils.js';
 
 export default function StatsScreen({ onBack }) {
   const [stats, setStats] = useState(null);
   const [history, setHistory] = useState([]);
   const [ageDist, setAgeDist] = useState(null);
+  const [inviteResults, setInviteResults] = useState(null);
 
   useEffect(() => {
     const loadStats = async () => {
-      const [profilesSnap, likesSnap, matchesSnap, reflectionsSnap, bugSnap] = await Promise.all([
+      const [profilesSnap, likesSnap, matchesSnap, reflectionsSnap, bugSnap, invitesSnap] = await Promise.all([
         getDocs(collection(db, 'profiles')),
         getDocs(collection(db, 'likes')),
         getDocs(collection(db, 'matches')),
         getDocs(collection(db, 'reflections')),
-        getDocs(collection(db, 'bugReports'))
+        getDocs(collection(db, 'bugReports')),
+        getDocs(collection(db, 'invites'))
       ]);
 
       const messageCount = matchesSnap.docs.reduce((acc, d) => acc + ((d.data().messages || []).length), 0);
@@ -48,6 +51,10 @@ export default function StatsScreen({ onBack }) {
         else dist['56+']++;
       });
       setAgeDist(dist);
+      const giftInvites = invitesSnap.docs.filter(d => d.data().gift);
+      const giftTotal = giftInvites.length;
+      const giftCreated = giftInvites.filter(d => d.data().accepted).length;
+      setInviteResults({ 'Oprettet': giftCreated, 'Ikke oprettet': giftTotal - giftCreated });
       const data = {
         profiles: profilesSnap.size,
         likes: likesSnap.size,
@@ -87,6 +94,7 @@ export default function StatsScreen({ onBack }) {
       React.createElement(StatsChart, { data: history, fields: 'views', title: 'Profilvisninger over tid' }),
       React.createElement(StatsChart, { data: history, fields: 'activeUsers', title: 'Aktive brugere over tid' }),
       React.createElement(StatsChart, { data: history, fields: 'invites', title: 'Premium invitationer over tid' }),
+      inviteResults && React.createElement(PieChart, { data: inviteResults, title: 'Premiuminvites der gav oprettelse' }),
       ageDist && React.createElement(AgeDistributionChart, { distribution: ageDist, title: 'Aldersfordeling' })
     ) : React.createElement('p', null, 'Indlæser...')
   );
