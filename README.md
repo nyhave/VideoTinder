@@ -32,6 +32,7 @@ Profiles are presented as short episodes rather than a catalog of faces. Each ep
 * Animation med nedtælling viser hvor lang tid der er tilbage under lyd- og videooptagelse
 * Daglige statistikker gemmes automatisk og vises som grafer i adminområdet
 * Statistik over hvor mange gange profiler bliver åbnet
+* Graf over antallet af premium invitationer
 * Graf over antallet af \u00E5bne fejl pr. dag
 * Matchlog kan åbnes fra adminområdet
 * Mulighed for at følge log for en specifik bruger
