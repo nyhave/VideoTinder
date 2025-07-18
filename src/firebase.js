@@ -12,6 +12,7 @@ import {
   getDoc,
   updateDoc,
   setDoc,
+  addDoc,
   arrayUnion,
   increment
 } from 'firebase/firestore';
@@ -187,6 +188,7 @@ export {
   getDoc,
   updateDoc,
   setDoc,
+  addDoc,
   arrayUnion,
   increment,
   ref,

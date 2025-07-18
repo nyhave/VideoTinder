@@ -4,6 +4,7 @@ async function loadInvite() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
   const gift = params.has('gift');
+  const inviteId = params.get('invite');
   const recipient = params.get('recipient');
   if (!id) return;
   try {
@@ -24,7 +25,10 @@ async function loadInvite() {
       picEl.appendChild(img);
     }
     const cta = document.getElementById('cta');
-    cta.href = gift ? `./index.html?gift=${id}` : `./index.html?ref=${id}`;
+    const inviteParam = inviteId ? `&invite=${inviteId}` : '';
+    cta.href = gift
+      ? `./index.html?gift=${id}${inviteParam}`
+      : `./index.html?ref=${id}${inviteParam}`;
   } catch (err) {
     console.error('Failed to load profile', err);
   }

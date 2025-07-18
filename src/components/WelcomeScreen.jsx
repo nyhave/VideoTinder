@@ -49,6 +49,7 @@ export default function WelcomeScreen({ onLogin }) {
     const id = Date.now().toString();
     const params = new URLSearchParams(window.location.search);
     const giftFrom = params.get('gift');
+    const inviteId = params.get('invite');
     const profile = {
       id,
       name: trimmedName,
@@ -81,6 +82,13 @@ export default function WelcomeScreen({ onLogin }) {
       }
     }
     await setDoc(doc(db, 'profiles', id), profile);
+    if (inviteId) {
+      try {
+        await updateDoc(doc(db,'invites', inviteId), { accepted: true, profileId: id });
+      } catch (err) {
+        console.error('Failed to update invite', err);
+      }
+    }
     setCreatedMsg(t(giftFrom ? 'profileCreatedGift' : 'profileCreated'));
     setCreatedId(id);
     setShowCreated(true);
