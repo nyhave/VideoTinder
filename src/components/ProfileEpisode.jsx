@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDoc, db, doc, setDoc } from '../firebase.js';
-import { getTodayStr } from '../utils.js';
+import { getTodayStr, getCurrentDate } from '../utils.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
@@ -18,6 +18,13 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const [reflection, setReflection] = useState('');
   const [reaction, setReaction] = useState('');
   const [rating, setRating] = useState(0);
+  const extendExpiry = (current) => {
+    const base = current && new Date(current) > getCurrentDate()
+      ? new Date(current) : getCurrentDate();
+    const next = new Date(base);
+    next.setDate(base.getDate() + 5);
+    return next.toISOString();
+  };
   useEffect(() => {
     if(progress?.rating) setRating(progress.rating);
   }, [progress]);
@@ -32,7 +39,22 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const lastDate = progress?.lastUpdated;
   const today = getTodayStr();
 
+  useEffect(() => {
+    if(!profile) return;
+    if(!progress) {
+      const expiresAt = extendExpiry();
+      setDoc(doc(db,'episodeProgress', progressId), {
+        id: progressId,
+        userId,
+        profileId,
+        stage: 1,
+        expiresAt
+      }, { merge: true }).catch(err => console.error('Failed to init progress', err));
+    }
+  }, [profile, progress]);
+
   const waiting = lastDate === today && stage !== 3;
+  const daysLeft = progress?.expiresAt ? Math.ceil((new Date(progress.expiresAt) - getCurrentDate())/86400000) : 5;
 
   const saveReflection = async () => {
     const text = reflection.trim();
@@ -44,7 +66,8 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       stage: 2,
       lastUpdated: today,
       reflection: text,
-      rating
+      rating,
+      expiresAt: extendExpiry(progress?.expiresAt)
     }, { merge: true });
   };
 
@@ -57,7 +80,8 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       profileId,
       stage: 3,
       lastUpdated: today,
-      reaction: text
+      reaction: text,
+      expiresAt: extendExpiry(progress?.expiresAt)
     }, { merge: true });
   };
 
@@ -79,6 +103,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       }))
     ),
     React.createElement('p', { className:'text-center text-sm text-gray-600 mb-2' }, stepLabels[stage-1]),
+    React.createElement('p', { className:'text-center text-xs text-yellow-600 mb-2' }, t('expiresIn').replace('{days}', daysLeft)),
     React.createElement(SectionTitle, { title: t('episodeIntro') }),
     profile.clip && React.createElement('p', { className: 'mb-4' }, `"${profile.clip}"`),
     React.createElement(SectionTitle, { title: t('videoClips') }),
