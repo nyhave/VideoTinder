@@ -32,6 +32,11 @@ if (!admin.apps.length) {
 }
 const db = admin.firestore();
 
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type'
+};
+
 webPush.setVapidDetails(
   'mailto:nyhave@gmail.com',
   process.env.WEB_PUSH_PUBLIC_KEY,
@@ -47,11 +52,14 @@ function checkEnv() {
 }
 
 exports.handler = async function(event) {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { statusCode: 405, headers, body: 'Method Not Allowed' };
   }
   if (!checkEnv()) {
-    return { statusCode: 500, body: 'Server configuration error' };
+    return { statusCode: 500, headers, body: 'Server configuration error' };
   }
 
   let parsedBody;
@@ -59,13 +67,13 @@ exports.handler = async function(event) {
     parsedBody = JSON.parse(event.body || '{}');
   } catch (err) {
     console.error('Failed to parse request body:', event.body, err);
-    return { statusCode: 400, body: 'Invalid JSON payload' };
+    return { statusCode: 400, headers, body: 'Invalid JSON payload' };
   }
 
   try {
     const { title = 'RealDate', body, userId } = parsedBody;
     if (!body) {
-      return { statusCode: 400, body: 'Invalid payload: body required' };
+      return { statusCode: 400, headers, body: 'Invalid payload: body required' };
     }
   let subsSnap;
   if (userId) {
@@ -104,6 +112,7 @@ exports.handler = async function(event) {
   }).catch(() => {});
   return {
     statusCode: 200,
+    headers,
     body: JSON.stringify({
       success: true,
       count: subs.length,
@@ -118,6 +127,6 @@ exports.handler = async function(event) {
       type: 'send-webpush',
       error: err.message
     }).catch(() => {});
-    return { statusCode: 500, body: 'Server error!' };
+    return { statusCode: 500, headers, body: 'Server error!' };
   }
 };
