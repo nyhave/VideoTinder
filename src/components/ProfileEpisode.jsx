@@ -158,7 +158,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       React.createElement(Button, { className:`mt-2 w-full bg-pink-500 text-white ${stage < 3 ? 'filter blur-sm pointer-events-none' : ''}` }, t('episodeMatchPrompt')),
       stage < 3 && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-8 h-8 text-pink-500' })
     ),
-    stage === 1 && React.createElement(React.Fragment, null,
+    stage === 1 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
       React.createElement('ul', { className:'list-disc list-inside text-sm mb-4' },
         [
           showWatchLine && React.createElement('li', { key:'watch' }, t('level2Watch')),
@@ -184,7 +184,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       }),
       React.createElement(Button, { className: 'bg-pink-500 text-white', onClick: saveReflection }, 'Gem')
     ),
-    stage === 2 && React.createElement(React.Fragment, null,
+    stage === 2 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
       progress?.reflection &&
         React.createElement('p', { className: 'italic text-gray-700 mb-2' }, `“${progress.reflection}”`),
       progress?.rating && React.createElement('div', { className:'flex justify-center gap-1 mb-2' },
