@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAge } from '../utils.js';
+import { getAge, getTodayStr, getCurrentDate } from '../utils.js';
 import { User, PlayCircle, Heart } from 'lucide-react';
 import VideoOverlay from './VideoOverlay.jsx';
 import { Card } from './ui/card.js';
@@ -17,7 +17,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const t = useT();
   const user = profiles.find(p => p.id === userId) || {};
   const hasSubscription = user.subscriptionExpires && new Date(user.subscriptionExpires) > new Date();
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayStr();
   const filtered = selectProfiles(user, profiles, ageRange);
   useEffect(() => {
     if(!userId || !profiles.length) return;
@@ -25,7 +25,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     const selectedIds = filtered.map(p => p.id);
     const log = {
       userId,
-      date: new Date().toISOString(),
+      date: getCurrentDate().toISOString(),
       potential: scored.map(p => ({ id: p.id, score: { score: p.score, breakdown: p.breakdown } })),
       selected: scored
         .filter(p => selectedIds.includes(p.id))
@@ -45,7 +45,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const [activeVideo, setActiveVideo] = useState(null);
   const [showBest, setShowBest] = useState(false);
   const handleExtraPurchase = async () => {
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = getTodayStr();
     await updateDoc(doc(db, 'profiles', userId), { extraClipsDate: todayStr });
     setShowPurchase(false);
   };
@@ -93,7 +93,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     }
   };
   useEffect(() => {
-    const now = new Date();
+    const now = getCurrentDate();
     const next = new Date(now);
     next.setDate(now.getDate() + 1);
     next.setHours(0,0,0,0);
