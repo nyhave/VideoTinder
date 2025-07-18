@@ -63,11 +63,16 @@ exports.handler = async function(event) {
   }
 
   try {
-    const { title = 'RealDate', body } = parsedBody;
+    const { title = 'RealDate', body, userId } = parsedBody;
     if (!body) {
       return { statusCode: 400, body: 'Invalid payload: body required' };
     }
-  const subsSnap = await db.collection('webPushSubscriptions').get();
+  let subsSnap;
+  if (userId) {
+    subsSnap = await db.collection('webPushSubscriptions').where('userId','==', userId).get();
+  } else {
+    subsSnap = await db.collection('webPushSubscriptions').get();
+  }
   const subs = subsSnap.docs.map(d => d.data());
   const payload = JSON.stringify({ title, body });
   const failed = [];
