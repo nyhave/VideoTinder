@@ -105,12 +105,9 @@ export default function LikesScreen({ userId, onSelectProfile }) {
     !hasSubscription && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb premium'),
     showPurchase && React.createElement(PurchaseOverlay,{title:'Månedligt abonnement', price:'59 kr/md', onClose:()=>setShowPurchase(false), onBuy:handlePurchase},
       React.createElement('ul',{className:'list-disc list-inside text-sm space-y-1'},
-        React.createElement('li',null,'🎞️ Flere daglige klip: Se fx 6 i stedet for 3 kandidater om dagen'),
-        React.createElement('li',null,'🔁 Se tidligere klip igen ("Fortryd swipe")'),
-        React.createElement('li',null,'🧠 Indsigt i hvem der har liket dig'),
-        React.createElement('li',null,'📝 Udfoldede profiler – adgang til længere refleksioner, flere videoer'),
-        React.createElement('li',null,'🎙️ Profilbooster: Få dit klip vist tidligere på dagen'),
-        React.createElement('li',null,'⏳ Bliv på profillisten i længere tid, fx 10 dage')
+        React.createElement('li',null,'🎞️ Få adgang til at se flere nye klip hver dag (+3 profiler)'),
+        React.createElement('li',null,'🧠 Få indsigt i hvem der har liket dig (ubegrænset)'),
+        React.createElement('li',null,'⏳ Bliv på set i længere tid på listen af profiler (+5 dage)')
       )
     ),
     matchedProfile && React.createElement(MatchOverlay,{name:matchedProfile.name,onClose:()=>setMatchedProfile(null)}),
