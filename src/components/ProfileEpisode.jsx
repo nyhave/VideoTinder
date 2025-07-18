@@ -36,7 +36,6 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
 
   if (!profile) return null;
   const stage = progress?.stage || 1;
-  const lastDate = progress?.lastUpdated;
   const today = getTodayStr();
 
   useEffect(() => {
@@ -53,7 +52,6 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     }
   }, [profile, progress]);
 
-  const waiting = lastDate === today && stage !== 3;
   const daysLeft = progress?.expiresAt ? Math.ceil((new Date(progress.expiresAt) - getCurrentDate())/86400000) : 5;
 
   const saveReflection = async () => {
@@ -63,7 +61,6 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       id: progressId,
       userId,
       profileId,
-      stage: 2,
       lastUpdated: today,
       reflection: text,
       rating,
@@ -78,11 +75,23 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       id: progressId,
       userId,
       profileId,
-      stage: 3,
       lastUpdated: today,
       reaction: text,
       expiresAt: extendExpiry(progress?.expiresAt)
     }, { merge: true });
+  };
+
+  const handleClipEnd = async index => {
+    if(stage === index + 1 && stage < 3){
+      await setDoc(doc(db, 'episodeProgress', progressId), {
+        id: progressId,
+        userId,
+        profileId,
+        stage: stage + 1,
+        lastUpdated: today,
+        expiresAt: extendExpiry(progress?.expiresAt)
+      }, { merge: true });
+    }
   };
 
   if (stage >= 3) {
@@ -113,7 +122,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         const url = clip && clip.url ? clip.url : clip;
         const locked = i >= stage;
         return React.createElement('div', { key: i, className:`w-[30%] flex flex-col items-center justify-end min-h-[160px] relative ${locked ? 'filter blur-sm pointer-events-none' : ''}` },
-          url && React.createElement(VideoPreview, { src: url }),
+          url && React.createElement(VideoPreview, { src: url, onEnded: () => handleClipEnd(i) }),
           locked && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-8 h-8 text-pink-500' })
         );
       })
@@ -150,9 +159,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         placeholder: t('episodeReflectionPrompt'),
         className: 'mb-4'
       }),
-      waiting ?
-        React.createElement('p', { className: 'text-sm text-gray-500' }, t('episodeReturnTomorrow')) :
-        React.createElement(Button, { className: 'bg-pink-500 text-white', onClick: saveReflection }, 'Gem')
+      React.createElement(Button, { className: 'bg-pink-500 text-white', onClick: saveReflection }, 'Gem')
     ),
     stage === 2 && React.createElement(React.Fragment, null,
       progress?.reflection &&
@@ -171,9 +178,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         placeholder: t('episodeReactionPrompt'),
         className: 'mb-4'
       }),
-      waiting ?
-        React.createElement('p', { className: 'text-sm text-gray-500' }, t('episodeReturnTomorrow')) :
-        React.createElement(Button, { className: 'bg-pink-500 text-white', onClick: saveReaction }, 'Gem')
+      React.createElement(Button, { className: 'bg-pink-500 text-white', onClick: saveReaction }, 'Gem')
     )
   );
 }

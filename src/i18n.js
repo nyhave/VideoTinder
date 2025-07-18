@@ -63,7 +63,7 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   episodeIntro:{ en:'Introduction', da:'Introduktion', sv:'Introduktion', es:'Introducción', fr:'Introduction', de:'Einführung' },
   episodeReflectionPrompt:{ en:'Write a short reflection...', da:'Skriv en kort refleksion...', sv:'Skriv en kort reflektion...', es:'Escribe una breve reflexión...', fr:'Écrivez une courte réflexion...', de:'Schreibe eine kurze Reflexion...' },
   episodeReactionPrompt:{ en:'Send a reaction', da:'Send en reaktion', sv:'Skicka en reaktion', es:'Envía una reacción', fr:'Envoyer une réaction', de:'Sende eine Reaktion' },
-  episodeReturnTomorrow:{ en:'Come back tomorrow to continue', da:'Kom tilbage i morgen for at fortsætte', sv:'Kom tillbaka i morgon för att fortsätta', es:'Vuelve mañana para continuar', fr:'Revenez demain pour continuer', de:'Komm morgen zurück, um fortzufahren' },
+  episodeReturnTomorrow:{ en:'Watch another clip to continue', da:'Se et klip mere for at fortsætte', sv:'Titta på ett klipp till för att fortsätta', es:'Mira otro clip para continuar', fr:'Regardez un autre clip pour continuer', de:'Schau einen weiteren Clip, um fortzufahren' },
   episodeMatchPrompt:{ en:'Start conversation', da:'Start samtale', sv:'Starta samtal', es:'Iniciar conversación', fr:'Commencer la conversation', de:'Gespräch starten' },
   episodeStageReflection:{ en:'Reflection', da:'Refleksion', sv:'Reflektion', es:'Reflexión', fr:'Réflexion', de:'Reflexion' },
   episodeStageReaction:{ en:'Reaction', da:'Reaktion', sv:'Reaktion', es:'Reacción', fr:'Réaction', de:'Reaktion' },
@@ -72,7 +72,7 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   missingFieldsTitle:{ en:'Missing information', da:'Mangler information', sv:'Saknar information', es:'Falta información', fr:'Informations manquantes', de:'Fehlende Angaben' },
   missingFieldsDesc:{ en:'Please fill out all required fields', da:'Udfyld venligst alle obligatoriske felter', sv:'Vänligen fyll i alla obligatoriska fält', es:'Por favor, completa todos los campos obligatorios', fr:'Veuillez remplir tous les champs obligatoires', de:'Bitte fülle alle Pflichtfelder aus' },
   helpTitle:{ en:'Help', da:'Hjælp', sv:'Hjälp', es:'Ayuda', fr:'Aide', de:'Hilfe' },
-  helpLevels:{ en:'On the Daily Life page each profile has three levels. Return the next day to unlock more content.', da:'På siden Dagens liv har hver profil tre niveauer. Kom videre ved at vende tilbage dagen efter for at låse mere op.' },
+  helpLevels:{ en:'On the Daily Life page each profile has three levels. Watch clips to unlock more content.', da:'På siden Dagens liv har hver profil tre niveauer. Se klip for at låse mere op.' },
   helpSupport:{ en:'Need assistance? Choose "Report bug" on the About page to contact support.', da:'Brug for hjælp? Vælg \"Fejlmeld\" på Om RealDate-siden for at kontakte support.' },
   helpInvites:{ en:'You can send up to five invitations. Follow each invitation until your friend has created a profile.', da:'Du kan sende op til fem invitationer. Følg hver invitation, indtil din ven har oprettet en profil.' },
 };
