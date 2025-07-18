@@ -14,6 +14,9 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const progressId = `${userId}-${profileId}`;
   const progress = useDoc('episodeProgress', progressId);
   const profile = useDoc('profiles', profileId);
+  const viewer = useDoc('profiles', userId);
+  const hasSubscription = viewer?.subscriptionExpires && new Date(viewer.subscriptionExpires) > new Date();
+  const expiryDays = hasSubscription ? 10 : 5;
   const t = useT();
   const [reflection, setReflection] = useState('');
   const [reaction, setReaction] = useState('');
@@ -22,7 +25,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     const base = current && new Date(current) > getCurrentDate()
       ? new Date(current) : getCurrentDate();
     const next = new Date(base);
-    next.setDate(base.getDate() + 5);
+    next.setDate(base.getDate() + expiryDays);
     return next.toISOString();
   };
   useEffect(() => {
@@ -54,7 +57,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   }, [profile, progress]);
 
   const waiting = lastDate === today && stage !== 3;
-  const daysLeft = progress?.expiresAt ? Math.ceil((new Date(progress.expiresAt) - getCurrentDate())/86400000) : 5;
+  const daysLeft = progress?.expiresAt ? Math.ceil((new Date(progress.expiresAt) - getCurrentDate())/86400000) : expiryDays;
 
   const saveReflection = async () => {
     const text = reflection.trim();
