@@ -18,13 +18,17 @@ export default function WelcomeScreen({ onLogin }) {
   const [showBirthdayOverlay, setShowBirthdayOverlay] = useState(false);
   const [showMissingFields, setShowMissingFields] = useState(false);
   const [triedSubmit, setTriedSubmit] = useState(false);
+  const [showAgeError, setShowAgeError] = useState(false);
+  const [showCreated, setShowCreated] = useState(false);
+  const [createdMsg, setCreatedMsg] = useState('');
+  const [createdId, setCreatedId] = useState('');
   const { lang } = useLang();
   const t = useT();
 
   const handleBirthdayBlur = () => {
     setShowBirthdayOverlay(false);
     if (birthday && getAge(birthday) < 18) {
-      alert('Du skal v\u00e6re mindst 18 \u00e5r for at bruge appen');
+      setShowAgeError(true);
     }
   };
 
@@ -39,7 +43,7 @@ export default function WelcomeScreen({ onLogin }) {
     }
     // Require a valid birthday confirming the user is at least 18
     if (!birthday || getAge(birthday) < 18) {
-      alert('Du skal v\u00e6re mindst 18 \u00e5r for at bruge appen');
+      setShowAgeError(true);
       return;
     }
     const id = Date.now().toString();
@@ -77,8 +81,9 @@ export default function WelcomeScreen({ onLogin }) {
       }
     }
     await setDoc(doc(db, 'profiles', id), profile);
-    alert(t(giftFrom ? 'profileCreatedGift' : 'profileCreated'));
-    onLogin(id);
+    setCreatedMsg(t(giftFrom ? 'profileCreatedGift' : 'profileCreated'));
+    setCreatedId(id);
+    setShowCreated(true);
   };
   return React.createElement(
     React.Fragment,
@@ -103,6 +108,18 @@ export default function WelcomeScreen({ onLogin }) {
       onClose: () => setShowMissingFields(false)
     },
       React.createElement('p', null, t('missingFieldsDesc'))
+    ),
+    showAgeError && React.createElement(InfoOverlay, {
+      title: t('register'),
+      onClose: () => setShowAgeError(false)
+    },
+      React.createElement('p', { className:'text-center' }, 'Du skal v\u00e6re mindst 18 \u00e5r for at bruge appen')
+    ),
+    showCreated && React.createElement(InfoOverlay, {
+      title: t('register'),
+      onClose: () => { setShowCreated(false); onLogin(createdId); }
+    },
+      React.createElement('p', { className:'text-center' }, createdMsg)
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       showRegister ? (
