@@ -37,6 +37,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   }, [userId, profiles, ageRange]);
 
   const likes = useCollection('likes','userId',userId);
+  const progresses = useCollection('episodeProgress','userId', userId);
 
   const [hoursUntil, setHoursUntil] = useState(0);
   const [showPurchase, setShowPurchase] = useState(false);
@@ -105,12 +106,15 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Nye klip om ${hoursUntil} timer`),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Tag dig god tid til at udforske dagens klip`),
     React.createElement('ul', { className: 'space-y-4' },
-      filtered.length ? filtered.map(p => (
-        React.createElement('li', {
+      filtered.length ? filtered.map(p => {
+        const prog = progresses.find(pr => pr.profileId === p.id);
+        const stage = prog?.stage || 1;
+        return React.createElement('li', {
           key: p.id,
           className: 'p-4 bg-white rounded-lg cursor-pointer shadow-lg border border-gray-200 flex flex-col relative',
           onClick: () => onSelectProfile(p.id)
         },
+          React.createElement('span', { className:'absolute top-2 left-2 bg-pink-100 text-pink-600 text-xs font-semibold px-2 rounded' }, `Level ${stage}`),
           React.createElement(Heart, {
             className: `w-8 h-8 absolute top-2 right-2 ${likes.some(l => l.profileId === p.id) ? 'text-pink-500' : 'text-gray-400'}`,
             onClick: e => { e.stopPropagation(); toggleLike(p.id); }
@@ -134,7 +138,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
             )
           )
         )
-      )) :
+      }) :
         React.createElement('li', { className: 'text-center text-gray-500' }, t('noProfiles'))
     ),
     showBest && React.createElement('ul', { className: 'space-y-4 mt-4' },

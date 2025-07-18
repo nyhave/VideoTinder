@@ -7,6 +7,7 @@ import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
 import ProfileSettings from './ProfileSettings.jsx';
+import VideoPreview from './VideoPreview.jsx';
 import { Star } from 'lucide-react';
 
 export default function ProfileEpisode({ userId, profileId, onBack }) {
@@ -21,9 +22,9 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     if(progress?.rating) setRating(progress.rating);
   }, [progress]);
   const stepLabels = [
-    t('episodeStageReflection'),
-    t('episodeStageReaction'),
-    t('episodeStageConnect')
+    'Level 1',
+    'Level 2',
+    'Level 3'
   ];
 
   if (!profile) return null;
@@ -80,6 +81,28 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     React.createElement('p', { className:'text-center text-sm text-gray-600 mb-2' }, stepLabels[stage-1]),
     React.createElement(SectionTitle, { title: t('episodeIntro') }),
     profile.clip && React.createElement('p', { className: 'mb-4' }, `"${profile.clip}"`),
+    React.createElement(SectionTitle, { title: t('videoClips') }),
+    React.createElement('div', { className: 'flex items-center gap-4 mb-4 justify-between' },
+      Array.from({ length: 3 }).map((_, i) => {
+        const clip = (profile.videoClips || [])[i];
+        const url = clip && clip.url ? clip.url : clip;
+        const locked = i >= stage;
+        return React.createElement('div', { key: i, className:`w-[30%] flex flex-col items-center justify-end min-h-[160px] ${locked ? 'filter blur-sm pointer-events-none' : ''}` },
+          url && React.createElement(VideoPreview, { src: url })
+        );
+      })
+    ),
+    React.createElement(SectionTitle, { title: t('audioClips') }),
+    React.createElement('div', { className: 'space-y-2 mb-4' },
+      (profile.audioClips || []).slice(0,3).map((clip, i) => {
+        const url = clip && clip.url ? clip.url : clip;
+        const locked = i >= stage;
+        return React.createElement('div', { key: i, className:`flex items-center relative ${locked ? 'filter blur-sm pointer-events-none' : ''}` },
+          React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' })
+        );
+      })
+    ),
+    React.createElement(Button, { className:`mt-2 w-full bg-pink-500 text-white ${stage < 3 ? 'filter blur-sm pointer-events-none' : ''}` }, t('episodeMatchPrompt')),
     stage === 1 && React.createElement(React.Fragment, null,
       React.createElement('div', { className: 'flex justify-center gap-1 mb-2' },
         [1,2,3].map(n => (
