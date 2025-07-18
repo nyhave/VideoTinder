@@ -9,12 +9,7 @@ if (!admin.apps.length) {
     if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
       serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
     } else {
-      const credPath =
-        process.env.GOOGLE_APPLICATION_CREDENTIALS ||
-        path.join(
-          __dirname,
-          '../../videotinder-38b8b-firebase-adminsdk-fbsvc-5f3bef3136.json'
-        );
+      const credPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
       if (fs.existsSync(credPath)) {
         serviceAccount = require(credPath);
       } else {
