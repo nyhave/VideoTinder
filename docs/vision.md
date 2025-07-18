@@ -13,13 +13,13 @@ For at understrege følelsen af små historier præsenteres hver dagsprofil som 
 
 Denne episodiske tilgang gør det mere engagerende end at bladre i et uendeligt katalog og inviterer til fordybelse i stedet for hurtige swipes.
 
-Vi tror på, at dybere forbindelser starter med nysgerrighed og tid – ikke med hurtige valg. Derfor får brugeren adgang til hver profil i tre trin over tre dage:
+Vi tror på, at dybere forbindelser starter med nysgerrighed og tid – ikke med hurtige valg. Derfor får brugeren adgang til hver profil i tre trin, der låses op ved at se korte videoklip:
 
-1. **Dag 1 – Refleksion:** Brugeren ser en kort præsentation og svarer på en refleksions-prompt, der gemmes til senere.
-2. **Dag 2 – Reaktion:** Brugeren genser profilen og kan nu sende små reaktioner, fx emojier eller en kort besked.
-3. **Dag 3 – Forbindelse:** Hvis brugeren vælger at vende tilbage igen, gives mulighed for at matche og starte en samtale.
+1. **Trin 1 – Refleksion:** Brugeren ser en kort præsentation og svarer på en refleksions-prompt, der gemmes til senere.
+2. **Trin 2 – Reaktion:** Brugeren genser profilen og kan nu sende små reaktioner, fx emojier eller en kort besked.
+3. **Trin 3 – Forbindelse:** Efter endnu et klip får brugeren mulighed for at matche og starte en samtale.
 
-Brugeren kan til enhver tid vende tilbage til tidligere refleksioner og gense profiler, men det er først efter tre separate møder, at muligheden for at matche opstår.
+Brugeren kan til enhver tid vende tilbage til tidligere refleksioner og gense profiler, men det er først efter de tre trin, at muligheden for at matche opstår.
 
 Dette flow skaber en oplevelse, hvor forbindelser får lov at modne over tid – og hvor førstehåndsindtryk bliver en begyndelse, ikke en dom.
 

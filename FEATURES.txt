@@ -1,5 +1,5 @@
 Daily discovery of short video clips or sound clips
-Three-day episodic flow for each profile (reflection, reaction, connection)
+Three-step episodic flow for each profile (reflection, reaction, connection)
 Three-star rating stored with each reflection (ratings are private)
 Basic chat between matched profiles
 Unmatch to remove chat from both users
