@@ -36,6 +36,13 @@ GitHub Pages. Serverless functions for push notifications and scoring run on Net
 
 Appen bruger generelt en rød/lyserød farveskala. Adminknapperne er blå, mens premium-funktioner er gule.
 
+## Designretningslinjer
+
+* Profilbilleder er firkantede med afrundede hjørner for et blødt udtryk
+* Layoutet holdes simpelt med brug af Tailwind CSS utility-klasser
+* Farverne følger temaet med pink som primær accentfarve
+* Komponenter bør have god luft omkring sig for at sikre læsbarhed
+
 ## Getting Started
 
 1. Copy `.env.example` to `.env` and fill in your Firebase credentials.
