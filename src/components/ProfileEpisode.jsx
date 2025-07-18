@@ -120,14 +120,14 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
-    React.createElement('div', { className: 'flex justify-center gap-2 mb-2' },
+    React.createElement('div', { className: 'flex justify-start gap-2 mb-2' },
       stepLabels.map((_, i) => React.createElement('span', {
         key: i,
         className: `w-3 h-3 rounded-full ${i < stage ? 'bg-pink-500' : 'bg-gray-300'}`
       }))
     ),
-    React.createElement('p', { className:'text-center text-sm text-gray-600 mb-2' }, stepLabels[stage-1]),
-    stage === 1 && React.createElement('p', { className:'text-center text-sm mb-2 text-gray-700 font-medium' }, t('level2Intro').replace('{name}', profile.name || '')),
+    React.createElement('p', { className:'text-left text-sm text-gray-600 mb-2' }, stepLabels[stage-1]),
+    stage === 1 && React.createElement('p', { className:'text-left text-sm mb-2 text-gray-700 font-medium' }, t('level2Intro').replace('{name}', profile.name || '')),
     stage === 1 && React.createElement('ul', { className:'list-disc list-inside text-sm mb-4' },
       [
         showWatchLine && React.createElement('li', { key:'watch' }, t('level2Watch')),
@@ -136,7 +136,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       ].filter(Boolean)
     ),
     React.createElement(SectionTitle, { title: `${profile.name || ''}, ${profile.birthday ? getAge(profile.birthday) : profile.age || ''}${profile.city ? ', ' + profile.city : ''}` }),
-    React.createElement('p', { className:'text-center text-xs text-yellow-600 mb-2' }, t('expiresIn').replace('{days}', daysLeft)),
+    React.createElement('p', { className:'text-left text-xs text-yellow-600 mb-2' }, t('expiresIn').replace('{days}', daysLeft)),
     React.createElement(SectionTitle, { title: t('episodeIntro') }),
     profile.clip && React.createElement('p', { className: 'mb-4' }, `"${profile.clip}"`),
     React.createElement(SectionTitle, { title: t('videoClips') }),
