@@ -172,7 +172,7 @@ export default function VideotpushApp() {
       ),
       'RealDate',
       React.createElement(HelpCircle, {
-        className: 'absolute top-1/2 right-12 -translate-y-1/2 cursor-pointer',
+        className: 'absolute top-1/2 right-16 -translate-y-1/2 cursor-pointer',
         onClick: () => setShowHelp(true)
       }),
       userId && React.createElement('div', {
