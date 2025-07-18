@@ -6,7 +6,7 @@
     "start": "npx serve .",
     "dev": "parcel public/index.html",
     "prebuild": "node scripts/bump-version.js",
-    "build": "parcel build public/index.html --dist-dir dist --public-url ./"
+    "build": "parcel build public/index.html public/invite.html --dist-dir dist --public-url ./"
   },
   "dependencies": {
     "firebase": "^9.23.0",
