@@ -37,7 +37,6 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     'Level 3'
   ];
 
-  if (!profile) return null;
   const stage = progress?.stage || 1;
   const today = getTodayStr();
 
@@ -54,6 +53,8 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       }, { merge: true }).catch(err => console.error('Failed to init progress', err));
     }
   }, [profile, progress]);
+
+  if (!profile) return null;
 
   const daysLeft = progress?.expiresAt ? Math.ceil((new Date(progress.expiresAt) - getCurrentDate())/86400000) : expiryDays;
 
