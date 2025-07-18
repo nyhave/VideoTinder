@@ -41,7 +41,8 @@ export default function VideotpushApp() {
   const [tab,setTab]=useState('discovery');
   const [viewProfile,setViewProfile]=useState(null);
   const [videoCallId,setVideoCallId]=useState(null);
-  const hasUnread = chats.some(c => c.unreadByUser || c.newMatch);
+  const unreadCount = chats.filter(c => c.unreadByUser || c.newMatch).length;
+  const hasUnread = unreadCount > 0;
   const currentUser = profiles.find(p => p.id === userId) || {};
 
   const openDailyClips = () => {
@@ -226,7 +227,7 @@ export default function VideotpushApp() {
       React.createElement(Heart, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('likes'); setViewProfile(null);} }),
       React.createElement('div', { className: 'relative', onClick: ()=>{setTab('chat'); setViewProfile(null);} },
         React.createElement(ChatIcon, { className: 'w-8 h-8 text-pink-600' }),
-        hasUnread && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center' }, '1')
+        hasUnread && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full min-w-4 h-4 flex items-center justify-center px-1' }, unreadCount)
       ),
       React.createElement(CalendarDays, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} })
       )
