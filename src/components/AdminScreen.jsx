@@ -4,7 +4,7 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
-import { db, updateDoc, doc, getDoc, storage, listAll, ref, getDownloadURL, messaging, setExtendedLogging, isExtendedLogging } from '../firebase.js';
+import { db, updateDoc, doc, getDoc, storage, listAll, ref, getDownloadURL, messaging, setExtendedLogging, isExtendedLogging, useDoc } from '../firebase.js';
 import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
 
@@ -14,6 +14,8 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   const { lang, setLang } = useLang();
   const t = useT();
   const [logEnabled, setLogEnabled] = useState(isExtendedLogging());
+  const config = useDoc('config', 'app') || {};
+  const invitesEnabled = config.premiumInvitesEnabled !== false;
 
   const toggleLog = () => {
     const val = !logEnabled;
@@ -183,6 +185,15 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement('label', { className: 'flex items-center mb-2' },
       React.createElement('input', { type: 'checkbox', className: 'mr-2', checked: logEnabled, onChange: toggleLog }),
       'Udvidet logning'
+    ),
+    React.createElement('label', { className: 'flex items-center mb-2' },
+      React.createElement('input', {
+        type: 'checkbox',
+        className: 'mr-2',
+        checked: invitesEnabled,
+        onChange: () => updateDoc(doc(db, 'config', 'app'), { premiumInvitesEnabled: !invitesEnabled })
+      }),
+      'Premium invites'
     ),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenTextLog }, 'Se log'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenMatchLog }, 'Se matchlog'),

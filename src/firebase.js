@@ -164,6 +164,18 @@ export function useCollection(collectionName, field, value) {
   return data;
 }
 
+export function useDoc(collectionName, docId) {
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    const d = doc(db, collectionName, docId);
+    const unsub = onSnapshot(d, snap => {
+      setData(snap.exists() ? { id: snap.id, ...snap.data() } : null);
+    });
+    return () => unsub();
+  }, [collectionName, docId]);
+  return data;
+}
+
 export {
   collection,
   getDocs,
@@ -186,6 +198,7 @@ export {
   onMessage,
   requestNotificationPermission,
   subscribeToWebPush,
+  useDoc,
   setExtendedLogging,
   isExtendedLogging,
   logEvent

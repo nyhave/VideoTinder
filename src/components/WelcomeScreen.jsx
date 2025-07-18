@@ -4,7 +4,7 @@ import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
 import { UserPlus, LogIn } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
-import { db, doc, setDoc } from '../firebase.js';
+import { db, doc, setDoc, updateDoc, increment } from '../firebase.js';
 import { getAge } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
@@ -34,6 +34,8 @@ export default function WelcomeScreen({ onLogin }) {
       return;
     }
     const id = Date.now().toString();
+    const params = new URLSearchParams(window.location.search);
+    const giftFrom = params.get('gift');
     const profile = {
       id,
       name: trimmed,
@@ -51,6 +53,20 @@ export default function WelcomeScreen({ onLogin }) {
       videoClips: [],
       interests: []
     };
+    if (giftFrom) {
+      const now = new Date();
+      const expiry = new Date(now);
+      expiry.setMonth(expiry.getMonth() + 3);
+      profile.subscriptionActive = true;
+      profile.subscriptionPurchased = now.toISOString();
+      profile.subscriptionExpires = expiry.toISOString();
+      profile.giftedBy = giftFrom;
+      try {
+        await updateDoc(doc(db, 'profiles', giftFrom), { premiumInvitesUsed: increment(1) });
+      } catch (err) {
+        console.error('Failed to update inviter', err);
+      }
+    }
     await setDoc(doc(db, 'profiles', id), profile);
     onLogin(id);
   };
