@@ -193,8 +193,6 @@ export default function VideotpushApp() {
             userId,
             ageRange,
             onChangeAgeRange: setAgeRange,
-            onLogout: ()=>{setLoggedIn(false); setTab('discovery'); setViewProfile(null);},
-            onSaveUserLogout: saveUserAndLogout,
             onViewPublicProfile: viewOwnPublicProfile,
             onOpenAbout: ()=>setTab('about')
           }),

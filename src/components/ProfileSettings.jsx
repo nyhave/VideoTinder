@@ -19,7 +19,7 @@ import { languages, useT } from '../i18n.js';
 import { getInterestCategory } from '../interests.js';
 import { getAge } from '../utils.js';
 
-export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onLogout = () => {}, onSaveUserLogout, onViewPublicProfile = () => {}, onOpenAbout = () => {}, viewerId, onBack }) {
+export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, viewerId, onBack }) {
   const [profile,setProfile]=useState(null);
   const t = useT();
   const audioRef = useRef();
@@ -400,16 +400,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
           onClick: onViewPublicProfile
         }, 'View public profile'),
-        React.createElement('div', { className: 'flex gap-2' },
-          React.createElement('button', {
-            className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
-            onClick: onLogout
-          }, 'Logout'),
-          onSaveUserLogout && React.createElement('button', {
-            className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
-            onClick: onSaveUserLogout
-          }, 'Save & Logout')
-        )
+        null
       ),
       React.createElement('div', { className: 'mt-4 flex justify-end' },
         React.createElement(Button, {
