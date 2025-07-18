@@ -16,7 +16,7 @@ async function loadInvite() {
       const img = document.createElement('img');
       img.src = profile.photoURL;
       img.alt = profile.name;
-      img.className = 'w-20 h-20 rounded-full object-cover mr-4';
+      img.className = 'w-20 h-20 rounded-lg object-cover mr-4';
       picEl.appendChild(img);
     }
     const cta = document.getElementById('cta');
