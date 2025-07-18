@@ -39,6 +39,30 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const likes = useCollection('likes','userId',userId);
   const progresses = useCollection('episodeProgress','userId', userId);
 
+  useEffect(() => {
+    if(!userId) return;
+    filtered.forEach(p => {
+      const id = `${userId}-${p.id}`;
+      const prog = progresses.find(pr => pr.id === id);
+      if(!prog){
+        const expires = new Date(getCurrentDate());
+        expires.setDate(expires.getDate() + 5);
+        setDoc(doc(db,'episodeProgress', id), {
+          id,
+          userId,
+          profileId: p.id,
+          stage: 1,
+          expiresAt: expires.toISOString()
+        }, { merge: true }).catch(err => console.error('Failed to init progress', err));
+      }
+    });
+  }, [filtered, progresses, userId]);
+
+  const activeProfiles = filtered.filter(p => {
+    const prog = progresses.find(pr => pr.profileId === p.id);
+    return !prog?.expiresAt || new Date(prog.expiresAt) >= getCurrentDate();
+  });
+
   const [hoursUntil, setHoursUntil] = useState(0);
   const [showPurchase, setShowPurchase] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
@@ -106,15 +130,17 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Nye klip om ${hoursUntil} timer`),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Tag dig god tid til at udforske dagens klip`),
     React.createElement('ul', { className: 'space-y-4' },
-      filtered.length ? filtered.map(p => {
+      activeProfiles.length ? activeProfiles.map(p => {
         const prog = progresses.find(pr => pr.profileId === p.id);
         const stage = prog?.stage || 1;
+        const daysLeft = prog?.expiresAt ? Math.ceil((new Date(prog.expiresAt) - getCurrentDate())/86400000) : 5;
         return React.createElement('li', {
           key: p.id,
           className: 'p-4 bg-white rounded-lg cursor-pointer shadow-lg border border-gray-200 flex flex-col relative',
           onClick: () => onSelectProfile(p.id)
         },
           React.createElement('span', { className:'absolute top-2 left-2 bg-pink-100 text-pink-600 text-xs font-semibold px-2 rounded' }, `Level ${stage}`),
+          React.createElement('span', { className:'absolute bottom-2 left-2 bg-yellow-100 text-yellow-600 text-xs font-semibold px-2 rounded' }, t('expiresIn').replace('{days}', daysLeft)),
           React.createElement(Heart, {
             className: `w-8 h-8 absolute top-2 right-2 ${likes.some(l => l.profileId === p.id) ? 'text-pink-500' : 'text-gray-400'}`,
             onClick: e => { e.stopPropagation(); toggleLike(p.id); }
