@@ -82,7 +82,8 @@ async function sendAll(userId, title, body, tokensByUser, subsByUser) {
     try {
       const res = await admin.messaging().sendEachForMulticast({
         tokens,
-        notification: { title, body }
+        notification: { title, body },
+        data: { title, body }
       });
       const bad = res.responses
         .map((r, i) => (!r.success ? tokens[i] : null))

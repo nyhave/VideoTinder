@@ -77,9 +77,13 @@ exports.handler = async function(event) {
       }).catch(() => {});
       return { statusCode: 200, headers, body: 'No tokens' };
     }
-    const message = silent
-      ? { tokens, data: { title, body, silent: 'true' } }
-      : { tokens, notification: { title, body } };
+    const message = {
+      tokens,
+      data: { title, body, silent: silent ? 'true' : 'false' }
+    };
+    if (!silent) {
+      message.notification = { title, body };
+    }
     const res = await admin.messaging().sendEachForMulticast(message);
 
     const badTokens = res.responses
