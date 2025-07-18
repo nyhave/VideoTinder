@@ -149,7 +149,7 @@ export default function WelcomeScreen({ onLogin }) {
           value: city,
           onChange: e => setCity(e.target.value),
           placeholder: 'By',
-          name: 'cityname',
+          name: 'city',
           autoComplete: 'address-level2',
           required: true
         }),
