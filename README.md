@@ -14,6 +14,7 @@ Profiles are presented as short episodes rather than a catalog of faces. Each ep
 * Daily discovery of short video clips (up to 3 or 6 with subscription)
 * Option to buy 3 extra clips for the day
 * Profiles open as short episodes over three days: reflection, reaction and finally the option to match
+* Rate each profile with up to three stars when writing your reflection (ratings are private)
 * Monthly subscriptions with visible expiration date and stored purchase date
 * Basic chat between matched profiles with option to unmatch
 * Improved chat layout with timestamps for better readability 
