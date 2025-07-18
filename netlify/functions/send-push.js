@@ -2,7 +2,8 @@
 // {
 //   "body": "Hello there",
 //   "title": "RealDate",
-//   "tokens": ["token1", "token2"] // optional
+//   "tokens": ["token1", "token2"], // optional
+//   "silent": true // optional
 // }
 
 const admin = require('firebase-admin');
@@ -52,7 +53,7 @@ exports.handler = async function(event) {
     return { statusCode: 405, headers, body: 'Method Not Allowed' };
   }
   try {
-    const { title = 'RealDate', body, tokens: bodyTokens, userId } = JSON.parse(event.body || '{}');
+    const { title = 'RealDate', body, tokens: bodyTokens, userId, silent } = JSON.parse(event.body || '{}');
     if (!body) {
       return { statusCode: 400, headers, body: 'Invalid payload' };
     }
@@ -76,10 +77,10 @@ exports.handler = async function(event) {
       }).catch(() => {});
       return { statusCode: 200, headers, body: 'No tokens' };
     }
-    const res = await admin.messaging().sendEachForMulticast({
-      tokens,
-      notification: { title, body }
-    });
+    const message = silent
+      ? { tokens, data: { title, body, silent: 'true' } }
+      : { tokens, notification: { title, body } };
+    const res = await admin.messaging().sendEachForMulticast(message);
 
     const badTokens = res.responses
       .map((r, i) => (!r.success ? tokens[i] : null))
@@ -96,6 +97,7 @@ exports.handler = async function(event) {
       type: 'send-push',
       body,
       tokens: tokens.length,
+      silent: !!silent,
       successCount: res.successCount,
       removedCount: badTokens.length
     }).catch(() => {});

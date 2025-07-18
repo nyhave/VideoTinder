@@ -71,7 +71,7 @@ exports.handler = async function(event) {
   }
 
   try {
-    const { title = 'RealDate', body, userId } = parsedBody;
+    const { title = 'RealDate', body, userId, silent } = parsedBody;
     if (!body) {
       return { statusCode: 400, headers, body: 'Invalid payload: body required' };
     }
@@ -82,7 +82,7 @@ exports.handler = async function(event) {
     subsSnap = await db.collection('webPushSubscriptions').get();
   }
   const subs = subsSnap.docs.map(d => d.data());
-  const payload = JSON.stringify({ title, body });
+  const payload = JSON.stringify({ title, body, silent: !!silent });
   const failed = [];
   await Promise.all(
     subs.map(async sub => {

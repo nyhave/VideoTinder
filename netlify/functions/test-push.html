@@ -15,6 +15,7 @@ button{margin-top:1em;padding:0.5em 1em;}
 <h1>Send Test Push</h1>
 <label>Title <input id="title" type="text" placeholder="Optional" /></label>
 <label>Body <input id="body" type="text" placeholder="Notification text" /></label>
+<label><input id="silent" type="checkbox" /> Silent</label>
 <fieldset style="margin-top:1em;">
   <legend>Send to</legend>
   <label><input type="radio" name="target" value="ios" checked /> iOS</label>
@@ -38,6 +39,7 @@ button{margin-top:1em;padding:0.5em 1em;}
   document.getElementById('send').addEventListener('click', async () => {
     const title = document.getElementById('title').value;
     const body = document.getElementById('body').value;
+    const silent = document.getElementById('silent').checked;
     const target = document.querySelector('input[name="target"]:checked').value;
     const statusEl = document.getElementById('status');
     const subsEl = document.getElementById('subs');
@@ -46,14 +48,14 @@ button{margin-top:1em;padding:0.5em 1em;}
     try {
       const parts = [];
       if (target === 'ios' || target === 'both') {
-        const data = await post('/.netlify/functions/send-webpush', { title, body });
+        const data = await post('/.netlify/functions/send-webpush', { title, body, silent });
         parts.push('iOS: ' + (data.count ?? '?') + ' subscriptions');
         if (Array.isArray(data.subscriptions)) {
           subsEl.textContent = JSON.stringify(data.subscriptions, null, 2);
         }
       }
       if (target === 'other' || target === 'both') {
-        const data = await post('/.netlify/functions/send-push', { title, body });
+        const data = await post('/.netlify/functions/send-push', { title, body, silent });
         parts.push('Andre: ' + (data.successCount ?? '?') + ' sent');
       }
       statusEl.textContent = parts.join(' | ');
