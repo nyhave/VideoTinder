@@ -3,6 +3,7 @@ import { db, doc, getDoc } from './firebase.js';
 async function loadInvite() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
+  const gift = params.get('gift');
   if (!id) return;
   try {
     const snap = await getDoc(doc(db, 'profiles', id));
@@ -19,7 +20,8 @@ async function loadInvite() {
       picEl.appendChild(img);
     }
     const cta = document.getElementById('cta');
-    cta.href = `./index.html?ref=${id}`;
+    const extra = gift ? `&gift=1` : '';
+    cta.href = `./index.html?ref=${id}${extra}`;
   } catch (err) {
     console.error('Failed to load profile', err);
   }

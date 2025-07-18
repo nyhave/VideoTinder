@@ -4,7 +4,7 @@ import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
 import { UserPlus, LogIn } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
-import { db, doc, setDoc } from '../firebase.js';
+import { db, doc, setDoc, getDoc, updateDoc } from '../firebase.js';
 import { getAge } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
@@ -51,6 +51,28 @@ export default function WelcomeScreen({ onLogin }) {
       videoClips: [],
       interests: []
     };
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    const gift = params.get('gift');
+    if (gift === '1' && ref) {
+      const configSnap = await getDoc(doc(db, 'config', 'app'));
+      if (configSnap.exists() && configSnap.data().premiumInviteEnabled) {
+        const refSnap = await getDoc(doc(db, 'profiles', ref));
+        const invitesLeft = (refSnap.data()?.premiumInvitesLeft ?? 5) - 1;
+        if (invitesLeft >= 0) {
+          const now = new Date();
+          const expiry = new Date(now);
+          expiry.setMonth(expiry.getMonth() + 3);
+          Object.assign(profile, {
+            subscriptionActive: true,
+            subscriptionPurchased: now.toISOString(),
+            subscriptionExpires: expiry.toISOString(),
+            invitedBy: ref
+          });
+          await updateDoc(doc(db, 'profiles', ref), { premiumInvitesLeft: invitesLeft });
+        }
+      }
+    }
     await setDoc(doc(db, 'profiles', id), profile);
     onLogin(id);
   };

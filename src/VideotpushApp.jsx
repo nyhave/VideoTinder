@@ -210,7 +210,7 @@ export default function VideotpushApp() {
           tab==='textlog' && React.createElement(TextLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='trackuser' && React.createElement(TrackUserScreen, { onBack: ()=>setTab('admin'), profiles }),
           tab==='serverlog' && React.createElement(ServerLogScreen, { onBack: ()=>setTab('admin') }),
-          tab==='about' && React.createElement(AboutScreen, null)
+          tab==='about' && React.createElement(AboutScreen, { userId })
         )
     ),
     React.createElement('div', {

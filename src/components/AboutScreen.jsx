@@ -6,7 +6,7 @@ import InviteOverlay from './InviteOverlay.jsx';
 import version from '../version.js';
 import { useT } from '../i18n.js';
 
-export default function AboutScreen() {
+export default function AboutScreen({ userId }) {
   const [showReport, setShowReport] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
   const t = useT();
@@ -21,7 +21,7 @@ export default function AboutScreen() {
       React.createElement(Button, { className: 'bg-blue-500 text-white w-full mb-2', onClick: () => setShowInvite(true) }, t('inviteFriend')),
       React.createElement(Button, { className: 'bg-pink-500 text-white w-full mb-2', onClick: () => setShowReport(true) }, 'Fejlmeld')
     ),
-    showInvite && React.createElement(InviteOverlay, { onClose: () => setShowInvite(false) }),
+    showInvite && React.createElement(InviteOverlay, { onClose: () => setShowInvite(false), userId }),
     showReport && React.createElement(BugReportOverlay, { onClose: () => setShowReport(false) })
   );
 }

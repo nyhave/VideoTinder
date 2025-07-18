@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { languages, useLang, useT } from '../i18n.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
@@ -14,11 +14,24 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   const { lang, setLang } = useLang();
   const t = useT();
   const [logEnabled, setLogEnabled] = useState(isExtendedLogging());
+  const [premiumInvites, setPremiumInvites] = useState(false);
+
+  useEffect(() => {
+    getDoc(doc(db, 'config', 'app')).then(snap => {
+      setPremiumInvites(!!snap.data()?.premiumInviteEnabled);
+    });
+  }, []);
 
   const toggleLog = () => {
     const val = !logEnabled;
     setLogEnabled(val);
     setExtendedLogging(val);
+  };
+
+  const togglePremiumInvites = async () => {
+    const val = !premiumInvites;
+    setPremiumInvites(val);
+    await updateDoc(doc(db, 'config', 'app'), { premiumInviteEnabled: val });
   };
 
   const sendPush = async body => {
@@ -157,6 +170,10 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
 
     // Daily admin section
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Daglig administration'),
+    React.createElement('label', { className: 'flex items-center mb-2' },
+      React.createElement('input', { type: 'checkbox', className: 'mr-2', checked: premiumInvites, onChange: togglePremiumInvites }),
+      'Tillad premium-invitationer'
+    ),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, 'Fejlmeldinger'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenBugReports }, 'Se alle fejlmeldinger'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Anmeldt indhold'),

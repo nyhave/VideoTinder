@@ -53,8 +53,11 @@ const messages = {
 inviteFriend:{ en:'Invite a friend', da:'Invit en ven', sv:'Bjud in en vän', es:'Invitar a un amigo', fr:'Inviter un ami', de:'Einen Freund einladen' },
 inviteDesc:{ en:'Share the link below to invite others to RealDate', da:'Del linket nedenfor for at invitere andre til RealDate', sv:'Dela länken nedan för at bjuda in andra til RealDate', es:'Comparte el enlace de abajo para invitar a otros a RealDate', fr:"Partagez le lien ci-dessous pour inviter d'autres sur RealDate", de:'Teile den Link unten, um andere zu RealDate einzuladen' },
 share:{ en:'Share', da:'Del', sv:'Dela', es:'Compartir', fr:'Partager', de:'Teilen' },
-copyLink:{ en:'Copy link', da:'Kopiér link', sv:'Kopiera länk', es:'Copiar enlace', fr:'Copier le lien', de:'Link kopieren' },
-linkCopied:{ en:'Link copied to clipboard', da:'Link kopieret', sv:'Länk kopierad', es:'Enlace copiado', fr:'Lien copié', de:'Link kopiert' },
+  copyLink:{ en:'Copy link', da:'Kopiér link', sv:'Kopiera länk', es:'Copiar enlace', fr:'Copier le lien', de:'Link kopieren' },
+  linkCopied:{ en:'Link copied to clipboard', da:'Link kopieret', sv:'Länk kopierad', es:'Enlace copiado', fr:'Lien copié', de:'Link kopiert' },
+  premiumInviteDesc:{ en:'Give a friend 3 months of premium for free', da:'Giv en ven 3 måneders gratis premium', sv:'Ge en vän 3 månaders gratis premium', es:'Regala 3 meses de premium a un amigo', fr:'Offrez 3 mois de premium à un ami', de:'Schenke einem Freund 3 Monate Premium' },
+  sharePremium:{ en:'Share premium invite', da:'Del premium-invitation', sv:'Dela premiuminbjudan', es:'Compartir invitación premium', fr:"Partager l'invitation premium", de:'Premium-Einladung teilen' },
+  copyPremium:{ en:'Copy premium link', da:'Kopiér premium-link', sv:'Kopiera premiumlänk', es:'Copiar enlace premium', fr:'Copier le lien premium', de:'Premium-Link kopieren' },
 };
 
 const LangContext = createContext({ lang: 'en', setLang: () => {} });
