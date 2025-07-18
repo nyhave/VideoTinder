@@ -381,7 +381,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         const url = clip && clip.url ? clip.url : clip;
         const locked = i >= stage;
         return React.createElement('div', { key: i, className: `flex items-center relative ${locked ? 'pointer-events-none' : ''}` },
-          React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' }),
+          React.createElement('audio', { src: url, controls: true, controlsList: 'nodownload noplaybackrate', className: 'flex-1 mr-2' }),
           locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2' },
             React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('unlockHigherLevels'))
           ),

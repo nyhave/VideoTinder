@@ -66,7 +66,7 @@ export default function ReportedContentScreen({ onBack }) {
     React.createElement('ul', { className:'space-y-4 overflow-y-auto max-h-[70vh]' },
       detailItems.map((item,i)=>
         React.createElement('li', { key:i, className:'border p-2 rounded' },
-          item.clipURL && React.createElement('video', { src:item.clipURL, controls:true, className:'w-full mb-2' }),
+          item.clipURL && React.createElement('video', { src:item.clipURL, controls:true, controlsList:'nodownload noplaybackrate', className:'w-full mb-2' }),
           item.text && React.createElement('p', { className:'mb-2' }, item.text),
           React.createElement('p', { className:'text-sm text-gray-600 mb-1' }, `Antal anmeldelser: ${item.reports.length}`),
           React.createElement('ul', { className:'mb-2 list-disc list-inside text-sm' },
