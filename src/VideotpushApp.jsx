@@ -63,6 +63,12 @@ export default function VideotpushApp() {
     setViewProfile(null);
   };
 
+  const logout = () => {
+    setLoggedIn(false);
+    setTab('discovery');
+    setViewProfile(null);
+  };
+
   const viewOwnPublicProfile = () => {
     setViewProfile(userId);
     setTab('discovery');
@@ -194,7 +200,8 @@ export default function VideotpushApp() {
             ageRange,
             onChangeAgeRange: setAgeRange,
             onViewPublicProfile: viewOwnPublicProfile,
-            onOpenAbout: ()=>setTab('about')
+            onOpenAbout: ()=>setTab('about'),
+            onLogout: logout
           }),
           tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
           tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenTextLog: ()=>setTab('textlog'), onOpenUserLog: ()=>setTab('trackuser'), onOpenServerLog: ()=>setTab('serverlog'), profiles, userId, onSwitchProfile: id=>setUserId(id), onSaveUserLogout: saveUserAndLogout }),
