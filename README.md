@@ -19,6 +19,7 @@ GitHub Pages. Serverless functions for push notifications and scoring run on Net
 * Preferred languages with option to allow other languages
 * Choose up to five personal interests in profile settings
 * Profile pictures, audio clips and video clips cached for offline viewing
+* Push-notifications when new clips are ready with configurable do-not-disturb period and per-type preferences
 * Premium page showing who liked you (subscription required)
 * Invite friends with a shareable link
 * Seed data includes 11 mandlige profiler der matcher standardbrugeren så du kan teste premium og ekstra klip

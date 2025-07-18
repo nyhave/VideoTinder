@@ -34,6 +34,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [editInterests, setEditInterests] = useState(false);
   const [editPrefs, setEditPrefs] = useState(false);
   const [editAbout, setEditAbout] = useState(false);
+  const [editNotifications, setEditNotifications] = useState(false);
   const profiles = useCollection('profiles');
   const viewerProfile = viewerId ? profiles.find(p => p.id === viewerId) : null;
   const viewerInterests = viewerProfile ? viewerProfile.interests || [] : [];
@@ -206,6 +207,18 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     setProfile({ ...profile, birthday });
     const age = birthday ? getAge(birthday) : '';
     await updateDoc(doc(db,'profiles',userId), { birthday, age });
+  };
+
+  const updateNotificationPref = (field, value) => {
+    const prefs = { ...(profile.notificationPrefs || {}) };
+    if (field.startsWith('types.')) {
+      const type = field.split('.')[1];
+      prefs.types = { ...(prefs.types || {}), [type]: value };
+    } else {
+      prefs[field] = value;
+    }
+    setProfile({ ...profile, notificationPrefs: prefs });
+    updateDoc(doc(db,'profiles',userId), { notificationPrefs: prefs });
   };
 
 
@@ -604,6 +617,29 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         : React.createElement('p', { className:'mb-2' },
             profile.allowOtherLanguages !== false ? t('yes') : t('no')
           )
+    ),
+    !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+      React.createElement(SectionTitle, { title: 'Notifikationer', action: editNotifications ?
+        React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditNotifications(false) }, 'Gem ændringer') :
+        React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditNotifications(true) }) }),
+      React.createElement('label', { className:'flex items-center mt-2' },
+        React.createElement('input', { type:'checkbox', className:'mr-2', checked: (profile.notificationPrefs?.types?.newClips !== false), onChange: e => updateNotificationPref('types.newClips', e.target.checked) }),
+        'Nye klip'
+      ),
+      React.createElement('label', { className:'flex items-center mt-2' },
+        React.createElement('input', { type:'checkbox', className:'mr-2', checked: (profile.notificationPrefs?.types?.newMatch !== false), onChange: e => updateNotificationPref('types.newMatch', e.target.checked) }),
+        'Nye matches'
+      ),
+      React.createElement('label', { className:'flex items-center mt-2' },
+        React.createElement('input', { type:'checkbox', className:'mr-2', checked: (profile.notificationPrefs?.types?.newMessage !== false), onChange: e => updateNotificationPref('types.newMessage', e.target.checked) }),
+        'Nye beskeder'
+      ),
+      React.createElement('div', { className:'flex items-center gap-2 mt-2' },
+        React.createElement('label', null, 'Forstyr ikke fra'),
+        React.createElement('input', { type:'time', value: profile.notificationPrefs?.dndStart || '', onChange: e => updateNotificationPref('dndStart', e.target.value) }),
+        React.createElement('span', null, 'til'),
+        React.createElement('input', { type:'time', value: profile.notificationPrefs?.dndEnd || '', onChange: e => updateNotificationPref('dndEnd', e.target.value) })
+      )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: t('aboutMe'), action: !publicView && (editAbout ?
