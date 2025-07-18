@@ -6,6 +6,9 @@ and simple profile management powered by Firebase. The code is hosted on
 [GitHub](https://github.com/nyhave/videotpush) and the live demo is served from
 GitHub Pages. Serverless functions for push notifications and scoring run on Netlify.
 
+For more background on the guiding principles, see [Vision for "Dagens profiler"](docs/vision.md).
+Profiles are presented as short episodes rather than a catalog of faces. Each episode guides you through introduction, a behind-the-scenes prompt answer, a glimpse of daily life and space for your reaction.
+
 ## Features
 
 * Daily discovery of short video clips (up to 3 or 6 with subscription)
