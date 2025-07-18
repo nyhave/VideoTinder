@@ -44,13 +44,18 @@ exports.handler = async function(event) {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
   try {
-    const { title = 'RealDate', body, tokens: bodyTokens } = JSON.parse(event.body || '{}');
+    const { title = 'RealDate', body, tokens: bodyTokens, userId } = JSON.parse(event.body || '{}');
     if (!body) {
       return { statusCode: 400, body: 'Invalid payload' };
     }
     let tokens = bodyTokens;
     if (!Array.isArray(tokens) || tokens.length === 0) {
-      const tokensSnap = await db.collection('pushTokens').get();
+      let tokensSnap;
+      if (userId) {
+        tokensSnap = await db.collection('pushTokens').where('userId','==', userId).get();
+      } else {
+        tokensSnap = await db.collection('pushTokens').get();
+      }
       tokens = tokensSnap.docs.map(d => d.id);
     }
     if (tokens.length === 0) {
