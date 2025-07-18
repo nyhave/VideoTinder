@@ -22,19 +22,24 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
       const online = navigator.onLine;
       let serviceWorkerActive = false;
       let webPushSub = false;
+      let webPushValid = false;
       let fcmToken = false;
+      let fcmValid = false;
       try {
         const reg = await navigator.serviceWorker.ready;
         serviceWorkerActive = !!reg;
         const sub = await reg.pushManager.getSubscription();
         if (sub && sub.endpoint) {
           webPushSub = sub.endpoint.includes('apple.com');
+          const exp = sub.expirationTime;
+          webPushValid = !exp || exp > Date.now();
         }
       } catch {}
       if (messaging && permission === 'granted') {
         try {
           const tok = await getToken(messaging, { vapidKey: process.env.VAPID_KEY, serviceWorkerRegistration: fcmReg });
           fcmToken = !!tok;
+          fcmValid = !!tok;
         } catch {}
       }
       let dbConn = false;
@@ -42,7 +47,7 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
         await getDocs(collection(db, 'profiles'));
         dbConn = true;
       } catch {}
-      setCheckResult({ installed, permission, online, serviceWorkerActive, webPushSub, fcmToken, dbConn });
+      setCheckResult({ installed, permission, online, serviceWorkerActive, webPushSub, webPushValid, fcmToken, fcmValid, dbConn });
     }
     runChecks();
   }, []);
@@ -82,6 +87,9 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
           ),
           React.createElement('li', { className: checkResult.online ? 'text-green-600' : 'text-red-600' },
             (checkResult.online ? '✔' : '✖') + ' Browseren er online'
+          ),
+          React.createElement('li', { className: logs.some(l => l.event.includes('error')) ? 'text-green-600' : 'text-red-600' },
+            (logs.some(l => l.event.includes('error')) ? '✔' : '✖') + ' Fejl rapporteret'
           )
         )
       ),
@@ -90,6 +98,9 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
         React.createElement('ul', { className: 'list-disc ml-5' },
           React.createElement('li', { className: checkResult.webPushSub ? 'text-green-600' : 'text-red-600' },
             (checkResult.webPushSub ? '✔' : '✖') + ' Web Push subscription registreret'
+          ),
+          React.createElement('li', { className: checkResult.webPushValid ? 'text-green-600' : 'text-red-600' },
+            (checkResult.webPushValid ? '✔' : '✖') + ' Subscription gyldig'
           )
         )
       ),
@@ -98,6 +109,9 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
         React.createElement('ul', { className: 'list-disc ml-5' },
           React.createElement('li', { className: checkResult.fcmToken ? 'text-green-600' : 'text-red-600' },
             (checkResult.fcmToken ? '✔' : '✖') + ' FCM token tilg\u00e6ngelig'
+          ),
+          React.createElement('li', { className: checkResult.fcmValid ? 'text-green-600' : 'text-red-600' },
+            (checkResult.fcmValid ? '✔' : '✖') + ' Token gyldigt'
           )
         )
       )
