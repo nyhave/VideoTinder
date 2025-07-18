@@ -51,10 +51,11 @@ self.addEventListener('notificationclick', event => {
   event.notification.close();
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientsArr => {
+      const root = self.registration.scope;
       for (const client of clientsArr) {
-        if (client.url.includes('/') && 'focus' in client) return client.focus();
+        if (client.url.startsWith(root) && 'focus' in client) return client.focus();
       }
-      if (clients.openWindow) return clients.openWindow('/');
+      if (clients.openWindow) return clients.openWindow(root);
     })
   );
 });
