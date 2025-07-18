@@ -84,4 +84,6 @@ export default async function seedData() {
     { id: 'r3', userId: '101', date: refDates[2], text: 'Tog på vandretur.' }
   ];
   await Promise.all(reflections.map(r => setDoc(doc(db,'reflections',r.id), r)));
+
+  await setDoc(doc(db,'config','app'),{premiumInvitesEnabled:true});
 }
