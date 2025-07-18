@@ -39,14 +39,22 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type'
+};
+
 exports.handler = async function(event) {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { statusCode: 405, headers, body: 'Method Not Allowed' };
   }
   try {
     const { title = 'RealDate', body, tokens: bodyTokens, userId } = JSON.parse(event.body || '{}');
     if (!body) {
-      return { statusCode: 400, body: 'Invalid payload' };
+      return { statusCode: 400, headers, body: 'Invalid payload' };
     }
     let tokens = bodyTokens;
     if (!Array.isArray(tokens) || tokens.length === 0) {
@@ -66,7 +74,7 @@ exports.handler = async function(event) {
         tokens: 0,
         note: 'no tokens'
       }).catch(() => {});
-      return { statusCode: 200, body: 'No tokens' };
+      return { statusCode: 200, headers, body: 'No tokens' };
     }
     const res = await admin.messaging().sendEachForMulticast({
       tokens,
@@ -94,6 +102,7 @@ exports.handler = async function(event) {
 
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify({ successCount: res.successCount, removedCount: badTokens.length })
     };
   } catch (err) {
@@ -103,6 +112,6 @@ exports.handler = async function(event) {
       type: 'send-push',
       error: err.message
     }).catch(() => {});
-    return { statusCode: 500, body: 'Server error' };
+    return { statusCode: 500, headers, body: 'Server error' };
   }
 };
