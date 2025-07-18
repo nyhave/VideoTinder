@@ -5,7 +5,7 @@ import SectionTitle from './SectionTitle.jsx';
 import { db, collection, getDocs, setDoc, doc } from '../firebase.js';
 import StatsChart from './StatsChart.jsx';
 import AgeDistributionChart from './AgeDistributionChart.jsx';
-import { getAge } from '../utils.js';
+import { getAge, getTodayStr } from '../utils.js';
 
 export default function StatsScreen({ onBack }) {
   const [stats, setStats] = useState(null);
@@ -62,7 +62,7 @@ export default function StatsScreen({ onBack }) {
       };
       setStats(data);
 
-      const today = new Date().toISOString().split('T')[0];
+      const today = getTodayStr();
       await setDoc(doc(db, 'dailyStats', today), { date: today, ...data }, { merge: true });
       const histSnap = await getDocs(collection(db, 'dailyStats'));
       const hist = histSnap.docs.map(d => d.data()).sort((a, b) => a.date.localeCompare(b.date));

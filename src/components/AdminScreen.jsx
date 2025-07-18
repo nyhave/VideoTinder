@@ -5,6 +5,7 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
 import { db, updateDoc, doc, getDoc, storage, listAll, ref, getDownloadURL, messaging, setExtendedLogging, isExtendedLogging, useDoc } from '../firebase.js';
+import { advanceDay, resetDay, getTodayStr } from '../utils.js';
 import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
 
@@ -183,8 +184,19 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       }, 'Save & Logout')
     ),
 
-    // Daily admin section
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Daglig administration'),
+  // Daily admin section
+  React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Daglig administration'),
+    React.createElement('p', { className: 'mb-2' }, 'Dagens dato: ' + getTodayStr()),
+    React.createElement('div', { className: 'flex gap-2 mb-4' },
+      React.createElement(Button, {
+        className: 'bg-blue-500 text-white px-4 py-2 rounded',
+        onClick: () => { advanceDay(); location.reload(); }
+      }, 'Næste dag'),
+      React.createElement(Button, {
+        className: 'bg-blue-500 text-white px-4 py-2 rounded',
+        onClick: () => { resetDay(); location.reload(); }
+      }, 'Reset dag')
+    ),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, 'Fejlmeldinger'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenBugReports }, 'Se alle fejlmeldinger'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Anmeldt indhold'),

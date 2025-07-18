@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getCurrentDate, getTodayStr } from '../utils.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
@@ -10,7 +11,7 @@ export default function DailyCheckIn({ userId }) {
   const refs = useCollection('reflections','userId',userId);
   const t = useT();
   const [month,setMonth]=useState(()=>{
-    const d=new Date();
+    const d=getCurrentDate();
     d.setDate(1);
     return d;
   });
@@ -23,8 +24,8 @@ export default function DailyCheckIn({ userId }) {
   const save = async () => {
     const trimmed = text.trim();
     if(!trimmed) return;
-    const now = new Date();
-    const date = now.toISOString().split('T')[0];
+    const now = getCurrentDate();
+    const date = getTodayStr();
     const id = `${userId}-${date}`;
     await setDoc(doc(db,'reflections',id),{id,userId,date,text:trimmed});
     setText('');

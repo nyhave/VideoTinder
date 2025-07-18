@@ -21,6 +21,7 @@ import TextLogScreen from './components/TextLogScreen.jsx';
 import TrackUserScreen from './components/TrackUserScreen.jsx';
 import ServerLogScreen from './components/ServerLogScreen.jsx';
 import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment, logEvent } from './firebase.js';
+import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 
 
@@ -105,7 +106,7 @@ export default function VideotpushApp() {
     if(loggedIn && userId){
       logEvent('active user', { userId });
       updateDoc(doc(db, 'profiles', userId), {
-        lastActive: new Date().toISOString()
+        lastActive: getCurrentDate().toISOString()
       }).catch(err => console.error('Failed to update lastActive', err));
     }
   }, [loggedIn, userId]);
