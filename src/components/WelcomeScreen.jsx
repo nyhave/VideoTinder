@@ -68,6 +68,7 @@ export default function WelcomeScreen({ onLogin }) {
       }
     }
     await setDoc(doc(db, 'profiles', id), profile);
+    alert(t(giftFrom ? 'profileCreatedGift' : 'profileCreated'));
     onLogin(id);
   };
   return React.createElement(
