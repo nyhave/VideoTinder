@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart, Flag, CalendarClock } from 'lucide-react';
+import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart, Flag } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
@@ -348,8 +348,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
                 className: `w-10 h-10 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
                 onClick: !publicView ? () => setShowSnapVideoRecorder(true) : undefined
               }),
-          locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded' },
-            React.createElement(CalendarClock, { className:'w-8 h-8 text-pink-500' })
+          locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2' },
+            React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('unlockHigherLevels'))
           ),
           url && !publicView && React.createElement(Button, {
             className: 'mt-1 bg-pink-500 text-white p-1 rounded-full flex items-center justify-center',
@@ -382,8 +382,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         const locked = i >= stage;
         return React.createElement('div', { key: i, className: `flex items-center relative ${locked ? 'pointer-events-none' : ''}` },
           React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' }),
-          locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded' },
-            React.createElement(CalendarClock, { className:'w-6 h-6 text-pink-500' })
+          locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2' },
+            React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('unlockHigherLevels'))
           ),
           !publicView && React.createElement(Button, {
             className: 'ml-2 bg-pink-500 text-white p-1 rounded w-[20%] flex items-center justify-center',
@@ -472,10 +472,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         }, 'Upload billede'),
         publicView && !isOwnProfile && React.createElement('div', { className:'relative ml-auto' },
           React.createElement(Button, {
-            className: `bg-pink-500 text-white ${stage < 3 ? 'filter blur-sm pointer-events-none' : ''}`,
+            className: `bg-pink-500 text-white ${stage < 3 ? 'opacity-50 pointer-events-none' : ''}`,
             onClick: stage >= 3 ? toggleLike : undefined
           }, liked ? 'Unmatch' : 'Match'),
-          stage < 3 && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-8 h-8 text-pink-500' })
+          stage < 3 && React.createElement('span', { className:'absolute inset-0 m-auto text-pink-500 text-xs font-semibold flex items-center justify-center text-center px-2' }, t('unlockHigherLevels'))
         ),
         publicView && !isOwnProfile && React.createElement(Button, {
           className: 'ml-2 bg-red-500 text-white',
