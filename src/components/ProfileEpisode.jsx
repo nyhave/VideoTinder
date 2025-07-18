@@ -57,6 +57,9 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
 
   const daysLeft = progress?.expiresAt ? Math.ceil((new Date(progress.expiresAt) - getCurrentDate())/86400000) : expiryDays;
 
+  const showWatchLine = (profile.videoClips?.length || 0) > 0 || (profile.audioClips?.length || 0) > 0;
+  const showRatingLine = !progress?.rating;
+
   const saveReflection = async () => {
     const text = reflection.trim();
     if (!text) return;
@@ -116,6 +119,13 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     ),
     React.createElement('p', { className:'text-center text-sm text-gray-600 mb-2' }, stepLabels[stage-1]),
     React.createElement('p', { className:'text-center text-xs text-yellow-600 mb-2' }, t('expiresIn').replace('{days}', daysLeft)),
+    stage === 1 && React.createElement('ul', { className:'list-disc list-inside text-sm mb-4' },
+      [
+        showWatchLine && React.createElement('li', { key:'watch' }, t('level2Watch')),
+        showRatingLine && React.createElement('li', { key:'rate' }, t('level2Rate')),
+        React.createElement('li', { key:'reflect' }, t('level2Reflect'))
+      ].filter(Boolean)
+    ),
     React.createElement(SectionTitle, { title: t('episodeIntro') }),
     profile.clip && React.createElement('p', { className: 'mb-4' }, `"${profile.clip}"`),
     React.createElement(SectionTitle, { title: t('videoClips') }),
@@ -126,6 +136,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         const locked = i >= stage;
         return React.createElement('div', { key: i, className:`w-[30%] flex flex-col items-center justify-end min-h-[160px] relative ${locked ? 'filter blur-sm pointer-events-none' : ''}` },
           url && React.createElement(VideoPreview, { src: url, onEnded: () => handleClipEnd(i) }),
+          !locked && i === stage - 1 && React.createElement('span', { className:'absolute top-1 right-1 bg-green-100 text-green-600 text-xs font-semibold px-1 rounded' }, t('newLabel')),
           locked && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-8 h-8 text-pink-500' })
         );
       })
@@ -137,6 +148,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         const locked = i >= stage;
         return React.createElement('div', { key: i, className:`flex items-center relative ${locked ? 'filter blur-sm pointer-events-none' : ''}` },
           React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' }),
+          !locked && i === stage - 1 && React.createElement('span', { className:'absolute top-1 right-1 bg-green-100 text-green-600 text-xs font-semibold px-1 rounded' }, t('newLabel')),
           locked && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-6 h-6 text-pink-500' })
         );
       })

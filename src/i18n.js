@@ -74,6 +74,10 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   helpLevels:{ en:'On the Daily Life page each profile has three levels. Watch clips to unlock more content.', da:'På siden Dagens liv har hver profil tre niveauer. Se klip for at låse mere op.' },
   helpSupport:{ en:'Need assistance? Choose "Report bug" on the About page to contact support.', da:'Brug for hjælp? Vælg \"Fejlmeld\" på Om RealDate-siden for at kontakte support.' },
   helpInvites:{ en:'You can send up to five invitations. Follow each invitation until your friend has created a profile.', da:'Du kan sende op til fem invitationer. Følg hver invitation, indtil din ven har oprettet en profil.' },
+  level2Watch:{ en:'Watch the new video or sound clip', da:'Se det nye video- eller lydklip', sv:'Titta på det nya video- eller ljudklippet', es:'Mira el nuevo vídeo o clip de sonido', fr:'Regardez la nouvelle vidéo ou le nouveau clip audio', de:'Sieh dir den neuen Video- oder Audioclip an' },
+  level2Rate:{ en:'Give a private rating', da:'Giv en privat vurdering', sv:'Ge ett privat betyg', es:'Da una calificación privada', fr:'Donnez une évaluation privée', de:'Gib eine private Bewertung ab' },
+  level2Reflect:{ en:'Write a private reflection', da:'Skriv en privat refleksion', sv:'Skriv en privat reflektion', es:'Escribe una reflexión privada', fr:'Écrivez une réflexion privée', de:'Schreibe eine private Reflexion' },
+  newLabel:{ en:'New!', da:'Nyt!', sv:'Nytt!', es:'¡Nuevo!', fr:'Nouveau !', de:'Neu!' },
 };
 
 const LangContext = createContext({ lang: 'en', setLang: () => {} });
