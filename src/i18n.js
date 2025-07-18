@@ -70,6 +70,10 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   episodeStageConnect:{ en:'Connect', da:'Forbind', sv:'Anslut', es:'Conectar', fr:'Connecter', de:'Verbinden' },
   missingFieldsTitle:{ en:'Missing information', da:'Mangler information', sv:'Saknar information', es:'Falta información', fr:'Informations manquantes', de:'Fehlende Angaben' },
   missingFieldsDesc:{ en:'Please fill out all required fields', da:'Udfyld venligst alle obligatoriske felter', sv:'Vänligen fyll i alla obligatoriska fält', es:'Por favor, completa todos los campos obligatorios', fr:'Veuillez remplir tous les champs obligatoires', de:'Bitte fülle alle Pflichtfelder aus' },
+  helpTitle:{ en:'Help', da:'Hjælp', sv:'Hjälp', es:'Ayuda', fr:'Aide', de:'Hilfe' },
+  helpLevels:{ en:'On the Daily Life page each profile has three levels. Return the next day to unlock more content.', da:'På siden Dagens liv har hver profil tre niveauer. Kom videre ved at vende tilbage dagen efter for at låse mere op.' },
+  helpSupport:{ en:'Need assistance? Choose "Report bug" on the About page to contact support.', da:'Brug for hjælp? Vælg \"Fejlmeld\" på Om RealDate-siden for at kontakte support.' },
+  helpInvites:{ en:'You can send up to five invitations. Follow each invitation until your friend has created a profile.', da:'Du kan sende op til fem invitationer. Følg hver invitation, indtil din ven har oprettet en profil.' },
 };
 
 const LangContext = createContext({ lang: 'en', setLang: () => {} });

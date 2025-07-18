@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LanguageProvider } from './i18n.js';
-import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays, Heart, Shield } from 'lucide-react';
+import { Home as HomeIcon, User as UserIcon, MessageCircle as ChatIcon, CalendarDays, Heart, Shield, HelpCircle } from 'lucide-react';
 import WelcomeScreen from './components/WelcomeScreen.jsx';
 import DailyDiscovery from './components/DailyDiscovery.jsx';
 import LikesScreen from './components/LikesScreen.jsx';
@@ -21,6 +21,7 @@ import TextLogScreen from './components/TextLogScreen.jsx';
 import TrackUserScreen from './components/TrackUserScreen.jsx';
 import ServerLogScreen from './components/ServerLogScreen.jsx';
 import ProfileEpisode from './components/ProfileEpisode.jsx';
+import HelpOverlay from './components/HelpOverlay.jsx';
 import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment, logEvent } from './firebase.js';
 import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
@@ -43,6 +44,7 @@ export default function VideotpushApp() {
   const [tab,setTab]=useState('discovery');
   const [viewProfile,setViewProfile]=useState(null);
   const [videoCallId,setVideoCallId]=useState(null);
+  const [showHelp,setShowHelp]=useState(false);
   const unreadCount = chats.filter(c => c.unreadByUser || c.newMatch).length;
   const hasUnread = unreadCount > 0;
   const currentUser = profiles.find(p => p.id === userId) || {};
@@ -169,6 +171,10 @@ export default function VideotpushApp() {
         React.createElement(Shield, { className: 'w-6 h-6 text-white' })
       ),
       'RealDate',
+      React.createElement(HelpCircle, {
+        className: 'absolute top-1/2 right-12 -translate-y-1/2 cursor-pointer',
+        onClick: () => setShowHelp(true)
+      }),
       userId && React.createElement('div', {
         className: 'absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer',
         onClick: openProfileSettings
@@ -238,6 +244,7 @@ export default function VideotpushApp() {
         hasUnread && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full min-w-4 h-4 flex items-center justify-center px-1' }, unreadCount)
       ),
       React.createElement(CalendarDays, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} })
-      )
+      ),
+    showHelp && React.createElement(HelpOverlay, { onClose: ()=>setShowHelp(false) })
   ));
 }
