@@ -73,6 +73,13 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       rating,
       expiresAt: extendExpiry(progress?.expiresAt)
     }, { merge: true });
+    const refId = `${userId}-${today}-${profileId}`;
+    await setDoc(doc(db, 'reflections', refId), {
+      id: refId,
+      userId,
+      date: today,
+      text
+    }, { merge: true });
   };
 
   const saveReaction = async () => {
@@ -90,6 +97,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
 
   const handleClipEnd = async index => {
     if(stage === index + 1 && stage < 3){
+      if(stage === 1) await saveReflection();
       await setDoc(doc(db, 'episodeProgress', progressId), {
         id: progressId,
         userId,
@@ -170,7 +178,10 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
           React.createElement(Star, {
             key: n,
             className: `w-6 h-6 cursor-pointer ${n <= rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`,
-            onClick: () => setRating(n)
+            onClick: async () => {
+              setRating(n);
+              await saveReflection();
+            }
           })
         ))
       ),
@@ -178,10 +189,10 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       React.createElement(Textarea, {
         value: reflection,
         onChange: e => setReflection(e.target.value),
+        onBlur: saveReflection,
         placeholder: t('episodeReflectionPrompt'),
         className: 'mb-4'
-      }),
-      React.createElement(Button, { className: 'bg-pink-500 text-white', onClick: saveReflection }, 'Gem')
+      })
     ),
     stage === 2 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
       progress?.reflection &&
