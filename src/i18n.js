@@ -77,7 +77,14 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   level2Watch:{ en:'Watch the new video or sound clip', da:'Se det nye video- eller lydklip', sv:'Titta på det nya video- eller ljudklippet', es:'Mira el nuevo vídeo o clip de sonido', fr:'Regardez la nouvelle vidéo ou le nouveau clip audio', de:'Sieh dir den neuen Video- oder Audioclip an' },
   level2Rate:{ en:'Give a private rating', da:'Giv en privat vurdering', sv:'Ge ett privat betyg', es:'Da una calificación privada', fr:'Donnez une évaluation privée', de:'Gib eine private Bewertung ab' },
   level2Reflect:{ en:'Write a private reflection', da:'Skriv en privat refleksion', sv:'Skriv en privat reflektion', es:'Escribe una reflexión privada', fr:'Écrivez une réflexion privée', de:'Schreibe eine private Reflexion' },
-  level2Intro:{ en:'Get to level 2 with {name}', da:'Kom til niveau 2 med {name}', sv:'Kom till nivå 2 med {name}', es:'Llega al nivel 2 con {name}', fr:'Atteignez le niveau 2 avec {name}', de:'Erreiche Level 2 mit {name}' },
+  level2Intro:{
+    en:'Get to level 2 with {name} to see more content',
+    da:'Kom til niveau 2 med {name} for at se mere indhold',
+    sv:'Kom till nivå 2 med {name} för att se mer innehåll',
+    es:'Llega al nivel 2 con {name} para ver más contenido',
+    fr:'Atteignez le niveau 2 avec {name} pour voir plus de contenu',
+    de:'Erreiche Level 2 mit {name}, um mehr Inhalte zu sehen'
+  },
   unlockHigherLevels:{ en:'Unlocks at higher levels', da:'L\u00e5ses op p\u00e5 h\u00f8jere niveauer', sv:'L\u00e5ses upp p\u00e5 h\u00f6gre niv\u00e5er', es:'Se desbloquea en niveles superiores', fr:'Se d\u00e9bloque \u00e0 des niveaux sup\u00e9rieurs', de:'Wird auf h\u00f6heren Ebenen freigeschaltet' },
   newLabel:{ en:'New!', da:'Nyt!', sv:'Nytt!', es:'\u00a1Nuevo!', fr:'Nouveau !', de:'Neu!' },
 };
