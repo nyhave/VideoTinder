@@ -68,6 +68,32 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     alert('Public: ' + pub + '\nPrivate: ' + priv);
   };
 
+  const compareVapidKeys = async () => {
+    const base = process.env.FUNCTIONS_BASE_URL || '';
+    const toHex = buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    const hash = async str => toHex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)));
+    try {
+      const resp = await fetch(`${base}/.netlify/functions/vapid-info`);
+      if (!resp.ok) throw new Error('status ' + resp.status);
+      const server = await resp.json();
+      const local = {
+        VAPID_KEY: process.env.VAPID_KEY || '',
+        WEB_PUSH_PUBLIC_KEY: process.env.WEB_PUSH_PUBLIC_KEY || '',
+        WEB_PUSH_PRIVATE_KEY: process.env.WEB_PUSH_PRIVATE_KEY || ''
+      };
+      const lines = await Promise.all(Object.entries(local).map(async ([k, v]) => {
+        const localLen = v.length;
+        const localHash = await hash(v);
+        const serverInfo = server[k] || { length: 0, sha256: '' };
+        const match = localLen === serverInfo.length && localHash === serverInfo.sha256;
+        return `${k}: ${match ? '✔' : '✖'} local ${localLen}, server ${serverInfo.length}`;
+      }));
+      alert(lines.join('\n'));
+    } catch (err) {
+      alert('Comparison failed: ' + err.message);
+    }
+  };
+
   const showPushInfo = async () => {
     const values = {
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
@@ -205,6 +231,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: logClientToken }, 'Log client token'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showVapidKeys }, 'Show VAPID keys'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: compareVapidKeys }, 'Compare VAPID keys'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showPushInfo }, 'Show push info'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenServerLog }, 'Server log'),
 
