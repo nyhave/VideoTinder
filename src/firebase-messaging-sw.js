@@ -16,11 +16,13 @@ function handleBackgroundMessages() {
   if (!messaging) return;
   messaging.onBackgroundMessage(payload => {
     const n = payload.notification || {};
+    const d = payload.data || {};
     const title = n.title || 'RealDate';
     const body = n.body || title;
     self.registration.showNotification(title, {
       body,
-      icon: 'icon-192.png'
+      icon: 'icon-192.png',
+      silent: d.silent === 'true' || n.silent === true
     });
   });
 }
@@ -35,7 +37,8 @@ self.addEventListener('push', event => {
   event.waitUntil((async () => {
     await self.registration.showNotification(title, {
       body,
-      icon: 'icon-192.png'
+      icon: 'icon-192.png',
+      silent: data.silent === true || data.silent === 'true'
     });
     const clientsArr = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     for (const client of clientsArr) {
