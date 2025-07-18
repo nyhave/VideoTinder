@@ -20,6 +20,7 @@ import FunctionTestScreen from './components/FunctionTestScreen.jsx';
 import TextLogScreen from './components/TextLogScreen.jsx';
 import TrackUserScreen from './components/TrackUserScreen.jsx';
 import ServerLogScreen from './components/ServerLogScreen.jsx';
+import ProfileJourney from './components/ProfileJourney.jsx';
 import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment, logEvent } from './firebase.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 
@@ -185,14 +186,20 @@ export default function VideotpushApp() {
             React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange, onOpenProfile: openProfileSettings })
           ),
           viewProfile && (
-            React.createElement(ProfileSettings, {
-              userId: viewProfile,
-              viewerId: userId,
-              ageRange,
-              onChangeAgeRange: setAgeRange,
-              publicView: true,
-              onBack: viewProfile === userId ? openProfileSettings : openDailyClips
-            })
+            viewProfile === userId ?
+              React.createElement(ProfileSettings, {
+                userId: viewProfile,
+                viewerId: userId,
+                ageRange,
+                onChangeAgeRange: setAgeRange,
+                publicView: true,
+                onBack: openDailyClips
+              }) :
+              React.createElement(ProfileJourney, {
+                profileId: viewProfile,
+                viewerId: userId,
+                onBack: openDailyClips
+              })
           ),
           tab==='chat' && React.createElement(ChatScreen, { userId, onStartCall: id => setVideoCallId(id) }),
           tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
