@@ -68,7 +68,6 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const [showInfo, setShowInfo] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [activeVideo, setActiveVideo] = useState(null);
-  const [showBest, setShowBest] = useState(false);
   const handleExtraPurchase = async () => {
     const todayStr = getTodayStr();
     await updateDoc(doc(db, 'profiles', userId), { extraClipsDate: todayStr });
@@ -167,38 +166,6 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       }) :
         React.createElement('li', { className: 'text-center text-gray-500' }, t('noProfiles'))
     ),
-    showBest && React.createElement('ul', { className: 'space-y-4 mt-4' },
-      scoreProfiles(user, profiles, ageRange).slice(0,3).map(p => (
-        React.createElement('li', {
-          key: 'best-' + p.id,
-          className: 'p-4 bg-white rounded-lg cursor-pointer shadow-lg border border-gray-200 flex flex-col relative',
-          onClick: () => onSelectProfile(p.id)
-        },
-          React.createElement(Heart, {
-            className: `w-8 h-8 absolute top-2 right-2 ${likes.some(l => l.profileId === p.id) ? 'text-pink-500' : 'text-gray-400'}`,
-            onClick: e => { e.stopPropagation(); toggleLike(p.id); }
-          }),
-          React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
-            React.createElement('div', { className:'flex flex-col items-center' },
-              (p.photoURL ?
-                React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
-                React.createElement(User, { className: 'w-10 h-10 text-pink-500' })
-              ),
-              p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
-            ),
-            React.createElement('div', null,
-              React.createElement('p', { className: 'font-medium' }, `${p.name}(${p.birthday ? getAge(p.birthday) : p.age})`),
-              p.clip && React.createElement('p', { className: 'text-sm text-gray-700' }, `“${p.clip}”`)
-            )
-          ),
-          React.createElement('div', { className: 'flex gap-2 mt-2' },
-            React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1', onClick:e=>{e.stopPropagation(); const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null; if(url) setActiveVideo(url); } },
-              React.createElement(PlayCircle, { className: 'w-5 h-5' }), 'Afspil'
-            )
-          )
-        )
-      ))
-    ),
     React.createElement(Button, {
       className: 'mt-4 w-full bg-yellow-500 text-white',
       onClick: () => {
@@ -209,11 +176,6 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
         }
       }
     }, t('loadMore')),
-    React.createElement(Button, {
-      className: 'mt-4 w-full bg-yellow-500 text-white',
-      disabled: !hasSubscription,
-      onClick: () => setShowBest(b => !b)
-    }, t('revealBestMatch')),
     showPurchase && React.createElement(PurchaseOverlay, {
       title: 'Flere klip',
       price: '9 kr',
