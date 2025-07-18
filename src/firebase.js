@@ -168,6 +168,10 @@ export function useCollection(collectionName, field, value) {
 export function useDoc(collectionName, docId) {
   const [data, setData] = useState(null);
   useEffect(() => {
+    if (!docId) {
+      setData(null);
+      return;
+    }
     const d = doc(db, collectionName, docId);
     const unsub = onSnapshot(d, snap => {
       setData(snap.exists() ? { id: snap.id, ...snap.data() } : null);
