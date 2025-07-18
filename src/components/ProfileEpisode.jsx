@@ -160,13 +160,6 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       stage < 3 && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-8 h-8 text-pink-500' })
     ),
     stage === 1 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
-      React.createElement('ul', { className:'list-disc list-inside text-sm mb-4' },
-        [
-          showWatchLine && React.createElement('li', { key:'watch' }, t('level2Watch')),
-          showRatingLine && React.createElement('li', { key:'rate' }, t('level2Rate')),
-          React.createElement('li', { key:'reflect' }, t('level2Reflect'))
-        ].filter(Boolean)
-      ),
       React.createElement('div', { className: 'flex justify-center gap-1 mb-2' },
         [1,2,3].map(n => (
           React.createElement(Star, {
