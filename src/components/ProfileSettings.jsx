@@ -9,7 +9,7 @@ import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
 import ReportOverlay from './ReportOverlay.jsx';
-import { useCollection, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from '../firebase.js';
+import { useCollection, useDoc, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import InterestsOverlay from './InterestsOverlay.jsx';
 import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
@@ -46,6 +46,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [reportMode, setReportMode] = useState(false);
   const [reportItem, setReportItem] = useState(null);
+  const progressId = publicView && viewerId && viewerId !== userId ? `${viewerId}-${userId}` : null;
+  const progress = progressId ? useDoc('episodeProgress', progressId) : null;
+  const stage = progress?.stage || 1;
 
   const handlePurchase = async () => {
     const now = new Date();
@@ -337,7 +340,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       Array.from({ length: 3 }).map((_, i) => {
         const clip = (profile.videoClips || [])[i];
         const url = clip && clip.url ? clip.url : clip;
-        return React.createElement('div', { key: i, className: 'w-[30%] flex flex-col items-center justify-end min-h-[160px] relative' },
+        const locked = i >= stage;
+        return React.createElement('div', { key: i, className: `w-[30%] flex flex-col items-center justify-end min-h-[160px] relative ${locked ? 'filter blur-sm pointer-events-none' : ''}` },
           url
             ? React.createElement(VideoPreview, { src: url })
             : React.createElement(CameraIcon, {
@@ -372,7 +376,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     React.createElement('div', { className: 'space-y-2 mb-4' },
       audioClips.map((clip, i) => {
         const url = clip && clip.url ? clip.url : clip;
-        return React.createElement('div', { key: i, className: 'flex items-center relative' },
+        const locked = i >= stage;
+        return React.createElement('div', { key: i, className: `flex items-center relative ${locked ? 'filter blur-sm pointer-events-none' : ''}` },
           React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' }),
           !publicView && React.createElement(Button, {
             className: 'ml-2 bg-pink-500 text-white p-1 rounded w-[20%] flex items-center justify-center',
@@ -460,8 +465,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           onClick: () => photoRef.current && photoRef.current.click()
         }, 'Upload billede'),
         publicView && !isOwnProfile && React.createElement(Button, {
-          className: 'ml-auto bg-pink-500 text-white',
-          onClick: toggleLike
+          className: `ml-auto bg-pink-500 text-white ${stage < 3 ? 'filter blur-sm pointer-events-none' : ''}`,
+          onClick: stage >= 3 ? toggleLike : undefined
         }, liked ? 'Unmatch' : 'Match'),
         publicView && !isOwnProfile && React.createElement(Button, {
           className: 'ml-2 bg-red-500 text-white',
