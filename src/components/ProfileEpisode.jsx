@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDoc, db, doc, setDoc } from '../firebase.js';
 import { getTodayStr } from '../utils.js';
 import { Card } from './ui/card.js';
@@ -7,6 +7,7 @@ import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
 import ProfileSettings from './ProfileSettings.jsx';
+import { Star } from 'lucide-react';
 
 export default function ProfileEpisode({ userId, profileId, onBack }) {
   const progressId = `${userId}-${profileId}`;
@@ -15,6 +16,10 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const t = useT();
   const [reflection, setReflection] = useState('');
   const [reaction, setReaction] = useState('');
+  const [rating, setRating] = useState(0);
+  useEffect(() => {
+    if(progress?.rating) setRating(progress.rating);
+  }, [progress]);
   const stepLabels = [
     t('episodeStageReflection'),
     t('episodeStageReaction'),
@@ -37,7 +42,8 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       profileId,
       stage: 2,
       lastUpdated: today,
-      reflection: text
+      reflection: text,
+      rating
     }, { merge: true });
   };
 
@@ -75,6 +81,16 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     React.createElement(SectionTitle, { title: t('episodeIntro') }),
     profile.clip && React.createElement('p', { className: 'mb-4' }, `"${profile.clip}"`),
     stage === 1 && React.createElement(React.Fragment, null,
+      React.createElement('div', { className: 'flex justify-center gap-1 mb-2' },
+        [1,2,3].map(n => (
+          React.createElement(Star, {
+            key: n,
+            className: `w-6 h-6 cursor-pointer ${n <= rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`,
+            onClick: () => setRating(n)
+          })
+        ))
+      ),
+      React.createElement('p', { className: 'text-sm text-gray-500 mb-2 text-center' }, 'Ratingen er privat'),
       React.createElement(Textarea, {
         value: reflection,
         onChange: e => setReflection(e.target.value),
@@ -88,6 +104,14 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     stage === 2 && React.createElement(React.Fragment, null,
       progress?.reflection &&
         React.createElement('p', { className: 'italic text-gray-700 mb-2' }, `“${progress.reflection}”`),
+      progress?.rating && React.createElement('div', { className:'flex justify-center gap-1 mb-2' },
+        [1,2,3].map(n => (
+          React.createElement(Star, {
+            key:n,
+            className:`w-5 h-5 ${n <= progress.rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`
+          })
+        ))
+      ),
       React.createElement(Textarea, {
         value: reaction,
         onChange: e => setReaction(e.target.value),
