@@ -17,6 +17,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const t = useT();
   const user = profiles.find(p => p.id === userId) || {};
   const hasSubscription = user.subscriptionExpires && new Date(user.subscriptionExpires) > new Date();
+  const expiryDays = hasSubscription ? 10 : 5;
   const today = getTodayStr();
   const filtered = selectProfiles(user, profiles, ageRange);
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       const prog = progresses.find(pr => pr.id === id);
       if(!prog){
         const expires = new Date(getCurrentDate());
-        expires.setDate(expires.getDate() + 5);
+        expires.setDate(expires.getDate() + expiryDays);
         setDoc(doc(db,'episodeProgress', id), {
           id,
           userId,
@@ -133,7 +134,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       activeProfiles.length ? activeProfiles.map(p => {
         const prog = progresses.find(pr => pr.profileId === p.id);
         const stage = prog?.stage || 1;
-        const daysLeft = prog?.expiresAt ? Math.ceil((new Date(prog.expiresAt) - getCurrentDate())/86400000) : 5;
+        const daysLeft = prog?.expiresAt ? Math.ceil((new Date(prog.expiresAt) - getCurrentDate())/86400000) : expiryDays;
         return React.createElement('li', {
           key: p.id,
           className: 'p-4 bg-white rounded-lg cursor-pointer shadow-lg border border-gray-200 flex flex-col relative',
