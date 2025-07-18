@@ -172,7 +172,7 @@ export default function VideotpushApp() {
         onClick: openProfileSettings
       },
         currentUser.photoURL ?
-          React.createElement('img', { src: currentUser.photoURL, alt: 'Profil', className: 'w-8 h-8 rounded-full object-cover' }) :
+          React.createElement('img', { src: currentUser.photoURL, alt: 'Profil', className: 'w-8 h-8 rounded-lg object-cover' }) :
           React.createElement(UserIcon, { className: 'w-8 h-8 text-white' })
       )
     ),

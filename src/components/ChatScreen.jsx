@@ -117,7 +117,7 @@ export default function ChatScreen({ userId, onStartCall }) {
         React.createElement('div', { className: 'flex items-center gap-2 mb-2' },
           React.createElement('div', { className: 'flex flex-col items-center' },
             activeProfile.photoURL ?
-              React.createElement('img', { src: activeProfile.photoURL, className: 'w-16 h-16 rounded-full object-cover' }) :
+              React.createElement('img', { src: activeProfile.photoURL, className: 'w-16 h-16 rounded-lg object-cover' }) :
               React.createElement(UserIcon, { className: 'w-16 h-16 text-pink-500' }),
             activeProfile.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
           ),
