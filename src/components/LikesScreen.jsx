@@ -108,7 +108,8 @@ export default function LikesScreen({ userId, onSelectProfile }) {
         React.createElement('li',null,'🔁 Se tidligere klip igen ("Fortryd swipe")'),
         React.createElement('li',null,'🧠 Indsigt i hvem der har liket dig'),
         React.createElement('li',null,'📝 Udfoldede profiler – adgang til længere refleksioner, flere videoer'),
-        React.createElement('li',null,'🎙️ Profilbooster: Få dit klip vist tidligere på dagen')
+        React.createElement('li',null,'🎙️ Profilbooster: Få dit klip vist tidligere på dagen'),
+        React.createElement('li',null,'⏳ Bliv på profillisten i længere tid, fx 10 dage')
       )
     ),
     matchedProfile && React.createElement(MatchOverlay,{name:matchedProfile.name,onClose:()=>setMatchedProfile(null)}),
