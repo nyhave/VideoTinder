@@ -9,7 +9,7 @@ import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
 
 
-export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenFunctionTest, onOpenTextLog, onOpenUserLog, onOpenServerLog, profiles = [], userId, onSwitchProfile }) {
+export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenFunctionTest, onOpenTextLog, onOpenUserLog, onOpenServerLog, profiles = [], userId, onSwitchProfile, onSaveUserLogout }) {
 
   const { lang, setLang } = useLang();
   const t = useT();
@@ -141,12 +141,18 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       )
     ),
     React.createElement('label', { className: 'block mb-1' }, t('selectUser')),
-    React.createElement('select', {
-      className: 'border p-2 mb-4 w-full',
-      value: userId || '',
-      onChange: e => onSwitchProfile(e.target.value)
-    },
-      profiles.map(p => React.createElement('option', { key: p.id, value: p.id }, p.name))
+    React.createElement('div', { className: 'flex gap-2 mb-4' },
+      React.createElement('select', {
+        className: 'border p-2 flex-1',
+        value: userId || '',
+        onChange: e => onSwitchProfile(e.target.value)
+      },
+        profiles.map(p => React.createElement('option', { key: p.id, value: p.id }, p.name))
+      ),
+      onSaveUserLogout && React.createElement(Button, {
+        className: 'bg-blue-500 text-white px-4 py-2 rounded whitespace-nowrap',
+        onClick: onSaveUserLogout
+      }, 'Save & Logout')
     ),
 
     // Daily admin section
