@@ -341,14 +341,16 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         const clip = (profile.videoClips || [])[i];
         const url = clip && clip.url ? clip.url : clip;
         const locked = i >= stage;
-        return React.createElement('div', { key: i, className: `w-[30%] flex flex-col items-center justify-end min-h-[160px] relative ${locked ? 'filter blur-sm pointer-events-none' : ''}` },
+        return React.createElement('div', { key: i, className: `w-[30%] flex flex-col items-center justify-end min-h-[160px] relative ${locked ? 'pointer-events-none' : ''}` },
           url
             ? React.createElement(VideoPreview, { src: url })
             : React.createElement(CameraIcon, {
                 className: `w-10 h-10 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
                 onClick: !publicView ? () => setShowSnapVideoRecorder(true) : undefined
               }),
-          locked && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-8 h-8 text-pink-500' }),
+          locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded' },
+            React.createElement(CalendarClock, { className:'w-8 h-8 text-pink-500' })
+          ),
           url && !publicView && React.createElement(Button, {
             className: 'mt-1 bg-pink-500 text-white p-1 rounded-full flex items-center justify-center',
             onClick: () => deleteFile('videoClips', i)
@@ -378,9 +380,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       audioClips.map((clip, i) => {
         const url = clip && clip.url ? clip.url : clip;
         const locked = i >= stage;
-        return React.createElement('div', { key: i, className: `flex items-center relative ${locked ? 'filter blur-sm pointer-events-none' : ''}` },
+        return React.createElement('div', { key: i, className: `flex items-center relative ${locked ? 'pointer-events-none' : ''}` },
           React.createElement('audio', { src: url, controls: true, className: 'flex-1 mr-2' }),
-          locked && React.createElement(CalendarClock, { className:'absolute inset-0 m-auto w-6 h-6 text-pink-500' }),
+          locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded' },
+            React.createElement(CalendarClock, { className:'w-6 h-6 text-pink-500' })
+          ),
           !publicView && React.createElement(Button, {
             className: 'ml-2 bg-pink-500 text-white p-1 rounded w-[20%] flex items-center justify-center',
             onClick: () => deleteFile('audioClips', i)
