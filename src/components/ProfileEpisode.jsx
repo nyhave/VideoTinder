@@ -16,8 +16,8 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const profile = useDoc('profiles', profileId);
   const viewer = useDoc('profiles', userId);
   const t = useT();
-  const hasSubscription = viewer?.subscriptionExpires && new Date(viewer.subscriptionExpires) > getCurrentDate();
-  const expiryDays = hasSubscription ? 10 : 5;
+  const profileHasSub = profile?.subscriptionExpires && new Date(profile.subscriptionExpires) > getCurrentDate();
+  const expiryDays = profileHasSub ? 10 : 5;
   const [reflection, setReflection] = useState('');
   const [reaction, setReaction] = useState('');
   const [rating, setRating] = useState(0);
