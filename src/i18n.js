@@ -55,8 +55,10 @@ inviteDesc:{ en:'Share the link below to invite others to RealDate', da:'Del lin
 share:{ en:'Share', da:'Del', sv:'Dela', es:'Compartir', fr:'Partager', de:'Teilen' },
 copyLink:{ en:'Copy link', da:'Kopiér link', sv:'Kopiera länk', es:'Copiar enlace', fr:'Copier le lien', de:'Link kopieren' },
 linkCopied:{ en:'Link copied to clipboard', da:'Link kopieret', sv:'Länk kopierad', es:'Enlace copiado', fr:'Lien copié', de:'Link kopiert' },
-profileCreated:{ en:'Thanks for creating your profile!', da:'Tak fordi du oprettede din profil!', sv:'Tack för att du skapade din profil!', es:'¡Gracias por crear tu perfil!', fr:'Merci d\'avoir créé votre profil !', de:'Danke für das Erstellen deines Profils!' },
-profileCreatedGift:{ en:'You have received 3 months of premium for free.', da:'Du har fået gratis premium i 3 måneder.', sv:'Du har fått 3 månaders premium gratis.', es:'Has recibido 3 meses de premium gratis.', fr:'Vous avez reçu 3 mois de premium gratuit.', de:'Du hast 3 Monate Premium gratis erhalten.' },
+  profileCreated:{ en:'Thanks for creating your profile!', da:'Tak fordi du oprettede din profil!', sv:'Tack för att du skapade din profil!', es:'¡Gracias por crear tu perfil!', fr:'Merci d\'avoir créé votre profil !', de:'Danke für das Erstellen deines Profils!' },
+  profileCreatedGift:{ en:'You have received 3 months of premium for free.', da:'Du har fået gratis premium i 3 måneder.', sv:'Du har fått 3 månaders premium gratis.', es:'Has recibido 3 meses de premium gratis.', fr:'Vous avez reçu 3 mois de premium gratuit.', de:'Du hast 3 Monate Premium gratis erhalten.' },
+  missingFieldsTitle:{ en:'Missing information', da:'Mangler information', sv:'Saknar information', es:'Falta información', fr:'Informations manquantes', de:'Fehlende Angaben' },
+  missingFieldsDesc:{ en:'Please fill out all required fields', da:'Udfyld venligst alle obligatoriske felter', sv:'Vänligen fyll i alla obligatoriska fält', es:'Por favor, completa todos los campos obligatorios', fr:'Veuillez remplir tous les champs obligatoires', de:'Bitte fülle alle Pflichtfelder aus' },
 };
 
 const LangContext = createContext({ lang: 'en', setLang: () => {} });
