@@ -5,7 +5,7 @@ import { useT } from '../i18n.js';
 
 export default function InviteOverlay({ onClose }) {
   const t = useT();
-  const link = window.location.origin;
+  const link = window.location.origin + '/VideoTinder';
 
   const copy = async () => {
     try {
