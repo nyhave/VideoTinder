@@ -200,7 +200,6 @@ export {
   getDownloadURL,
   listAll,
   deleteObject,
-  messaging,
   onMessage,
   requestNotificationPermission,
   subscribeToWebPush,
@@ -210,4 +209,3 @@ export {
   logEvent
 };
 
-export { storage };
