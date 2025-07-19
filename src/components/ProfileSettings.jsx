@@ -350,10 +350,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         return React.createElement('div', { key: i, className: `w-[30%] flex flex-col items-center justify-end min-h-[160px] relative ${locked ? 'pointer-events-none' : ''} ${ (i===0 && highlightVideo1) || (i===1 && highlightVideo2) ? 'ring-4 ring-green-500' : ''}` },
           url
             ? React.createElement(VideoPreview, { src: url })
-            : React.createElement(CameraIcon, {
-                className: `w-10 h-10 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
-                onClick: !publicView ? () => setShowSnapVideoRecorder(true) : undefined
-              }),
+            : React.createElement('div', { className:'flex flex-col items-center' },
+                React.createElement(CameraIcon, {
+                  className: `w-10 h-10 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
+                  onClick: !publicView ? () => setShowSnapVideoRecorder(true) : undefined
+                }),
+                React.createElement('span', { className:'text-xs text-gray-500 mt-1' }, t('max10Sec'))
+              ),
           locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2' },
             React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('unlockHigherLevels'))
           ),
@@ -405,11 +408,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     ),
     remainingAudios > 0 && !publicView && React.createElement('div', { className: 'flex gap-4 justify-center mb-4' },
       Array.from({ length: remainingAudios }).map((_, i) =>
-        React.createElement(Mic, {
-          key: i,
-          className: `w-8 h-8 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
-          onClick: !publicView ? () => setShowSnapRecorder(true) : undefined
-        })
+        React.createElement('div', { key: i, className:'flex flex-col items-center' },
+          React.createElement(Mic, {
+            className: `w-8 h-8 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
+            onClick: !publicView ? () => setShowSnapRecorder(true) : undefined
+          }),
+          React.createElement('span', { className:'text-xs text-gray-500 mt-1' }, t('max10Sec'))
+        )
       )
     ),
     !publicView && React.createElement(React.Fragment, null,
