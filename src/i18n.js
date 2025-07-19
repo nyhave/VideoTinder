@@ -86,7 +86,7 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   level2Reflect:{ en:'Write a private reflection', da:'Skriv en privat refleksion', sv:'Skriv en privat reflektion', es:'Escribe una reflexión privada', fr:'Écrivez une réflexion privée', de:'Schreibe eine private Reflexion' },
   level2Intro:{
     en:'Get to level 2 with {name} to see more content',
-    da:'Kom til niveau 2 med {name} for at se mere indhold',
+    da:'Kom til Niveau 2 med {name} for at se mere indhold',
     sv:'Kom till nivå 2 med {name} för att se mer innehåll',
     es:'Llega al nivel 2 con {name} para ver más contenido',
     fr:'Atteignez le niveau 2 avec {name} pour voir plus de contenu',

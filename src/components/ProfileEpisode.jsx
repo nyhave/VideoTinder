@@ -60,8 +60,6 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
 
   const daysLeft = progress?.expiresAt ? Math.ceil((new Date(progress.expiresAt) - getCurrentDate())/86400000) : expiryDays;
 
-  const showWatchLine = (profile.videoClips?.length || 0) > 0 || (profile.audioClips?.length || 0) > 0;
-  const showRatingLine = !progress?.rating;
 
   const saveReflection = async () => {
     const text = reflection.trim();
@@ -132,13 +130,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       ),
       React.createElement('p', { className:'text-left text-sm text-gray-600 mb-2' }, stepLabels[stage-1]),
       stage === 1 && React.createElement('p', { className:'text-left text-sm mb-2 text-gray-700 font-medium' }, t('level2Intro').replace('{name}', profile.name || '')),
-      stage === 1 && React.createElement('ul', { className:'list-disc list-inside text-sm' },
-        [
-          showWatchLine && React.createElement('li', { key:'watch' }, t('level2Watch')),
-          showRatingLine && React.createElement('li', { key:'rate' }, t('level2Rate')),
-          React.createElement('li', { key:'reflect' }, t('level2Reflect'))
-        ].filter(Boolean)
-      ),
+      // Help details are shown in a popup instead of directly on the page
       stage === 1 && React.createElement('p', {
         className:'text-right text-xs text-blue-500 underline cursor-pointer mt-1',
         onClick: ()=>setShowHelp(true)
