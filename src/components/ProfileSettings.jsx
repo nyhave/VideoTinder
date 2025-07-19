@@ -69,13 +69,33 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     setShowSub(false);
   };
 
-  useEffect(()=>{if(!userId)return;getDoc(doc(db,'profiles',userId)).then(s=>s.exists()&&setProfile({id:s.id,...s.data()}));},[userId]);
+  useEffect(() => {
+    if (!userId) return;
+    getDoc(doc(db, 'profiles', userId))
+      .then(s => {
+        if (s.exists()) {
+          setProfile({ id: s.id, ...s.data() });
+        } else {
+          setProfile(false);
+        }
+      })
+      .catch(err => {
+        console.error('Failed to load profile', err);
+        setProfile(false);
+      });
+  }, [userId]);
   useEffect(()=>{if(profile && profile.distanceRange) setDistanceRange(profile.distanceRange);},[profile]);
-  if(!profile) return React.createElement('div', { className:'mt-8' },
+  if(profile === null) return React.createElement('div', { className:'mt-8' },
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-24 animate-pulse' }),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-32 animate-pulse' }),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-32 animate-pulse' }),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-40 animate-pulse' })
+  );
+
+  if(profile === false) return React.createElement('div', { className:'mt-8' },
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 text-center' },
+      'Profile not found'
+    )
   );
 
   const subscriptionActive = profile.subscriptionExpires && new Date(profile.subscriptionExpires) > new Date();
