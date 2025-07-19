@@ -10,9 +10,16 @@ import { getAge } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
   const [showRegister, setShowRegister] = useState(false);
+  const [showLoginForm, setShowLoginForm] = useState(false);
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginUser, setLoginUser] = useState('');
+  const [loginPass, setLoginPass] = useState('');
+  const [loginError, setLoginError] = useState(false);
+  const [userExists, setUserExists] = useState(false);
   const [gender, setGender] = useState('Kvinde');
   const [birthday, setBirthday] = useState('');
   const [showBirthdayOverlay, setShowBirthdayOverlay] = useState(false);
@@ -32,11 +39,22 @@ export default function WelcomeScreen({ onLogin }) {
     }
   };
 
+  const handleLogin = () => {
+    const creds = JSON.parse(localStorage.getItem('userCreds') || '{}');
+    const entry = creds[loginUser.trim()];
+    if (entry && entry.password === loginPass) {
+      onLogin(entry.id);
+    } else {
+      setLoginError(true);
+    }
+  };
+
   const register = async () => {
     const trimmedName = name.trim();
     const trimmedCity = city.trim();
     const trimmedEmail = email.trim();
-    if (!trimmedName || !trimmedCity || !trimmedEmail || !birthday) {
+    const trimmedUser = username.trim();
+    if (!trimmedName || !trimmedCity || !trimmedEmail || !birthday || !trimmedUser || !password) {
       setTriedSubmit(true);
       setShowMissingFields(true);
       return;
@@ -46,6 +64,12 @@ export default function WelcomeScreen({ onLogin }) {
       setShowAgeError(true);
       return;
     }
+    const stored = JSON.parse(localStorage.getItem('userCreds') || '{}');
+    if (stored[trimmedUser]) {
+      setUserExists(true);
+      return;
+    }
+
     const id = Date.now().toString();
     const params = new URLSearchParams(window.location.search);
     let giftFrom = params.get('gift');
@@ -113,6 +137,9 @@ export default function WelcomeScreen({ onLogin }) {
       }
     }
     await setDoc(doc(db, 'profiles', id), profile);
+    const creds = JSON.parse(localStorage.getItem('userCreds') || '{}');
+    creds[trimmedUser] = { id, password };
+    localStorage.setItem('userCreds', JSON.stringify(creds));
     if (inviteId && inviteValid) {
       try {
         await updateDoc(doc(db,'invites', inviteId), { accepted: true, profileId: id });
@@ -160,6 +187,18 @@ export default function WelcomeScreen({ onLogin }) {
     },
       React.createElement('p', { className:'text-center' }, createdMsg)
     ),
+    loginError && React.createElement(InfoOverlay, {
+      title: t('login'),
+      onClose: () => setLoginError(false)
+    },
+      React.createElement('p', { className:'text-center' }, t('loginFailed'))
+    ),
+    userExists && React.createElement(InfoOverlay, {
+      title: t('register'),
+      onClose: () => setUserExists(false)
+    },
+      React.createElement('p', { className:'text-center' }, t('usernameTaken'))
+    ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       showRegister ? (
       React.createElement(React.Fragment, null,
@@ -205,6 +244,23 @@ export default function WelcomeScreen({ onLogin }) {
           autoComplete: 'email',
           required: true
         }),
+        React.createElement('label', { className:'block mb-1' }, t('username')),
+        React.createElement(Input, {
+          className: `border p-2 mb-2 w-full ${triedSubmit && !username.trim() ? 'border-red-500' : ''}`,
+          value: username,
+          onChange: e => setUsername(e.target.value),
+          placeholder: 'username',
+          required: true
+        }),
+        React.createElement('label', { className:'block mb-1' }, t('password')),
+        React.createElement(Input, {
+          type: 'password',
+          className: `border p-2 mb-2 w-full ${triedSubmit && !password ? 'border-red-500' : ''}`,
+          value: password,
+          onChange: e => setPassword(e.target.value),
+          placeholder: '********',
+          required: true
+        }),
         React.createElement('p', {
           className:'text-xs text-gray-500 mb-2'
         }, t('emailPrivate')),
@@ -228,18 +284,39 @@ export default function WelcomeScreen({ onLogin }) {
           }, t('cancel'))
         )
       )
+    ) : showLoginForm ? (
+      React.createElement(React.Fragment, null,
+        React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, t('login')),
+        React.createElement('label', { className:'block mb-1' }, t('username')),
+        React.createElement(Input, {
+          className: 'border p-2 mb-2 w-full',
+          value: loginUser,
+          onChange: e => setLoginUser(e.target.value)
+        }),
+        React.createElement('label', { className:'block mb-1' }, t('password')),
+        React.createElement(Input, {
+          type: 'password',
+          className: 'border p-2 mb-4 w-full',
+          value: loginPass,
+          onChange: e => setLoginPass(e.target.value)
+        }),
+        React.createElement('div', { className: 'flex justify-between' },
+          React.createElement(Button, { onClick: handleLogin, className:'bg-pink-500 text-white' }, t('login')),
+          React.createElement(Button, { variant:'outline', onClick: () => setShowLoginForm(false) }, t('cancel'))
+        )
+      )
     ) : (
       React.createElement(React.Fragment, null,
         React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, 'Om RealDate'),
         React.createElement('p', { className: 'mb-4 text-gray-700' },
-          'Velkommen til en ny måde at date på. Her er fokus på at finde den personen med den rigtige energi. Det gør vi gennem lyd og video fremfor billeder.' +
+          'Velkommen til en ny måde at date på. Her er fokus på at finde den personen med den rigtige energi. Det gør vi gennem lyd og video fremfor billeder.'+
           'Her handler det ikke om hurtige swipes.' +
           'RealDate er for dig, der søger noget ægte og meningsfuldt.'
         ),
-        
+
         React.createElement(Button, {
           className: 'bg-pink-500 text-white mb-4',
-          onClick: () => onLogin()
+          onClick: () => setShowLoginForm(true)
         }, t('login')),
         React.createElement(Button, {
           className: 'bg-pink-500 text-white',
