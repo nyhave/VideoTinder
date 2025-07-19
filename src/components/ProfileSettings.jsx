@@ -48,7 +48,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [reportItem, setReportItem] = useState(null);
   const progressId = publicView && viewerId && viewerId !== userId ? `${viewerId}-${userId}` : null;
   const progress = progressId ? useDoc('episodeProgress', progressId) : null;
-  const stage = progress?.stage || 1;
+  const stage = isOwnProfile ? 3 : (progress?.stage || 1);
 
   const handlePurchase = async () => {
     const now = new Date();
