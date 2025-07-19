@@ -5,7 +5,7 @@ import { Input } from './ui/input.js';
 import InfoOverlay from './InfoOverlay.jsx';
 import { UserPlus, LogIn } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
-import { db, doc, setDoc, updateDoc, increment } from '../firebase.js';
+import { db, doc, setDoc, updateDoc, increment, getDoc } from '../firebase.js';
 import { getAge } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
@@ -48,8 +48,39 @@ export default function WelcomeScreen({ onLogin }) {
     }
     const id = Date.now().toString();
     const params = new URLSearchParams(window.location.search);
-    const giftFrom = params.get('gift');
+    let giftFrom = params.get('gift');
     const inviteId = params.get('invite');
+
+    // Validate invitation if present
+    let inviteValid = false;
+    if (inviteId) {
+      try {
+        const snap = await getDoc(doc(db, 'invites', inviteId));
+        if (snap.exists()) {
+          const inv = snap.data();
+          if (!inv.accepted && (!giftFrom || giftFrom === inv.inviterId)) {
+            inviteValid = true;
+            if (!giftFrom && inv.gift) giftFrom = inv.inviterId;
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load invite', err);
+      }
+    }
+
+    if (giftFrom && inviteValid) {
+      try {
+        const inviterSnap = await getDoc(doc(db, 'profiles', giftFrom));
+        if (!inviterSnap.exists() || (inviterSnap.data().premiumInvitesUsed || 0) >= 5) {
+          giftFrom = null;
+          inviteValid = false;
+        }
+      } catch (err) {
+        console.error('Failed to verify inviter', err);
+        giftFrom = null;
+        inviteValid = false;
+      }
+    }
     const profile = {
       id,
       name: trimmedName,
@@ -67,7 +98,7 @@ export default function WelcomeScreen({ onLogin }) {
       videoClips: [],
       interests: []
     };
-    if (giftFrom) {
+    if (giftFrom && inviteValid) {
       const now = new Date();
       const expiry = new Date(now);
       expiry.setMonth(expiry.getMonth() + 3);
@@ -82,14 +113,14 @@ export default function WelcomeScreen({ onLogin }) {
       }
     }
     await setDoc(doc(db, 'profiles', id), profile);
-    if (inviteId) {
+    if (inviteId && inviteValid) {
       try {
         await updateDoc(doc(db,'invites', inviteId), { accepted: true, profileId: id });
       } catch (err) {
         console.error('Failed to update invite', err);
       }
     }
-    setCreatedMsg(t(giftFrom ? 'profileCreatedGift' : 'profileCreated'));
+    setCreatedMsg(t(giftFrom && inviteValid ? 'profileCreatedGift' : 'profileCreated'));
     setCreatedId(id);
     setShowCreated(true);
   };
