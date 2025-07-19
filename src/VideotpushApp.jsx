@@ -22,6 +22,8 @@ import TrackUserScreen from './components/TrackUserScreen.jsx';
 import ServerLogScreen from './components/ServerLogScreen.jsx';
 import ProfileEpisode from './components/ProfileEpisode.jsx';
 import HelpOverlay from './components/HelpOverlay.jsx';
+import TaskButton from './components/TaskButton.jsx';
+import { getNextTask } from './tasks.js';
 import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment, logEvent } from './firebase.js';
 import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
@@ -47,9 +49,18 @@ export default function VideotpushApp() {
   const [viewProfile,setViewProfile]=useState(null);
   const [videoCallId,setVideoCallId]=useState(null);
   const [showHelp,setShowHelp]=useState(false);
+  const [activeTask, setActiveTask] = useState(null);
   const unreadCount = chats.filter(c => c.unreadByUser || c.newMatch).length;
   const hasUnread = unreadCount > 0;
   const currentUser = profiles.find(p => p.id === userId) || {};
+
+  useEffect(() => {
+    if (!activeTask) return;
+    const next = getNextTask(currentUser);
+    if (!next || next.key !== activeTask) {
+      setActiveTask(null);
+    }
+  }, [currentUser, activeTask]);
 
   const openDailyClips = () => {
     setTab('discovery');
@@ -59,6 +70,16 @@ export default function VideotpushApp() {
   const openProfileSettings = () => {
     setTab('profile');
     setViewProfile(null);
+  };
+
+  const handleTaskClick = () => {
+    const task = getNextTask(currentUser);
+    if (!task) return;
+    setActiveTask(task.key);
+    if (tab !== 'profile') {
+      setTab('profile');
+      setViewProfile(null);
+    }
   };
 
   const openAdmin = () => {
@@ -204,6 +225,7 @@ export default function VideotpushApp() {
       videoCallId ?
         React.createElement(VideoCallPage, { matchId: videoCallId, userId, onBack: () => setVideoCallId(null) }) :
         React.createElement(React.Fragment, null,
+          React.createElement(TaskButton, { profile: currentUser, onClick: handleTaskClick }),
           tab==='discovery' && !viewProfile && (
             React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange, onOpenProfile: openProfileSettings })
           ),
@@ -215,7 +237,8 @@ export default function VideotpushApp() {
                 ageRange,
                 onChangeAgeRange: setAgeRange,
                 publicView: true,
-                onBack: openProfileSettings
+                onBack: openProfileSettings,
+                activeTask
               }) :
               React.createElement(ProfileEpisode, {
                 userId,
@@ -231,7 +254,8 @@ export default function VideotpushApp() {
             onChangeAgeRange: setAgeRange,
             onViewPublicProfile: viewOwnPublicProfile,
             onOpenAbout: ()=>setTab('about'),
-            onLogout: logout
+            onLogout: logout,
+            activeTask
           }),
           tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
           tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenTextLog: ()=>setTab('textlog'), onOpenUserLog: ()=>setTab('trackuser'), onOpenServerLog: ()=>setTab('serverlog'), profiles, userId, onSwitchProfile: id=>setUserId(id), onSaveUserLogout: saveUserAndLogout }),
