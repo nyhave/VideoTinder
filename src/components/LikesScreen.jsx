@@ -8,6 +8,7 @@ import PurchaseOverlay from './PurchaseOverlay.jsx';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useCollection, db, doc, setDoc, deleteDoc, getDoc } from '../firebase.js';
+import StoryLineOverlay from './StoryLineOverlay.jsx';
 
 export default function LikesScreen({ userId, onSelectProfile }) {
   const profiles = useCollection('profiles');
@@ -22,6 +23,8 @@ export default function LikesScreen({ userId, onSelectProfile }) {
 
   const [activeVideo, setActiveVideo] = useState(null);
   const [matchedProfile, setMatchedProfile] = useState(null);
+  const [storyProfile, setStoryProfile] = useState(null);
+  const progresses = useCollection('episodeProgress','userId', userId);
   const toggleLike = async profileId => {
     const likeId = `${userId}-${profileId}`;
     const exists = likes.some(l => l.profileId === profileId);
@@ -94,7 +97,8 @@ export default function LikesScreen({ userId, onSelectProfile }) {
             React.createElement('div',{className:'flex gap-2 mt-2'},
               React.createElement(Button,{size:'sm',variant:'outline',className:'flex items-center gap-1',onClick:e=>{e.stopPropagation();const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null;if(url)setActiveVideo(url);}},
                 React.createElement(PlayCircle,{className:'w-5 h-5'}),'Afspil'
-              )
+              ),
+              React.createElement(Button,{size:'sm',variant:'outline',onClick:e=>{e.stopPropagation();setStoryProfile(p);}},'StoryLine')
             )
           )
         )) :
@@ -110,6 +114,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
         React.createElement('li',null,'⏳ Bliv på set i længere tid på listen af profiler (+5 dage)')
       )
     ),
+    storyProfile && React.createElement(StoryLineOverlay,{profile:storyProfile, progress: progresses.find(pr=>pr.profileId===storyProfile.id), onClose:()=>setStoryProfile(null), onMatch:id=>{toggleLike(id); setStoryProfile(null);}}),
     matchedProfile && React.createElement(MatchOverlay,{name:matchedProfile.name,onClose:()=>setMatchedProfile(null)}),
     activeVideo && React.createElement(VideoOverlay,{src:activeVideo,onClose:()=>setActiveVideo(null)})
   );
