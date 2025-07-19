@@ -11,6 +11,7 @@ import selectProfiles, { scoreProfiles } from '../selectProfiles.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
+import StoryLineOverlay from './StoryLineOverlay.jsx';
 
 export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOpenProfile }) {
   const profiles = useCollection('profiles');
@@ -70,6 +71,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const [showInfo, setShowInfo] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [activeVideo, setActiveVideo] = useState(null);
+  const [storyProfile, setStoryProfile] = useState(null);
   const handleExtraPurchase = async () => {
     const todayStr = getTodayStr();
     await updateDoc(doc(db, 'profiles', userId), { extraClipsDate: todayStr });
@@ -160,11 +162,12 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
               p.clip && React.createElement('p', { className: 'text-sm text-gray-700' }, `“${p.clip}”`)
             )
           ),
-        React.createElement('div', { className: 'flex gap-2 mt-2' },
-            React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1', onClick:e=>{e.stopPropagation(); const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null; if(url) setActiveVideo(url); } },
-              React.createElement(PlayCircle, { className: 'w-5 h-5' }), 'Afspil'
+          React.createElement('div', { className: 'flex gap-2 mt-2' },
+              React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1', onClick:e=>{e.stopPropagation(); const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null; if(url) setActiveVideo(url); } },
+                React.createElement(PlayCircle, { className: 'w-5 h-5' }), 'Afspil'
+              ),
+              React.createElement(Button, { size: 'sm', variant: 'outline', onClick:e=>{e.stopPropagation(); setStoryProfile(p);} }, 'StoryLine')
             )
-          )
         )
       }) :
         React.createElement('li', { className: 'text-center text-gray-500' }, t('noProfiles'))
@@ -193,6 +196,12 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     },
       React.createElement('p', { className: 'text-center text-sm' }, 'Du har allerede købt ekstra klip i dag')
     ),
+    storyProfile && React.createElement(StoryLineOverlay, {
+      profile: storyProfile,
+      progress: progresses.find(pr => pr.profileId === storyProfile.id),
+      onClose: () => setStoryProfile(null),
+      onMatch: id => { toggleLike(id); setStoryProfile(null); }
+    }),
     matchedProfile && React.createElement(MatchOverlay, {
       name: matchedProfile.name,
       onClose: () => setMatchedProfile(null)
