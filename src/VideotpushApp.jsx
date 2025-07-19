@@ -26,6 +26,8 @@ import { useCollection, requestNotificationPermission, subscribeToWebPush, db, d
 import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
+
 
 export default function VideotpushApp() {
   const [lang, setLang] = useState(() =>
@@ -57,6 +59,19 @@ export default function VideotpushApp() {
   const openProfileSettings = () => {
     setTab('profile');
     setViewProfile(null);
+  };
+
+  const openAdmin = () => {
+    const stored = localStorage.getItem('adminAuthorized') === 'true';
+    if (!stored) {
+      const pass = prompt('Admin password:');
+      if (pass !== ADMIN_PASSWORD) {
+        alert('Wrong password');
+        return;
+      }
+      localStorage.setItem('adminAuthorized', 'true');
+    }
+    setTab('admin');
   };
 
   const saveUserAndLogout = () => {
@@ -166,7 +181,7 @@ export default function VideotpushApp() {
     },
       userId && React.createElement('div', {
         className: 'absolute top-1/2 left-4 -translate-y-1/2 cursor-pointer',
-        onClick: () => setTab('admin')
+        onClick: openAdmin
       },
         React.createElement(Shield, { className: 'w-6 h-6 text-white' })
       ),
