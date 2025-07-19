@@ -33,7 +33,7 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
       } catch {}
       if (messaging && permission === 'granted') {
         try {
-          const tok = await getToken(messaging, { vapidKey: process.env.VAPID_KEY, serviceWorkerRegistration: fcmReg });
+          const tok = await getToken(messaging, { vapidKey: process.env.FCM_VAPID_KEY, serviceWorkerRegistration: fcmReg });
           fcmToken = !!tok;
         } catch {}
       }

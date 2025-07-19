@@ -83,6 +83,7 @@ FIREBASE_PROJECT_ID
 FIREBASE_STORAGE_BUCKET
 FIREBASE_MESSAGING_SENDER_ID
 FIREBASE_APP_ID
+FCM_VAPID_KEY
 GOOGLE_APPLICATION_CREDENTIALS
 WEB_PUSH_PUBLIC_KEY
 WEB_PUSH_PRIVATE_KEY
@@ -91,7 +92,7 @@ FUNCTIONS_BASE_URL
 
 `FUNCTIONS_BASE_URL` should point to your Netlify site URL (for example `https://videotpush.netlify.app`). It allows the GitHub Pages site to call the functions hosted on Netlify.
 
-VAPID KEYS are used on both Github Pages and Netlify in both environments that are created as secrets. During the GitHub Pages build job, these secrets are written to a `.env` file so Parcel can embed the Firebase config.
+VAPID keys are used on both GitHub Pages and Netlify. The Firebase Cloud Messaging key lives in `FCM_VAPID_KEY`, while the standard Web Push keys use `WEB_PUSH_PUBLIC_KEY` and `WEB_PUSH_PRIVATE_KEY`. During the GitHub Pages build job these secrets are written to a `.env` file so Parcel can embed the Firebase config.
   
 ## Configuring CORS for Firebase Storage
 
