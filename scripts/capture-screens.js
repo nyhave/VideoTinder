@@ -11,12 +11,18 @@ async function startServer(distPath, port) {
     res.sendFile(path.join(distPath, 'index.html'));
   });
   return new Promise(resolve => {
-    const server = app.listen(port, () => resolve(server));
+    const server = app.listen(port, () => {
+      console.log(`Server started on http://localhost:${port}`);
+      resolve(server);
+    });
   });
 }
 
 async function capture() {
   const distDir = path.join(__dirname, '..', 'dist');
+  if (!fs.existsSync(distDir)) {
+    throw new Error('dist folder missing; run "npm run build" first');
+  }
   const port = 5000;
   const server = await startServer(distDir, port);
 
@@ -26,6 +32,11 @@ async function capture() {
     args: ['--no-sandbox']
   });
   const page = await browser.newPage();
+  await page.setRequestInterception(true);
+  page.on('request', req => {
+    const allowed = req.url().startsWith(`http://localhost:${port}`) || req.url().startsWith('data:');
+    allowed ? req.continue() : req.abort();
+  });
   const routes = ['/', '/profile', '/chat', '/admin'];
   const shotsDir = path.join(__dirname, '..', 'screenshots');
   fs.mkdirSync(shotsDir, { recursive: true });
@@ -33,7 +44,7 @@ async function capture() {
   for (const route of routes) {
     const url = `http://localhost:${port}${route}`;
     const file = path.join(shotsDir, `${route === '/' ? 'home' : route.substring(1)}.png`);
-    await page.goto(url, { waitUntil: 'networkidle0' });
+    await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
     await page.screenshot({ path: file, fullPage: true });
     console.log('Saved', file);
   }
