@@ -25,13 +25,15 @@ export default function InviteOverlay({ userId, onClose }) {
         gift:invitesEnabled && remaining > 0,
         accepted:false
       });
-      const base = window.location.origin + '/VideoTinder/invite.html';
+      const basePath = new URL('./invite.html', window.location.href).pathname;
+      const base = window.location.origin + basePath;
       const giftParam = invitesEnabled && remaining > 0 ? '&gift=1' : '';
       const recipientParam = recipient ? `&recipient=${encodeURIComponent(recipient)}` : '';
       return `${base}?id=${userId}&invite=${docRef.id}${giftParam}${recipientParam}`;
     } catch(err){
       console.error('Failed to create invite', err);
-      return window.location.origin + '/VideoTinder/invite.html';
+      const fallbackPath = new URL('./invite.html', window.location.href).pathname;
+      return window.location.origin + fallbackPath;
     }
   };
 
