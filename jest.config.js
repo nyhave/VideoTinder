@@ -8,7 +8,6 @@ module.exports = {
       },
       extensionsToTreatAsEsm: ['.jsx'],
       testMatch: ['<rootDir>/src/**/__tests__/**/*.test.js']
-    },
-    '<rootDir>/netlify/functions'
+    }
   ]
 };

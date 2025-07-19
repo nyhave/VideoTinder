@@ -8,7 +8,6 @@
     "prebuild": "node scripts/bump-version.js",
     "build": "parcel build public/index.html public/invite.html --dist-dir dist --public-url ./",
     "test": "jest",
-    "test:functions": "jest -c netlify/functions/jest.config.js",
     "screenshots": "node scripts/capture-screens.js"
   },
   "dependencies": {
