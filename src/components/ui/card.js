@@ -1,4 +1,4 @@
 import React from 'react';
-export function Card({ className = '', ...props }) {
-  return React.createElement('div', { className, ...props }, props.children);
-}
+export const Card = React.forwardRef(function Card({ className = '', ...props }, ref) {
+  return React.createElement('div', { className, ref, ...props }, props.children);
+});
