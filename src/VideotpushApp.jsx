@@ -43,6 +43,7 @@ export default function VideotpushApp() {
   const DEFAULT_USER_ID = '101';
   const LAST_USER_KEY = 'preferredUserId';
   const [userId, setUserId] = useState(null);
+  const [loginMethod, setLoginMethod] = useState('password');
   const profiles = useCollection('profiles');
   const chats = useCollection('matches', 'userId', userId);
   const [ageRange,setAgeRange]=useState([35,55]);
@@ -101,12 +102,14 @@ export default function VideotpushApp() {
       localStorage.setItem(LAST_USER_KEY, userId);
     }
     setLoggedIn(false);
+    setLoginMethod('password');
     setTab('discovery');
     setViewProfile(null);
   };
 
   const logout = () => {
     setLoggedIn(false);
+    setLoginMethod('password');
     setTab('discovery');
     setViewProfile(null);
   };
@@ -154,11 +157,11 @@ export default function VideotpushApp() {
   useEffect(() => {
     if (loggedIn && userId) {
       (async () => {
-        await requestNotificationPermission(userId);
-        await subscribeToWebPush(userId);
+        await requestNotificationPermission(userId, loginMethod);
+        await subscribeToWebPush(userId, loginMethod);
       })();
     }
-  }, [loggedIn, userId]);
+  }, [loggedIn, userId, loginMethod]);
 
   useEffect(() => {
     profiles.forEach(p => {
@@ -180,7 +183,7 @@ export default function VideotpushApp() {
 
 
   if(!loggedIn) return React.createElement(LanguageProvider, { value:{lang,setLang} },
-    React.createElement(WelcomeScreen, { onLogin: id => { setLoggedIn(true); setUserId(id); logEvent('login'); } })
+    React.createElement(WelcomeScreen, { onLogin: id => { setLoggedIn(true); setUserId(id); setLoginMethod('password'); logEvent('login'); } })
   );
   const selectProfile = async id => {
     setViewProfile(id);
@@ -259,7 +262,7 @@ export default function VideotpushApp() {
             activeTask
           }),
           tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenTextLog: ()=>setTab('textlog'), onOpenUserLog: ()=>setTab('trackuser'), onOpenServerLog: ()=>setTab('serverlog'), onOpenRecentLogins: ()=>setTab('recentlogins'), profiles, userId, onSwitchProfile: id=>setUserId(id), onSaveUserLogout: saveUserAndLogout }),
+          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenTextLog: ()=>setTab('textlog'), onOpenUserLog: ()=>setTab('trackuser'), onOpenServerLog: ()=>setTab('serverlog'), onOpenRecentLogins: ()=>setTab('recentlogins'), profiles, userId, onSwitchProfile: id=>{ setUserId(id); setLoginMethod('admin'); }, onSaveUserLogout: saveUserAndLogout }),
           tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
           tab==='matchlog' && React.createElement(MatchLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='scorelog' && React.createElement(ScoreLogScreen, { onBack: ()=>setTab('admin') }),
