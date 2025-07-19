@@ -86,4 +86,13 @@ export default async function seedData() {
   await Promise.all(reflections.map(r => setDoc(doc(db,'reflections',r.id), r)));
 
   await setDoc(doc(db,'config','app'),{premiumInvitesEnabled:true});
+
+  // Seed login credentials for the example users
+  if (typeof window !== 'undefined') {
+    const creds = {};
+    for (const u of testUsers) {
+      creds[`user${u.id}`] = { id: u.id, password: '' };
+    }
+    localStorage.setItem('userCreds', JSON.stringify(creds));
+  }
 }
