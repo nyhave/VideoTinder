@@ -28,10 +28,10 @@ export default function StoryLineOverlay({ profile, progress, onClose, onMatch }
   const audioUrl = (profile.audioClips && profile.audioClips[0]) ? (profile.audioClips[0].url || profile.audioClips[0]) : null;
 
   const titles = [
-    '10 sec video',
-    'Abot me',
-    '10 sec sound',
-    'your reflections'
+    'Video (3 sec)',
+    'About me',
+    'Sound (3 sec)',
+    'Your reflections'
   ];
 
   return React.createElement('div', { className:'fixed inset-0 z-50 bg-black/70 flex items-center justify-center' },
