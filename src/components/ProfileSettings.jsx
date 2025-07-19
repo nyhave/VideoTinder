@@ -358,7 +358,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           url && publicView && reportMode && React.createElement(Flag, {
             className: 'w-5 h-5 text-red-500 absolute top-1 right-1 cursor-pointer',
             onClick: () => setReportItem({ clipURL: url })
-          })
+          }),
+          React.createElement('p', { className:'mt-1 text-xs text-center' }, t(`clip${i+1}`))
         );
       })
     ),
