@@ -38,6 +38,7 @@ test('shows registration form when clicking register', async () => {
   const regButton = screen.getByRole('button', { name: 'Create profile' });
   await userEvent.click(regButton);
   expect(screen.getByPlaceholderText('Fornavn')).toBeInTheDocument();
+  expect(screen.getByPlaceholderText('username')).toBeInTheDocument();
 });
 
 // Test missing fields validation
@@ -55,6 +56,8 @@ test('shows age error when user is under 18', async () => {
   await userEvent.type(screen.getByPlaceholderText('Fornavn'), 'Alice');
   await userEvent.type(screen.getByPlaceholderText('By'), 'City');
   await userEvent.type(screen.getByPlaceholderText('you@example.com'), 'a@test.com');
+  await userEvent.type(screen.getByPlaceholderText('username'), 'alice');
+  await userEvent.type(screen.getByPlaceholderText('********'), 'pass123');
   await userEvent.type(screen.getByPlaceholderText('F\u00f8dselsdag'), '2010-01-01');
   await userEvent.click(screen.getByRole('button', { name: 'Create profile' }));
   expect(await screen.findByText(/mindst 18 \u00e5r/)).toBeInTheDocument();
@@ -70,6 +73,8 @@ test('calls Firebase and onLogin when registration succeeds', async () => {
   await userEvent.type(screen.getByPlaceholderText('By'), 'Town');
   await userEvent.type(screen.getByPlaceholderText('F\u00f8dselsdag'), '1990-01-01');
   await userEvent.type(screen.getByPlaceholderText('you@example.com'), 'bob@test.com');
+  await userEvent.type(screen.getByPlaceholderText('username'), 'bob');
+  await userEvent.type(screen.getByPlaceholderText('********'), 'secret');
   await userEvent.click(screen.getByRole('button', { name: 'Create profile' }));
 
   await waitFor(() => expect(setDoc).toHaveBeenCalled());
