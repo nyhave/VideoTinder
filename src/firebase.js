@@ -201,11 +201,6 @@ export {
   listAll,
   deleteObject,
   onMessage,
-  requestNotificationPermission,
-  subscribeToWebPush,
-  useDoc,
-  setExtendedLogging,
-  isExtendedLogging,
-  logEvent
+  
 };
 
