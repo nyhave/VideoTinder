@@ -8,7 +8,8 @@
     "prebuild": "node scripts/bump-version.js",
     "build": "parcel build public/index.html public/invite.html --dist-dir dist --public-url ./",
     "test": "jest",
-    "test:functions": "jest -c netlify/functions/jest.config.js"
+    "test:functions": "jest -c netlify/functions/jest.config.js",
+    "screenshots": "node scripts/capture-screens.js"
   },
   "dependencies": {
     "firebase": "^9.23.0",
@@ -33,6 +34,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "parcel": "^2.9.3",
+    "puppeteer": "^24.14.0",
     "supertest": "^7.1.3"
   }
 }

@@ -85,6 +85,14 @@ This runs Jest using the configuration in `jest.config.js`.
 
 Dette er en test af workflow.
 
+## Automated Screenshots
+
+During the GitHub Pages build, the workflow runs `npm run screenshots` after the
+production build completes. This command starts a local server from the `dist/`
+folder, visits key routes using Puppeteer and saves screenshots in
+`screenshots/`. The workflow uploads this directory as an artifact so you can
+download the latest overview images from the workflow run page.
+
 ## Netlify Functions
 
 Push notifications and scoring logic run as Netlify Functions. These functions are hosted on Netlify while the rest of the site lives on GitHub Pages. Configure the following environment variables in **Site settings > Environment variables** on Netlify:
