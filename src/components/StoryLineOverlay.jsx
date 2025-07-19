@@ -29,6 +29,8 @@ export default function StoryLineOverlay({ profile, progress, onClose, onMatch }
 
   return React.createElement('div', { className:'fixed inset-0 z-50 bg-black/70 flex items-center justify-center' },
     React.createElement(Card, { className:'bg-white p-6 rounded shadow-xl max-w-sm w-full text-center' },
+      React.createElement('h2', { className:'text-xl font-semibold mb-2 text-pink-600' }, 'Storyline'),
+      React.createElement('p', { className:'text-sm text-gray-500 mb-4' }, `${step + 1} of 4`),
       React.createElement('div', { className:`transition-opacity duration-500 ${fade ? 'opacity-0' : 'opacity-100'}` },
         step === 0 && videoUrl && React.createElement('video', { src: videoUrl, autoPlay:true, className:'w-full rounded' }),
         step === 1 && React.createElement('p', { className:'text-lg mb-2' }, `“${profile.clip || ''}”`),
