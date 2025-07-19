@@ -29,3 +29,25 @@ export function getAge(birthday){
   }
   return age;
 }
+
+export function detectOS(){
+  if (typeof navigator === 'undefined') return '';
+  const ua = navigator.userAgent || '';
+  if (/android/i.test(ua)) return 'Android';
+  if (/iPad|iPhone|iPod/.test(ua)) return 'iOS';
+  if (/Win/.test(ua)) return 'Windows';
+  if (/Mac/.test(ua)) return 'Mac';
+  if (/Linux/.test(ua)) return 'Linux';
+  return 'Unknown';
+}
+
+export function detectBrowser(){
+  if (typeof navigator === 'undefined') return '';
+  const ua = navigator.userAgent || '';
+  if (/Edg\//.test(ua)) return 'Edge';
+  if (/OPR\//.test(ua)) return 'Opera';
+  if (/Chrome\//.test(ua)) return 'Chrome';
+  if (/Safari\//.test(ua) && !/Chrome\//.test(ua)) return 'Safari';
+  if (/Firefox\//.test(ua)) return 'Firefox';
+  return 'Unknown';
+}

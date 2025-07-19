@@ -30,6 +30,7 @@ import {
   onMessage
 } from 'firebase/messaging';
 import { fcmReg } from './swRegistration.js';
+import { detectOS, detectBrowser } from './utils.js';
 
 let extendedLogging = false;
 if (typeof window !== 'undefined') {
@@ -45,6 +46,21 @@ export function setExtendedLogging(val) {
 
 export function isExtendedLogging() {
   return extendedLogging;
+}
+
+function getUsernameForId(userId) {
+  if (typeof window === 'undefined') return '';
+  try {
+    const creds = JSON.parse(localStorage.getItem('userCreds') || '{}');
+    for (const [name, data] of Object.entries(creds)) {
+      if (data && data.id === userId) {
+        return name;
+      }
+    }
+  } catch (err) {
+    console.error('Failed to read userCreds', err);
+  }
+  return '';
 }
 
 export async function logEvent(event, details = {}) {
@@ -93,7 +109,10 @@ export async function subscribeToWebPush(userId) {
         .replace(/=+$/, '');
     await setDoc(doc(db, 'webPushSubscriptions', safeId), {
       ...sub.toJSON(),
-      userId
+      userId,
+      username: getUsernameForId(userId),
+      os: detectOS(),
+      browser: detectBrowser()
     });
     logEvent('subscribeToWebPush success', { userId });
     return sub;
@@ -141,7 +160,13 @@ export async function requestNotificationPermission(userId) {
       serviceWorkerRegistration: fcmReg
     });
     if (token) {
-      await setDoc(doc(db, 'pushTokens', token), { token, userId }, { merge: true });
+      await setDoc(doc(db, 'pushTokens', token), {
+        token,
+        userId,
+        username: getUsernameForId(userId),
+        os: detectOS(),
+        browser: detectBrowser()
+      }, { merge: true });
     }
     logEvent('requestNotificationPermission success', { userId });
     return token;
