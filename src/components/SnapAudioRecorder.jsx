@@ -13,10 +13,20 @@ export default function SnapAudioRecorder({ onCancel, onRecorded }) {
   const startTimeRef = useRef(null);
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-      streamRef.current = stream;
-      start();
-    });
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        streamRef.current = stream;
+        try {
+          start();
+        } catch(err){
+          console.error('Failed to start audio recorder', err);
+          onCancel && onCancel();
+        }
+      })
+      .catch(err => {
+        console.error('Failed to access microphone', err);
+        onCancel && onCancel();
+      });
     return () => {
       if(streamRef.current){
         streamRef.current.getTracks().forEach(t => t.stop());
@@ -26,7 +36,14 @@ export default function SnapAudioRecorder({ onCancel, onRecorded }) {
 
   const start = () => {
     if(!streamRef.current) return;
-    const recorder = new MediaRecorder(streamRef.current);
+    let recorder;
+    try {
+      recorder = new MediaRecorder(streamRef.current);
+    } catch(err){
+      console.error('Failed to create MediaRecorder', err);
+      onCancel && onCancel();
+      return;
+    }
     recorderRef.current = recorder;
     chunksRef.current = [];
     recorder.ondataavailable = e => chunksRef.current.push(e.data);
