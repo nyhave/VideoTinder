@@ -87,7 +87,7 @@ function urlB64ToUint8Array(base64String) {
   return outputArray;
 }
 
-export async function subscribeToWebPush(userId) {
+export async function subscribeToWebPush(userId, loginMethod = 'password') {
   if (typeof window === 'undefined') return null;
   if (Notification.permission !== 'granted') return null;
 
@@ -112,7 +112,8 @@ export async function subscribeToWebPush(userId) {
       userId,
       username: getUsernameForId(userId),
       os: detectOS(),
-      browser: detectBrowser()
+      browser: detectBrowser(),
+      loginMethod
     });
     logEvent('subscribeToWebPush success', { userId });
     return sub;
@@ -139,7 +140,7 @@ if (typeof window !== 'undefined') {
   messaging = getMessaging(app);
 }
 
-export async function requestNotificationPermission(userId) {
+export async function requestNotificationPermission(userId, loginMethod = 'password') {
 
   if (!messaging || Notification.permission === 'denied') return null;
   let permission = Notification.permission;
@@ -165,7 +166,8 @@ export async function requestNotificationPermission(userId) {
         userId,
         username: getUsernameForId(userId),
         os: detectOS(),
-        browser: detectBrowser()
+        browser: detectBrowser(),
+        loginMethod
       }, { merge: true });
     }
     logEvent('requestNotificationPermission success', { userId });
