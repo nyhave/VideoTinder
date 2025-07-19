@@ -1,4 +1,5 @@
 # RealDate
+![Test](https://github.com/nyhave/videotpush/actions/workflows/test.yml/badge.svg)
 
 RealDate is a small prototype for experimenting with a slower approach to online dating.
 The **VideotpushApp** demonstrates daily video discovery, chat, reflection notes
@@ -69,6 +70,8 @@ To create a production build run:
 npm run build
 ```
 The compiled files will be placed in the `dist` folder. When changes are pushed to `main`, a GitHub Actions workflow builds the project and publishes the site to **GitHub Pages**. The workflow lives in `.github/workflows/build.yml` where the required secrets, including `FUNCTIONS_BASE_URL`, are written to a `.env` file during the build step so the app can call the Netlify functions.
+
+A separate workflow defined in `.github/workflows/test.yml` installs dependencies and runs the Jest test suite with coverage on every push.
 
 ## Running Tests
 
