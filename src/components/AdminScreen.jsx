@@ -10,7 +10,7 @@ import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
 
 
-export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenFunctionTest, onOpenTextLog, onOpenUserLog, onOpenServerLog, profiles = [], userId, onSwitchProfile, onSaveUserLogout }) {
+export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenFunctionTest, onOpenTextLog, onOpenUserLog, onOpenServerLog, onOpenRecentLogins, profiles = [], userId, onSwitchProfile, onSaveUserLogout }) {
 
   const { lang, setLang } = useLang();
   const t = useT();
@@ -246,6 +246,8 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showPushInfo }, 'Show push info'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenServerLog }, 'Server log'),
 
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Seneste logins'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenRecentLogins }, 'Se seneste logins'),
 
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Aktive opkald'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenCallLog }, 'Se aktive opkald'),
