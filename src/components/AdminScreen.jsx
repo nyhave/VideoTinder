@@ -50,7 +50,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   const logClientToken = async () => {
     try {
       const token = await getToken(messaging, {
-        vapidKey: process.env.VAPID_KEY,
+        vapidKey: process.env.FCM_VAPID_KEY,
         serviceWorkerRegistration: fcmReg
       });
       if (token) {
@@ -78,7 +78,6 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       if (!resp.ok) throw new Error('status ' + resp.status);
       const server = await resp.json();
       const local = {
-        VAPID_KEY: process.env.VAPID_KEY || '',
         WEB_PUSH_PUBLIC_KEY: process.env.WEB_PUSH_PUBLIC_KEY || '',
         WEB_PUSH_PRIVATE_KEY: process.env.WEB_PUSH_PRIVATE_KEY || ''
       };

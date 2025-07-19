@@ -137,7 +137,7 @@ export async function requestNotificationPermission(userId) {
   try {
     logEvent('requestNotificationPermission start', { userId });
     const token = await getToken(messaging, {
-      vapidKey: process.env.VAPID_KEY,
+      vapidKey: process.env.FCM_VAPID_KEY,
       serviceWorkerRegistration: fcmReg
     });
     if (token) {

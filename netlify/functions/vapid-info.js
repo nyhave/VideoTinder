@@ -10,7 +10,6 @@ exports.handler = async function(event){
     statusCode: 200,
     headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
     body: JSON.stringify({
-      VAPID_KEY: info('VAPID_KEY'),
       WEB_PUSH_PUBLIC_KEY: info('WEB_PUSH_PUBLIC_KEY'),
       WEB_PUSH_PRIVATE_KEY: info('WEB_PUSH_PRIVATE_KEY')
     })
