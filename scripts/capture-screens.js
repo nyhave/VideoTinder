@@ -6,7 +6,8 @@ const puppeteer = require('puppeteer');
 async function startServer(distPath, port) {
   const app = express();
   app.use(express.static(distPath));
-  app.get('*', (req, res) => {
+  // For client-side routing in the built SPA
+  app.use((req, res) => {
     res.sendFile(path.join(distPath, 'index.html'));
   });
   return new Promise(resolve => {
@@ -21,7 +22,8 @@ async function capture() {
 
   const browser = await puppeteer.launch({
     headless: 'new',
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+    args: ['--no-sandbox']
   });
   const page = await browser.newPage();
   const routes = ['/', '/profile', '/chat', '/admin'];
