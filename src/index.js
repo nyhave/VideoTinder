@@ -8,13 +8,11 @@ ReactDOM.render(React.createElement(VideotpushApp), document.getElementById('roo
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
-    const baseScope = new URL('./', import.meta.url).pathname;
+    const swUrl = new URL('../public/service-worker.js', import.meta.url);
+    const baseScope = new URL('../', swUrl).pathname;
     // Register the main service worker generated in the production build
     await navigator.serviceWorker
-      .register(
-        new URL('../public/service-worker.js', import.meta.url),
-        { scope: baseScope }
-      )
+      .register(swUrl, { scope: baseScope })
       .catch(err => console.error('SW registration failed', err));
 
     // Register the Firebase messaging service worker now located under src
