@@ -19,7 +19,7 @@ import { languages, useT } from '../i18n.js';
 import { getInterestCategory } from '../interests.js';
 import { getAge } from '../utils.js';
 
-export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId, onBack }) {
+export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId, onBack, activeTask }) {
   const [profile,setProfile]=useState(null);
   const t = useT();
   const audioRef = useRef();
@@ -77,6 +77,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const subscriptionActive = profile.subscriptionExpires && new Date(profile.subscriptionExpires) > new Date();
 
   const maxAudios = (profile.audioClips || []).length >= 3;
+
+  const highlightPhoto = activeTask === 'photo';
+  const highlightVideo1 = activeTask === 'video1';
+  const highlightVideo2 = activeTask === 'video2';
+  const highlightAudio = activeTask === 'audio';
+  const highlightAbout = activeTask === 'about';
 
   const uploadFile = async (file, field) => {
     if(!file) return;
@@ -341,7 +347,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         const clip = (profile.videoClips || [])[i];
         const url = clip && clip.url ? clip.url : clip;
         const locked = i >= stage;
-        return React.createElement('div', { key: i, className: `w-[30%] flex flex-col items-center justify-end min-h-[160px] relative ${locked ? 'pointer-events-none' : ''}` },
+        return React.createElement('div', { key: i, className: `w-[30%] flex flex-col items-center justify-end min-h-[160px] relative ${locked ? 'pointer-events-none' : ''} ${ (i===0 && highlightVideo1) || (i===1 && highlightVideo2) ? 'ring-4 ring-green-500' : ''}` },
           url
             ? React.createElement(VideoPreview, { src: url })
             : React.createElement(CameraIcon, {
@@ -447,7 +453,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         ) }),
       publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
       React.createElement('div', { className:'flex items-center mb-4 gap-4' },
-        React.createElement('div', { className:'flex flex-col items-center' },
+        React.createElement('div', { className:`flex flex-col items-center ${highlightPhoto ? 'ring-4 ring-green-500' : ''}` },
           profile.photoURL ?
             React.createElement('img', {
               src: profile.photoURL,
@@ -547,8 +553,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           className: 'text-center text-sm text-gray-500'
         }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`)
       ),
-    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, videoSection),
-    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' }, audioSection),
+    React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightVideo1 || highlightVideo2 ? 'ring-4 ring-green-500' : ''}` }, videoSection),
+    React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightAudio ? 'ring-4 ring-green-500' : ''}` }, audioSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: t('interests'), action: !publicView && (editInterests ?
         React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditInterests(false) }, 'Gem ændringer') :
@@ -656,12 +662,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         React.createElement('input', { type:'time', value: profile.notificationPrefs?.dndEnd || '', onChange: e => updateNotificationPref('dndEnd', e.target.value) })
       )
     ),
-    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+    React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightAbout ? 'ring-4 ring-green-500' : ''}` },
       React.createElement(SectionTitle, { title: t('aboutMe'), action: !publicView && (editAbout ?
         React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditAbout(false) }, 'Gem ændringer') :
         React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditAbout(true) }) ) }),
       React.createElement(Textarea, {
-        className: 'mb-4',
+        className: `mb-4 ${highlightAbout ? 'ring-4 ring-green-500' : ''}`,
         readOnly: publicView || !editAbout,
         value: profile.clip || '',
         onChange: (publicView || !editAbout) ? undefined : handleClipChange
