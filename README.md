@@ -89,11 +89,10 @@ Dette er en test af workflow.
 
 ## Automated Screenshots
 
-During the GitHub Pages build, the workflow runs `npm run screenshots` after the
-production build completes. This command starts a local server from the `dist/`
-folder, visits key routes using Puppeteer and saves screenshots in
-`screenshots/`. The workflow uploads this directory as an artifact so you can
-download the latest overview images from the workflow run page.
+Screenshots of key routes can be generated with `npm run screenshots`. The
+command starts a local server from the `dist/` folder, visits a few routes using
+Puppeteer and saves the result in `screenshots/`. This step is run manually on
+the development server and no longer executes in the GitHub Pages build.
 
 ## Netlify Functions
 
