@@ -27,9 +27,16 @@ export default function StoryLineOverlay({ profile, progress, onClose, onMatch }
   const videoUrl = (profile.videoClips && profile.videoClips[0]) ? (profile.videoClips[0].url || profile.videoClips[0]) : null;
   const audioUrl = (profile.audioClips && profile.audioClips[0]) ? (profile.audioClips[0].url || profile.audioClips[0]) : null;
 
+  const titles = [
+    '10 sec video',
+    'Abot me',
+    '10 sec sound',
+    'your reflections'
+  ];
+
   return React.createElement('div', { className:'fixed inset-0 z-50 bg-black/70 flex items-center justify-center' },
     React.createElement(Card, { className:'bg-white p-6 rounded shadow-xl max-w-sm w-full text-center' },
-      React.createElement('h2', { className:'text-xl font-semibold mb-2 text-pink-600' }, 'Storyline'),
+      React.createElement('h2', { className:'text-xl font-semibold mb-2 text-pink-600' }, titles[step]),
       React.createElement('p', { className:'text-sm text-gray-500 mb-4' }, `${step + 1} of 4`),
       React.createElement('div', { className:`transition-opacity duration-500 ${fade ? 'opacity-0' : 'opacity-100'}` },
         step === 0 && videoUrl && React.createElement('video', { src: videoUrl, autoPlay:true, className:'w-full rounded' }),
