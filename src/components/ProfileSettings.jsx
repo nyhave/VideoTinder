@@ -85,6 +85,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       });
   }, [userId]);
   useEffect(()=>{if(profile && profile.distanceRange) setDistanceRange(profile.distanceRange);},[profile]);
+  useEffect(() => {
+    const ref =
+      activeTask === 'photo' ? photoSectionRef :
+      activeTask === 'video1' || activeTask === 'video2' ? videoSectionRef :
+      activeTask === 'audio' ? audioSectionRef :
+      activeTask === 'about' ? aboutSectionRef : null;
+    ref?.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [activeTask]);
   if(profile === null) return React.createElement('div', { className:'mt-8' },
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-24 animate-pulse' }),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-32 animate-pulse' }),
@@ -107,15 +115,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const highlightVideo2 = activeTask === 'video2';
   const highlightAudio = activeTask === 'audio';
   const highlightAbout = activeTask === 'about';
-
-  useEffect(() => {
-    const ref =
-      activeTask === 'photo' ? photoSectionRef :
-      activeTask === 'video1' || activeTask === 'video2' ? videoSectionRef :
-      activeTask === 'audio' ? audioSectionRef :
-      activeTask === 'about' ? aboutSectionRef : null;
-    ref?.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [activeTask]);
 
   const uploadFile = async (file, field) => {
     if(!file) return;
