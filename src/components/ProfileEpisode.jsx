@@ -16,6 +16,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const progress = useDoc('episodeProgress', progressId);
   const profile = useDoc('profiles', profileId);
   const viewer = useDoc('profiles', userId);
+  const isOwnProfile = userId === profileId;
   const t = useT();
   const profileHasSub = profile?.subscriptionExpires && new Date(profile.subscriptionExpires) > getCurrentDate();
   const expiryDays = profileHasSub ? 10 : 5;
@@ -39,11 +40,11 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     'Level 3'
   ];
 
-  const stage = progress?.stage || 1;
+  const stage = isOwnProfile ? 3 : (progress?.stage || 1);
   const today = getTodayStr();
 
   useEffect(() => {
-    if(!profile) return;
+    if(!profile || isOwnProfile) return;
     if(!progress) {
       const expiresAt = extendExpiry();
       setDoc(doc(db,'episodeProgress', progressId), {
@@ -54,7 +55,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         expiresAt
       }, { merge: true }).catch(err => console.error('Failed to init progress', err));
     }
-  }, [profile, progress]);
+  }, [profile, progress, isOwnProfile]);
 
   if (!profile) return null;
 
