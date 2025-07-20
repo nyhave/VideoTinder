@@ -23,7 +23,7 @@ export default function AboutScreen({ userId }) {
       React.createElement(Button, { className: 'bg-pink-500 text-white w-full mb-2', onClick: () => setShowReport(true) }, 'Fejlmeld'),
       React.createElement('div', { className: 'flex flex-col items-center mt-4' },
         React.createElement(QRCodeSVG, { value: new URL('./index.html', window.location.href).href, size: 128 }),
-        React.createElement('p', { className: 'text-xs mt-2 text-gray-600' }, t('qrOpen'))
+        React.createElement('p', { className: 'text-xs mt-2 text-gray-600' }, t('qrOpen')),
         React.createElement('p', { className: 'text-xs text-gray-500 text-center mt-4' }, '© 2025')
       )
       ),
