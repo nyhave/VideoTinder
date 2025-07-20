@@ -29,7 +29,8 @@ import { useCollection, requestNotificationPermission, subscribeToWebPush, db, d
 import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
+// Temporarily disable admin password check
+// const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
 
 
 export default function VideotpushApp() {
@@ -86,12 +87,15 @@ export default function VideotpushApp() {
 
   const openAdmin = () => {
     const stored = localStorage.getItem('adminAuthorized') === 'true';
+    // Temporarily bypass password check while ADMIN_PASSWORD is disabled
     if (!stored) {
+      /*
       const pass = prompt('Admin password:');
       if (pass !== ADMIN_PASSWORD) {
         alert('Wrong password');
         return;
       }
+      */
       localStorage.setItem('adminAuthorized', 'true');
     }
     setTab('admin');
