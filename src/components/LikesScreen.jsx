@@ -105,7 +105,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
           React.createElement('li',{className:'text-center text-gray-500'},'Ingen har liket dig endnu')
       )
     ),
-    !hasSubscription && React.createElement('span',{className:'absolute inset-0 m-auto text-yellow-500 text-sm font-semibold pointer-events-none flex items-center justify-center text-center px-2'},'Unlocks at higher levels'),
+    !hasSubscription && React.createElement('span',{className:'absolute inset-0 m-auto text-yellow-500 text-sm font-semibold pointer-events-none flex items-center justify-center text-center px-2'},'Kr\u00e6ver premium abonnement'),
     !hasSubscription && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb premium'),
     showPurchase && React.createElement(PurchaseOverlay,{title:'Månedligt abonnement', price:'59 kr/md', onClose:()=>setShowPurchase(false), onBuy:handlePurchase},
       React.createElement('ul',{className:'list-disc list-inside text-sm space-y-1'},
