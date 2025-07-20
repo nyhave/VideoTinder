@@ -95,6 +95,14 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   unlockHigherLevels:{ en:'Unlocks at higher levels', da:'L\u00e5ses op p\u00e5 h\u00f8jere niveauer', sv:'L\u00e5ses upp p\u00e5 h\u00f6gre niv\u00e5er', es:'Se desbloquea en niveles superiores', fr:'Se d\u00e9bloque \u00e0 des niveaux sup\u00e9rieurs', de:'Wird auf h\u00f6heren Ebenen freigeschaltet' },
   max10Sec:{ en:'Max 10 sec', da:'Max 10 sek', sv:'Max 10 sek', es:'M\u00e1x 10 seg', fr:'Max 10 s', de:'Max 10 Sek' },
   newLabel:{ en:'New!', da:'Nyt!', sv:'Nytt!', es:'\u00a1Nuevo!', fr:'Nouveau !', de:'Neu!' },
+  qrOpen:{
+    en:'Scan to open RealDate',
+    da:'Scan for at \u00e5bne RealDate',
+    sv:'Skanna f\u00f6r att \u00f6ppna RealDate',
+    es:'Escanea para abrir RealDate',
+    fr:'Scannez pour ouvrir RealDate',
+    de:'Zum \u00d6ffnen von RealDate scannen'
+  }
 };
 
 const LangContext = createContext({ lang: 'en', setLang: () => {} });
