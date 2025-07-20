@@ -81,6 +81,12 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   helpLevels:{ en:'On the Daily Life page each profile has three levels. Watch clips to unlock more content.', da:'På siden Dagens liv har hver profil tre niveauer. Se klip for at låse mere op.' },
   helpSupport:{ en:'Need assistance? Choose "Report bug" on the About page to contact support.', da:'Brug for hjælp? Vælg \"Fejlmeld\" på Om RealDate-siden for at kontakte support.' },
   helpInvites:{ en:'You can send up to five invitations. Follow each invitation until your friend has created a profile.', da:'Du kan sende op til fem invitationer. Følg hver invitation, indtil din ven har oprettet en profil.' },
+  dailyHelpLabel:{ en:'Need help?', da:'Need help?' },
+  dailyHelpTitle:{ en:'Daily Clips Help', da:'Hjælp til Dagens klip' },
+  dailyHelpText:{
+    en:'Feel the energy and consider carefully before matching. We use video clips and audio to show the person\'s energy and personality. Take your time with the profiles. We support reflection time and want to avoid endless swiping. Therefore you get video/audio one at a time and can look forward to more clips of the same person being released in the next days. To make the videos unique we ask for different content: introduction, biggest interest and free choice.',
+    da:'Føl energien og overvej grundigt inden du matcher. Vi bruger videoklip og lyd til at vise personens energi og personlighed. Brug god tid på profilerne. Vi understøtter tid til refleksion og ønsker at undgå uendelig swipe. Derfor får du video/lyd en af gangen og kan glæde dig til at der næste dage frigives flere klip af samme person. For at gøre videoerne unikke beder vi om forskelligt indhold introduktion, største interesse og frit valg.'
+  },
   level2Watch:{ en:'Watch the new video or sound clip', da:'Se det nye video- eller lydklip', sv:'Titta på det nya video- eller ljudklippet', es:'Mira el nuevo vídeo o clip de sonido', fr:'Regardez la nouvelle vidéo ou le nouveau clip audio', de:'Sieh dir den neuen Video- oder Audioclip an' },
   level2Rate:{ en:'Give a private rating', da:'Giv en privat vurdering', sv:'Ge ett privat betyg', es:'Da una calificación privada', fr:'Donnez une évaluation privée', de:'Gib eine private Bewertung ab' },
   level2Reflect:{ en:'Write a private reflection', da:'Skriv en privat refleksion', sv:'Skriv en privat reflektion', es:'Escribe una reflexión privada', fr:'Écrivez une réflexion privée', de:'Schreibe eine private Reflexion' },
