@@ -53,6 +53,7 @@ export default function VideotpushApp() {
   const [videoCallId,setVideoCallId]=useState(null);
   const [showHelp,setShowHelp]=useState(false);
   const [activeTask, setActiveTask] = useState(null);
+  const [taskClicks, setTaskClicks] = useState(0);
   const unreadCount = chats.filter(c => c.unreadByUser || c.newMatch).length;
   const hasUnread = unreadCount > 0;
   const currentUser = profiles.find(p => p.id === userId) || {};
@@ -79,6 +80,7 @@ export default function VideotpushApp() {
     const task = getNextTask(currentUser);
     if (!task) return;
     setActiveTask(task.key);
+    setTaskClicks(c => c + 1);
     if (tab !== 'profile') {
       setTab('profile');
       setViewProfile(null);
@@ -246,7 +248,8 @@ export default function VideotpushApp() {
                 onChangeAgeRange: setAgeRange,
                 publicView: true,
                 onBack: openProfileSettings,
-                activeTask
+                activeTask,
+                taskTrigger: taskClicks
               }) :
               React.createElement(ProfileEpisode, {
                 userId,
@@ -263,7 +266,8 @@ export default function VideotpushApp() {
             onViewPublicProfile: viewOwnPublicProfile,
             onOpenAbout: ()=>setTab('about'),
             onLogout: logout,
-            activeTask
+            activeTask,
+            taskTrigger: taskClicks
           }),
           tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
           tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenTextLog: ()=>setTab('textlog'), onOpenUserLog: ()=>setTab('trackuser'), onOpenServerLog: ()=>setTab('serverlog'), onOpenRecentLogins: ()=>setTab('recentlogins'), profiles, userId, onSwitchProfile: id=>{ setUserId(id); setLoginMethod('admin'); }, onSaveUserLogout: saveUserAndLogout }),
