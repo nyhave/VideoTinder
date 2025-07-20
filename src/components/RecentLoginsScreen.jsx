@@ -27,7 +27,8 @@ export default function RecentLoginsScreen({ onBack }){
       React.createElement('ul',{ className:'space-y-2 mt-4' },
         list.map(p=>React.createElement('li',{ key:p.id, className:'border-b pb-1 text-sm' },
           React.createElement('div',null,p.name || p.id),
-          React.createElement('div',{ className:'text-xs text-gray-500' }, formatDate(p.lastActive))
+          React.createElement('div',{ className:'text-xs text-gray-500' }, formatDate(p.lastActive)),
+          React.createElement('div',{ className:'text-xs text-gray-500' }, p.lastLoginMethod === 'admin' ? 'Administrator' : 'Bruger')
         ))
       )
     ) : (
