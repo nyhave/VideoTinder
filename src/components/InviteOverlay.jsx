@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { useT } from '../i18n.js';
@@ -106,7 +107,11 @@ export default function InviteOverlay({ userId, onClose }) {
         value: recipient,
         onChange: e => setRecipient(e.target.value)
       }),
-      React.createElement('input', { type: 'text', readOnly: true, className: 'border p-2 rounded w-full mb-4', value: link }),
+      React.createElement('input', { type: 'text', readOnly: true, className: 'border p-2 rounded w-full mb-2', value: link }),
+      React.createElement('div', { className: 'flex flex-col items-center mb-4' },
+        React.createElement(QRCodeSVG, { value: link, size: 128 }),
+        React.createElement('p', { className: 'text-xs mt-2 text-gray-600' }, t('qrOpen'))
+      ),
       invites.length > 0 && React.createElement('div', { className:'mb-4' },
         React.createElement('h3', { className:'font-semibold text-sm mb-1' }, t('inviteList')),
         React.createElement('ul', { className:'text-sm space-y-1' },
