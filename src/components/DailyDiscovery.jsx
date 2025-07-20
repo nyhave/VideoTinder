@@ -67,6 +67,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   });
 
   const [hoursUntil, setHoursUntil] = useState(0);
+  const [showHelp, setShowHelp] = useState(false);
   const [showPurchase, setShowPurchase] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
@@ -129,7 +130,9 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   }, []);
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title: t('dailyClips') }),
+    React.createElement(SectionTitle, { title: t('dailyClips'), action:
+      React.createElement('span', { className:'text-sm text-blue-500 underline cursor-pointer', onClick:()=>setShowHelp(true) }, t('dailyHelpLabel'))
+    }),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Nye klip om ${hoursUntil} timer`),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Tag dig god tid til at udforske dagens klip`),
     React.createElement('ul', { className: 'space-y-4' },
@@ -206,6 +209,12 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       name: matchedProfile.name,
       onClose: () => setMatchedProfile(null)
     }),
-    activeVideo && React.createElement(VideoOverlay, { src: activeVideo, onClose: () => setActiveVideo(null) })
+    activeVideo && React.createElement(VideoOverlay, { src: activeVideo, onClose: () => setActiveVideo(null) }),
+    showHelp && React.createElement(InfoOverlay, {
+      title: t('dailyHelpTitle'),
+      onClose: () => setShowHelp(false)
+    },
+      React.createElement('p', { className:'text-sm' }, t('dailyHelpText'))
+    )
   );
 }
