@@ -92,7 +92,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       activeTask === 'audio' ? audioSectionRef :
       activeTask === 'about' ? aboutSectionRef : null;
     ref?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, [activeTask, taskTrigger]);
+  }, [activeTask, taskTrigger, profile]);
   if(profile === null) return React.createElement('div', { className:'mt-8' },
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-24 animate-pulse' }),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-32 animate-pulse' }),
@@ -480,7 +480,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         }, t('about'))
       )
     ),
-    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90', ref: photoSectionRef, style: { scrollMarginTop: '5rem' } },
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90', ref: photoSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } },
         React.createElement(SectionTitle, { title: 'Din profil', action: !publicView && (
           editInfo ? null :
           React.createElement(EditIcon, {
@@ -590,8 +590,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           className: 'text-center text-sm text-gray-500'
         }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`)
       ),
-    React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightVideo1 || highlightVideo2 ? 'ring-4 ring-green-500' : ''}`, ref: videoSectionRef, style: { scrollMarginTop: '5rem' } }, videoSection),
-    React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightAudio ? 'ring-4 ring-green-500' : ''}`, ref: audioSectionRef, style: { scrollMarginTop: '5rem' } }, audioSection),
+    React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightVideo1 || highlightVideo2 ? 'ring-4 ring-green-500' : ''}`, ref: videoSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } }, videoSection),
+    React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightAudio ? 'ring-4 ring-green-500' : ''}`, ref: audioSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } }, audioSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: t('interests'), action: !publicView && (editInterests ?
         React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditInterests(false) }, 'Gem ændringer') :
@@ -699,7 +699,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         React.createElement('input', { type:'time', value: profile.notificationPrefs?.dndEnd || '', onChange: e => updateNotificationPref('dndEnd', e.target.value) })
       )
     ),
-    React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightAbout ? 'ring-4 ring-green-500' : ''}`, ref: aboutSectionRef, style: { scrollMarginTop: '5rem' } },
+    React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightAbout ? 'ring-4 ring-green-500' : ''}`, ref: aboutSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } },
       React.createElement(SectionTitle, { title: t('aboutMe'), action: !publicView && (editAbout ?
         React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditAbout(false) }, 'Gem ændringer') :
         React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditAbout(true) }) ) }),
