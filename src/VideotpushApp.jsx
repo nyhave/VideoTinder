@@ -72,6 +72,7 @@ export default function VideotpushApp() {
   };
 
   const openProfileSettings = () => {
+    setActiveTask(null);
     setTab('profile');
     setViewProfile(null);
   };
