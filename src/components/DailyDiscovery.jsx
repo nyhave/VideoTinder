@@ -55,6 +55,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           userId,
           profileId: p.id,
           stage: 1,
+          seenStage: 1,
           expiresAt: expires.toISOString()
         }, { merge: true }).catch(err => console.error('Failed to init progress', err));
       }
