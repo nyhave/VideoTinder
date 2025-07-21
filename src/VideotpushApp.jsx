@@ -43,7 +43,7 @@ export default function VideotpushApp() {
   const profiles = useCollection('profiles');
   const chats = useCollection('matches', 'userId', userId);
   const [ageRange,setAgeRange]=useState([35,55]);
-  const [tab,setTab]=useState('discovery');
+  const [tab,setTab]=useState('admin');
   const [viewProfile,setViewProfile]=useState(null);
   const [videoCallId,setVideoCallId]=useState(null);
   const [showHelp,setShowHelp]=useState(false);
