@@ -74,6 +74,7 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   episodeIntro:{ en:'Introduction', da:'Introduktion', sv:'Introduktion', es:'Introducción', fr:'Introduction', de:'Einführung' },
   episodeReflectionPrompt:{ en:'Write a short reflection...', da:'Skriv en kort refleksion...', sv:'Skriv en kort reflektion...', es:'Escribe una breve reflexión...', fr:'Écrivez une courte réflexion...', de:'Schreibe eine kurze Reflexion...' },
   episodeReactionPrompt:{ en:'Send a reaction', da:'Send en reaktion', sv:'Skicka en reaktion', es:'Envía una reacción', fr:'Envoyer une réaction', de:'Sende eine Reaktion' },
+  charactersLeft:{ en:'{count} characters left', da:'{count} tegn tilbage', sv:'{count} tecken kvar', es:'Quedan {count} caracteres', fr:'{count} caractères restants', de:'{count} Zeichen übrig' },
   episodeReturnTomorrow:{ en:'Watch another clip to continue', da:'Se et klip mere for at fortsætte', sv:'Titta på ett klipp till för att fortsätta', es:'Mira otro clip para continuar', fr:'Regardez un autre clip pour continuer', de:'Schau einen weiteren Clip, um fortzufahren' },
   episodeMatchPrompt:{ en:'Start conversation', da:'Start samtale', sv:'Starta samtal', es:'Iniciar conversación', fr:'Commencer la conversation', de:'Gespräch starten' },
   episodeStageReflection:{ en:'Reflection', da:'Refleksion', sv:'Reflektion', es:'Reflexión', fr:'Réflexion', de:'Reflexion' },

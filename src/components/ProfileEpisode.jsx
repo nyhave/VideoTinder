@@ -26,6 +26,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const [reaction, setReaction] = useState('');
   const [rating, setRating] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
+  const MAX_REFLECTION_LEN = 30;
   const extendExpiry = (current) => {
     const base = current && new Date(current) > getCurrentDate()
       ? new Date(current) : getCurrentDate();
@@ -206,11 +207,14 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       React.createElement('p', { className: 'text-sm text-gray-500 mb-2 text-center' }, 'Ratingen er privat'),
       React.createElement(Textarea, {
         value: reflection,
-        onChange: e => setReflection(e.target.value),
+        maxLength: MAX_REFLECTION_LEN,
+        onChange: e => setReflection(e.target.value.slice(0, MAX_REFLECTION_LEN)),
         onBlur: saveReflection,
         placeholder: t('episodeReflectionPrompt'),
-        className: 'mb-4'
-      })
+        className: 'mb-1'
+      }),
+      React.createElement('p', { className:'text-xs text-right text-gray-500 mb-3' },
+        t('charactersLeft').replace('{count}', MAX_REFLECTION_LEN - reflection.length))
     ),
     stage === 2 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
       progress?.reflection &&
