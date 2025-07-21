@@ -119,7 +119,7 @@ button.btn-outline-red {
 
 /* Reveal animation for newly unlocked content */
 .reveal-animation {
-  animation: reveal-scale 0.5s ease-out;
+  animation: reveal-scale 1s ease-out;
 }
 
 @keyframes reveal-scale {
