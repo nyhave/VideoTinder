@@ -98,6 +98,7 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
     fr:'Atteignez le niveau 2 avec {name} pour voir plus de contenu',
     de:'Erreiche Level 2 mit {name}, um mehr Inhalte zu sehen'
   },
+  keepProfile:{ en:'Keep profile', da:'Bevar profilen', sv:'Bevara profilen', es:'Mantener perfil', fr:'Garder le profil', de:'Profil behalten' },
   dayLabel:{
     en:'Day {day}',
     da:'Dag {day}',
