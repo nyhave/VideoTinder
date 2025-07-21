@@ -14,8 +14,9 @@ jest.mock('../firebase.js', () => ({
   updateDoc: jest.fn(() => Promise.resolve()),
   increment: jest.fn(() => 'increment'),
   sendPasswordResetEmail: jest.fn(() => Promise.resolve()),
-  createUserWithEmailAndPassword: jest.fn(() => Promise.resolve()),
-  signInWithEmailAndPassword: jest.fn(() => Promise.resolve()),
+  createUserWithEmailAndPassword: jest.fn(() => Promise.resolve({ user: { uid: 'uid123' } })),
+  signInWithEmailAndPassword: jest.fn(() => Promise.resolve({ user: { uid: 'uid123' } })),
+  getDoc: jest.fn(() => Promise.resolve({ exists: () => false })),
 }));
 
 let nowSpy;
@@ -82,7 +83,7 @@ test('calls Firebase and onLogin when registration succeeds', async () => {
   await userEvent.click(screen.getByRole('button', { name: 'Create profile' }));
 
   await waitFor(() => expect(setDoc).toHaveBeenCalled());
-  expect(setDoc).toHaveBeenCalledTimes(1);
+  expect(setDoc).toHaveBeenCalledTimes(2);
 
   // Overlay should show success message
   expect(await screen.findByText('Thanks for creating your profile!')).toBeInTheDocument();

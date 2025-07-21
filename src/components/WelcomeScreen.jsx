@@ -6,7 +6,7 @@ import InfoOverlay from './InfoOverlay.jsx';
 import ForgotPasswordOverlay from './ForgotPasswordOverlay.jsx';
 import { UserPlus, LogIn } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
-import { db, doc, setDoc, updateDoc, increment, getDoc } from '../firebase.js';
+import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../firebase.js';
 import { getAge } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
@@ -20,7 +20,6 @@ export default function WelcomeScreen({ onLogin }) {
   const [loginUser, setLoginUser] = useState('');
   const [loginPass, setLoginPass] = useState('');
   const [loginError, setLoginError] = useState(false);
-  const [userExists, setUserExists] = useState(false);
   const [gender, setGender] = useState('Kvinde');
   const [birthday, setBirthday] = useState('');
   const [showBirthdayOverlay, setShowBirthdayOverlay] = useState(false);
@@ -41,12 +40,14 @@ export default function WelcomeScreen({ onLogin }) {
     }
   };
 
-  const handleLogin = () => {
-    const creds = JSON.parse(localStorage.getItem('userCreds') || '{}');
-    const entry = creds[loginUser.trim()];
-    if (entry && entry.password === loginPass) {
-      onLogin(entry.id);
-    } else {
+  const handleLogin = async () => {
+    try {
+      const cred = await signInWithEmailAndPassword(auth, loginUser.trim(), loginPass);
+      const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
+      const pid = userDoc.exists() ? userDoc.data().profileId : cred.user.uid;
+      onLogin(pid);
+    } catch (err) {
+      console.error('Login failed', err);
       setLoginError(true);
     }
   };
@@ -66,11 +67,7 @@ export default function WelcomeScreen({ onLogin }) {
       setShowAgeError(true);
       return;
     }
-    const stored = JSON.parse(localStorage.getItem('userCreds') || '{}');
-    if (stored[trimmedUser]) {
-      setUserExists(true);
-      return;
-    }
+
 
     const id = Date.now().toString();
     const params = new URLSearchParams(window.location.search);
@@ -138,10 +135,16 @@ export default function WelcomeScreen({ onLogin }) {
         console.error('Failed to update inviter', err);
       }
     }
-    await setDoc(doc(db, 'profiles', id), profile);
-    const creds = JSON.parse(localStorage.getItem('userCreds') || '{}');
-    creds[trimmedUser] = { id, password };
-    localStorage.setItem('userCreds', JSON.stringify(creds));
+    let userCred;
+    try {
+      userCred = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
+    } catch (err) {
+      console.error('Failed to create user', err);
+      setLoginError(true);
+      return;
+    }
+    await setDoc(doc(db, 'profiles', id), { ...profile, uid: userCred.user.uid });
+    await setDoc(doc(db, 'users', userCred.user.uid), { profileId: id });
     if (inviteId && inviteValid) {
       try {
         await updateDoc(doc(db,'invites', inviteId), { accepted: true, profileId: id });
@@ -198,12 +201,6 @@ export default function WelcomeScreen({ onLogin }) {
       onClose: () => setLoginError(false)
     },
       React.createElement('p', { className:'text-center' }, t('loginFailed'))
-    ),
-    userExists && React.createElement(InfoOverlay, {
-      title: t('register'),
-      onClose: () => setUserExists(false)
-    },
-      React.createElement('p', { className:'text-center' }, t('usernameTaken'))
     ),
     showForgot && React.createElement(ForgotPasswordOverlay, {
       onClose: () => setShowForgot(false)
