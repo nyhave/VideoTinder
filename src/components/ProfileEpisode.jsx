@@ -62,6 +62,13 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   }, [profile, progress, isOwnProfile]);
 
   useEffect(() => {
+    if(showReveal){
+      const audio = new Audio('/reveal.mp3');
+      audio.play().catch(err => console.error('Failed to play reveal sound', err));
+    }
+  }, [showReveal]);
+
+  useEffect(() => {
     if(!progress) return;
     if((progress.seenStage || 1) < stage){
       setDoc(doc(db,'episodeProgress', progressId), {
