@@ -33,7 +33,9 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  onAuthStateChanged,
+  signOut
 } from 'firebase/auth';
 import { fcmReg } from './swRegistration.js';
 import { detectOS, detectBrowser } from './utils.js';
@@ -142,6 +144,10 @@ const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const auth = getAuth(app);
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '')
+  .split(',')
+  .map(e => e.trim())
+  .filter(Boolean);
 export let messaging;
 if (typeof window !== 'undefined') {
   messaging = getMessaging(app);
@@ -215,6 +221,23 @@ export function useDoc(collectionName, docId) {
   return data;
 }
 
+export function useAuth() {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, u => setUser(u));
+    return () => unsub();
+  }, []);
+  return user;
+}
+
+export function isAdminUser(user) {
+  return !!user && ADMIN_EMAILS.includes(user.email || '');
+}
+
+export function signOutUser() {
+  return signOut(auth);
+}
+
 export {
   collection,
   getDocs,
@@ -238,5 +261,9 @@ export {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  onAuthStateChanged,
+  signOut,
 };
+
+export { useAuth, isAdminUser, signOutUser };
 

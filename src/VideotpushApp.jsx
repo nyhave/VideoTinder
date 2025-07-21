@@ -25,14 +25,9 @@ import ProfileEpisode from './components/ProfileEpisode.jsx';
 import HelpOverlay from './components/HelpOverlay.jsx';
 import TaskButton from './components/TaskButton.jsx';
 import { getNextTask } from './tasks.js';
-import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment, logEvent } from './firebase.js';
+import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment, logEvent, auth, isAdminUser, signOutUser } from './firebase.js';
 import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
-
-// Temporarily disable admin password check
-// const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
-
-
 export default function VideotpushApp() {
   const [lang, setLang] = useState(() =>
     localStorage.getItem('lang') || 'en'
@@ -89,17 +84,9 @@ export default function VideotpushApp() {
   };
 
   const openAdmin = () => {
-    const stored = localStorage.getItem('adminAuthorized') === 'true';
-    // Temporarily bypass password check while ADMIN_PASSWORD is disabled
-    if (!stored) {
-      /*
-      const pass = prompt('Admin password:');
-      if (pass !== ADMIN_PASSWORD) {
-        alert('Wrong password');
-        return;
-      }
-      */
-      localStorage.setItem('adminAuthorized', 'true');
+    if (!isAdminUser(auth.currentUser)) {
+      alert('Admin access denied');
+      return;
     }
     setTab('admin');
     setViewProfile(null);
@@ -109,6 +96,7 @@ export default function VideotpushApp() {
     if (userId) {
       localStorage.setItem(LAST_USER_KEY, userId);
     }
+    signOutUser().catch(() => {});
     setLoggedIn(false);
     setLoginMethod('password');
     setTab('discovery');
@@ -116,6 +104,7 @@ export default function VideotpushApp() {
   };
 
   const logout = () => {
+    signOutUser().catch(() => {});
     setLoggedIn(false);
     setLoginMethod('password');
     setTab('discovery');
