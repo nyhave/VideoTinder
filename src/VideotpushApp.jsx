@@ -102,6 +102,7 @@ export default function VideotpushApp() {
       localStorage.setItem('adminAuthorized', 'true');
     }
     setTab('admin');
+    setViewProfile(null);
   };
 
   const saveUserAndLogout = () => {
