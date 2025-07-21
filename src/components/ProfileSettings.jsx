@@ -25,6 +25,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [profile,setProfile]=useState(null);
   const t = useT();
   const audioRef = useRef();
+  const videoRef = useRef();
   const photoRef = useRef();
   const photoSectionRef = useRef();
   const videoSectionRef = useRef();
@@ -211,6 +212,16 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       return;
     }
     uploadFile(file, 'audioClips');
+  };
+
+  const handleVideoChange = async e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    if(!(await checkDuration(file))){
+      alert('Video må højest være 10 sekunder');
+      return;
+    }
+    uploadFile(file, 'videoClips');
   };
 
   const handleAgeRangeChange = async range => {
@@ -409,8 +420,21 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         );
       })
     ),
-      !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded })
-    );
+    !publicView && React.createElement('div', { className:'flex justify-center mb-2' },
+      React.createElement(Button, {
+        className: 'bg-pink-500 text-white',
+        onClick: () => videoRef.current && videoRef.current.click()
+      }, 'Evas upload knap')
+    ),
+    !publicView && React.createElement('input', {
+      type: 'file',
+      accept: 'video/*',
+      ref: videoRef,
+      onChange: handleVideoChange,
+      className: 'hidden'
+    }),
+    !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded })
+  );
 
   const audioClips = profile.audioClips || [];
   const remainingAudios = Math.max(0, 3 - audioClips.length);
@@ -453,6 +477,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement('span', { className:'text-xs text-gray-500 mt-1' }, t('max10Sec'))
         )
       )
+    ),
+    !publicView && React.createElement('div', { className:'flex justify-center mb-2' },
+      React.createElement(Button, {
+        className:'bg-pink-500 text-white',
+        onClick: () => audioRef.current && audioRef.current.click()
+      }, 'Evas upload knap')
     ),
     !publicView && React.createElement(React.Fragment, null,
       React.createElement('input', {
