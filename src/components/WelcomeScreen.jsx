@@ -167,7 +167,6 @@ export default function WelcomeScreen({ onLogin }) {
         className: 'border p-2',
         value: birthday,
         onChange: e => setBirthday(e.target.value),
-        onBlur: handleBirthdayBlur,
         autoFocus: true
       }),
       React.createElement(Button, {
