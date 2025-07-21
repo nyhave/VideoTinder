@@ -53,7 +53,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         userId,
         profileId,
         stage: 1,
-        seenStage: 1,
+        seenStage: 0,
         expiresAt
       }, { merge: true }).catch(err => console.error('Failed to init progress', err));
     }
@@ -162,9 +162,9 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         const classes = `w-[30%] flex flex-col items-center justify-end min-h-[160px] relative ${locked ? 'pointer-events-none' : ''} ${showReveal && i === stage - 1 ? 'reveal-animation' : ''}`;
         return React.createElement('div', { key: i, className: classes },
           url && React.createElement(VideoPreview, { src: url, onEnded: () => handleClipEnd(i) }),
-          !locked && i === stage - 1 && React.createElement('span', { className:'absolute top-1 right-1 bg-green-100 text-green-600 text-xs font-semibold px-1 rounded' }, t('newLabel')),
+          !locked && i === stage - 1 && React.createElement('span', { className:'absolute top-1 right-1 bg-green-100 text-green-600 text-xs font-semibold px-1 rounded' }, t('dayLabel').replace('{day}', i + 1)),
           locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2' },
-            React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('unlockHigherLevels'))
+            React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('dayLabel').replace('{day}', i + 1))
           )
         );
       })
@@ -177,16 +177,16 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         const aClasses = `flex items-center relative ${locked ? 'pointer-events-none' : ''} ${showReveal && i === stage - 1 ? 'reveal-animation' : ''}`;
         return React.createElement('div', { key: i, className: aClasses },
           React.createElement('audio', { src: url, controls: true, controlsList: 'nodownload noplaybackrate', className: 'flex-1 mr-2' }),
-          !locked && i === stage - 1 && React.createElement('span', { className:'absolute top-1 right-1 bg-green-100 text-green-600 text-xs font-semibold px-1 rounded' }, t('newLabel')),
+          !locked && i === stage - 1 && React.createElement('span', { className:'absolute top-1 right-1 bg-green-100 text-green-600 text-xs font-semibold px-1 rounded' }, t('dayLabel').replace('{day}', i + 1)),
           locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2' },
-            React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('unlockHigherLevels'))
+            React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('dayLabel').replace('{day}', i + 1))
           )
         );
       })
     ),
     React.createElement('div', { className:'relative' },
       React.createElement(Button, { className:`mt-2 w-full bg-pink-500 text-white ${stage < 3 ? 'opacity-50 pointer-events-none' : ''}` }, t('episodeMatchPrompt')),
-      stage < 3 && React.createElement('span', { className:'absolute inset-0 m-auto text-pink-500 text-xs font-semibold flex items-center justify-center text-center px-2' }, t('unlockHigherLevels'))
+      stage < 3 && React.createElement('span', { className:'absolute inset-0 m-auto text-pink-500 text-xs font-semibold flex items-center justify-center text-center px-2' }, t('dayLabel').replace('{day}', 3))
     ),
     stage === 1 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
       React.createElement('div', { className: 'flex justify-center gap-1 mb-2' },
