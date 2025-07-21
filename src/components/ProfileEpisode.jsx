@@ -149,11 +149,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         onClick: () => setShowHelp(true)
       }, 'Need help?')
     ),
-    React.createElement('div', { className:'w-[300px] mx-auto text-left border border-gray-300 rounded p-4 mb-4' },
-      showLevels && React.createElement('p', { className:'text-left text-sm text-gray-600 mb-2' }, stepLabels[stage-1]),
-      stage === 1 && React.createElement('p', { className:'text-left text-sm mb-2 text-gray-700 font-medium' }, t('level2Intro').replace('{name}', profile.name || '')),
-      // Help details are shown in a popup instead of directly on the page
-    ),
+    // The old level 2 intro box has been removed
     React.createElement(SectionTitle, { title: `${profile.name || ''}, ${profile.birthday ? getAge(profile.birthday) : profile.age || ''}${profile.city ? ', ' + profile.city : ''}` }),
     React.createElement('p', { className:'text-left text-xs text-yellow-600 mb-2' }, t('expiresIn').replace('{days}', daysLeft)),
     React.createElement(SectionTitle, { title: t('episodeIntro') }),
