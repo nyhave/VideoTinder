@@ -210,7 +210,7 @@ export default function VideotpushApp() {
     React.createElement('div', { className: 'flex flex-col min-h-[100dvh] w-screen bg-gradient-to-br from-pink-100 to-white pb-24 overflow-hidden' },
 
     React.createElement('div', {
-      className: 'p-4 bg-pink-600 text-white text-center font-bold fixed top-0 left-0 right-0 z-10',
+      className: 'p-4 bg-pink-600 text-white text-center font-bold fixed top-0 left-0 right-0 z-30',
       style: { paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }
     },
       userId && React.createElement('div', {
