@@ -19,7 +19,7 @@ import { languages, useT } from '../i18n.js';
 import { getInterestCategory } from '../interests.js';
 import { getAge } from '../utils.js';
 
-export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId, onBack, activeTask, taskTrigger = 0 }) {
+export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId = userId, onBack, activeTask, taskTrigger = 0 }) {
   const [profile,setProfile]=useState(null);
   const t = useT();
   const audioRef = useRef();
