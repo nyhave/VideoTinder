@@ -265,5 +265,4 @@ export {
   signOut,
 };
 
-export { useAuth, isAdminUser, signOutUser };
 
