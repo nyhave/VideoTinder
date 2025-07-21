@@ -67,7 +67,11 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
 
   const activeProfiles = filtered.filter(p => {
     const prog = progresses.find(pr => pr.profileId === p.id);
-    return !prog?.expiresAt || new Date(prog.expiresAt) >= getCurrentDate();
+    if(!prog?.expiresAt) return true;
+    const now = getCurrentDate();
+    const grace = new Date(now);
+    grace.setDate(grace.getDate() - 1);
+    return new Date(prog.expiresAt) >= grace;
   });
 
   const [hoursUntil, setHoursUntil] = useState(0);
@@ -153,7 +157,9 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           onClick: () => onSelectProfile(p.id)
         },
           showLevels && React.createElement('span', { className:'absolute top-2 left-2 bg-pink-100 text-pink-600 text-xs font-semibold px-2 rounded' }, `Level ${stage}`),
-          React.createElement('span', { className:'absolute bottom-2 left-2 bg-yellow-100 text-yellow-600 text-xs font-semibold px-2 rounded' }, t('expiresIn').replace('{days}', daysLeft)),
+          React.createElement('span', { className:`absolute bottom-2 left-2 ${daysLeft <= 0 ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'} text-xs font-semibold px-2 rounded` },
+            daysLeft <= 0 ? t('lastDay') : t('expiresIn').replace('{days}', daysLeft)
+          ),
           React.createElement(Heart, {
             className: `w-8 h-8 absolute top-2 right-2 ${likes.some(l => l.profileId === p.id) ? 'text-pink-500' : 'text-gray-400'}`,
             onClick: e => { e.stopPropagation(); toggleLike(p.id); }
