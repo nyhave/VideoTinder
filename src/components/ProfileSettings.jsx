@@ -477,10 +477,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
           onClick: onLogout
         }, 'Logout')
-        , React.createElement(Button, {
-          className: 'bg-red-500 text-white px-4 py-2 rounded',
-          onClick: () => setShowDelete(true)
-        }, t('deleteAccount'))
       ),
       React.createElement('div', { className: 'mt-4 flex justify-end' },
         React.createElement(Button, {
@@ -742,6 +738,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'mt-2 w-full bg-yellow-500 text-white',
         onClick: () => setShowSub(true)
       }, 'Køb abonnement'),
+    !publicView && React.createElement(Button, {
+        className: 'mt-6 w-full bg-red-500 text-white',
+        onClick: () => setShowDelete(true)
+      }, t('deleteAccount')),
     showSub && React.createElement(PurchaseOverlay, {
         title: 'Månedligt abonnement',
         price: '59 kr/md',
