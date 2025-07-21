@@ -29,6 +29,12 @@ import {
   getToken,
   onMessage
 } from 'firebase/messaging';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail
+} from 'firebase/auth';
 import { fcmReg } from './swRegistration.js';
 import { detectOS, detectBrowser } from './utils.js';
 
@@ -135,6 +141,7 @@ export const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+export const auth = getAuth(app);
 export let messaging;
 if (typeof window !== 'undefined') {
   messaging = getMessaging(app);
@@ -228,6 +235,9 @@ export {
   listAll,
   deleteObject,
   onMessage,
-  
+  auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 };
 
