@@ -12,6 +12,7 @@ jest.mock('../firebase.js', () => ({
   setDoc: jest.fn(() => Promise.resolve()),
   updateDoc: jest.fn(() => Promise.resolve()),
   increment: jest.fn(() => 'increment'),
+  signUpWithEmail: jest.fn(() => Promise.resolve({ user: { uid: 'abc123' } }))
 }));
 
 let nowSpy;
@@ -83,5 +84,5 @@ test('calls Firebase and onLogin when registration succeeds', async () => {
   // Overlay should show success message
   expect(await screen.findByText('Thanks for creating your profile!')).toBeInTheDocument();
   await userEvent.click(screen.getByText('Luk'));
-  expect(onLogin).toHaveBeenCalledWith('1716163200000');
+  expect(onLogin).toHaveBeenCalledWith('abc123');
 });

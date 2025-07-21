@@ -5,7 +5,17 @@ import { Input } from './ui/input.js';
 import InfoOverlay from './InfoOverlay.jsx';
 import { UserPlus, LogIn } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
-import { db, doc, setDoc, updateDoc, increment, getDoc } from '../firebase.js';
+import {
+  db,
+  doc,
+  setDoc,
+  updateDoc,
+  increment,
+  getDoc,
+  signUpWithEmail,
+  signInWithEmail,
+  sendPasswordReset
+} from '../firebase.js';
 import { getAge } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
@@ -16,7 +26,7 @@ export default function WelcomeScreen({ onLogin }) {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loginUser, setLoginUser] = useState('');
+  const [loginEmail, setLoginEmail] = useState('');
   const [loginPass, setLoginPass] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [userExists, setUserExists] = useState(false);
@@ -29,6 +39,8 @@ export default function WelcomeScreen({ onLogin }) {
   const [showCreated, setShowCreated] = useState(false);
   const [createdMsg, setCreatedMsg] = useState('');
   const [createdId, setCreatedId] = useState('');
+  const [showResetSent, setShowResetSent] = useState(false);
+  const [resetError, setResetError] = useState(false);
   const { lang } = useLang();
   const t = useT();
 
@@ -40,13 +52,21 @@ export default function WelcomeScreen({ onLogin }) {
   };
 
   const handleLogin = () => {
-    const creds = JSON.parse(localStorage.getItem('userCreds') || '{}');
-    const entry = creds[loginUser.trim()];
-    if (entry && entry.password === loginPass) {
-      onLogin(entry.id);
-    } else {
+    signInWithEmail(loginEmail.trim(), loginPass)
+      .then(cred => {
+        onLogin(cred.user.uid);
+      })
+      .catch(() => setLoginError(true));
+  };
+
+  const handleReset = () => {
+    if (!loginEmail.trim()) {
       setLoginError(true);
+      return;
     }
+    sendPasswordReset(loginEmail.trim())
+      .then(() => setShowResetSent(true))
+      .catch(() => setResetError(true));
   };
 
   const register = async () => {
@@ -70,7 +90,15 @@ export default function WelcomeScreen({ onLogin }) {
       return;
     }
 
-    const id = Date.now().toString();
+    let userCred;
+    try {
+      userCred = await signUpWithEmail(trimmedEmail, password);
+    } catch (err) {
+      console.error('Failed to create user', err);
+      setLoginError(true);
+      return;
+    }
+    const id = userCred.user.uid;
     const params = new URLSearchParams(window.location.search);
     let giftFrom = params.get('gift');
     const inviteId = params.get('invite');
@@ -138,7 +166,7 @@ export default function WelcomeScreen({ onLogin }) {
     }
     await setDoc(doc(db, 'profiles', id), profile);
     const creds = JSON.parse(localStorage.getItem('userCreds') || '{}');
-    creds[trimmedUser] = { id, password };
+    creds[trimmedUser] = { id };
     localStorage.setItem('userCreds', JSON.stringify(creds));
     if (inviteId && inviteValid) {
       try {
@@ -186,6 +214,18 @@ export default function WelcomeScreen({ onLogin }) {
       onClose: () => { setShowCreated(false); onLogin(createdId); }
     },
       React.createElement('p', { className:'text-center' }, createdMsg)
+    ),
+    showResetSent && React.createElement(InfoOverlay, {
+      title: t('login'),
+      onClose: () => setShowResetSent(false)
+    },
+      React.createElement('p', { className:'text-center' }, t('resetEmailSent'))
+    ),
+    resetError && React.createElement(InfoOverlay, {
+      title: t('login'),
+      onClose: () => setResetError(false)
+    },
+      React.createElement('p', { className:'text-center' }, t('resetEmailError'))
     ),
     loginError && React.createElement(InfoOverlay, {
       title: t('login'),
@@ -287,11 +327,12 @@ export default function WelcomeScreen({ onLogin }) {
     ) : showLoginForm ? (
       React.createElement(React.Fragment, null,
         React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, t('login')),
-        React.createElement('label', { className:'block mb-1' }, t('username')),
+        React.createElement('label', { className:'block mb-1' }, t('email')),
         React.createElement(Input, {
+          type: 'email',
           className: 'border p-2 mb-2 w-full',
-          value: loginUser,
-          onChange: e => setLoginUser(e.target.value)
+          value: loginEmail,
+          onChange: e => setLoginEmail(e.target.value)
         }),
         React.createElement('label', { className:'block mb-1' }, t('password')),
         React.createElement(Input, {
@@ -300,6 +341,11 @@ export default function WelcomeScreen({ onLogin }) {
           value: loginPass,
           onChange: e => setLoginPass(e.target.value)
         }),
+        React.createElement('button', {
+          className: 'text-sm text-pink-600 mb-4',
+          type: 'button',
+          onClick: () => handleReset()
+        }, t('forgotPassword')),
         React.createElement('div', { className: 'flex justify-between' },
           React.createElement(Button, { onClick: handleLogin, className:'bg-pink-500 text-white' }, t('login')),
           React.createElement(Button, { variant:'outline', onClick: () => setShowLoginForm(false) }, t('cancel'))

@@ -21,7 +21,8 @@ Profiles are presented as short episodes rather than a catalog of faces. Each ep
 * Give three or four stars to keep the profile from expiring
 * Monthly subscriptions with visible expiration date and stored purchase date
 * Basic chat between matched profiles with option to unmatch
-* Improved chat layout with timestamps for better readability 
+* Login via Firebase Authentication with email/password and a "forgot password" link
+* Improved chat layout with timestamps for better readability
 * Celebration overlay when two profiles match
 * Calendar for daily reflections
 * Minimal profile settings and admin mode
@@ -67,6 +68,7 @@ Appen bruger generelt en rød/lyserød farveskala. Adminknapperne er blå, mens 
    ```
 4. Open the provided local URL (typically http://localhost:1234) in your browser.
 5. Sign up with your name to start swiping.
+6. Enable **Email/Password** in Firebase Authentication if it's not already on.
 
 To create a production build run:
 ```bash

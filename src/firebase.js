@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut
+} from 'firebase/auth';
+import {
   getFirestore,
   collection,
   getDocs,
@@ -135,9 +142,27 @@ export const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+export const auth = getAuth(app);
 export let messaging;
 if (typeof window !== 'undefined') {
   messaging = getMessaging(app);
+}
+
+// Authentication helpers
+export function signUpWithEmail(email, password) {
+  return createUserWithEmailAndPassword(auth, email, password);
+}
+
+export function signInWithEmail(email, password) {
+  return signInWithEmailAndPassword(auth, email, password);
+}
+
+export function sendPasswordReset(email) {
+  return sendPasswordResetEmail(auth, email);
+}
+
+export function logout() {
+  return signOut(auth);
 }
 
 export async function requestNotificationPermission(userId, loginMethod = 'password') {
@@ -228,6 +253,11 @@ export {
   listAll,
   deleteObject,
   onMessage,
+  signUpWithEmail,
+  signInWithEmail,
+  sendPasswordReset,
+  logout,
+  auth,
   
 };
 
