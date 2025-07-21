@@ -28,11 +28,6 @@ import { getNextTask } from './tasks.js';
 import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment, logEvent, auth, isAdminUser, signOutUser } from './firebase.js';
 import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
-
-// Temporarily disable admin password check
-// const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
-
-
 export default function VideotpushApp() {
   const [lang, setLang] = useState(() =>
     localStorage.getItem('lang') || 'en'

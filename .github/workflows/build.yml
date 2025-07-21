@@ -38,7 +38,7 @@ jobs:
           WEB_PUSH_PUBLIC_KEY=${{ secrets.WEB_PUSH_PUBLIC_KEY }}
           WEB_PUSH_PRIVATE_KEY=${{ secrets.WEB_PUSH_PRIVATE_KEY }}
           FUNCTIONS_BASE_URL=${{ secrets.FUNCTIONS_BASE_URL }}
-          ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
+          ADMIN_EMAILS=${{ secrets.ADMIN_EMAILS }}
           EOF
       - run: npm ci
       - run: npm run build
