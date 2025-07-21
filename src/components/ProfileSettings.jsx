@@ -9,7 +9,8 @@ import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
 import ReportOverlay from './ReportOverlay.jsx';
-import { useCollection, useDoc, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from '../firebase.js';
+import DeleteAccountOverlay from './DeleteAccountOverlay.jsx';
+import { useCollection, useDoc, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject, deleteAccount } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import InterestsOverlay from './InterestsOverlay.jsx';
 import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
@@ -34,6 +35,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [showSnapVideoRecorder, setShowSnapVideoRecorder] = useState(false);
   const [showSub, setShowSub] = useState(false);
   const [showInterests, setShowInterests] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
   const [editInfo, setEditInfo] = useState(false);
   const [editInterests, setEditInterests] = useState(false);
@@ -475,6 +477,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
           onClick: onLogout
         }, 'Logout')
+        , React.createElement(Button, {
+          className: 'bg-red-500 text-white px-4 py-2 rounded',
+          onClick: () => setShowDelete(true)
+        }, t('deleteAccount'))
       ),
       React.createElement('div', { className: 'mt-4 flex justify-end' },
         React.createElement(Button, {
@@ -763,6 +769,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         clipURL: reportItem.clipURL || '',
         text: reportItem.text || '',
         onClose: () => { setReportItem(null); setReportMode(false); }
+      }),
+    showDelete && React.createElement(DeleteAccountOverlay, {
+        onDelete: async () => { await deleteAccount(userId); onLogout && onLogout(); },
+        onClose: () => setShowDelete(false)
       })
   );
 }
