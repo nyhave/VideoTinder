@@ -235,15 +235,12 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   ),
   showHelp && React.createElement(InfoOverlay, {
     title: 'Need help?',
-    onClose: ()=>setShowHelp(false)
+    onClose: () => setShowHelp(false)
   },
-    React.createElement('div', { className:'space-y-2 text-sm' },
-      React.createElement('p', null, t('level2Intro').replace('{name}', profile.name || '')),
-      React.createElement('ul', { className:'list-disc list-inside' },
-        React.createElement('li', null, t('level2Watch')),
-        React.createElement('li', null, t('level2Rate')),
-        React.createElement('li', null, t('level2Reflect'))
-      )
+    React.createElement('p', { className:'text-sm text-center' },
+      t('level2Intro')
+        .replace('{name}', profile.name || '')
+        .replace('{day}', stage)
     )
   )
 );
