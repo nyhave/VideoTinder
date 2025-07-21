@@ -304,7 +304,6 @@ export {
   sendPasswordResetEmail,
   onAuthStateChanged,
   signOut,
-  deleteAccount,
 };
 
 
