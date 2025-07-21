@@ -33,6 +33,10 @@ export default function WelcomeScreen({ onLogin }) {
   const { lang } = useLang();
   const t = useT();
 
+  const handleSkip = () => {
+    onLogin('101', 'admin');
+  };
+
   const handleBirthdayBlur = () => {
     setShowBirthdayOverlay(false);
     if (birthday && getAge(birthday) < 18) {
@@ -328,10 +332,16 @@ export default function WelcomeScreen({ onLogin }) {
           className: 'bg-pink-500 text-white mb-4',
           onClick: () => setShowLoginForm(true)
         }, t('login')),
-        React.createElement(Button, {
-          className: 'bg-pink-500 text-white',
-          onClick: () => { setShowRegister(true); setName(''); setCity(''); }
-        }, t('register'))
+        React.createElement('div', { className: 'flex gap-2' },
+          React.createElement(Button, {
+            className: 'bg-pink-500 text-white flex-1',
+            onClick: () => { setShowRegister(true); setName(''); setCity(''); }
+          }, t('register')),
+          React.createElement(Button, {
+            className: 'bg-blue-500 text-white flex-1',
+            onClick: handleSkip
+          }, t('skip'))
+        )
       )
     )
   ));
