@@ -8,11 +8,11 @@ export default function InviteOverlay({ userId, onClose }) {
   const t = useT();
   const profiles = useCollection('profiles');
   const user = profiles.find(p => p.id === userId) || {};
-  const invitesUsed = user.premiumInvitesUsed || 0;
+  const invites = useCollection('invites','inviterId', userId) || [];
+  const invitesUsed = invites.filter(inv => inv.gift).length;
   const config = useDoc('config','app') || {};
   const invitesEnabled = config.premiumInvitesEnabled !== false;
   const remaining = 5 - invitesUsed;
-  const invites = useCollection('invites','inviterId',userId);
   const [recipient, setRecipient] = useState('');
   const [link, setLink] = useState('');
   const [inviteId, setInviteId] = useState(null);
