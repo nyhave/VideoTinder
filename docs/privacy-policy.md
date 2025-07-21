@@ -5,7 +5,7 @@ This app collects and stores personal data needed to provide the service. Profil
 **User Rights**
 - Access: You can request a copy of your stored data.
 - Rectification: You may update or correct your profile information.
-- Erasure: Contact support to delete your account and associated data.
+- Erasure: You can delete your account from the settings page or contact support for assistance.
 - Objection: You can object to data processing or withdraw consent at any time.
 
 We do not sell your data to third parties. Some data may be processed by service providers like Firebase and Netlify for hosting and push notifications.

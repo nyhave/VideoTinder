@@ -35,7 +35,8 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   onAuthStateChanged,
-  signOut
+  signOut,
+  deleteUser
 } from 'firebase/auth';
 import { fcmReg } from './swRegistration.js';
 import { detectOS, detectBrowser } from './utils.js';
@@ -238,6 +239,46 @@ export function signOutUser() {
   return signOut(auth);
 }
 
+export async function deleteAccount(profileId) {
+  const uid = auth.currentUser?.uid;
+  try {
+    await Promise.all([
+      deleteDoc(doc(db, 'profiles', profileId)),
+      uid ? deleteDoc(doc(db, 'users', uid)) : Promise.resolve()
+    ]);
+
+    const clean = async (col, field1, field2) => {
+      const promises = [];
+      for (const f of [field1, field2]) {
+        if (!f) continue;
+        const q = query(collection(db, col), where(f, '==', profileId));
+        const snap = await getDocs(q);
+        promises.push(...snap.docs.map(d => deleteDoc(d.ref)));
+      }
+      await Promise.all(promises);
+    };
+
+    await clean('likes', 'userId', 'profileId');
+    await clean('matches', 'userId', 'profileId');
+    await clean('reflections', 'userId');
+    await clean('pushTokens', 'userId');
+    await clean('webPushSubscriptions', 'userId');
+    await clean('episodeProgress', 'userId', 'profileId');
+
+    try {
+      const list = await listAll(ref(storage, `profiles/${profileId}`));
+      await Promise.all(list.items.map(i => deleteObject(i)));
+    } catch {}
+
+    if (auth.currentUser) {
+      try { await deleteUser(auth.currentUser); } catch {}
+    }
+  } catch (err) {
+    console.error('Failed to delete account', err);
+    throw err;
+  }
+}
+
 export {
   collection,
   getDocs,
@@ -263,6 +304,7 @@ export {
   sendPasswordResetEmail,
   onAuthStateChanged,
   signOut,
+  deleteAccount,
 };
 
 
