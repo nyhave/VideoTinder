@@ -235,7 +235,6 @@ export {
   listAll,
   deleteObject,
   onMessage,
-  auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
