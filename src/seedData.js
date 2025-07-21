@@ -85,7 +85,10 @@ export default async function seedData() {
   ];
   await Promise.all(reflections.map(r => setDoc(doc(db,'reflections',r.id), r)));
 
-  await setDoc(doc(db,'config','app'),{premiumInvitesEnabled:true});
+  await setDoc(doc(db,'config','app'),{
+    premiumInvitesEnabled:true,
+    showLevels:true
+  });
 
   // Seed login credentials for the example users
   if (typeof window !== 'undefined') {

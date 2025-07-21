@@ -18,6 +18,8 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const viewer = useDoc('profiles', userId);
   const isOwnProfile = userId === profileId;
   const t = useT();
+  const config = useDoc('config', 'app') || {};
+  const showLevels = config.showLevels !== false;
   const profileHasSub = profile?.subscriptionExpires && new Date(profile.subscriptionExpires) > getCurrentDate();
   const expiryDays = profileHasSub ? 10 : 5;
   const [reflection, setReflection] = useState('');
@@ -141,7 +143,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
           className: `w-3 h-3 rounded-full ${i < stage ? 'bg-pink-500' : 'bg-gray-300'}`
         }))
       ),
-      React.createElement('p', { className:'text-left text-sm text-gray-600 mb-2' }, stepLabels[stage-1]),
+      showLevels && React.createElement('p', { className:'text-left text-sm text-gray-600 mb-2' }, stepLabels[stage-1]),
       stage === 1 && React.createElement('p', { className:'text-left text-sm mb-2 text-gray-700 font-medium' }, t('level2Intro').replace('{name}', profile.name || '')),
       // Help details are shown in a popup instead of directly on the page
       stage === 1 && React.createElement('p', {

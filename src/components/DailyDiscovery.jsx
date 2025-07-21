@@ -6,7 +6,7 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
-import { useCollection, db, doc, setDoc, deleteDoc, getDoc, updateDoc, collection } from '../firebase.js';
+import { useCollection, useDoc, db, doc, setDoc, deleteDoc, getDoc, updateDoc, collection } from '../firebase.js';
 import selectProfiles, { scoreProfiles } from '../selectProfiles.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
@@ -16,6 +16,8 @@ import StoryLineOverlay from './StoryLineOverlay.jsx';
 export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOpenProfile }) {
   const profiles = useCollection('profiles');
   const t = useT();
+  const config = useDoc('config', 'app') || {};
+  const showLevels = config.showLevels !== false;
   const user = profiles.find(p => p.id === userId) || {};
   const hasActiveSub = prof =>
     prof.subscriptionExpires && new Date(prof.subscriptionExpires) > getCurrentDate();
@@ -147,7 +149,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           className: 'p-4 bg-white rounded-lg cursor-pointer shadow-lg border border-gray-200 flex flex-col relative',
           onClick: () => onSelectProfile(p.id)
         },
-          React.createElement('span', { className:'absolute top-2 left-2 bg-pink-100 text-pink-600 text-xs font-semibold px-2 rounded' }, `Level ${stage}`),
+          showLevels && React.createElement('span', { className:'absolute top-2 left-2 bg-pink-100 text-pink-600 text-xs font-semibold px-2 rounded' }, `Level ${stage}`),
           React.createElement('span', { className:'absolute bottom-2 left-2 bg-yellow-100 text-yellow-600 text-xs font-semibold px-2 rounded' }, t('expiresIn').replace('{days}', daysLeft)),
           React.createElement(Heart, {
             className: `w-8 h-8 absolute top-2 right-2 ${likes.some(l => l.profileId === p.id) ? 'text-pink-500' : 'text-gray-400'}`,
