@@ -8,10 +8,14 @@ import { setDoc, doc } from '../firebase.js';
 
 jest.mock('../firebase.js', () => ({
   db: {},
+  auth: {},
   doc: jest.fn(() => ({})),
   setDoc: jest.fn(() => Promise.resolve()),
   updateDoc: jest.fn(() => Promise.resolve()),
   increment: jest.fn(() => 'increment'),
+  sendPasswordResetEmail: jest.fn(() => Promise.resolve()),
+  createUserWithEmailAndPassword: jest.fn(() => Promise.resolve()),
+  signInWithEmailAndPassword: jest.fn(() => Promise.resolve()),
 }));
 
 let nowSpy;
