@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Star } from 'lucide-react';
+import { useT } from '../i18n.js';
 
 export default function StoryLineOverlay({ profile, progress, onClose, onMatch }) {
   const videoUrl = (profile.videoClips && profile.videoClips[0]) ? (profile.videoClips[0].url || profile.videoClips[0]) : null;
   const audioUrl = (profile.audioClips && profile.audioClips[0]) ? (profile.audioClips[0].url || profile.audioClips[0]) : null;
+
+  const t = useT();
 
   const steps = [];
   const titles = [];
@@ -52,11 +55,12 @@ export default function StoryLineOverlay({ profile, progress, onClose, onMatch }
         steps[step] === 'audio' && React.createElement('audio', { src: audioUrl, autoPlay:true, className:'w-full', controls:false }),
         steps[step] === 'rating' && React.createElement('div', { className:'space-y-2' },
           progress?.rating && React.createElement('div', { className:'flex justify-center gap-1' },
-            [1,2,3].map(n => React.createElement(Star, {
+            [1,2,3,4].map(n => React.createElement(Star, {
               key:n,
               className:`w-5 h-5 ${n <= progress.rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`
             }))
           ),
+          progress?.rating >= 3 && React.createElement('p', { className:'text-xs text-green-700 font-medium' }, t('keepProfile')),
           progress?.reflection && React.createElement('p', { className:'italic' }, `“${progress.reflection}”`)
         )
       ),

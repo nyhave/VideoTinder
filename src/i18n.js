@@ -98,6 +98,14 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
     fr:'Atteignez le niveau 2 avec {name} pour voir plus de contenu',
     de:'Erreiche Level 2 mit {name}, um mehr Inhalte zu sehen'
   },
+  keepProfile:{
+    en:'Keep the profile by giving either 3 or 4 stars',
+    da:'Bevar profilen ved at give enten 3 eller 4 stjerner',
+    sv:'Bevara profilen genom att ge 3 eller 4 stjärnor',
+    es:'Mantén el perfil dando 3 o 4 estrellas',
+    fr:'Gardez le profil en donnant 3 ou 4 étoiles',
+    de:'Profil behalten mit 3 oder 4 Sternen'
+  },
   dayLabel:{
     en:'Day {day}',
     da:'Dag {day}',
