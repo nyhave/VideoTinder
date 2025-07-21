@@ -4,7 +4,7 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
-import { db, updateDoc, doc, getDoc, storage, listAll, ref, getDownloadURL, messaging, setExtendedLogging, isExtendedLogging, useDoc } from '../firebase.js';
+import { db, collection, getDocs, deleteDoc, updateDoc, doc, getDoc, query, where, storage, listAll, ref, getDownloadURL, deleteObject, messaging, setExtendedLogging, isExtendedLogging, useDoc } from '../firebase.js';
 import { advanceDay, resetDay, getTodayStr } from '../utils.js';
 import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
@@ -156,6 +156,46 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     }
   };
 
+  const deleteUser = async () => {
+    if (!userId) return;
+    if (!window.confirm('Delete user?')) return;
+    try {
+      const snap = await getDoc(doc(db, 'profiles', userId));
+      const uid = snap.exists() ? snap.data().uid : null;
+      const removeFrom = async (col, field) => {
+        const q = query(collection(db, col), where(field, '==', userId));
+        const res = await getDocs(q);
+        await Promise.all(res.docs.map(d => deleteDoc(d.ref)));
+      };
+      await Promise.all([
+        removeFrom('likes', 'userId'),
+        removeFrom('likes', 'profileId'),
+        removeFrom('matches', 'userId'),
+        removeFrom('matches', 'profileId'),
+        removeFrom('reflections', 'userId'),
+        removeFrom('episodeProgress', 'userId'),
+        removeFrom('episodeProgress', 'profileId'),
+        removeFrom('pushTokens', 'userId'),
+        removeFrom('webPushSubscriptions', 'userId')
+      ]);
+      const logsQ = query(collection(db, 'textLogs'), where('details.userId', '==', userId));
+      const logsRes = await getDocs(logsQ);
+      await Promise.all(logsRes.docs.map(d => deleteDoc(d.ref)));
+      if (uid) await deleteDoc(doc(db, 'users', uid));
+      await deleteDoc(doc(db, 'profiles', userId));
+      try {
+        const folder = ref(storage, `profiles/${userId}`);
+        const { items } = await listAll(folder);
+        await Promise.all(items.map(i => deleteObject(i)));
+      } catch (err) {
+        console.error('Failed to delete storage', err);
+      }
+      onSwitchProfile(profiles.find(p => p.id !== userId)?.id || '');
+    } catch (err) {
+      alert('Failed to delete user: ' + err.message);
+    }
+  };
+
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: 'Administration', colorClass: 'text-blue-600' }),
@@ -211,6 +251,10 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         await updateDoc(doc(db, 'profiles', userId), { verified: !prof.verified });
       }
     }, (profiles.find(p => p.id === userId) || {}).verified ? 'Fjern verificering' : 'Verificer profil'),
+    React.createElement(Button, {
+      className: 'mt-2 bg-red-500 text-white px-4 py-2 rounded',
+      onClick: deleteUser
+    }, 'Delete user'),
 
     // Troubleshooting section
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Fejlsøgning og test'),
