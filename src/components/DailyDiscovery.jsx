@@ -12,6 +12,7 @@ import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
 import StoryLineOverlay from './StoryLineOverlay.jsx';
+import { triggerHaptic } from '../haptics.js';
 
 export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOpenProfile }) {
   const profiles = useCollection('profiles');
@@ -95,6 +96,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       ]);
     } else {
       await setDoc(ref,{id:likeId,userId,profileId});
+      triggerHaptic();
       const otherLike = await getDoc(doc(db,'likes',`${profileId}-${userId}`));
       if(otherLike.exists()){
         const m1 = {
@@ -121,6 +123,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
         ]);
         const prof = profiles.find(p => p.id === profileId);
         if(prof) setMatchedProfile(prof);
+        triggerHaptic([100,50,100]);
       }
     }
   };

@@ -9,6 +9,7 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useCollection, db, doc, setDoc, deleteDoc, getDoc } from '../firebase.js';
 import StoryLineOverlay from './StoryLineOverlay.jsx';
+import { triggerHaptic } from '../haptics.js';
 
 export default function LikesScreen({ userId, onSelectProfile }) {
   const profiles = useCollection('profiles');
@@ -38,6 +39,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
       ]);
     } else {
       await setDoc(ref,{id:likeId,userId,profileId});
+      triggerHaptic();
       const otherLike = await getDoc(doc(db,'likes',`${profileId}-${userId}`));
       if(otherLike.exists()){
         const m1 = {id:`${userId}-${profileId}`,userId,profileId,lastMessage:'',unreadByUser:false,unreadByProfile:false,newMatch:false};
@@ -48,6 +50,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
         ]);
         const prof = profiles.find(p => p.id === profileId);
         if(prof) setMatchedProfile(prof);
+        triggerHaptic([100,50,100]);
       }
     }
   };

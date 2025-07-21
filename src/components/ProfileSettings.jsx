@@ -18,6 +18,7 @@ import MatchOverlay from './MatchOverlay.jsx';
 import { languages, useT } from '../i18n.js';
 import { getInterestCategory } from '../interests.js';
 import { getAge } from '../utils.js';
+import { triggerHaptic } from '../haptics.js';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId = userId, onBack, activeTask, taskTrigger = 0 }) {
   const [profile,setProfile]=useState(null);
@@ -327,6 +328,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       ]);
     } else {
       await setDoc(ref,{id:likeId,userId:currentUserId,profileId:userId});
+      triggerHaptic();
       const otherLike = await getDoc(doc(db,'likes',`${userId}-${currentUserId}`));
       if(otherLike.exists()){
         const m1 = {
@@ -352,6 +354,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           setDoc(doc(db,'matches',m2.id),m2)
         ]);
         setMatchedProfile(profile);
+        triggerHaptic([100,50,100]);
       }
     }
   };
