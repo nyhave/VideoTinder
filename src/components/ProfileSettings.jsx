@@ -390,7 +390,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
                 React.createElement('span', { className:'text-xs text-gray-500 mt-1' }, t('max10Sec'))
               ),
           locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2' },
-            React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('unlockHigherLevels'))
+            React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('dayLabel').replace('{day}', i + 1))
           ),
           url && !publicView && React.createElement(Button, {
             className: 'mt-1 bg-pink-500 text-white p-1 rounded-full flex items-center justify-center',
@@ -425,7 +425,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         return React.createElement('div', { key: i, className: `flex items-center relative ${locked ? 'pointer-events-none' : ''}` },
           React.createElement('audio', { src: url, controls: true, controlsList: 'nodownload noplaybackrate', className: 'flex-1 mr-2' }),
           locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2' },
-            React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('unlockHigherLevels'))
+            React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('dayLabel').replace('{day}', i + 1))
           ),
           !publicView && React.createElement(Button, {
             className: 'ml-2 bg-pink-500 text-white p-1 rounded w-[20%] flex items-center justify-center',
@@ -519,7 +519,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             className: `bg-pink-500 text-white ${stage < 3 ? 'opacity-50 pointer-events-none' : ''}`,
             onClick: stage >= 3 ? toggleLike : undefined
           }, liked ? 'Unmatch' : 'Match'),
-          stage < 3 && React.createElement('span', { className:'absolute inset-0 m-auto text-pink-500 text-xs font-semibold flex items-center justify-center text-center px-2' }, t('unlockHigherLevels'))
+          stage < 3 && React.createElement('span', { className:'absolute inset-0 m-auto text-pink-500 text-xs font-semibold flex items-center justify-center text-center px-2' }, t('dayLabel').replace('{day}', 3))
         ),
         publicView && !isOwnProfile && React.createElement(Button, {
           className: 'ml-2 bg-red-500 text-white',
