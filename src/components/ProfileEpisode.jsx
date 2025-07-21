@@ -190,7 +190,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     ),
     stage === 1 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
       React.createElement('div', { className: 'flex justify-center gap-1 mb-2' },
-        [1,2,3].map(n => (
+        [1,2,3,4].map(n => (
           React.createElement(Star, {
             key: n,
             className: `w-6 h-6 cursor-pointer ${n <= rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`,
@@ -201,6 +201,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
           })
         ))
       ),
+      rating >= 3 && React.createElement('p', { className:'text-xs text-green-700 font-medium text-center' }, t('keepProfile')),
       React.createElement('p', { className: 'text-sm text-gray-500 mb-2 text-center' }, 'Ratingen er privat'),
       React.createElement(Textarea, {
         value: reflection,
@@ -214,13 +215,14 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       progress?.reflection &&
         React.createElement('p', { className: 'italic text-gray-700 mb-2' }, `“${progress.reflection}”`),
       progress?.rating && React.createElement('div', { className:'flex justify-center gap-1 mb-2' },
-        [1,2,3].map(n => (
+        [1,2,3,4].map(n => (
           React.createElement(Star, {
             key:n,
             className:`w-5 h-5 ${n <= progress.rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`
           })
         ))
       ),
+      progress?.rating >= 3 && React.createElement('p', { className:'text-xs text-green-700 font-medium text-center mb-2' }, t('keepProfile')),
       React.createElement(Textarea, {
         value: reaction,
         onChange: e => setReaction(e.target.value),
