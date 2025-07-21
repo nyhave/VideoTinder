@@ -96,11 +96,11 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   level2Rate:{ en:'Give a private rating', da:'Giv en privat vurdering', sv:'Ge ett privat betyg', es:'Da una calificación privada', fr:'Donnez une évaluation privée', de:'Gib eine private Bewertung ab' },
   level2Reflect:{ en:'Write a private reflection', da:'Skriv en privat refleksion', sv:'Skriv en privat reflektion', es:'Escribe una reflexión privada', fr:'Écrivez une réflexion privée', de:'Schreibe eine private Reflexion' },
   level2Intro:{
-    en:'Get to level 2 with {name} to see more content',
-    sv:'Kom till nivå 2 med {name} för att se mer innehåll',
-    es:'Llega al nivel 2 con {name} para ver más contenido',
-    fr:'Atteignez le niveau 2 avec {name} pour voir plus de contenu',
-    de:'Erreiche Level 2 mit {name}, um mehr Inhalte zu sehen'
+    en:'This is Day {day} with {name}. Watch all the available content, write a reflection and rate {name}. Come back tomorrow to see more content',
+    sv:'Detta är dag {day} med {name}. Titta på allt innehåll som finns, skriv en reflektion och betygsätt {name}. Kom tillbaka i morgon för att se mer innehåll',
+    es:'Este es el día {day} con {name}. Mira todo el contenido disponible, escribe una reflexión y califica a {name}. Vuelve mañana para ver más contenido',
+    fr:'C\'est le jour {day} avec {name}. Regardez tout le contenu disponible, écrivez une réflexion et évaluez {name}. Revenez demain pour voir plus de contenu',
+    de:'Dies ist Tag {day} mit {name}. Sieh dir alle verfügbaren Inhalte an, schreibe eine Reflexion und bewerte {name}. Komm morgen zurück, um mehr Inhalte zu sehen'
   },
   keepProfile:{ en:'Keep profile', da:'Bevar profilen med 3 eller 4 stjerner', sv:'Bevara profilen', es:'Mantener perfil', fr:'Garder le profil', de:'Profil behalten' },
   dayLabel:{
