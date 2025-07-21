@@ -3,6 +3,7 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
 import InfoOverlay from './InfoOverlay.jsx';
+import ForgotPasswordOverlay from './ForgotPasswordOverlay.jsx';
 import { UserPlus, LogIn } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
 import { db, doc, setDoc, updateDoc, increment, getDoc } from '../firebase.js';
@@ -29,6 +30,7 @@ export default function WelcomeScreen({ onLogin }) {
   const [showCreated, setShowCreated] = useState(false);
   const [createdMsg, setCreatedMsg] = useState('');
   const [createdId, setCreatedId] = useState('');
+  const [showForgot, setShowForgot] = useState(false);
   const { lang } = useLang();
   const t = useT();
 
@@ -199,6 +201,9 @@ export default function WelcomeScreen({ onLogin }) {
     },
       React.createElement('p', { className:'text-center' }, t('usernameTaken'))
     ),
+    showForgot && React.createElement(ForgotPasswordOverlay, {
+      onClose: () => setShowForgot(false)
+    }),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       showRegister ? (
       React.createElement(React.Fragment, null,
@@ -303,7 +308,12 @@ export default function WelcomeScreen({ onLogin }) {
         React.createElement('div', { className: 'flex justify-between' },
           React.createElement(Button, { onClick: handleLogin, className:'bg-pink-500 text-white' }, t('login')),
           React.createElement(Button, { variant:'outline', onClick: () => setShowLoginForm(false) }, t('cancel'))
-        )
+        ),
+        React.createElement(Button, {
+          className: 'mt-2',
+          variant: 'outline',
+          onClick: () => setShowForgot(true)
+        }, t('forgotPassword'))
       )
     ) : (
       React.createElement(React.Fragment, null,
