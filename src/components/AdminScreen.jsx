@@ -17,6 +17,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   const [logEnabled, setLogEnabled] = useState(isExtendedLogging());
   const config = useDoc('config', 'app') || {};
   const invitesEnabled = config.premiumInvitesEnabled !== false;
+  const showLevels = config.showLevels !== false;
 
   const toggleLog = () => {
     const val = !logEnabled;
@@ -231,6 +232,15 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         onChange: () => updateDoc(doc(db, 'config', 'app'), { premiumInvitesEnabled: !invitesEnabled })
       }),
       'Premium invites'
+    ),
+    React.createElement('label', { className: 'flex items-center mb-2' },
+      React.createElement('input', {
+        type: 'checkbox',
+        className: 'mr-2',
+        checked: showLevels,
+        onChange: () => updateDoc(doc(db, 'config', 'app'), { showLevels: !showLevels })
+      }),
+      'View levels'
     ),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenTextLog }, 'Se log'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenMatchLog }, 'Se matchlog'),
