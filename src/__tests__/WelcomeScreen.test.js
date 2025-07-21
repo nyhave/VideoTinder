@@ -76,6 +76,8 @@ test('calls Firebase and onLogin when registration succeeds', async () => {
   await userEvent.type(screen.getByPlaceholderText('Fornavn'), 'Bob');
   await userEvent.type(screen.getByPlaceholderText('By'), 'Town');
   await userEvent.type(screen.getByPlaceholderText('F\u00f8dselsdag'), '1990-01-01');
+  // Close birthday selector overlay
+  await userEvent.click(screen.getByText('Luk'));
   await userEvent.type(screen.getByPlaceholderText('you@example.com'), 'bob@test.com');
   await userEvent.type(screen.getByPlaceholderText('username'), 'bob');
   await userEvent.type(screen.getByPlaceholderText('********'), 'secret');
