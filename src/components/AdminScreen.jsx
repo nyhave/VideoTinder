@@ -121,6 +121,17 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     alert(lines.join('\n'));
   };
 
+  const checkAuthAccess = async () => {
+    const base = process.env.FUNCTIONS_BASE_URL || '';
+    try {
+      const resp = await fetch(`${base}/.netlify/functions/check-auth`);
+      if (!resp.ok) throw new Error(await resp.text());
+      alert('Auth access OK');
+    } catch (err) {
+      alert('Auth check failed: ' + err.message);
+    }
+  };
+
   const recoverMissing = async () => {
     const profileRef = doc(db, 'profiles', userId);
     const snap = await getDoc(profileRef);
@@ -298,6 +309,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showVapidKeys }, 'Show VAPID keys'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: compareVapidKeys }, 'Compare VAPID keys'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showPushInfo }, 'Show push info'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: checkAuthAccess }, 'Check Firebase Auth'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenServerLog }, 'Server log'),
 
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Seneste logins'),
