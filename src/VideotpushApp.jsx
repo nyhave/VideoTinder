@@ -181,7 +181,17 @@ export default function VideotpushApp() {
 
 
   if(!loggedIn) return React.createElement(LanguageProvider, { value:{lang,setLang} },
-    React.createElement(WelcomeScreen, { onLogin: id => { setLoggedIn(true); setUserId(id); setLoginMethod('password'); logEvent('login'); } })
+    React.createElement(WelcomeScreen, { onLogin: (id, method = 'password') => {
+      setLoggedIn(true);
+      setUserId(id);
+      setLoginMethod(method);
+      if (method === 'admin') {
+        setTab('admin');
+      } else {
+        setTab('discovery');
+      }
+      logEvent('login');
+    } })
   );
   const selectProfile = async id => {
     setViewProfile(id);

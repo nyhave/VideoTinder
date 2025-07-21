@@ -34,6 +34,7 @@ const messages = {
   aboutMe:{ en:'About me', da:'Om mig', sv:'Om mig', es:'Sobre mí', fr:'À propos de moi', de:'Über mich' },
   register:{ en:'Create profile', da:'Opret profil', sv:'Skapa profil', es:'Crear perfil', fr:'Créer un profil', de:'Profil erstellen' },
   cancel:{ en:'Cancel', da:'Annuller', sv:'Avbryt', es:'Cancelar', fr:'Annuler', de:'Abbrechen' },
+  skip:{ en:'Skip', da:'Skip', sv:'Skip', es:'Skip', fr:'Skip', de:'Skip' },
   deleteAccount:{ en:'Delete account', da:'Slet konto' },
   confirmDeleteTitle:{ en:'Delete account?', da:'Slet konto?' },
   confirmDeleteDesc:{ en:'This will permanently remove your profile. Continue?', da:'Dette vil fjerne din profil permanent. Fortsæt?' },
