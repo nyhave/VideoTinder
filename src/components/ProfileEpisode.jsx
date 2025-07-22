@@ -188,10 +188,6 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         );
       })
     ),
-    React.createElement('div', { className:'relative' },
-      React.createElement(Button, { className:`mt-2 w-full bg-pink-500 text-white ${stage < 3 ? 'opacity-50 pointer-events-none' : ''}` }, t('episodeMatchPrompt')),
-      stage < 3 && React.createElement('span', { className:'absolute inset-0 m-auto text-pink-500 text-xs font-semibold flex items-center justify-center text-center px-2' }, t('dayLabel').replace('{day}', 3))
-    ),
     stage === 1 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
       React.createElement('div', { className: 'flex justify-center gap-1 mb-2' },
         [1,2,3,4].map(n => (
