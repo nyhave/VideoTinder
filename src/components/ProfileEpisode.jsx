@@ -85,25 +85,28 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const daysLeft = progress?.expiresAt ? Math.ceil((new Date(progress.expiresAt) - getCurrentDate())/86400000) : expiryDays;
 
 
-  const saveReflection = async () => {
+  const saveReflection = async (givenRating = rating) => {
     const text = reflection.trim();
-    if (!text) return;
-    await setDoc(doc(db, 'episodeProgress', progressId), {
+    if (!text && givenRating === (progress?.rating || 0)) return;
+    const data = {
       id: progressId,
       userId,
       profileId,
       lastUpdated: today,
-      reflection: text,
-      rating,
+      rating: givenRating,
       expiresAt: extendExpiry(progress?.expiresAt)
-    }, { merge: true });
-    const refId = `${userId}-${today}-${profileId}`;
-    await setDoc(doc(db, 'reflections', refId), {
-      id: refId,
-      userId,
-      date: today,
-      text
-    }, { merge: true });
+    };
+    if (text) data.reflection = text;
+    await setDoc(doc(db, 'episodeProgress', progressId), data, { merge: true });
+    if (text) {
+      const refId = `${userId}-${today}-${profileId}`;
+      await setDoc(doc(db, 'reflections', refId), {
+        id: refId,
+        userId,
+        date: today,
+        text
+      }, { merge: true });
+    }
   };
 
   const saveReaction = async () => {
@@ -196,7 +199,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
             className: `w-6 h-6 cursor-pointer ${n <= rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`,
             onClick: async () => {
               setRating(n);
-              await saveReflection();
+              await saveReflection(n);
             }
           })
         ))
