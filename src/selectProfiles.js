@@ -1,6 +1,6 @@
 // Filtering helper kept separate so it can also run in a Netlify
 // Function. Netlify Functions support both JavaScript and TypeScript.
-import { getAge, getTodayStr } from './utils.js';
+import { getAge, getTodayStr, getCurrentDate } from './utils.js';
 import { getInterestCategory } from './interests.js';
 
 // Calculate a detailed match score for a single profile. Missing data is handled
@@ -130,7 +130,8 @@ export function scoreProfiles(user, profiles, ageRange) {
 
 export default function selectProfiles(user, profiles, ageRange) {
   const hasSubscription =
-    user.subscriptionExpires && new Date(user.subscriptionExpires) > new Date();
+    user.subscriptionExpires &&
+    new Date(user.subscriptionExpires) > getCurrentDate();
   const today = getTodayStr();
   const extra = user.extraClipsDate === today ? 3 : 0;
   const limit = (hasSubscription ? 6 : 3) + extra;

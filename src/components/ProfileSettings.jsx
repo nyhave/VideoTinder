@@ -18,7 +18,7 @@ import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
 import { languages, useT } from '../i18n.js';
 import { getInterestCategory } from '../interests.js';
-import { getAge } from '../utils.js';
+import { getAge, getCurrentDate } from '../utils.js';
 import { triggerHaptic } from '../haptics.js';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId = userId, onBack, activeTask, taskTrigger = 0 }) {
@@ -59,7 +59,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const stage = isOwnProfile ? 3 : (progress?.stage || 1);
 
   const handlePurchase = async () => {
-    const now = new Date();
+    const now = getCurrentDate();
     const current = profile.subscriptionExpires ? new Date(profile.subscriptionExpires) : now;
     const base = current > now ? current : now;
     const expiry = new Date(base);
@@ -110,7 +110,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     )
   );
 
-  const subscriptionActive = profile.subscriptionExpires && new Date(profile.subscriptionExpires) > new Date();
+  const subscriptionActive =
+    profile.subscriptionExpires &&
+    new Date(profile.subscriptionExpires) > getCurrentDate();
 
   const maxAudios = (profile.audioClips || []).length >= 3;
 
