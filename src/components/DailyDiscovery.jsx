@@ -24,9 +24,9 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     prof.subscriptionExpires && new Date(prof.subscriptionExpires) > getCurrentDate();
   const today = getTodayStr();
   const filtered = selectProfiles(user, profiles, ageRange);
+  const scored = scoreProfiles(user, profiles, ageRange);
   useEffect(() => {
     if(!userId || !profiles.length) return;
-    const scored = scoreProfiles(user, profiles, ageRange);
     const selectedIds = filtered.map(p => p.id);
     const log = {
       userId,
@@ -46,10 +46,14 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
 
   useEffect(() => {
     if(!userId) return;
+    const hasSub = hasActiveSub(user);
+    const extra = user.extraClipsDate === today ? 3 : 0;
+    const limit = (hasSub ? 6 : 3) + extra;
+    let createdToday = progresses.filter(pr => pr.addedDate === today).length;
     filtered.forEach(p => {
       const id = `${userId}-${p.id}`;
       const prog = progresses.find(pr => pr.id === id);
-      if(!prog){
+      if(!prog && createdToday < limit){
         const expires = new Date(getCurrentDate());
         const days = hasActiveSub(p) ? 10 : 5;
         expires.setDate(expires.getDate() + days);
@@ -60,8 +64,10 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           stage: 1,
           seenStage: 1,
           lastUpdated: today,
+          addedDate: today,
           expiresAt: expires.toISOString()
         }, { merge: true }).catch(err => console.error('Failed to init progress', err));
+        createdToday++;
       }
     });
   }, [filtered, progresses, userId]);
@@ -89,10 +95,12 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     });
   }, [progresses, userId]);
 
-  const activeProfiles = filtered.filter(p => {
-    const prog = progresses.find(pr => pr.profileId === p.id);
-    if(prog?.removed) return false;
-    if(!prog?.expiresAt) return true;
+  const progressMap = new Map(progresses.map(pr => [pr.profileId, pr]));
+  const activeProfiles = scored.filter(p => {
+    const prog = progressMap.get(p.id);
+    if(!prog) return false;
+    if(prog.removed) return false;
+    if(!prog.expiresAt) return true;
     const now = getCurrentDate();
     const grace = new Date(now);
     grace.setDate(grace.getDate() - 1);
