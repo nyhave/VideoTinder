@@ -104,7 +104,9 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         id: refId,
         userId,
         date: today,
-        text
+        text,
+        rating: givenRating,
+        profileName: profile?.name
       }, { merge: true });
     }
   };
