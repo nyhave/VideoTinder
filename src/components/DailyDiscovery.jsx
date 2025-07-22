@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAge, getTodayStr, getCurrentDate } from '../utils.js';
-import { User, PlayCircle, Heart } from 'lucide-react';
+import { User, PlayCircle, Heart, Star } from 'lucide-react';
 import VideoOverlay from './VideoOverlay.jsx';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
@@ -91,15 +91,21 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
 
   const activeProfiles = filtered.filter(p => {
     const prog = progresses.find(pr => pr.profileId === p.id);
+    if(prog?.removed) return false;
     if(!prog?.expiresAt) return true;
     const now = getCurrentDate();
     const grace = new Date(now);
     grace.setDate(grace.getDate() - 1);
     return new Date(prog.expiresAt) >= grace;
   });
+  const archivedProfiles = progresses
+    .filter(pr => (pr.removed || (pr.expiresAt && new Date(pr.expiresAt) < getCurrentDate())) && pr.rating >= 3)
+    .map(pr => profiles.find(p => p.id === pr.profileId))
+    .filter(Boolean);
 
   const [hoursUntil, setHoursUntil] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
   const [showPurchase, setShowPurchase] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
@@ -155,6 +161,10 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       }
     }
   };
+  const removeProfile = async profileId => {
+    const id = `${userId}-${profileId}`;
+    await setDoc(doc(db,'episodeProgress', id), { removed: true }, { merge: true });
+  };
   useEffect(() => {
     const now = getCurrentDate();
     const next = new Date(now);
@@ -206,10 +216,52 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
                 React.createElement(PlayCircle, { className: 'w-5 h-5' }), 'Afspil'
               ),
               React.createElement(Button, { size: 'sm', variant: 'outline', onClick:e=>{e.stopPropagation(); setStoryProfile(p);} }, 'StoryLine')
+            ),
+          prog?.rating && React.createElement('div', { className:'flex gap-1 mt-2' },
+            [1,2,3,4].map(n =>
+              React.createElement(Star,{key:n,className:`w-4 h-4 ${n <= prog.rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`})
             )
+          ),
+          React.createElement(Button,{size:'sm',variant:'ghost',className:'self-end text-red-500 text-xs mt-1',onClick:e=>{e.stopPropagation(); removeProfile(p.id);} }, t('remove'))
         )
       }) :
         React.createElement('li', { className: 'text-center text-gray-500' }, t('noProfiles'))
+    ),
+    archivedProfiles.length && !showArchived && React.createElement(Button, {
+      className: 'mt-4 w-full bg-gray-200',
+      onClick: () => setShowArchived(true)
+    }, t('showArchived')),
+    archivedProfiles.length && showArchived && React.createElement(React.Fragment, null,
+      React.createElement('h3', { className:'mt-6 mb-2 font-medium' }, t('archivedProfiles')),
+      React.createElement('ul', { className:'space-y-4 mb-4' },
+        archivedProfiles.map(p => {
+          const prog = progresses.find(pr => pr.profileId === p.id) || {};
+          return React.createElement('li', {
+            key:p.id,
+            className:'p-4 bg-white rounded-lg cursor-pointer shadow-lg border border-gray-200 flex flex-col',
+            onClick:()=>onSelectProfile(p.id)
+          },
+            React.createElement('div', { className:'flex items-center gap-4 mb-2' },
+              React.createElement('div',{ className:'flex flex-col items-center' },
+                p.photoURL ?
+                  React.createElement('img',{src:p.photoURL,className:'w-10 h-10 rounded object-cover'}) :
+                  React.createElement(User,{className:'w-10 h-10 text-pink-500'}),
+                p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
+              ),
+              React.createElement('div',null,
+                React.createElement('p',{className:'font-medium'},`${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`),
+                p.clip && React.createElement('p',{className:'text-sm text-gray-700'},`“${p.clip}”`)
+              )
+            ),
+            prog.rating && React.createElement('div',{className:'flex gap-1 mt-2'},
+              [1,2,3,4].map(n =>
+                React.createElement(Star,{key:n,className:`w-4 h-4 ${n <= prog.rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`})
+              )
+            )
+          );
+        })
+      ),
+      React.createElement(Button,{className:'w-full bg-gray-200',onClick:()=>setShowArchived(false)},t('cancel'))
     ),
     React.createElement(Button, {
       className: 'mt-4 w-full bg-yellow-500 text-white',
