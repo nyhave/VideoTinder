@@ -7,7 +7,7 @@ import ForgotPasswordOverlay from './ForgotPasswordOverlay.jsx';
 import { UserPlus, LogIn } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
 import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../firebase.js';
-import { getAge } from '../utils.js';
+import { getAge, getCurrentDate } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
   const [showRegister, setShowRegister] = useState(false);
@@ -126,7 +126,7 @@ export default function WelcomeScreen({ onLogin }) {
       interests: []
     };
     if (giftFrom && inviteValid) {
-      const now = new Date();
+      const now = getCurrentDate();
       const expiry = new Date(now);
       expiry.setMonth(expiry.getMonth() + 3);
       profile.subscriptionActive = true;

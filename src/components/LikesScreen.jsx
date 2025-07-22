@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getAge } from '../utils.js';
+import { getAge, getCurrentDate } from '../utils.js';
 import { User as UserIcon, PlayCircle, Heart } from 'lucide-react';
 import VideoOverlay from './VideoOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
@@ -20,7 +20,9 @@ export default function LikesScreen({ userId, onSelectProfile }) {
     likes.some(l => l.userId === p.id) && !matchedIds.includes(p.id)
   );
   const currentUser = profiles.find(p => p.id === userId) || {};
-  const hasSubscription = currentUser.subscriptionExpires && new Date(currentUser.subscriptionExpires) > new Date();
+  const hasSubscription =
+    currentUser.subscriptionExpires &&
+    new Date(currentUser.subscriptionExpires) > getCurrentDate();
 
   const [activeVideo, setActiveVideo] = useState(null);
   const [matchedProfile, setMatchedProfile] = useState(null);
@@ -57,7 +59,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
 
   const [showPurchase, setShowPurchase] = useState(false);
   const handlePurchase = async () => {
-    const now = new Date();
+    const now = getCurrentDate();
     const current = currentUser.subscriptionExpires ? new Date(currentUser.subscriptionExpires) : now;
     const base = current > now ? current : now;
     const expiry = new Date(base);
