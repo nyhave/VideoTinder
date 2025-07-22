@@ -59,11 +59,35 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           profileId: p.id,
           stage: 1,
           seenStage: 1,
+          lastUpdated: today,
           expiresAt: expires.toISOString()
         }, { merge: true }).catch(err => console.error('Failed to init progress', err));
       }
     });
   }, [filtered, progresses, userId]);
+
+  useEffect(() => {
+    if (!userId) return;
+    const todayStr = getTodayStr();
+    progresses.forEach(pr => {
+      if(!pr) return;
+      if(!pr.lastUpdated){
+        setDoc(doc(db,'episodeProgress', pr.id), { lastUpdated: todayStr }, { merge: true });
+        return;
+      }
+      const last = new Date(pr.lastUpdated);
+      const nowStr = todayStr;
+      const lastStr = last.toISOString().split('T')[0];
+      if(pr.stage < 3 && lastStr !== nowStr){
+        const newStage = pr.stage + 1;
+        setDoc(doc(db,'episodeProgress', pr.id), {
+          stage: newStage,
+          seenStage: newStage,
+          lastUpdated: todayStr
+        }, { merge: true }).catch(err => console.error('Failed to advance stage', err));
+      }
+    });
+  }, [progresses, userId]);
 
   const activeProfiles = filtered.filter(p => {
     const prog = progresses.find(pr => pr.profileId === p.id);
