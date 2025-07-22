@@ -230,7 +230,12 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
               React.createElement(Star,{key:n,className:`w-4 h-4 ${n <= prog.rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`})
             )
           ),
-          React.createElement(Button,{size:'sm',variant:'ghost',className:'self-end text-red-500 text-xs mt-1',onClick:e=>{e.stopPropagation(); removeProfile(p.id);} }, t('remove'))
+          React.createElement(Button, {
+            size: 'sm',
+            variant: 'ghost',
+            className: 'self-end bg-red-500 text-white text-xs mt-1 px-2 py-1 rounded',
+            onClick: e => { e.stopPropagation(); removeProfile(p.id); }
+          }, t('remove'))
         )
       }) :
         React.createElement('li', { className: 'text-center text-gray-500' }, t('noProfiles'))
