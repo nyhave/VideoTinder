@@ -185,7 +185,7 @@ export default function ChatScreen({ userId, onStartCall }) {
             )
           ),
           React.createElement(Button, {
-            className: 'btn-outline-red',
+            className: 'bg-red-500 text-white',
             onClick: unmatch
           }, 'Unmatch')
         )
