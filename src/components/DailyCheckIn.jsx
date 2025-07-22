@@ -77,7 +77,8 @@ export default function DailyCheckIn({ userId }) {
       placeholder: 'Skriv din refleksion...',
       className: 'mb-2',
       value: text,
-      onChange: e => setText(e.target.value)
+      onChange: e => setText(e.target.value),
+      onBlur: save
     }),
     React.createElement('p', {
       className: 'text-sm text-gray-500 mb-4 text-center'
