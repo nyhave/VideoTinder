@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAge, getTodayStr, getCurrentDate } from '../utils.js';
-import { User, PlayCircle, Heart, Star } from 'lucide-react';
+import { User, PlayCircle, Star } from 'lucide-react';
 import VideoOverlay from './VideoOverlay.jsx';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
@@ -203,10 +203,10 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           React.createElement('span', { className:`absolute bottom-2 left-2 ${daysLeft <= 0 ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'} text-xs font-semibold px-2 rounded` },
             daysLeft <= 0 ? t('lastDay') : t('expiresIn').replace('{days}', daysLeft)
           ),
-          React.createElement(Heart, {
-            className: `w-8 h-8 absolute top-2 right-2 ${likes.some(l => l.profileId === p.id) ? 'text-pink-500' : 'text-gray-400'}`,
+          React.createElement(Button, {
+            className: `absolute top-2 right-2 bg-pink-500 text-white text-xs px-2 py-1 rounded ${likes.some(l => l.profileId === p.id) ? '' : 'opacity-80'}`,
             onClick: e => { e.stopPropagation(); toggleLike(p.id); }
-          }),
+          }, 'Match'),
           React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
             React.createElement('div', { className:'flex flex-col items-center' },
               (p.photoURL ?
