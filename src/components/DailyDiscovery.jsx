@@ -212,10 +212,10 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
             )
           ),
           React.createElement('div', { className: 'flex gap-2 mt-2' },
-              React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1', onClick:e=>{e.stopPropagation(); const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null; if(url) setActiveVideo(url); } },
+              React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1 bg-white text-black border border-gray-300', onClick:e=>{e.stopPropagation(); const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null; if(url) setActiveVideo(url); } },
                 React.createElement(PlayCircle, { className: 'w-5 h-5' }), 'Afspil'
               ),
-              React.createElement(Button, { size: 'sm', variant: 'outline', onClick:e=>{e.stopPropagation(); setStoryProfile(p);} }, 'StoryLine')
+              React.createElement(Button, { size: 'sm', variant: 'outline', className: 'bg-white text-black border border-gray-300', onClick:e=>{e.stopPropagation(); setStoryProfile(p);} }, 'StoryLine')
             ),
           prog?.rating && React.createElement('div', { className:'flex gap-1 mt-2' },
             [1,2,3,4].map(n =>
@@ -228,7 +228,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
         React.createElement('li', { className: 'text-center text-gray-500' }, t('noProfiles'))
     ),
     archivedProfiles.length && !showArchived && React.createElement(Button, {
-      className: 'mt-4 w-full bg-gray-200',
+      className: 'mt-4 w-full bg-gray-200 text-black',
       onClick: () => setShowArchived(true)
     }, t('showArchived')),
     archivedProfiles.length && showArchived && React.createElement(React.Fragment, null,
@@ -261,7 +261,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           );
         })
       ),
-      React.createElement(Button,{className:'w-full bg-gray-200',onClick:()=>setShowArchived(false)},t('cancel'))
+      React.createElement(Button,{className:'w-full bg-gray-200 text-black',onClick:()=>setShowArchived(false)},t('cancel'))
     ),
     React.createElement(Button, {
       className: 'mt-4 w-full bg-yellow-500 text-white',

@@ -9,7 +9,7 @@ export default function PurchaseOverlay({ title, price, children, onClose, onBuy
       children,
       price && React.createElement('p', { className: 'text-center font-bold my-4' }, price),
       React.createElement(Button, { className: 'w-full bg-yellow-500 text-white mb-2', onClick: onBuy }, 'Køb'),
-      React.createElement(Button, { className: 'w-full', onClick: onClose }, 'Luk')
+      React.createElement(Button, { className: 'w-full bg-gray-200 text-black', onClick: onClose }, 'Luk')
     )
   );
 }
