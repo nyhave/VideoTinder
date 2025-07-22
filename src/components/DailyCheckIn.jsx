@@ -18,7 +18,9 @@ export default function DailyCheckIn({ userId }) {
   const daysInMonth=new Date(month.getFullYear(),month.getMonth()+1,0).getDate();
   const days=Array.from({length:daysInMonth},(_,i)=>i+1);
   const monthStr = month.toISOString().slice(0,7);
-  const monthRefs = refs.filter(r => (r.date || '').startsWith(monthStr));
+  const monthRefs = refs
+    .filter(r => (r.date || '').startsWith(monthStr))
+    .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   const [text,setText]=useState('');
 
   const save = async () => {
