@@ -58,6 +58,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         stage: 1,
         seenStage: 0,
         lastUpdated: today,
+        addedDate: today,
         expiresAt
       }, { merge: true }).catch(err => console.error('Failed to init progress', err));
     }
