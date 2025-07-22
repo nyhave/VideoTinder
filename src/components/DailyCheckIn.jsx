@@ -67,7 +67,10 @@ export default function DailyCheckIn({ userId }) {
     React.createElement('ul', { className: 'list-disc list-inside mb-4' },
       monthRefs.map(r => {
         const d = parseInt(r.date.split('-')[2],10);
-        return React.createElement('li', { key: r.id }, `${d}: ${r.text}`);
+        let info = `${d}: ${r.text}`;
+        if(r.profileName) info += ` \u2013 ${r.profileName}`;
+        if(r.rating) info += ` (${r.rating}\u2605)`;
+        return React.createElement('li', { key: r.id }, info);
       })
     ),
     React.createElement(Textarea, {
