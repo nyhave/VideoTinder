@@ -99,17 +99,16 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     };
     if (text) data.reflection = text;
     await setDoc(doc(db, 'episodeProgress', progressId), data, { merge: true });
-    if (text) {
-      const refId = `${userId}-${today}-${profileId}`;
-      await setDoc(doc(db, 'reflections', refId), {
-        id: refId,
-        userId,
-        date: today,
-        text,
-        rating: givenRating,
-        profileName: profile?.name
-      }, { merge: true });
-    }
+    const refId = `${userId}-${today}-${profileId}`;
+    const refData = {
+      id: refId,
+      userId,
+      date: today,
+      rating: givenRating,
+      profileName: profile?.name
+    };
+    if (text) refData.text = text;
+    await setDoc(doc(db, 'reflections', refId), refData, { merge: true });
   };
 
   const saveReaction = async () => {
