@@ -163,6 +163,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           setDoc(doc(db,'matches',m1.id),m1),
           setDoc(doc(db,'matches',m2.id),m2)
         ]);
+        await setDoc(doc(db,'episodeProgress', `${userId}-${profileId}`), { removed: true }, { merge: true });
         const prof = profiles.find(p => p.id === profileId);
         if(prof) setMatchedProfile(prof);
         triggerHaptic([100,50,100]);

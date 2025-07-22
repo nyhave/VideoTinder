@@ -368,6 +368,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           setDoc(doc(db,'matches',m1.id),m1),
           setDoc(doc(db,'matches',m2.id),m2)
         ]);
+        await setDoc(doc(db,'episodeProgress', `${currentUserId}-${userId}`), { removed: true }, { merge: true });
         setMatchedProfile(profile);
         triggerHaptic([100,50,100]);
       }
