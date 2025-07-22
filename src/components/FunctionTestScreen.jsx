@@ -31,6 +31,14 @@ const features = [
     ]
   },
   {
+    title: 'Four-star rating stored with each reflection (ratings are private)',
+    expected: [
+      'Users can select 1-4 stars when writing a reflection',
+      'Rating is saved together with the reflection',
+      'Ratings are only visible to the user'
+    ]
+  },
+  {
     title: 'Basic chat between matched profiles with option to unmatch',
     expected: [
       'Matched users can exchange messages',
@@ -111,6 +119,14 @@ const features = [
     ]
   },
   {
+    title: 'Switch between user profiles from the admin page',
+    expected: [
+      'Admin screen lists available test profiles',
+      'Selecting a profile switches the current user',
+      'Switching back restores admin access'
+    ]
+  },
+  {
     title: 'Video and audio clips limited to 10 seconds',
     expected: [
       'Recording stops after 10 seconds',
@@ -124,6 +140,14 @@ const features = [
       'Visible timer counts down from 10 seconds',
       'Timer reaches zero as recording ends',
       'Helps users keep clips short'
+    ]
+  },
+  {
+    title: 'Reveal animation highlights newly unlocked content',
+    expected: [
+      'Newly unlocked clips animate into view',
+      'Animation draws attention without affecting playback',
+      'Timing feels smooth and not distracting'
     ]
   },
   {
