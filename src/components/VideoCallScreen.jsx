@@ -21,7 +21,7 @@ export default function VideoCallScreen({ matchId, userId, onEnd }) {
     let unsubOffer;
 
     const init = async () => {
-      const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: { echoCancellation: true } });
       localVideoRef.current.srcObject = localStream;
       if (localVideoRef.current?.play) {
         try { localVideoRef.current.play(); } catch(e) { /* ignore autoplay errors */ }

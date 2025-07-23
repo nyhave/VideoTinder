@@ -13,7 +13,7 @@ export default function SnapAudioRecorder({ onCancel, onRecorded }) {
   const startTimeRef = useRef(null);
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ audio: true })
+    navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true } })
       .then(stream => {
         streamRef.current = stream;
         try {

@@ -12,7 +12,7 @@ export default function SnapVideoRecorder({ onCancel, onRecorded }) {
   const startTimeRef = useRef(null);
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+    navigator.mediaDevices.getUserMedia({ video: true, audio: { echoCancellation: true } }).then(stream => {
       streamRef.current = stream;
       if(videoRef.current){
         videoRef.current.srcObject = stream;
