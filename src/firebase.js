@@ -316,9 +316,5 @@ export {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   onAuthStateChanged,
-  signOut,
-  signInWithGoogle,
-  signInWithFacebook
+  signOut
 };
-
-
