@@ -138,6 +138,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       ]);
     } else {
       await setDoc(ref,{id:likeId,userId,profileId});
+      await setDoc(doc(db,'episodeProgress', `${userId}-${profileId}`), { removed: true }, { merge: true });
       triggerHaptic();
       const otherLike = await getDoc(doc(db,'likes',`${profileId}-${userId}`));
       if(otherLike.exists()){
@@ -163,7 +164,6 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           setDoc(doc(db,'matches',m1.id),m1),
           setDoc(doc(db,'matches',m2.id),m2)
         ]);
-        await setDoc(doc(db,'episodeProgress', `${userId}-${profileId}`), { removed: true }, { merge: true });
         const prof = profiles.find(p => p.id === profileId);
         if(prof) setMatchedProfile(prof);
         triggerHaptic([100,50,100]);
@@ -206,7 +206,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           React.createElement(Button, {
             className: `absolute top-2 right-2 bg-pink-500 text-white text-xs px-2 py-1 rounded ${likes.some(l => l.profileId === p.id) ? '' : 'opacity-80'}`,
             onClick: e => { e.stopPropagation(); toggleLike(p.id); }
-          }, 'Match'),
+          }, likes.some(l => l.profileId === p.id) ? 'Unlike' : 'Like'),
           React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
             React.createElement('div', { className:'flex flex-col items-center' },
               (p.photoURL ?
