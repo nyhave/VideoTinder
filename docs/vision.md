@@ -27,3 +27,15 @@ Brugeren har altid adgang til egne refleksioner og ratings. For at holde brugere
 Dette flow skaber en oplevelse, hvor forbindelser får lov at modne over tid – og hvor førstehåndsindtryk bliver en begyndelse, ikke en dom.
 
 Brug visionen som pejlemærke i al videre udvikling – fra UI-tekst og animationshastigheder til onboarding og notifikationer.
+
+## Mission Statement
+
+Vi skaber ægte forbindelser i en verden fuld af overfladiske swipes. Vores mission er at bringe mennesker sammen gennem autenticitet, ærlighed og samhørighed – uden filtre, uden facade. Hos os handler dating om mere end lækre billeder – det handler om mennesker og om energien mellem mennesker.
+
+## Værdier
+
+- **Autenticitet**
+- **Samhørighed** (fællesskab/forbindelse)
+- **Ærlighed** (ægthed)
+- **Nysgerrighed**
+- **Fordybelse** (nærvær)
