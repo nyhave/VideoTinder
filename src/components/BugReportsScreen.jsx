@@ -8,6 +8,14 @@ export default function BugReportsScreen({ onBack }) {
   const bugReports = useCollection('bugReports');
   const [showClosed, setShowClosed] = useState(false);
 
+  const copyText = async text => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error('Failed to copy', err);
+    }
+  };
+
   const filtered = bugReports
     .filter(r => showClosed ? r.closed : !r.closed)
     .sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
@@ -28,7 +36,10 @@ export default function BugReportsScreen({ onBack }) {
         filtered.map(r =>
           React.createElement('li', { key: r.id, className: 'border p-2 rounded' },
             r.screenshotURL && React.createElement('img', { src: r.screenshotURL, className: 'mb-2 max-h-40 object-contain w-full' }),
-            React.createElement('p', { className: 'text-sm mb-2' }, r.text),
+            React.createElement('div', { className: 'flex items-start gap-2 mb-2' },
+              React.createElement('p', { className: 'text-sm flex-1' }, r.text),
+              React.createElement(Button, { className: 'bg-gray-500 text-white px-2 py-1', onClick: () => copyText(r.text) }, 'Copy')
+            ),
             !r.closed && React.createElement('div', { className: 'flex gap-2' },
               !r.readyForTest && React.createElement(Button, { className: 'bg-green-500 text-white flex-1', onClick: () => markReady(r.id) }, 'Klar til test'),
               React.createElement(Button, { className: 'bg-blue-500 text-white flex-1', onClick: () => closeReport(r.id) }, 'Luk')
