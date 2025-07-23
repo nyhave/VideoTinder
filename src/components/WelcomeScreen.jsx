@@ -80,6 +80,119 @@ export default function WelcomeScreen({ onLogin }) {
     }
   };
 
+  const finalizeRegistration = async (id, profile, uid, inviteId, inviteValid, giftFrom) => {
+    await setDoc(doc(db, 'profiles', id), { ...profile, uid });
+    await setDoc(doc(db, 'users', uid), { profileId: id });
+    if (inviteId && inviteValid) {
+      try {
+        await updateDoc(doc(db, 'invites', inviteId), { accepted: true, profileId: id });
+      } catch (err) {
+        console.error('Failed to update invite', err);
+      }
+    }
+    setCreatedMsg(t(giftFrom && inviteValid ? 'profileCreatedGift' : 'profileCreated'));
+    setCreatedId(id);
+    setShowCreated(true);
+  };
+
+  const registerWithProvider = async provider => {
+    const trimmedName = name.trim() || (provider.displayName || '');
+    const trimmedCity = city.trim();
+    const trimmedUser = username.trim();
+    if (!trimmedName || !trimmedCity || !birthday || !trimmedUser) {
+      setTriedSubmit(true);
+      setShowMissingFields(true);
+      return;
+    }
+    if (getAge(birthday) < 18) {
+      setShowAgeError(true);
+      return;
+    }
+
+    let cred;
+    try {
+      cred = provider === 'google' ? await signInWithGoogle() : await signInWithFacebook();
+    } catch (err) {
+      console.error('Provider signup failed', err);
+      setLoginError(true);
+      return;
+    }
+
+    const id = Date.now().toString();
+    const params = new URLSearchParams(window.location.search);
+    let giftFrom = params.get('gift');
+    const inviteId = params.get('invite');
+
+    let inviteValid = false;
+    if (inviteId) {
+      try {
+        const snap = await getDoc(doc(db, 'invites', inviteId));
+        if (snap.exists()) {
+          const inv = snap.data();
+          if (!inv.accepted && (!giftFrom || giftFrom === inv.inviterId)) {
+            inviteValid = true;
+            if (!giftFrom && inv.gift) giftFrom = inv.inviterId;
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load invite', err);
+      }
+    }
+
+    if (giftFrom && inviteValid) {
+      try {
+        const inviterSnap = await getDoc(doc(db, 'profiles', giftFrom));
+        if (!inviterSnap.exists() || (inviterSnap.data().premiumInvitesUsed || 0) >= 5) {
+          giftFrom = null;
+          inviteValid = false;
+        }
+      } catch (err) {
+        console.error('Failed to verify inviter', err);
+        giftFrom = null;
+        inviteValid = false;
+      }
+    }
+
+    const trimmedEmail = cred.user.email || '';
+    const profile = {
+      id,
+      name: trimmedName,
+      city: trimmedCity,
+      email: trimmedEmail,
+      gender,
+      interest: gender === 'Kvinde' ? 'Mand' : 'Kvinde',
+      birthday,
+      age: birthday ? getAge(birthday) : 18,
+      language: lang,
+      preferredLanguages: [lang],
+      allowOtherLanguages: true,
+      distanceRange: [10, 25],
+      audioClips: [],
+      videoClips: [],
+      interests: []
+    };
+
+    if (giftFrom && inviteValid) {
+      const now = getCurrentDate();
+      const expiry = new Date(now);
+      expiry.setMonth(expiry.getMonth() + 3);
+      profile.subscriptionActive = true;
+      profile.subscriptionPurchased = now.toISOString();
+      profile.subscriptionExpires = expiry.toISOString();
+      profile.giftedBy = giftFrom;
+      try {
+        await updateDoc(doc(db, 'profiles', giftFrom), { premiumInvitesUsed: increment(1) });
+      } catch (err) {
+        console.error('Failed to update inviter', err);
+      }
+    }
+
+    await finalizeRegistration(id, profile, cred.user.uid, inviteId, inviteValid, giftFrom);
+  };
+
+  const handleGoogleRegister = () => registerWithProvider('google');
+  const handleFacebookRegister = () => registerWithProvider('facebook');
+
   const register = async () => {
     const trimmedName = name.trim();
     const trimmedCity = city.trim();
@@ -171,18 +284,7 @@ export default function WelcomeScreen({ onLogin }) {
       setLoginError(true);
       return;
     }
-    await setDoc(doc(db, 'profiles', id), { ...profile, uid: userCred.user.uid });
-    await setDoc(doc(db, 'users', userCred.user.uid), { profileId: id });
-    if (inviteId && inviteValid) {
-      try {
-        await updateDoc(doc(db,'invites', inviteId), { accepted: true, profileId: id });
-      } catch (err) {
-        console.error('Failed to update invite', err);
-      }
-    }
-    setCreatedMsg(t(giftFrom && inviteValid ? 'profileCreatedGift' : 'profileCreated'));
-    setCreatedId(id);
-    setShowCreated(true);
+    await finalizeRegistration(id, profile, userCred.user.uid, inviteId, inviteValid, giftFrom);
   };
   return React.createElement(
     React.Fragment,
@@ -315,7 +417,15 @@ export default function WelcomeScreen({ onLogin }) {
             variant: 'outline',
             onClick: () => setShowRegister(false)
           }, t('cancel'))
-        )
+        ),
+        React.createElement(Button, {
+          className: 'mt-4 bg-white text-gray-800 border w-full',
+          onClick: handleGoogleRegister
+        }, t('registerGoogle')),
+        React.createElement(Button, {
+          className: 'mt-2 bg-blue-600 text-white w-full',
+          onClick: handleFacebookRegister
+        }, t('registerFacebook'))
       )
     ) : showLoginForm ? (
       React.createElement(React.Fragment, null,

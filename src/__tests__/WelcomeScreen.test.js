@@ -70,6 +70,14 @@ test('shows age error when user is under 18', async () => {
   expect(await screen.findByText(/mindst 18 \u00e5r/)).toBeInTheDocument();
 });
 
+// Test that Google and Facebook signup buttons are shown
+test('shows provider signup buttons', async () => {
+  renderWelcome();
+  await userEvent.click(screen.getByRole('button', { name: 'Create profile' }));
+  expect(screen.getByRole('button', { name: 'Create with Google' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Create with Facebook' })).toBeInTheDocument();
+});
+
 // Test successful registration
 
 test('calls Firebase and onLogin when registration succeeds', async () => {
