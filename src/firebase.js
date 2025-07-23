@@ -36,7 +36,10 @@ import {
   sendPasswordResetEmail,
   onAuthStateChanged,
   signOut,
-  deleteUser
+  deleteUser,
+  signInWithPopup,
+  GoogleAuthProvider,
+  FacebookAuthProvider
 } from 'firebase/auth';
 import { fcmReg } from './swRegistration.js';
 import { detectOS, detectBrowser } from './utils.js';
@@ -235,6 +238,16 @@ export function isAdminUser(user) {
   return !!user && ADMIN_EMAILS.includes(user.email || '');
 }
 
+export function signInWithGoogle() {
+  const provider = new GoogleAuthProvider();
+  return signInWithPopup(auth, provider);
+}
+
+export function signInWithFacebook() {
+  const provider = new FacebookAuthProvider();
+  return signInWithPopup(auth, provider);
+}
+
 export function signOutUser() {
   return signOut(auth);
 }
@@ -304,6 +317,8 @@ export {
   sendPasswordResetEmail,
   onAuthStateChanged,
   signOut,
+  signInWithGoogle,
+  signInWithFacebook
 };
 
 

@@ -6,7 +6,7 @@ import InfoOverlay from './InfoOverlay.jsx';
 import ForgotPasswordOverlay from './ForgotPasswordOverlay.jsx';
 import { UserPlus, LogIn } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
-import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../firebase.js';
+import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithGoogle, signInWithFacebook } from '../firebase.js';
 import { getAge, getCurrentDate } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
@@ -52,6 +52,30 @@ export default function WelcomeScreen({ onLogin }) {
       onLogin(pid);
     } catch (err) {
       console.error('Login failed', err);
+      setLoginError(true);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const cred = await signInWithGoogle();
+      const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
+      const pid = userDoc.exists() ? userDoc.data().profileId : cred.user.uid;
+      onLogin(pid, 'google');
+    } catch (err) {
+      console.error('Google login failed', err);
+      setLoginError(true);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      const cred = await signInWithFacebook();
+      const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
+      const pid = userDoc.exists() ? userDoc.data().profileId : cred.user.uid;
+      onLogin(pid, 'facebook');
+    } catch (err) {
+      console.error('Facebook login failed', err);
       setLoginError(true);
     }
   };
@@ -317,7 +341,15 @@ export default function WelcomeScreen({ onLogin }) {
           className: 'mt-2',
           variant: 'outline',
           onClick: () => setShowForgot(true)
-        }, t('forgotPassword'))
+        }, t('forgotPassword')),
+        React.createElement(Button, {
+          className: 'mt-4 bg-white text-gray-800 border w-full',
+          onClick: handleGoogleLogin
+        }, t('loginGoogle')),
+        React.createElement(Button, {
+          className: 'mt-2 bg-blue-600 text-white w-full',
+          onClick: handleFacebookLogin
+        }, t('loginFacebook'))
       )
     ) : (
       React.createElement(React.Fragment, null,
