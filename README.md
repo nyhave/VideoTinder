@@ -89,6 +89,10 @@ This runs Jest using the configuration in `jest.config.js`.
 
 Dette er en test af workflow.
 
+## Manual Function Testing
+
+The admin page contains a dedicated function test screen. Tests are organized in modules so each area can be completed separately. See [docs/function-test-modules.md](docs/function-test-modules.md) for an overview of the modules and how to submit results.
+
 ## Automated Screenshots
 
 Screenshots of key routes can be generated with `npm run screenshots`. The
