@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDoc, db, doc, setDoc } from '../firebase.js';
 import { getTodayStr, getCurrentDate, getAge } from '../utils.js';
 import { Card } from './ui/card.js';
@@ -26,6 +26,9 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const [reaction, setReaction] = useState('');
   const [rating, setRating] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
+  const reflectionRef = useRef('');
+  const ratingRef = useRef(0);
+  const progressRef = useRef(null);
   const MAX_REFLECTION_LEN = 30;
   const extendExpiry = (current) => {
     const base = current && new Date(current) > getCurrentDate()
@@ -37,6 +40,9 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   useEffect(() => {
     if(progress?.rating) setRating(progress.rating);
   }, [progress]);
+  useEffect(()=>{ reflectionRef.current = reflection; }, [reflection]);
+  useEffect(()=>{ ratingRef.current = rating; }, [rating]);
+  useEffect(()=>{ progressRef.current = progress; }, [progress]);
   const stepLabels = [
     'Level 1',
     'Level 2',
@@ -80,6 +86,37 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       }, { merge: true }).catch(err => console.error('Failed to update seen stage', err));
     }
   }, [progress, stage]);
+
+  useEffect(() => {
+    return () => {
+      const text = reflectionRef.current.trim();
+      const r = ratingRef.current;
+      const prog = progressRef.current;
+      if (!text && r === (prog?.rating || 0)) return;
+      const data = {
+        id: progressId,
+        userId,
+        profileId,
+        lastUpdated: today,
+        rating: r,
+        expiresAt: extendExpiry(prog?.expiresAt)
+      };
+      if (text) data.reflection = text;
+      setDoc(doc(db, 'episodeProgress', progressId), data, { merge: true })
+        .catch(err => console.error('Failed to save progress on unmount', err));
+      const refId = `${userId}-${today}-${profileId}`;
+      const refData = {
+        id: refId,
+        userId,
+        date: today,
+        rating: r,
+        profileName: profile?.name
+      };
+      if (text) refData.text = text;
+      setDoc(doc(db, 'reflections', refId), refData, { merge: true })
+        .catch(err => console.error('Failed to save reflection on unmount', err));
+    };
+  }, []);
 
   if (!profile) return null;
 
