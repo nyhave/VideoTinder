@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
@@ -211,11 +211,44 @@ const modules = [
 
 const features = modules.flatMap(m => m.features);
 
+const defaultResults = modules.map(mod =>
+  mod.features.map(() => ({ status: '', comment: '', file: null }))
+);
+
 export default function FunctionTestScreen({ onBack }) {
-  const [activeModule, setActiveModule] = useState(-1);
-  const [results, setResults] = useState(() =>
-    modules.map(mod => mod.features.map(() => ({ status: '', comment: '', file: null })))
-  );
+  const [activeModule, setActiveModule] = useState(() => {
+    const stored = localStorage.getItem('functionTestActiveModule');
+    return stored ? parseInt(stored, 10) : -1;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('functionTestActiveModule', String(activeModule));
+  }, [activeModule]);
+  const [results, setResults] = useState(() => {
+    const stored = localStorage.getItem('functionTestResults');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        return modules.map((m, mi) =>
+          m.features.map((_, fi) => ({
+            status: parsed[mi]?.[fi]?.status || '',
+            comment: parsed[mi]?.[fi]?.comment || '',
+            file: null
+          }))
+        );
+      } catch (e) {
+        // ignore parse errors
+      }
+    }
+    return defaultResults;
+  });
+
+  useEffect(() => {
+    const serializable = results.map(mod =>
+      mod.map(({ status, comment }) => ({ status, comment }))
+    );
+    localStorage.setItem('functionTestResults', JSON.stringify(serializable));
+  }, [results]);
 
   const update = (mIndex, fIndex, field, value) => {
     setResults(r =>
@@ -225,6 +258,13 @@ export default function FunctionTestScreen({ onBack }) {
           : mod
       )
     );
+  };
+
+  const resetProgress = () => {
+    localStorage.removeItem('functionTestResults');
+    localStorage.removeItem('functionTestActiveModule');
+    setResults(defaultResults);
+    setActiveModule(-1);
   };
 
   const submitModule = async mIndex => {
@@ -255,7 +295,12 @@ export default function FunctionTestScreen({ onBack }) {
 
   if (activeModule === -1) {
     return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title:'Funktionstest', colorClass:'text-blue-600', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
+      React.createElement(SectionTitle, { title:'Funktionstest', colorClass:'text-blue-600', action:
+        React.createElement('div', { className:'flex gap-2' },
+          React.createElement(Button, { className:'bg-red-500 text-white px-2 py-1 rounded', onClick: resetProgress }, 'Reset'),
+          React.createElement(Button, { className:'bg-gray-500 text-white px-2 py-1 rounded', onClick: onBack }, 'Tilbage')
+        )
+      }),
       React.createElement('ul', { className:'space-y-4 mt-4' },
         modules.map((m, i) =>
           React.createElement('li', { key:i, className:'border p-2 rounded flex justify-between items-center' },
