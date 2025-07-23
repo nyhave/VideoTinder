@@ -32,7 +32,7 @@ describe('AdminScreen delete user', () => {
     window.confirm = jest.fn(() => true);
     render(
       <LanguageProvider value={{ lang: 'en', setLang: () => {} }}>
-        <AdminScreen profiles={[{ id: 'u1', name: 'User' }]} userId="u1" onSwitchProfile={() => {}} />
+        <AdminScreen profiles={[{ id: 'u1', name: 'User' }]} userId="u1" onSwitchProfile={() => {}} onOpenRevealTest={() => {}} />
       </LanguageProvider>
     );
     await userEvent.click(screen.getByRole('button', { name: 'Delete user' }));
