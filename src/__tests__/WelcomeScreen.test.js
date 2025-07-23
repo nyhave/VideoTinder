@@ -16,6 +16,8 @@ jest.mock('../firebase.js', () => ({
   sendPasswordResetEmail: jest.fn(() => Promise.resolve()),
   createUserWithEmailAndPassword: jest.fn(() => Promise.resolve({ user: { uid: 'uid123' } })),
   signInWithEmailAndPassword: jest.fn(() => Promise.resolve({ user: { uid: 'uid123' } })),
+  signInWithGoogle: jest.fn(() => Promise.resolve({ user: { uid: 'uid123' } })),
+  signInWithFacebook: jest.fn(() => Promise.resolve({ user: { uid: 'uid123' } })),
   getDoc: jest.fn(() => Promise.resolve({ exists: () => false })),
 }));
 
