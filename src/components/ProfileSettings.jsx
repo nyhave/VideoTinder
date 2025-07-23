@@ -667,7 +667,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
               React.createElement('option', { value: 'Mand' }, 'Mænd'),
               React.createElement('option', { value: 'Kvinde' }, 'Kvinder')
             )
-          : React.createElement('p', { className: 'mb-2' }, profile.interest || 'Mand'),
+          : React.createElement('p', { className: 'mb-2' },
+              (profile.interest || 'Mand') === 'Kvinde' ? 'Kvinder' : 'Mænd'
+            ),
       
       React.createElement('label', { className: 'mt-2' }, `Alder: ${ageRange[0]} - ${ageRange[1]}`),
       React.createElement(Slider, {
