@@ -16,6 +16,10 @@ export default function BugReportsScreen({ onBack }) {
     await updateDoc(doc(db, 'bugReports', id), { closed: true });
   };
 
+  const markReady = async id => {
+    await updateDoc(doc(db, 'bugReports', id), { readyForTest: true });
+  };
+
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: 'Fejlmeldinger', colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
     React.createElement(Button, { className: 'mb-2', onClick: () => setShowClosed(!showClosed) }, showClosed ? 'Vis \u00E5bne' : 'Vis lukkede'),
@@ -25,7 +29,11 @@ export default function BugReportsScreen({ onBack }) {
           React.createElement('li', { key: r.id, className: 'border p-2 rounded' },
             r.screenshotURL && React.createElement('img', { src: r.screenshotURL, className: 'mb-2 max-h-40 object-contain w-full' }),
             React.createElement('p', { className: 'text-sm mb-2' }, r.text),
-            !r.closed && React.createElement(Button, { className: 'bg-blue-500 text-white', onClick: () => closeReport(r.id) }, 'Luk')
+            !r.closed && React.createElement('div', { className: 'flex gap-2' },
+              !r.readyForTest && React.createElement(Button, { className: 'bg-green-500 text-white flex-1', onClick: () => markReady(r.id) }, 'Klar til test'),
+              React.createElement(Button, { className: 'bg-blue-500 text-white flex-1', onClick: () => closeReport(r.id) }, 'Luk')
+            ),
+            r.readyForTest && React.createElement('p', { className: 'text-green-600 text-sm mt-1' }, 'Klar til test')
           )
         )
       ) :
