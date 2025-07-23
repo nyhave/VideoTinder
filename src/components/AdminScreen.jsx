@@ -8,6 +8,7 @@ import { db, collection, getDocs, deleteDoc, updateDoc, doc, getDoc, query, wher
 import { advanceDay, resetDay, getTodayStr } from '../utils.js';
 import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
+import { triggerHaptic } from '../haptics.js';
 
 
 export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenFunctionTest, onOpenRevealTest, onOpenTextLog, onOpenUserLog, onOpenServerLog, onOpenRecentLogins, profiles = [], userId, onSwitchProfile, onSaveUserLogout }) {
@@ -207,6 +208,10 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     }
   };
 
+  const testHaptic = () => {
+    triggerHaptic([100, 50, 100]);
+  };
+
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: 'Administration', colorClass: 'text-blue-600' }),
@@ -301,6 +306,9 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenMatchLog }, 'Se matchlog'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenScoreLog }, 'Se score log'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenUserLog }, 'F\u00f8lg bruger'),
+
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Haptisk feedback'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: testHaptic }, 'Test haptisk feedback'),
 
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Push notifications'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
