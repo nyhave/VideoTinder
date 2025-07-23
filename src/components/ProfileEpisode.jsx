@@ -39,7 +39,10 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   };
   useEffect(() => {
     if(progress?.rating) setRating(progress.rating);
-  }, [progress]);
+    if(progress?.lastUpdated === today && progress?.reflection){
+      setReflection(progress.reflection);
+    }
+  }, [progress, today]);
   useEffect(()=>{ reflectionRef.current = reflection; }, [reflection]);
   useEffect(()=>{ ratingRef.current = rating; }, [rating]);
   useEffect(()=>{ progressRef.current = progress; }, [progress]);
