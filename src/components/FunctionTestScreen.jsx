@@ -217,6 +217,15 @@ export default function FunctionTestScreen({ onBack }) {
     modules.map(mod => mod.features.map(() => ({ status: '', comment: '', file: null })))
   );
 
+  const copyFeature = async feature => {
+    const text = [feature.title, ...feature.expected.map(e => '- ' + e)].join('\n');
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error('Failed to copy text', err);
+    }
+  };
+
   const update = (mIndex, fIndex, field, value) => {
     setResults(r =>
       r.map((mod, mi) =>
@@ -277,6 +286,7 @@ export default function FunctionTestScreen({ onBack }) {
           React.createElement('ul', { className:'list-disc ml-5 text-sm mb-1' },
             f.expected.map((ex, j) => React.createElement('li', { key:j }, ex))
           ),
+          React.createElement(Button, { className:'mb-1 bg-gray-200 text-black px-2 py-1 rounded', onClick: () => copyFeature(f) }, 'Copy'),
           React.createElement('div', { className:'flex space-x-2 mb-1' },
             React.createElement(Button, { className:`px-2 py-1 rounded ${results[activeModule][i].status==='ok' ? 'bg-green-500 text-white' : 'bg-gray-200'}`, onClick:() => update(activeModule,i,'status',results[activeModule][i].status==='ok'?'':'ok') }, 'OK'),
             React.createElement(Button, { className:`px-2 py-1 rounded ${results[activeModule][i].status==='fail' ? 'bg-red-500 text-white' : 'bg-gray-200'}`, onClick:() => update(activeModule,i,'status',results[activeModule][i].status==='fail'?'':'fail') }, 'Fejl')
