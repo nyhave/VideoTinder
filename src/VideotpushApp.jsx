@@ -19,6 +19,7 @@ import AboutScreen from './components/AboutScreen.jsx';
 import FunctionTestScreen from './components/FunctionTestScreen.jsx';
 import RevealTestScreen from './components/RevealTestScreen.jsx';
 import TextLogScreen from './components/TextLogScreen.jsx';
+import TextPiecesScreen from './components/TextPiecesScreen.jsx';
 import TrackUserScreen from './components/TrackUserScreen.jsx';
 import ServerLogScreen from './components/ServerLogScreen.jsx';
 import RecentLoginsScreen from './components/RecentLoginsScreen.jsx';
@@ -273,7 +274,7 @@ export default function VideotpushApp() {
             taskTrigger: taskClicks
           }),
           tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenRevealTest: ()=>setTab('revealtest'), onOpenTextLog: ()=>setTab('textlog'), onOpenUserLog: ()=>setTab('trackuser'), onOpenServerLog: ()=>setTab('serverlog'), onOpenRecentLogins: ()=>setTab('recentlogins'), profiles, userId, onSwitchProfile: id=>{ setUserId(id); setLoginMethod('admin'); }, onSaveUserLogout: saveUserAndLogout }),
+          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenRevealTest: ()=>setTab('revealtest'), onOpenTextLog: ()=>setTab('textlog'), onOpenTextPieces: ()=>setTab('textpieces'), onOpenUserLog: ()=>setTab('trackuser'), onOpenServerLog: ()=>setTab('serverlog'), onOpenRecentLogins: ()=>setTab('recentlogins'), profiles, userId, onSwitchProfile: id=>{ setUserId(id); setLoginMethod('admin'); }, onSaveUserLogout: saveUserAndLogout }),
           tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
           tab==='matchlog' && React.createElement(MatchLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='scorelog' && React.createElement(ScoreLogScreen, { onBack: ()=>setTab('admin') }),
@@ -283,6 +284,7 @@ export default function VideotpushApp() {
           tab==='functiontest' && React.createElement(FunctionTestScreen, { onBack: ()=>setTab('admin') }),
           tab==='revealtest' && React.createElement(RevealTestScreen, { onBack: ()=>setTab('admin') }),
           tab==='textlog' && React.createElement(TextLogScreen, { onBack: ()=>setTab('admin') }),
+          tab==='textpieces' && React.createElement(TextPiecesScreen, { onBack: ()=>setTab('admin') }),
           tab==='trackuser' && React.createElement(TrackUserScreen, { onBack: ()=>setTab('admin'), profiles }),
           tab==='serverlog' && React.createElement(ServerLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='recentlogins' && React.createElement(RecentLoginsScreen, { onBack: ()=>setTab('admin') }),
