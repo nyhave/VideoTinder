@@ -208,6 +208,24 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     }
   };
 
+  const resetAllCandidates = async () => {
+    if (!window.confirm('Reset all candidates?')) return;
+    try {
+      const removeAll = async col => {
+        const snap = await getDocs(collection(db, col));
+        await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+      };
+      await Promise.all([
+        removeAll('likes'),
+        removeAll('matches'),
+        removeAll('episodeProgress')
+      ]);
+      alert('Alle kandidater nulstillet');
+    } catch (err) {
+      alert('Failed: ' + err.message);
+    }
+  };
+
   const testHaptic = () => {
     triggerHaptic([100, 50, 100]);
   };
@@ -277,6 +295,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
 
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, 'Database'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => seedData().then(() => alert('Databasen er nulstillet')) }, 'Reset database'),
+    React.createElement(Button, { className: 'mt-2 bg-red-500 text-white px-4 py-2 rounded', onClick: resetAllCandidates }, 'Reset all candidates'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: recoverMissing }, 'Hent mistet fra DB'),
 
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Logging'),
