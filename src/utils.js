@@ -12,10 +12,12 @@ export function getTodayStr(){
 export function advanceDay(){
   const off = parseInt(localStorage.getItem('dayOffset') || '0', 10) + 1;
   localStorage.setItem('dayOffset', off);
+  window.dispatchEvent(new Event('dayOffsetChange'));
 }
 
 export function resetDay(){
   localStorage.removeItem('dayOffset');
+  window.dispatchEvent(new Event('dayOffsetChange'));
 }
 
 export function getAge(birthday){

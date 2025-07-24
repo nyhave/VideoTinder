@@ -13,6 +13,7 @@ import MatchOverlay from './MatchOverlay.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
 import StoryLineOverlay from './StoryLineOverlay.jsx';
 import { triggerHaptic } from '../haptics.js';
+import useDayOffset from '../useDayOffset.js';
 
 export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOpenProfile }) {
   const profiles = useCollection('profiles');
@@ -20,6 +21,8 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const config = useDoc('config', 'app') || {};
   const showLevels = config.showLevels !== false;
   const user = profiles.find(p => p.id === userId) || {};
+  // Trigger re-renders when the admin changes the virtual date
+  useDayOffset();
   const hasActiveSub = prof =>
     prof.subscriptionExpires && new Date(prof.subscriptionExpires) > getCurrentDate();
   const today = getTodayStr();
