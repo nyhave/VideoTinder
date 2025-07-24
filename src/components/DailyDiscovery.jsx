@@ -48,7 +48,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const progresses = useCollection('episodeProgress','userId', userId);
 
   useEffect(() => {
-    if(!userId) return;
+    if(!userId || !progresses.loaded) return;
     const hasSub = hasActiveSub(user);
     const extra = user.extraClipsDate === today ? 3 : 0;
     const limit = (hasSub ? 6 : 3) + extra;
