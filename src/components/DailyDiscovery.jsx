@@ -109,8 +109,13 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     grace.setDate(grace.getDate() - 1);
     return new Date(prog.expiresAt) >= grace;
   });
+  const likedIds = new Set(likes.map(l => l.profileId));
   const archivedProfiles = progresses
-    .filter(pr => (pr.removed || (pr.expiresAt && new Date(pr.expiresAt) < getCurrentDate())) && pr.rating >= 3)
+    .filter(pr => {
+      const expired = pr.expiresAt && new Date(pr.expiresAt) < getCurrentDate();
+      const shouldShow = pr.rating >= 3 || likedIds.has(pr.profileId);
+      return (pr.removed || expired) && shouldShow;
+    })
     .map(pr => profiles.find(p => p.id === pr.profileId))
     .filter(Boolean);
 
