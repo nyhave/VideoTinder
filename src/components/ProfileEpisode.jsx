@@ -10,6 +10,7 @@ import ProfileSettings from './ProfileSettings.jsx';
 import VideoPreview from './VideoPreview.jsx';
 import { Star } from 'lucide-react';
 import InfoOverlay from './InfoOverlay.jsx';
+import useDayOffset from '../useDayOffset.js';
 
 export default function ProfileEpisode({ userId, profileId, onBack }) {
   const progressId = `${userId}-${profileId}`;
@@ -17,6 +18,8 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const profile = useDoc('profiles', profileId);
   const viewer = useDoc('profiles', userId);
   const isOwnProfile = userId === profileId;
+  // Listen for day changes from admin page
+  useDayOffset();
   const t = useT();
   const config = useDoc('config', 'app') || {};
   const showLevels = config.showLevels !== false;
