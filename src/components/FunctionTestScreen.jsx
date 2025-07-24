@@ -206,6 +206,35 @@ const modules = [
         ]
       }
     ]
+  },
+  {
+    name: 'Account Access',
+    features: [
+      {
+        title: 'Create profile from welcome screen',
+        expected: [
+          'Registration form validates required fields',
+          'Profile is saved in Firestore after sign-up',
+          'Success message appears after creating profile'
+        ]
+      },
+      {
+        title: 'Login with username and password',
+        expected: [
+          'Existing user can log in with correct credentials',
+          'Invalid credentials show an error message',
+          'Successful login opens discovery'
+        ]
+      },
+      {
+        title: 'Reset password with "Forgot Password"',
+        expected: [
+          'Forgot password link opens a form for email',
+          'Sending the form emails a reset link',
+          'Confirmation is shown after sending'
+        ]
+      }
+    ]
   }
 ];
 
