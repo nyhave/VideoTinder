@@ -198,15 +198,17 @@ export async function requestNotificationPermission(userId, loginMethod = 'passw
 
 export function useCollection(collectionName, field, value) {
   const [data, setData] = useState([]);
+  const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     const colRef = collection(db, collectionName);
     const q = field && value != null ? query(colRef, where(field, '==', value)) : colRef;
     const unsub = onSnapshot(q, snapshot => {
       setData(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setLoaded(true);
     });
     return () => unsub();
   }, [collectionName, field, value]);
-  return data;
+  return Object.assign([...data], { loaded });
 }
 
 export function useDoc(collectionName, docId) {
