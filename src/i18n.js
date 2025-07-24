@@ -67,7 +67,7 @@ const messages = {
   audioCtaTitle:{ en:'Add audio clips', da:'Tilføj lyde', sv:'Lägg till ljudklipp', es:'Añadir clips de audio', fr:'Ajouter des clips audio', de:'Audioclips hinzufügen' },
   audioCtaDesc:{ en:'Upload short audio clips to share your voice', da:'Upload korte lydklip for at dele din stemme', sv:'Ladda upp korta lydklipp för att dela din röst', es:'Sube clips de audio para compartir tu voz', fr:'Téléchargez de courts clips audio pour partager votre voix', de:'Lade kurze Audioclips hoch, um deine Stimme zu teilen' },
   clip1:{ en:'Introduction', da:'Introduktion', sv:'Introduktion', es:'Introducción', fr:'Introduction', de:'Einführung' },
-  clip2:{ en:'From my daily life', da:'Fra min dagligdag', sv:'Från vardagen', es:'De mi día a día', fr:'De mon quotidien', de:'Aus meinem Alltag' },
+  clip2:{ en:'biggest Interest', da:'Største interesse', sv:'Största intresse', es:'Mayor interés', fr:'Plus grand intérêt', de:'Größtes Interesse' },
   clip3:{ en:'Free', da:'Fri', sv:'Fritt', es:'Libre', fr:'Libre', de:'Frei' },
 inviteFriend:{ en:'Invite a friend', da:'Inviter en ven', sv:'Bjud in en vän', es:'Invitar a un amigo', fr:'Inviter un ami', de:'Einen Freund einladen' },
 inviteDesc:{ en:'Share the link below to invite others to RealDate', da:'Del linket nedenfor for at invitere andre til RealDate', sv:'Dela länken nedan för at bjuda in andra til RealDate', es:'Comparte el enlace de abajo para invitar a otros a RealDate', fr:"Partagez le lien ci-dessous pour inviter d'autres sur RealDate", de:'Teile den Link unten, um andere zu RealDate einzuladen' },
