@@ -74,6 +74,7 @@ inviteDesc:{ en:'Share the link below to invite others to RealDate', da:'Del lin
 share:{ en:'Share', da:'Del', sv:'Dela', es:'Compartir', fr:'Partager', de:'Teilen' },
 copyLink:{ en:'Copy link', da:'Kopiér link', sv:'Kopiera länk', es:'Copiar enlace', fr:'Copier le lien', de:'Link kopieren' },
 linkCopied:{ en:'Link copied to clipboard', da:'Link kopieret', sv:'Länk kopierad', es:'Enlace copiado', fr:'Lien copié', de:'Link kopiert' },
+visitWebsite:{ en:'Visit website', da:'Besøg hjemmesiden', sv:'Besök webbplatsen', es:'Visitar el sitio web', fr:'Visiter le site web', de:'Website besuchen' },
 inviteList:{ en:"Invitations", da:"Invitationer", sv:"Inbjudningar", es:"Invitaciones", fr:"Invitations", de:"Einladungen" },
 invitePending:{ en:"Pending", da:"Afventer", sv:"V\u00e4ntar", es:"Pendiente", fr:"En attente", de:"Ausstehend" },
 inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil creado", fr:"Profil cr\u00e9\u00e9", de:"Profil erstellt" },
