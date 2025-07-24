@@ -106,11 +106,12 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   level2Rate:{ en:'Give a private rating', da:'Giv en privat vurdering', sv:'Ge ett privat betyg', es:'Da una calificación privada', fr:'Donnez une évaluation privée', de:'Gib eine private Bewertung ab' },
   level2Reflect:{ en:'Write a private reflection', da:'Skriv en privat refleksion', sv:'Skriv en privat reflektion', es:'Escribe una reflexión privada', fr:'Écrivez une réflexion privée', de:'Schreibe eine private Reflexion' },
   level2Intro:{
-    en:'This is Day {day} with {name}. Watch all the available content, write a reflection and rate {name}. Come back tomorrow to see more content',
-    sv:'Detta är dag {day} med {name}. Titta på allt innehåll som finns, skriv en reflektion och betygsätt {name}. Kom tillbaka i morgon för att se mer innehåll',
-    es:'Este es el día {day} con {name}. Mira todo el contenido disponible, escribe una reflexión y califica a {name}. Vuelve mañana para ver más contenido',
-    fr:'C\'est le jour {day} avec {name}. Regardez tout le contenu disponible, écrivez une réflexion et évaluez {name}. Revenez demain pour voir plus de contenu',
-    de:'Dies ist Tag {day} mit {name}. Sieh dir alle verfügbaren Inhalte an, schreibe eine Reflexion und bewerte {name}. Komm morgen zurück, um mehr Inhalte zu sehen'
+    en:'This is Day {day} with {name}. Watch all available content and add a reflection or rating. If you do both they\'ll show together in your daily reflection. Come back tomorrow for more content',
+    da:'Dette er dag {day} med {name}. Se alt indhold og skriv en refleksion eller giv en vurdering. Hvis begge udfyldes vises de samlet i din daglige refleksion. Kom tilbage i morgen for mere indhold',
+    sv:'Detta är dag {day} med {name}. Titta på allt innehåll och skriv en reflektion eller ge ett betyg. Om båda fylls i visas de tillsammans i din dagliga reflektion. Kom tillbaka i morgon för mer innehåll',
+    es:'Este es el día {day} con {name}. Mira todo el contenido y escribe una reflexión o da una calificación. Si completas ambos aparecerán juntos en tu reflexión diaria. Vuelve mañana para ver más contenido',
+    fr:'C\'est le jour {day} avec {name}. Regardez tout le contenu puis écrivez une réflexion ou donnez une note. Si vous faites les deux, ils apparaîtront ensemble dans votre réflexion quotidienne. Revenez demain pour plus de contenu',
+    de:'Dies ist Tag {day} mit {name}. Sieh dir alle Inhalte an und schreibe eine Reflexion oder gib eine Bewertung ab. Wenn du beides machst, erscheinen sie zusammen in deiner täglichen Reflexion. Komm morgen zurück, um mehr Inhalte zu sehen'
   },
   keepProfile:{ en:'Keep profile', da:'Bevar profilen med 3 eller 4 stjerner', sv:'Bevara profilen', es:'Mantener perfil', fr:'Garder le profil', de:'Profil behalten' },
   dayLabel:{
