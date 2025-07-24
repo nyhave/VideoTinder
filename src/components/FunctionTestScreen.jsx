@@ -235,6 +235,35 @@ const modules = [
         ]
       }
     ]
+  },
+  {
+    name: 'Invitations',
+    features: [
+      {
+        title: 'Send invitation with a shareable link',
+        expected: [
+          'Generating an invite creates a unique link',
+          'Link can be copied or shared via the browser',
+          'Invite list shows the entered recipient'
+        ]
+      },
+      {
+        title: 'Gift 3 months of premium with up to five invites',
+        expected: [
+          'Premium gift enabled when invites are available',
+          'Remaining gift count is displayed',
+          'Gift status updates when the invite is used'
+        ]
+      },
+      {
+        title: 'Invite list displays pending and accepted',
+        expected: [
+          'All created invites are listed',
+          'Accepted invites are marked as created',
+          'Pending invites remain until your friend signs up'
+        ]
+      }
+    ]
   }
 ];
 
