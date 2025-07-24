@@ -41,3 +41,21 @@ describe('AdminScreen delete user', () => {
     expect(called).toBe(true);
   });
 });
+
+describe('AdminScreen day controls', () => {
+  test('next day persists to localStorage only', async () => {
+    const { updateDoc } = require('../firebase.js');
+    updateDoc.mockClear();
+    localStorage.clear();
+    const reload = jest.fn();
+    Object.defineProperty(window, 'location', { value: { reload }, writable: true });
+    render(
+      <LanguageProvider value={{ lang: 'en', setLang: () => {} }}>
+        <AdminScreen profiles={[{ id: 'u1', name: 'User' }]} userId="u1" onSwitchProfile={() => {}} onOpenRevealTest={() => {}} />
+      </LanguageProvider>
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'N\u00e6ste dag' }));
+    expect(localStorage.getItem('dayOffset')).toBe('1');
+    expect(updateDoc).not.toHaveBeenCalled();
+  });
+});
