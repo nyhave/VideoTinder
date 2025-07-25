@@ -10,6 +10,7 @@ GitHub Pages. Serverless functions for push notifications and scoring run on Net
 The home page is available at <https://videotpush.netlify.app/> and the app runs from <https://nyhave.github.io/VideoTinder/>.
 
 For more background on the guiding principles, see [Vision for "Dagens profiler"](docs/vision.md).
+Der findes også en dansk [beskrivelse af appens sider](docs/app-pages-da.md).
 Profiles are presented as short episodes rather than a catalog of faces. Each episode guides you through introduction, a behind-the-scenes prompt answer, a glimpse of daily life and space for your reaction.
 
 ## Features
