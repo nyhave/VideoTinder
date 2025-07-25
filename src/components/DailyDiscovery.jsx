@@ -266,11 +266,11 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       }) :
         React.createElement('li', { className: 'text-center text-gray-500' }, t('noProfiles'))
     ),
-    archivedProfiles.length && !showArchived && React.createElement(Button, {
+    archivedProfiles.length > 0 && !showArchived && React.createElement(Button, {
       className: 'mt-4 w-full bg-gray-200 text-black',
       onClick: () => setShowArchived(true)
     }, t('showArchived')),
-    archivedProfiles.length && showArchived && React.createElement(React.Fragment, null,
+    archivedProfiles.length > 0 && showArchived && React.createElement(React.Fragment, null,
       React.createElement('h3', { className:'mt-6 mb-2 font-medium' }, t('archivedProfiles')),
       React.createElement('ul', { className:'space-y-4 mb-4' },
         archivedProfiles.map(p => {
