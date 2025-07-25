@@ -151,6 +151,22 @@ const modules = [
           'Animation draws attention without affecting playback',
           'Timing feels smooth and not distracting'
         ]
+      },
+      {
+        title: 'App works offline after first visit',
+        expected: [
+          'Switching to airplane mode keeps the app usable',
+          'Previously viewed clips still play',
+          'Menus and navigation continue to work'
+        ]
+      },
+      {
+        title: 'Installable via PWA manifest',
+        expected: [
+          'Browser offers Add to Home Screen option',
+          'Installed app opens in standalone window',
+          'Icon matches the manifest'
+        ]
       }
     ]
   },
