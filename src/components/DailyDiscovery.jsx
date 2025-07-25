@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAge, getTodayStr, getCurrentDate } from '../utils.js';
+import { getAge, getTodayStr, getCurrentDate, getDaysLeft } from '../utils.js';
 import { User, PlayCircle, Star } from 'lucide-react';
 import VideoOverlay from './VideoOverlay.jsx';
 import { Card } from './ui/card.js';
@@ -201,7 +201,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
         const prog = progresses.find(pr => pr.profileId === p.id);
         const stage = prog?.stage || 1;
         const defaultDays = hasActiveSub(p) ? 10 : 5;
-        const daysLeft = prog?.expiresAt ? Math.ceil((new Date(prog.expiresAt) - getCurrentDate())/86400000) : defaultDays;
+        const daysLeft = prog?.expiresAt ? getDaysLeft(prog.expiresAt) : defaultDays;
         return React.createElement('li', {
           key: p.id,
           className: 'p-4 bg-white rounded-lg cursor-pointer shadow-lg border border-gray-200 flex flex-col relative',

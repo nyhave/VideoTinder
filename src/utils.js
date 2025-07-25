@@ -5,6 +5,15 @@ export function getCurrentDate(){
   return d;
 }
 
+export function getDaysLeft(expiresAt){
+  if(!expiresAt) return 0;
+  const now = getCurrentDate();
+  const exp = new Date(expiresAt);
+  now.setHours(0,0,0,0);
+  exp.setHours(0,0,0,0);
+  return Math.ceil((exp - now)/86400000);
+}
+
 export function getTodayStr(){
   return getCurrentDate().toISOString().split('T')[0];
 }

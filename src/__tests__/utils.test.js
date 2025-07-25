@@ -1,4 +1,4 @@
-import { getCurrentDate, getAge, getTodayStr } from '../utils.js';
+import { getCurrentDate, getAge, getTodayStr, getDaysLeft } from '../utils.js';
 
 // Control time for deterministic tests
 beforeEach(() => {
@@ -32,4 +32,11 @@ test('getAge calculates age relative to getCurrentDate', () => {
   // Birthday after the mocked current date this year
   const birthStr = '2000-05-21';
   expect(getAge(birthStr)).toBe(23);
+});
+
+test('getDaysLeft rounds down at midnight', () => {
+  const expires = '2024-05-25T12:00:00Z';
+  expect(getDaysLeft(expires)).toBe(5);
+  jest.setSystemTime(new Date('2024-05-21T08:00:00Z'));
+  expect(getDaysLeft(expires)).toBe(4);
 });

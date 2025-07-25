@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDoc, db, doc, setDoc } from '../firebase.js';
-import { getTodayStr, getCurrentDate, getAge } from '../utils.js';
+import { getTodayStr, getCurrentDate, getAge, getDaysLeft } from '../utils.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
@@ -126,7 +126,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
 
   if (!profile) return null;
 
-  const daysLeft = progress?.expiresAt ? Math.ceil((new Date(progress.expiresAt) - getCurrentDate())/86400000) : expiryDays;
+  const daysLeft = progress?.expiresAt ? getDaysLeft(progress.expiresAt) : expiryDays;
 
 
   const saveReflection = async (givenRating = rating) => {
