@@ -12,6 +12,7 @@ import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
 import StoryLineOverlay from './StoryLineOverlay.jsx';
+import ExtendAreaOverlay from './ExtendAreaOverlay.jsx';
 import { triggerHaptic } from '../haptics.js';
 import useDayOffset from '../useDayOffset.js';
 
@@ -120,12 +121,19 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
 
   const [hoursUntil, setHoursUntil] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
+  const [showExtend, setShowExtend] = useState(false);
+  const [extendDismissed, setExtendDismissed] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
   const [showPurchase, setShowPurchase] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [activeVideo, setActiveVideo] = useState(null);
   const [storyProfile, setStoryProfile] = useState(null);
+  useEffect(() => {
+    if (!extendDismissed && activeProfiles.length === 0) {
+      setShowExtend(true);
+    }
+  }, [activeProfiles, extendDismissed]);
   const handleExtraPurchase = async () => {
     const todayStr = getTodayStr();
     await updateDoc(doc(db, 'profiles', userId), { extraClipsDate: todayStr });
@@ -180,6 +188,16 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const removeProfile = async profileId => {
     const id = `${userId}-${profileId}`;
     await setDoc(doc(db,'episodeProgress', id), { removed: true }, { merge: true });
+  };
+  const extendArea = async () => {
+    const range = user.distanceRange || [0, 50];
+    const newRange = [range[0], (range[1] || 0) + 35];
+    await updateDoc(doc(db,'profiles', userId), { distanceRange: newRange });
+    setShowExtend(false);
+  };
+  const dismissExtend = () => {
+    setShowExtend(false);
+    setExtendDismissed(true);
   };
   useEffect(() => {
     const now = getCurrentDate();
@@ -319,6 +337,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       onClose: () => setMatchedProfile(null)
     }),
     activeVideo && React.createElement(VideoOverlay, { src: activeVideo, onClose: () => setActiveVideo(null) }),
+    showExtend && React.createElement(ExtendAreaOverlay, { onExtend: extendArea, onClose: dismissExtend }),
     showHelp && React.createElement(InfoOverlay, {
       title: t('dailyHelpTitle'),
       onClose: () => setShowHelp(false)

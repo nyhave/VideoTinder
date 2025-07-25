@@ -20,6 +20,16 @@ export const messages = {
   about:{ en:'About RealDate', da:'Om RealDate', sv:'Om RealDate', es:'Acerca de RealDate', fr:'À propos de RealDate', de:'Über RealDate' },
   loadMore:{ en:'Load more', da:'Hent flere...', sv:'Hämta fler...', es:'Cargar más', fr:'Charger plus', de:'Mehr laden' },
   noProfiles:{ en:'No profiles found', da:'Ingen profiler fundet', sv:'Inga profiler', es:'No hay perfiles', fr:'Aucun profil', de:'Keine Profile gefunden'},
+  extendAreaMessage:{
+    en:'No profiles near you. Expand search area by 35 km?',
+    da:'Ingen profiler i nærheden. Udvid område med 35 km?',
+    sv:'Inga profiler nära dig. Utöka området med 35 km?',
+    es:'No hay perfiles cerca. ¿Ampliar área en 35 km?',
+    fr:'Aucun profil à proximité. Étendre la zone de 35 km ?',
+    de:'Keine Profile in der Nähe. Bereich um 35 km erweitern?'
+  },
+  extendArea:{ en:'Expand area', da:'Udvid område', sv:'Utöka område', es:'Ampliar área', fr:'Étendre la zone', de:'Bereich erweitern' },
+  ok:{ en:'OK', da:'OK', sv:'OK', es:'OK', fr:'OK', de:'OK' },
   language:{ en:'Language', da:'Sprog', sv:'Språk', es:'Idioma', fr:'Langue', de:'Sprache' },
   preferredLanguages:{ en:'Preferred languages', da:'Foretrukne sprog', sv:'Föredragna språk', es:'Idiomas preferidos', fr:'Langues préférées', de:'Bevorzugte Sprachen' },
   allowOtherLanguages:{ en:'Allow other languages', da:'Tillad andre sprog', sv:'Tillåt andra språk', es:'Permitir otros idiomas', fr:"Autoriser d'autres langues", de:'Andere Sprachen erlauben' },
