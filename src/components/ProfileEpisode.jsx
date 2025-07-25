@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDoc, db, doc, setDoc } from '../firebase.js';
-import { getTodayStr, getCurrentDate, getAge, getDaysLeft } from '../utils.js';
+import { getTodayStr, getCurrentDate, getAge } from '../utils.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
@@ -33,13 +33,6 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const ratingRef = useRef(0);
   const progressRef = useRef(null);
   const MAX_REFLECTION_LEN = 30;
-  const extendExpiry = (current) => {
-    const base = current && new Date(current) > getCurrentDate()
-      ? new Date(current) : getCurrentDate();
-    const next = new Date(base);
-    next.setDate(base.getDate() + expiryDays);
-    return next.toISOString();
-  };
   useEffect(() => {
     if(progress?.rating) setRating(progress.rating);
     if(progress?.lastUpdated === today && progress?.reflection){
@@ -62,7 +55,6 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   useEffect(() => {
     if(!profile || isOwnProfile) return;
     if(!progress) {
-      const expiresAt = extendExpiry();
       setDoc(doc(db,'episodeProgress', progressId), {
         id: progressId,
         userId,
@@ -71,7 +63,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         seenStage: 0,
         lastUpdated: today,
         addedDate: today,
-        expiresAt
+        daysLeft: expiryDays
       }, { merge: true }).catch(err => console.error('Failed to init progress', err));
     }
   }, [profile, progress, isOwnProfile]);
@@ -104,8 +96,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         userId,
         profileId,
         lastUpdated: today,
-        rating: r,
-        expiresAt: extendExpiry(prog?.expiresAt)
+        rating: r
       };
       if (text) data.reflection = text;
       setDoc(doc(db, 'episodeProgress', progressId), data, { merge: true })
@@ -126,7 +117,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
 
   if (!profile) return null;
 
-  const daysLeft = progress?.expiresAt ? getDaysLeft(progress.expiresAt) : expiryDays;
+  const daysLeft = progress?.daysLeft ?? expiryDays;
 
 
   const saveReflection = async (givenRating = rating) => {
@@ -137,8 +128,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       userId,
       profileId,
       lastUpdated: today,
-      rating: givenRating,
-      expiresAt: extendExpiry(progress?.expiresAt)
+      rating: givenRating
     };
     if (text) data.reflection = text;
     await setDoc(doc(db, 'episodeProgress', progressId), data, { merge: true });
@@ -162,8 +152,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       userId,
       profileId,
       lastUpdated: today,
-      reaction: text,
-      expiresAt: extendExpiry(progress?.expiresAt)
+      reaction: text
     }, { merge: true });
   };
 
@@ -174,8 +163,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         id: progressId,
         userId,
         profileId,
-        lastUpdated: today,
-        expiresAt: extendExpiry(progress?.expiresAt)
+        lastUpdated: today
       }, { merge: true });
     }
   };

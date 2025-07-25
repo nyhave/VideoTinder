@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAge, getTodayStr, getCurrentDate, getDaysLeft } from '../utils.js';
+import { getAge, getTodayStr, getCurrentDate } from '../utils.js';
 import { User, PlayCircle, Star } from 'lucide-react';
 import VideoOverlay from './VideoOverlay.jsx';
 import { Card } from './ui/card.js';
@@ -57,9 +57,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       const id = `${userId}-${p.id}`;
       const prog = progresses.find(pr => pr.id === id);
       if(!prog && createdToday < limit){
-        const expires = new Date(getCurrentDate());
         const days = hasActiveSub(p) ? 10 : 5;
-        expires.setDate(expires.getDate() + days);
         setDoc(doc(db,'episodeProgress', id), {
           id,
           userId,
@@ -68,7 +66,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           seenStage: 1,
           lastUpdated: today,
           addedDate: today,
-          expiresAt: expires.toISOString()
+          daysLeft: days
         }, { merge: true }).catch(err => console.error('Failed to init progress', err));
         createdToday++;
       }
@@ -85,15 +83,19 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
         return;
       }
       const last = new Date(pr.lastUpdated);
-      const nowStr = todayStr;
       const lastStr = last.toISOString().split('T')[0];
-      if(pr.stage < 3 && lastStr !== nowStr){
-        const newStage = pr.stage + 1;
-        setDoc(doc(db,'episodeProgress', pr.id), {
-          stage: newStage,
-          seenStage: newStage,
-          lastUpdated: todayStr
-        }, { merge: true }).catch(err => console.error('Failed to advance stage', err));
+      if(lastStr !== todayStr){
+        const data = { lastUpdated: todayStr };
+        if(pr.stage < 3){
+          const newStage = pr.stage + 1;
+          data.stage = newStage;
+          data.seenStage = newStage;
+        }
+        if(pr.daysLeft !== undefined){
+          data.daysLeft = pr.daysLeft - 1;
+        }
+        setDoc(doc(db,'episodeProgress', pr.id), data, { merge: true })
+          .catch(err => console.error('Failed to advance stage', err));
       }
     });
   }, [progresses, userId]);
@@ -103,16 +105,13 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     const prog = progressMap.get(p.id);
     if(!prog) return false;
     if(prog.removed) return false;
-    if(!prog.expiresAt) return true;
-    const now = getCurrentDate();
-    const grace = new Date(now);
-    grace.setDate(grace.getDate() - 1);
-    return new Date(prog.expiresAt) >= grace;
+    if(prog.daysLeft === undefined) return true;
+    return prog.daysLeft >= 0;
   });
   const likedIds = new Set(likes.map(l => l.profileId));
   const archivedProfiles = progresses
     .filter(pr => {
-      const expired = pr.expiresAt && new Date(pr.expiresAt) < getCurrentDate();
+      const expired = pr.daysLeft !== undefined && pr.daysLeft < 0;
       const shouldShow = pr.rating >= 3 || likedIds.has(pr.profileId);
       return (pr.removed || expired) && shouldShow;
     })
@@ -201,7 +200,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
         const prog = progresses.find(pr => pr.profileId === p.id);
         const stage = prog?.stage || 1;
         const defaultDays = hasActiveSub(p) ? 10 : 5;
-        const daysLeft = prog?.expiresAt ? getDaysLeft(prog.expiresAt) : defaultDays;
+        const daysLeft = prog?.daysLeft ?? defaultDays;
         return React.createElement('li', {
           key: p.id,
           className: 'p-4 bg-white rounded-lg cursor-pointer shadow-lg border border-gray-200 flex flex-col relative',
