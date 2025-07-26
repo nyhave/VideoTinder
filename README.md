@@ -4,7 +4,7 @@
 RealDate is a small prototype for experimenting with a slower approach to online dating.
 The **VideotpushApp** demonstrates daily video discovery, chat, reflection notes
 and simple profile management powered by Firebase. The code is hosted on
-[GitHub](https://github.com/nyhave/VideoTinder) and the live demo is served from
+[GitHub](https://github.com/nyhave/VideoTinder/) and the live demo is served from
 GitHub Pages. Serverless functions for push notifications and scoring run on Netlify.
 
 The home page is available at <https://videotpush.netlify.app/> and the app runs from <https://nyhave.github.io/VideoTinder/>.
