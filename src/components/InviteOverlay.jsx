@@ -37,8 +37,10 @@ export default function InviteOverlay({ userId, onClose }) {
   };
 
   useEffect(() => {
+    if (inviteId) return;
+    if (invitesEnabled && remaining <= 0) return;
     createInvite();
-  }, []);
+  }, [inviteId, invitesEnabled, remaining]);
 
   useEffect(() => {
     if (!inviteId) return;
@@ -94,6 +96,16 @@ export default function InviteOverlay({ userId, onClose }) {
         ? `Tilbyd 3 måneders gratis premium. Du har ${remaining} tilbage`
         : 'Du har ikke flere premium invitationer')
     : t('inviteDesc');
+
+  if (invitesEnabled && remaining <= 0) {
+    return React.createElement('div', { className: 'fixed inset-0 z-50 bg-black/50 flex items-center justify-center' },
+      React.createElement(Card, { className: 'bg-white p-6 rounded shadow-xl max-w-sm w-full' },
+        React.createElement('h2', { className: 'text-xl font-semibold mb-4 text-pink-600 text-center' }, t('inviteFriend')),
+        React.createElement('p', { className: 'text-center text-sm mb-4' }, text),
+        React.createElement(Button, { className: 'w-full mt-2', onClick: onClose }, t('cancel'))
+      )
+    );
+  }
 
   return React.createElement('div', { className: 'fixed inset-0 z-50 bg-black/50 flex items-center justify-center' },
     React.createElement(Card, { className: 'bg-white p-6 rounded shadow-xl max-w-sm w-full' },
