@@ -15,6 +15,7 @@ import BugReportsScreen from './components/BugReportsScreen.jsx';
 import MatchLogScreen from './components/MatchLogScreen.jsx';
 import ScoreLogScreen from './components/ScoreLogScreen.jsx';
 import ActiveCallsScreen from './components/ActiveCallsScreen.jsx';
+import ActiveGroupCallsScreen from './components/ActiveGroupCallsScreen.jsx';
 import ReportedContentScreen from './components/ReportedContentScreen.jsx';
 import AboutScreen from './components/AboutScreen.jsx';
 import FunctionTestScreen from './components/FunctionTestScreen.jsx';
@@ -279,11 +280,12 @@ export default function VideotpushApp() {
             taskTrigger: taskClicks
           }),
           tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenRevealTest: ()=>setTab('revealtest'), onOpenTextLog: ()=>setTab('textlog'), onOpenTextPieces: ()=>setTab('textpieces'), onOpenUserLog: ()=>setTab('trackuser'), onOpenServerLog: ()=>setTab('serverlog'), onOpenRecentLogins: ()=>setTab('recentlogins'), profiles, userId, onSwitchProfile: id=>{ setUserId(id); setLoginMethod('admin'); }, onSaveUserLogout: saveUserAndLogout }),
+          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenGroupCallLog: ()=>setTab('groupcalllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenRevealTest: ()=>setTab('revealtest'), onOpenTextLog: ()=>setTab('textlog'), onOpenTextPieces: ()=>setTab('textpieces'), onOpenUserLog: ()=>setTab('trackuser'), onOpenServerLog: ()=>setTab('serverlog'), onOpenRecentLogins: ()=>setTab('recentlogins'), profiles, userId, onSwitchProfile: id=>{ setUserId(id); setLoginMethod('admin'); }, onSaveUserLogout: saveUserAndLogout }),
           tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
           tab==='matchlog' && React.createElement(MatchLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='scorelog' && React.createElement(ScoreLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='calllog' && React.createElement(ActiveCallsScreen, { onBack: ()=>setTab('admin') }),
+          tab==='groupcalllog' && React.createElement(ActiveGroupCallsScreen, { onBack: ()=>setTab('admin') }),
           tab==='reports' && React.createElement(ReportedContentScreen, { onBack: ()=>setTab('admin') }),
           tab==='bugs' && React.createElement(BugReportsScreen, { onBack: ()=>setTab('admin') }),
           tab==='functiontest' && React.createElement(FunctionTestScreen, { onBack: ()=>setTab('admin') }),
