@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
@@ -30,8 +30,16 @@ export default function WelcomeScreen({ onLogin }) {
   const [createdMsg, setCreatedMsg] = useState('');
   const [createdId, setCreatedId] = useState('');
   const [showForgot, setShowForgot] = useState(false);
+  const birthdayInputRef = useRef(null);
   const { lang } = useLang();
   const t = useT();
+
+  useEffect(() => {
+    if (showBirthdayOverlay) {
+      const input = birthdayInputRef.current;
+      if (input && input.showPicker) input.showPicker();
+    }
+  }, [showBirthdayOverlay]);
 
   const handleSkip = () => {
     onLogin('101', 'admin');
@@ -298,6 +306,7 @@ export default function WelcomeScreen({ onLogin }) {
       React.createElement(Input, {
         type: 'date',
         className: 'border p-2',
+        ref: birthdayInputRef,
         value: birthday,
         onChange: e => setBirthday(e.target.value),
         autoFocus: true
