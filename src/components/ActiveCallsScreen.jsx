@@ -3,8 +3,10 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useCollection } from '../firebase.js';
+import { useT } from '../i18n.js';
 
 export default function ActiveCallsScreen({ onBack }) {
+  const t = useT();
   const calls = useCollection('calls');
   const profiles = useCollection('profiles');
 
@@ -27,7 +29,7 @@ export default function ActiveCallsScreen({ onBack }) {
 
     return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, {
-      title: 'Aktive opkald',
+      title: t('activeCallsTitle'),
       colorClass: 'text-blue-600',
       action: React.createElement(Button, { onClick: onBack }, 'Tilbage')
     }),

@@ -20,7 +20,7 @@ export default function RevealTestScreen({ onBack }) {
 
   if (!profile) {
     return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: 'Reveal test', colorClass: 'text-blue-600', action: React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onBack }, 'Tilbage') }),
+      React.createElement(SectionTitle, { title: t('revealTestTitle'), colorClass: 'text-blue-600', action: React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onBack }, 'Tilbage') }),
       React.createElement('p', null, 'Indl\u00e6ser...')
     );
   }
@@ -33,7 +33,7 @@ export default function RevealTestScreen({ onBack }) {
   );
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title: 'Reveal test', colorClass: 'text-blue-600', action: React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onBack }, 'Tilbage') }),
+    React.createElement(SectionTitle, { title: t('revealTestTitle'), colorClass: 'text-blue-600', action: React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onBack }, 'Tilbage') }),
     videoURL && React.createElement('div', { className: 'mb-4 relative' },
       React.createElement(VideoPreview, { src: videoURL }),
       overlay

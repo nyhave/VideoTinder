@@ -4,6 +4,7 @@ import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
 import SectionTitle from './SectionTitle.jsx';
 import { db, storage, doc, setDoc, ref, uploadBytes, getDownloadURL } from '../firebase.js';
+import { useT } from '../i18n.js';
 
 const modules = [
   {
@@ -290,6 +291,7 @@ const defaultResults = modules.map(mod =>
 );
 
 export default function FunctionTestScreen({ onBack }) {
+  const t = useT();
   const [activeModule, setActiveModule] = useState(() => {
     const stored = localStorage.getItem('functionTestActiveModule');
     return stored ? parseInt(stored, 10) : -1;
@@ -369,7 +371,7 @@ export default function FunctionTestScreen({ onBack }) {
 
   if (activeModule === -1) {
     return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title:'Funktionstest', colorClass:'text-blue-600', action:
+      React.createElement(SectionTitle, { title:t('functionTestTitle'), colorClass:'text-blue-600', action:
         React.createElement('div', { className:'flex gap-2' },
           React.createElement(Button, { className:'bg-red-500 text-white px-2 py-1 rounded', onClick: resetProgress }, 'Reset'),
           React.createElement(Button, { className:'bg-gray-500 text-white px-2 py-1 rounded', onClick: onBack }, 'Tilbage')

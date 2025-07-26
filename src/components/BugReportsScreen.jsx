@@ -3,8 +3,10 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useCollection, db, doc, updateDoc } from '../firebase.js';
+import { useT } from '../i18n.js';
 
 export default function BugReportsScreen({ onBack }) {
+  const t = useT();
   const bugReports = useCollection('bugReports');
   const [showClosed, setShowClosed] = useState(false);
 
@@ -29,7 +31,7 @@ export default function BugReportsScreen({ onBack }) {
   };
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title: 'Fejlmeldinger', colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
+    React.createElement(SectionTitle, { title: t('bugReportsTitle'), colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
     React.createElement(Button, { className: 'mb-2', onClick: () => setShowClosed(!showClosed) }, showClosed ? 'Vis \u00E5bne' : 'Vis lukkede'),
     filtered.length ?
       React.createElement('ul', { className: 'space-y-4 mt-4 overflow-y-auto max-h-[70vh]' },
