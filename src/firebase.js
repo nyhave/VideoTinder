@@ -14,6 +14,7 @@ import {
   setDoc,
   addDoc,
   arrayUnion,
+  arrayRemove,
   increment
 } from 'firebase/firestore';
 import {
@@ -307,6 +308,7 @@ export {
   setDoc,
   addDoc,
   arrayUnion,
+  arrayRemove,
   increment,
   ref,
   uploadBytes,
