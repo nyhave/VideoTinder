@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { LanguageProvider } from './i18n.js';
 import { User as UserIcon, Shield, HelpCircle } from 'lucide-react';
-import { HomeModernIcon, HeartIcon, ChatBubbleOvalLeftIcon, CalendarDaysIcon } from '@heroicons/react/24/solid';
+import { HomeModernIcon, HeartIcon, ChatBubbleOvalLeftIcon, CalendarDaysIcon, UserGroupIcon } from '@heroicons/react/24/solid';
 import WelcomeScreen from './components/WelcomeScreen.jsx';
 import DailyDiscovery from './components/DailyDiscovery.jsx';
 import LikesScreen from './components/LikesScreen.jsx';
@@ -24,6 +24,7 @@ import TextPiecesScreen from './components/TextPiecesScreen.jsx';
 import TrackUserScreen from './components/TrackUserScreen.jsx';
 import ServerLogScreen from './components/ServerLogScreen.jsx';
 import RecentLoginsScreen from './components/RecentLoginsScreen.jsx';
+import InterestChatScreen from './components/InterestChatScreen.jsx';
 import ProfileEpisode from './components/ProfileEpisode.jsx';
 import HelpOverlay from './components/HelpOverlay.jsx';
 import ConsoleLogPanel from './components/ConsoleLogPanel.jsx';
@@ -265,6 +266,7 @@ export default function VideotpushApp() {
               })
           ),
           tab==='chat' && React.createElement(ChatScreen, { userId, onStartCall: id => setVideoCallId(id) }),
+          tab==='interestchat' && React.createElement(InterestChatScreen, { userId }),
           tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
           tab==='profile' && React.createElement(ProfileSettings, {
             userId,
@@ -305,6 +307,7 @@ export default function VideotpushApp() {
         React.createElement(ChatBubbleOvalLeftIcon, { className: 'w-8 h-8 text-pink-600' }),
         hasUnread && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full min-w-4 h-4 flex items-center justify-center px-1' }, unreadCount)
       ),
+      React.createElement(UserGroupIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('interestchat'); setViewProfile(null);} }),
       React.createElement(CalendarDaysIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} })
       ),
     showHelp && React.createElement(HelpOverlay, { onClose: ()=>setShowHelp(false) }),
