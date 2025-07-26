@@ -3,12 +3,14 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useCollection } from '../firebase.js';
+import { useT } from '../i18n.js';
 
 export default function TextLogScreen({ onBack }) {
   const logs = useCollection('textLogs');
   const sorted = logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  const t = useT();
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 overflow-y-auto max-h-[90vh]' },
-    React.createElement(SectionTitle, { title: 'Tekstlog', colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
+    React.createElement(SectionTitle, { title: t('textLogTitle'), colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, t('back')) }),
     sorted.length ?
       React.createElement('ul', { className: 'space-y-2 mt-4' },
         sorted.map(l =>

@@ -3,11 +3,13 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useCollection, db, doc, updateDoc, deleteDoc } from '../firebase.js';
+import { useT } from '../i18n.js';
 
 export default function ReportedContentScreen({ onBack }) {
   const reports = useCollection('reports');
   const profiles = useCollection('profiles');
   const profileMap = Object.fromEntries(profiles.map(p => [p.id, p]));
+  const t = useT();
 
   const openReports = reports.filter(r => r.status !== 'resolved')
     .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -82,7 +84,7 @@ export default function ReportedContentScreen({ onBack }) {
   );
 
   return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title:'Anmeldt indhold', colorClass:'text-blue-600', action: React.createElement(Button, { onClick:onBack }, 'Tilbage') }),
+    React.createElement(SectionTitle, { title:t('reportedContentTitle'), colorClass:'text-blue-600', action: React.createElement(Button, { onClick:onBack }, t('back')) }),
     openReports.length ? (selectedProfile ? detailView : listView)
       : React.createElement('p', { className:'text-center mt-4 text-gray-500' }, 'Ingen anmeldelser')
   );

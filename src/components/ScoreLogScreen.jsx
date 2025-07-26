@@ -3,11 +3,13 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useCollection } from '../firebase.js';
+import { useT } from '../i18n.js';
 
 export default function ScoreLogScreen({ onBack }) {
   const logs = useCollection('matchLogs');
   const profiles = useCollection('profiles');
   const profileMap = Object.fromEntries(profiles.map(p => [p.id, p]));
+  const t = useT();
 
   const sortedLogs = logs.sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -19,7 +21,7 @@ export default function ScoreLogScreen({ onBack }) {
   };
 
   return React.createElement(Card, { className: 'fixed inset-0 p-6 shadow-xl bg-white/90 overflow-y-auto' },
-    React.createElement(SectionTitle, { title: 'Score log', colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
+    React.createElement(SectionTitle, { title: t('scoreLogTitle'), colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, t('back')) }),
     sortedLogs.length ?
       React.createElement('ul', { className: 'space-y-4 mt-4 overflow-y-auto max-h-[70vh]' },
         sortedLogs.map(log =>

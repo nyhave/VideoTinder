@@ -519,7 +519,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90', ref: photoSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } },
-        React.createElement(SectionTitle, { title: 'Din profil', action: !publicView && (
+        React.createElement(SectionTitle, { title: t('yourProfileTitle'), action: !publicView && (
           editInfo ? null :
           React.createElement(EditIcon, {
             className:'w-5 h-5 text-gray-500 cursor-pointer',
@@ -717,7 +717,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           )
     ),
     !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: 'Notifikationer', action: editNotifications ?
+      React.createElement(SectionTitle, { title: t('notificationsTitle'), action: editNotifications ?
         React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditNotifications(false) }, 'Gem ændringer') :
         React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditNotifications(true) }) }),
       React.createElement('label', { className:'flex items-center mt-2' },
