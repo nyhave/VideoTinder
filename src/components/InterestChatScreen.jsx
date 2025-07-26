@@ -101,7 +101,7 @@ export default function InterestChatScreen({ userId }) {
         }),
         React.createElement(Button, { className:'bg-pink-500 text-white', disabled:!text.trim(), onClick:sendMessage }, 'Send')
       ),
-      React.createElement(Button, { className:'bg-blue-600 text-white font-bold mt-2', onClick:()=>setShowRealetten(true) }, 'Tag. Chancen - Pr\u00f8v Realetten')
+      React.createElement(Button, { className:'bg-blue-600 text-white font-bold mt-2', onClick:()=>setShowRealetten(true) }, 'Tag Chancen - Pr\u00f8v Realetten')
     )
   );
 }
