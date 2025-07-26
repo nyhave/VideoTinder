@@ -6,6 +6,7 @@ import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
 import { useDoc, useCollection, db, doc, setDoc, arrayUnion } from '../firebase.js';
+import RealettenPage from './RealettenPage.jsx';
 
 function sanitizeInterest(i){
   return encodeURIComponent(i || '').replace(/%20/g,'_');
@@ -18,6 +19,7 @@ export default function InterestChatScreen({ userId }) {
   const [interest, setInterest] = useState(null);
   const chat = useDoc('interestChats', interest ? sanitizeInterest(interest) : null);
   const [text, setText] = useState('');
+  const [showRealetten, setShowRealetten] = useState(false);
   const messagesRef = useRef(null);
   const textareaRef = useRef(null);
   const t = useT();
@@ -58,6 +60,9 @@ export default function InterestChatScreen({ userId }) {
   };
 
   if(!profile) return null;
+  if(showRealetten && interest){
+    return React.createElement(RealettenPage, { interest, userId, onBack:()=>setShowRealetten(false) });
+  }
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1', style:{maxHeight:'calc(100vh - 10rem)', overflow:'hidden'} },
     React.createElement(SectionTitle, { title: t('interestChatsTitle') }),
@@ -95,7 +100,8 @@ export default function InterestChatScreen({ userId }) {
           ref:textareaRef
         }),
         React.createElement(Button, { className:'bg-pink-500 text-white', disabled:!text.trim(), onClick:sendMessage }, 'Send')
-      )
+      ),
+      React.createElement(Button, { className:'bg-blue-600 text-white font-bold mt-2', onClick:()=>setShowRealetten(true) }, 'Tag. Chancen - Pr\u00f8v Realetten')
     )
   );
 }
