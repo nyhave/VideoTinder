@@ -26,9 +26,17 @@
       color: #fff;
       text-decoration: none;
       padding: 0.75rem 1.5rem;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       border-radius: 4px;
       cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 73, 87, 0.7); }
+      70% { transform: scale(1.05); box-shadow: 0 0 10px 10px rgba(255, 73, 87, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 73, 87, 0); }
     }
     section { padding: 2rem 1rem; }
     .features {
@@ -58,7 +66,7 @@
   <header>
     <h1>Welcome to RealDate</h1>
     <p>Because genuine connections can't be rushed.</p>
-    <a class="cta" href="https://nyhave.github.io/VideoTinder/">Try RealDate Today</a>
+    <a class="cta" href="https://nyhave.github.io/VideoTinder/">Try RealDate Today!</a>
   </header>
   <section>
     <h2>Why RealDate?</h2>
@@ -79,7 +87,7 @@
     </div>
   </section>
   <footer>
-    <p>RealDate &copy; 2024</p>
+    <p>RealDate &copy; 2025</p>
   </footer>
 </body>
 </html>
