@@ -60,15 +60,15 @@
   - Fælles interesser
 
 ## Adminsiden
-- Håndtering af anmeldt materiale og sletning af brugere.
-  - Se antal anmeldelser og brugernes kommentarer.
-  - Slet eller frigiv indhold.
-- Statistik over brug af appen:
-  - Grafer over udvikling i brugerantal, uploads, likes, matches, chats, 
+- **Daglig administration**
+  - Håndtering af anmeldt materiale og sletning af brugere.
+- **Business og statistik**
+  - Grafer over udvikling i brugerantal, uploads, likes, matches, chats,
     refleksioner og ratings.
   - Øjebliksbillede af aldersfordeling.
-- Kombineret test og fejlmelding:
+- **Testere**
   - Mulighed for at se appen som en bestemt bruger.
-  - Mulighed for at spole datoen tilbage lokalt for at teste dagsflowet.
+  - Mulighed for at sætte datoen frem og tilbage lokalt for at teste dagsflowet.
   - Bemærk at refleksioner gemmes i fremtiden, hvis funktionen benyttes.
-- Verifikation af teknisk opsætning, eksempelvis pushnotifikationer.
+- **Udviklere**
+  - Verifikation af teknisk opsætning, eksempelvis pushnotifikationer.
