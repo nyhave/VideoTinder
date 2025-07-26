@@ -164,8 +164,6 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   adminHaptics:{ en:'Haptic feedback', da:'Haptisk feedback', sv:'Haptisk \u00e5terkoppling', es:'Retroalimentaci\u00f3n h\u00e1ptica', fr:'Retour haptique', de:'Haptisches Feedback' },
   adminFunctionTest:{ en:'Function test', da:'Funktionstest', sv:'Funktionstest', es:'Prueba de funciones', fr:'Test de fonction', de:'Funktionstest' },
   adminRevealTest:{ en:'Reveal test', da:'Reveal test', sv:'Reveal test', es:'Prueba de revelaci\u00f3n', fr:'Test de r\u00e9v\u00e9lation', de:'Reveal-Test' },
-  adminGraphics:{ en:'Graphics', da:'Grafikelementer', sv:'Grafikelement', es:'Gr\u00e1ficos', fr:'\u00c9l\u00e9ments graphiques', de:'Grafikelemente' },
-  adminPageInfo:{ en:'Page overview', da:'Sideoversigt', sv:'Sid\u00f6versikt', es:'Resumen de p\u00e1ginas', fr:'Aper\u00e7u des pages', de:'Seiten\u00fcbersicht' },
   adminDevelopers:{ en:'Developers', da:'Udviklere', sv:'Utvecklare', es:'Desarrolladores', fr:'D\u00e9veloppeurs', de:'Entwickler' },
   adminPush:{ en:'Push notifications', da:'Push notifications', sv:'Pushnotiser', es:'Notificaciones push', fr:'Notifications push', de:'Push-Benachrichtigungen' },
   premiumTitle:{ en:'Premium', da:'Premium', sv:'Premium', es:'Premium', fr:'Premium', de:'Premium' },
