@@ -52,7 +52,7 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
         await setDoc(ref, { interest, participants: [userId] });
       } else {
         const data = snap.data() || {};
-        if((data.participants || []).length < 4 && !(data.participants || []).includes(userId)) {
+        if((data.participants || []).length < 4) {
           await updateDoc(ref, { participants: arrayUnion(userId) });
         }
       }
