@@ -22,6 +22,7 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
   const [participants, setParticipants] = useState([]);
   const localRef = useRef(null);
   const remoteRefs = useRef({});
+  const remoteStreams = useRef({});
   const pcsRef = useRef({});
 
   useEffect(() => {
@@ -83,11 +84,16 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
       });
       localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
       const remoteStream = new MediaStream();
+      remoteStreams.current[uid] = remoteStream;
       const refEl = remoteRefs.current[uid];
-      if (refEl) refEl.srcObject = remoteStream;
+      if (refEl) {
+        refEl.srcObject = remoteStream;
+        try { refEl.play(); } catch {}
+      }
       pc.ontrack = evt => {
         evt.streams[0].getTracks().forEach(tr => remoteStream.addTrack(tr));
         const el = remoteRefs.current[uid];
+        if (el && !el.srcObject) el.srcObject = remoteStream;
         if (el && el.paused) {
           try { el.play(); } catch {}
         }
@@ -134,7 +140,7 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
           await updateDoc(callDoc, { answer: { type: answer.type, sdp: answer.sdp } });
         }
       }
-      pcsRef.current[uid] = { pc, callDoc, offerCandidates, answerCandidates, unsubOff, unsubAns };
+      pcsRef.current[uid] = { pc, remoteStream, callDoc, offerCandidates, answerCandidates, unsubOff, unsubAns };
     };
 
     const disconnect = async uid => {
@@ -153,6 +159,7 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
         await deleteDoc(callDoc);
       } catch {}
       delete pcsRef.current[uid];
+      delete remoteStreams.current[uid];
     };
 
     const others = participants.filter(p => p !== userId);
@@ -177,7 +184,16 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
             if (isSelf) {
               localRef.current = el;
             } else if (uid) {
-              if (el) remoteRefs.current[uid] = el; else delete remoteRefs.current[uid];
+              if (el) {
+                remoteRefs.current[uid] = el;
+                const stream = remoteStreams.current[uid];
+                if (stream) {
+                  el.srcObject = stream;
+                  try { el.play(); } catch {}
+                }
+              } else {
+                delete remoteRefs.current[uid];
+              }
             }
           },
           className:'w-full h-full object-cover',
