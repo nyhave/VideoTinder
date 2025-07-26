@@ -168,6 +168,7 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   adminPush:{ en:'Push notifications', da:'Push notifications', sv:'Pushnotiser', es:'Notificaciones push', fr:'Notifications push', de:'Push-Benachrichtigungen' },
   premiumTitle:{ en:'Premium', da:'Premium', sv:'Premium', es:'Premium', fr:'Premium', de:'Premium' },
   revealTestTitle:{ en:'Reveal test', da:'Reveal test', sv:'Reveal test', es:'Prueba de revelaci\u00f3n', fr:'Test de r\u00e9v\u00e9lation', de:'Reveal-Test' },
+  videoCallsTitle:{ en:'Video calls', da:'Videoopkald', sv:'Videosamtal', es:'Llamadas de video', fr:'Appels vidéo', de:'Videoanrufe' },
   activeCallsTitle:{ en:'Active calls', da:'Aktive opkald', sv:'Aktiva samtal', es:'Llamadas activas', fr:'Appels actifs', de:'Aktive Anrufe' },
   groupCallsTitle:{ en:'Group calls', da:'Gruppeopkald', sv:'Gruppsamtal', es:'Llamadas grupales', fr:'Appels de groupe', de:'Gruppenanrufe' },
   bugReportsTitle:{ en:'Bug reports', da:'Fejlmeldinger', sv:'Buggrapporter', es:'Informes de errores', fr:'Rapports de bugs', de:'Fehlermeldungen' },
