@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import BugReportOverlay from './BugReportOverlay.jsx';
 import { languages, useLang, useT } from '../i18n.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
@@ -16,6 +17,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
 
   const { lang, setLang } = useLang();
   const t = useT();
+  const [showBugReport, setShowBugReport] = useState(false);
   const [logEnabled, setLogEnabled] = useState(isExtendedLogging());
   const [consoleEnabled, setConsoleEnabled] = useState(isConsoleCapture());
   const config = useDoc('config', 'app') || {};
@@ -239,7 +241,8 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   };
 
 
-  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+  return React.createElement(React.Fragment, null,
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: t('adminTitle'), colorClass: 'text-blue-600' }),
     React.createElement('label', { className: 'block mb-1' }, t('chooseLanguage')),
     React.createElement('select', {
@@ -304,6 +307,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     ),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, t('adminBugReports')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenBugReports }, 'Se alle fejlmeldinger'),
+    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: () => setShowBugReport(true) }, 'Fejlmeld'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminDatabase')),
     React.createElement(Button, { className: 'mt-2 bg-red-500 text-white px-4 py-2 rounded', onClick: resetAllCandidates }, 'Reset all candidates'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminLogging')),
@@ -359,5 +363,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showPushInfo }, 'Show push info'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: checkAuthAccess }, 'Check Firebase Auth'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenServerLog }, 'Server log')
+  ),
+    showBugReport && React.createElement(BugReportOverlay, { onClose: () => setShowBugReport(false) })
   );
 }
