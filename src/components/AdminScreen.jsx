@@ -12,7 +12,7 @@ import { fcmReg } from '../swRegistration.js';
 import { triggerHaptic } from '../haptics.js';
 
 
-export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenFunctionTest, onOpenRevealTest, onOpenTextLog, onOpenTextPieces, onOpenUserLog, onOpenServerLog, onOpenRecentLogins, onOpenGraphics, profiles = [], userId, onSwitchProfile, onSaveUserLogout }) {
+export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenFunctionTest, onOpenRevealTest, onOpenTextLog, onOpenTextPieces, onOpenUserLog, onOpenServerLog, onOpenRecentLogins, profiles = [], userId, onSwitchProfile, onSaveUserLogout }) {
 
   const { lang, setLang } = useLang();
   const t = useT();
@@ -21,7 +21,6 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   const config = useDoc('config', 'app') || {};
   const invitesEnabled = config.premiumInvitesEnabled !== false;
   const showLevels = config.showLevels !== false;
-  const pageInfoUrl = 'https://raw.githubusercontent.com/nyhave/VideoTinder/main/docs/app-pages-da.md';
 
   const toggleLog = () => {
     const val = !logEnabled;
@@ -345,10 +344,6 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenFunctionTest }, 'Åbn funktionstest'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminRevealTest')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenRevealTest }, 'Åbn reveal test'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminGraphics')),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenGraphics }, 'Alle grafikelementer'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminPageInfo')),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => window.open(pageInfoUrl, '_blank') }, 'Åbn sideinfo'),
 
   // Developer section
   React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminDevelopers')),
