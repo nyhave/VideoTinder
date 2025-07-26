@@ -13,7 +13,7 @@ import { fcmReg } from '../swRegistration.js';
 import { triggerHaptic } from '../haptics.js';
 
 
-export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenFunctionTest, onOpenRevealTest, onOpenTextLog, onOpenTextPieces, onOpenUserLog, onOpenServerLog, onOpenRecentLogins, profiles = [], userId, onSwitchProfile, onSaveUserLogout }) {
+export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenGroupCallLog, onOpenFunctionTest, onOpenRevealTest, onOpenTextLog, onOpenTextPieces, onOpenUserLog, onOpenServerLog, onOpenRecentLogins, profiles = [], userId, onSwitchProfile, onSaveUserLogout }) {
 
   const { lang, setLang } = useLang();
   const t = useT();
@@ -362,7 +362,8 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showPushInfo }, 'Show push info'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: checkAuthAccess }, 'Check Firebase Auth'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenServerLog }, 'Server log'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenCallLog }, 'Se aktive opkald')
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenCallLog }, 'Se aktive opkald'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenGroupCallLog }, 'Se gruppeopkald')
   ),
     showBugReport && React.createElement(BugReportOverlay, { onClose: () => setShowBugReport(false) })
   );
