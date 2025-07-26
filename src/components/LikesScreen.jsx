@@ -74,7 +74,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
   };
 
   return React.createElement(Card,{className:'relative p-6 m-4 shadow-xl bg-white/90 flex flex-col'},
-    React.createElement(SectionTitle,{title:'Nye personer har liket dig', colorClass:'text-yellow-600'}),
+    React.createElement(SectionTitle,{title:'Hvem synes om dig?', colorClass:'text-yellow-600'}),
     React.createElement('p',{className:'mb-4 text-gray-500'},`${likedProfiles.length} profiler`),
     React.createElement('div',{className: hasSubscription ? 'flex-1' : 'flex-1 filter blur-sm pointer-events-none'},
       React.createElement('ul',{className:'space-y-4'},
