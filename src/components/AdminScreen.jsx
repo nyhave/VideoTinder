@@ -241,7 +241,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
 
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title: 'Administration', colorClass: 'text-blue-600' }),
+    React.createElement(SectionTitle, { title: t('adminTitle'), colorClass: 'text-blue-600' }),
     React.createElement('label', { className: 'block mb-1' }, t('chooseLanguage')),
     React.createElement('select', {
       className: 'border p-2 mb-4 w-full',
@@ -268,7 +268,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     ),
 
   // Daily admin section
-  React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Daglig administration'),
+  React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminDaily')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenReports }, 'Se anmeldt indhold'),
     React.createElement('div', { className: 'mt-2' },
       React.createElement(Button, {
@@ -285,13 +285,13 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     ),
 
   // Business section
-  React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Business og statistik'),
+  React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminBusiness')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenStats }, 'Vis statistik'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenRecentLogins }, 'Se seneste logins'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenCallLog }, 'Se aktive opkald'),
 
   // Tester section
-  React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Testere'),
+  React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminTesters')),
     React.createElement('p', { className: 'mb-2' }, 'Dagens dato: ' + getTodayStr()),
     React.createElement('div', { className: 'flex gap-2 mb-4' },
       React.createElement(Button, {
@@ -303,13 +303,13 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         onClick: () => { resetDay(); location.reload(); }
       }, 'Reset dag')
     ),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, 'Fejlmeldinger'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, t('adminBugReports')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenBugReports }, 'Se alle fejlmeldinger'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Database'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminDatabase')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => seedData().then(() => alert('Databasen er nulstillet')) }, 'Reset database'),
     React.createElement(Button, { className: 'mt-2 bg-red-500 text-white px-4 py-2 rounded', onClick: resetAllCandidates }, 'Reset all candidates'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: recoverMissing }, 'Hent mistet fra DB'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Logging'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminLogging')),
     React.createElement('label', { className: 'flex items-center mb-2' },
       React.createElement('input', { type: 'checkbox', className: 'mr-2', checked: logEnabled, onChange: toggleLog }),
       'Udvidet logning'
@@ -341,20 +341,20 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenScoreLog }, 'Se score log'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenUserLog }, 'Følg bruger'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenTextPieces }, 'Alle tekststykker'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Haptisk feedback'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminHaptics')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: testHaptic }, 'Test haptisk feedback'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Funktionstest'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminFunctionTest')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenFunctionTest }, 'Åbn funktionstest'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Reveal test'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminRevealTest')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenRevealTest }, 'Åbn reveal test'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Grafikelementer'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminGraphics')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenGraphics }, 'Alle grafikelementer'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Sideoversigt'),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminPageInfo')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => window.open(pageInfoUrl, '_blank') }, 'Åbn sideinfo'),
 
   // Developer section
-  React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, 'Udviklere'),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, 'Push notifications'),
+  React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminDevelopers')),
+    React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, t('adminPush')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: logClientToken }, 'Log client token'),

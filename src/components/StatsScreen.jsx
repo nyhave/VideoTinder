@@ -7,12 +7,14 @@ import StatsChart from './StatsChart.jsx';
 import AgeDistributionChart from './AgeDistributionChart.jsx';
 import PieChart from './PieChart.jsx';
 import { getAge, getTodayStr } from '../utils.js';
+import { useT } from '../i18n.js';
 
 export default function StatsScreen({ onBack }) {
   const [stats, setStats] = useState(null);
   const [history, setHistory] = useState([]);
   const [ageDist, setAgeDist] = useState(null);
   const [inviteResults, setInviteResults] = useState(null);
+  const t = useT();
 
   useEffect(() => {
     const loadStats = async () => {
@@ -81,7 +83,7 @@ export default function StatsScreen({ onBack }) {
   }, []);
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title: 'Statistik', colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
+    React.createElement(SectionTitle, { title: t('statsTitle'), colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, t('back')) }),
     stats ? React.createElement(React.Fragment, null,
       React.createElement(StatsChart, { data: history, fields: 'profiles', title: 'Profiler over tid' }),
       React.createElement(StatsChart, { data: history, fields: 'likes', title: 'Likes over tid' }),

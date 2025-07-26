@@ -3,6 +3,7 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useCollection, db, collection, query, where, getDocs, deleteDoc, messaging } from '../firebase.js';
+import { useT } from '../i18n.js';
 import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
 
@@ -11,6 +12,7 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
   const logs = useCollection('textLogs', 'details.userId', userId);
   const sorted = logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
   const hasReceivedNotification = logs.some(l => l.event === 'push received');
+  const t = useT();
 
   const [checkResult, setCheckResult] = useState({});
 
@@ -54,7 +56,7 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
   };
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 overflow-y-auto max-h-[90vh]' },
-    React.createElement(SectionTitle, { title: 'F\u00f8lg bruger', colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, 'Tilbage') }),
+    React.createElement(SectionTitle, { title: t('trackUserTitle'), colorClass: 'text-blue-600', action: React.createElement(Button, { onClick: onBack }, t('back')) }),
     React.createElement('label', { className: 'block mb-1' }, 'V\u00e6lg bruger'),
     React.createElement('select', { className: 'border p-2 mb-4 w-full', value: userId, onChange: e => setUserId(e.target.value) },
       profiles.map(p => React.createElement('option', { key: p.id, value: p.id }, p.name))

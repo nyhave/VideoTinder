@@ -4,6 +4,7 @@ import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
 import SectionTitle from './SectionTitle.jsx';
 import { db, storage, doc, setDoc, ref, uploadBytes, getDownloadURL } from '../firebase.js';
+import { useT } from '../i18n.js';
 
 const modules = [
   {
@@ -294,6 +295,7 @@ export default function FunctionTestScreen({ onBack }) {
     const stored = localStorage.getItem('functionTestActiveModule');
     return stored ? parseInt(stored, 10) : -1;
   });
+  const t = useT();
 
   useEffect(() => {
     localStorage.setItem('functionTestActiveModule', String(activeModule));
@@ -369,10 +371,10 @@ export default function FunctionTestScreen({ onBack }) {
 
   if (activeModule === -1) {
     return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title:'Funktionstest', colorClass:'text-blue-600', action:
+      React.createElement(SectionTitle, { title:t('functionTestTitle'), colorClass:'text-blue-600', action:
         React.createElement('div', { className:'flex gap-2' },
           React.createElement(Button, { className:'bg-red-500 text-white px-2 py-1 rounded', onClick: resetProgress }, 'Reset'),
-          React.createElement(Button, { className:'bg-gray-500 text-white px-2 py-1 rounded', onClick: onBack }, 'Tilbage')
+          React.createElement(Button, { className:'bg-gray-500 text-white px-2 py-1 rounded', onClick: onBack }, t('back'))
         )
       }),
       React.createElement('ul', { className:'space-y-4 mt-4' },
@@ -388,7 +390,7 @@ export default function FunctionTestScreen({ onBack }) {
 
   const module = modules[activeModule];
   return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title:module.name, colorClass:'text-blue-600', action: React.createElement(Button, { onClick: () => setActiveModule(-1) }, 'Tilbage') }),
+    React.createElement(SectionTitle, { title:module.name, colorClass:'text-blue-600', action: React.createElement(Button, { onClick: () => setActiveModule(-1) }, t('back')) }),
     React.createElement('ul', { className:'space-y-4 mt-4 overflow-y-auto max-h-[70vh]' },
       module.features.map((f, i) =>
         React.createElement('li', { key:i, className:'border p-2 rounded' },
