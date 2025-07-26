@@ -146,14 +146,17 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
             if (ch.type === 'added') pc.addIceCandidate(new RTCIceCandidate(ch.doc.data()));
           });
         });
-        const snap = await getDoc(callDoc);
-        if (snap.exists()) {
-          const data = snap.data();
-          await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
-          const answer = await pc.createAnswer();
-          await pc.setLocalDescription(answer);
-          await updateDoc(callDoc, { answer: { type: answer.type, sdp: answer.sdp } });
-        }
+        const unsubDoc = onSnapshot(callDoc, async s => {
+          const data = s.data();
+          if (data?.offer && !pc.currentRemoteDescription) {
+            await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+            await updateDoc(callDoc, { answer: { type: answer.type, sdp: answer.sdp } });
+          }
+        });
+        pcsRef.current[uid] = { pc, remoteStream, callDoc, offerCandidates, answerCandidates, unsubOff, unsubAns, unsubDoc };
+        return;
       }
       pcsRef.current[uid] = { pc, remoteStream, callDoc, offerCandidates, answerCandidates, unsubOff, unsubAns };
     };
@@ -161,10 +164,11 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
     const disconnect = async uid => {
       const data = pcsRef.current[uid];
       if (!data) return;
-      const { pc, unsubOff, unsubAns, callDoc, offerCandidates, answerCandidates } = data;
+      const { pc, unsubOff, unsubAns, unsubDoc, callDoc, offerCandidates, answerCandidates } = data;
       pc.close();
       unsubOff && unsubOff();
       unsubAns && unsubAns();
+      unsubDoc && unsubDoc();
       try {
         const offSnap = await getDocs(offerCandidates);
         await Promise.all(offSnap.docs.map(d => deleteDoc(d.ref)));
