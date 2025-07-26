@@ -1,4 +1,4 @@
 import React from 'react';
-export function Input({ className = '', ...props }) {
-  return React.createElement('input', { className, ...props });
-}
+export const Input = React.forwardRef(function Input({ className = '', ...props }, ref) {
+  return React.createElement('input', { ref, className, ...props });
+});
