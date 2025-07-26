@@ -22,6 +22,7 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
   const [participants, setParticipants] = useState([]);
   const localRef = useRef(null);
   const localStreamRef = useRef(null);
+  const [localReady, setLocalReady] = useState(false);
   const setLocalVideoRef = useCallback(el => {
     localRef.current = el;
     if (el && localStreamRef.current) {
@@ -42,6 +43,7 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
         if (localRef.current) {
           localRef.current.srcObject = stream;
           try { localRef.current.play(); } catch (e) {}
+          setLocalReady(true);
         }
       } catch (err) {
         console.error('Failed to get media', err);
@@ -52,6 +54,7 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
         stream.getTracks().forEach(t => t.stop());
       }
       localStreamRef.current = null;
+      setLocalReady(false);
     };
   }, []);
 
@@ -181,7 +184,7 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
     return () => {
       others.forEach(disconnect);
     };
-  }, [participants, interest]);
+  }, [participants, interest, localReady]);
 
   const slots = [0,1,2,3];
 
