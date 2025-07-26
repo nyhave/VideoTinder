@@ -9,7 +9,9 @@ ReactDOM.render(React.createElement(VideotpushApp), document.getElementById('roo
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
-    const swUrl = new URL('../public/service-worker.js', import.meta.url);
+    // The build outputs the service worker next to the bundled JS
+    // so use a relative path without the "public" folder.
+    const swUrl = new URL('./service-worker.js', import.meta.url);
     const baseScope = new URL('../', swUrl).pathname;
     // Register the main service worker generated in the production build
     await navigator.serviceWorker
