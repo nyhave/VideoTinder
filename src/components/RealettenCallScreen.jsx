@@ -159,7 +159,6 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
       const data = pcsRef.current[uid];
       if (!data) return;
       const { pc, unsubOff, unsubAns, callDoc, offerCandidates, answerCandidates } = data;
-      pc.getSenders().forEach(s => s.track && s.track.stop());
       pc.close();
       unsubOff && unsubOff();
       unsubAns && unsubAns();
