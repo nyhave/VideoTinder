@@ -5,7 +5,7 @@ import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
-import { useDoc, useCollection, db, doc, updateDoc, arrayUnion } from '../firebase.js';
+import { useDoc, useCollection, db, doc, setDoc, arrayUnion } from '../firebase.js';
 
 function sanitizeInterest(i){
   return encodeURIComponent(i || '').replace(/%20/g,'_');
@@ -46,10 +46,14 @@ export default function InterestChatScreen({ userId }) {
     const trimmed = text.trim();
     if(!trimmed || !interest) return;
     const message = { from: userId, text: trimmed, ts: Date.now() };
-    await updateDoc(doc(db,'interestChats',sanitizeInterest(interest)),{
-      interest,
-      messages: arrayUnion(message)
-    });
+    await setDoc(
+      doc(db, 'interestChats', sanitizeInterest(interest)),
+      {
+        interest,
+        messages: arrayUnion(message)
+      },
+      { merge: true }
+    );
     setText('');
   };
 
