@@ -14,6 +14,7 @@ export async function cacheMediaIfNewer(url, uploadedAt) {
     await cache.put(url, resp.clone());
     localStorage.setItem(key, ts);
   } catch (err) {
-    console.error('Failed to cache media', err);
+    const msg = err && err.message ? err.message : String(err);
+    console.error(`Failed to cache media ${url}`, msg);
   }
 }
