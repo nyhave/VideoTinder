@@ -23,6 +23,7 @@ export default function WelcomeScreen({ onLogin }) {
   const [gender, setGender] = useState('Kvinde');
   const [birthday, setBirthday] = useState('');
   const [showBirthdayOverlay, setShowBirthdayOverlay] = useState(false);
+  const prevBirthdayRef = useRef('');
   const [showMissingFields, setShowMissingFields] = useState(false);
   const [triedSubmit, setTriedSubmit] = useState(false);
   const [showAgeError, setShowAgeError] = useState(false);
@@ -45,9 +46,19 @@ export default function WelcomeScreen({ onLogin }) {
     onLogin('101', 'admin');
   };
 
+  const handleBirthdayChange = e => {
+    setBirthday(e.target.value);
+  };
+
+  const handleBirthdayFocus = () => {
+    prevBirthdayRef.current = birthday || '';
+    setShowBirthdayOverlay(true);
+  };
+
   const handleBirthdayBlur = () => {
     setShowBirthdayOverlay(false);
     if (birthday && getAge(birthday) < 18) {
+      setBirthday(prevBirthdayRef.current);
       setShowAgeError(true);
     }
   };
@@ -308,7 +319,7 @@ export default function WelcomeScreen({ onLogin }) {
         className: 'border p-2',
         ref: birthdayInputRef,
         value: birthday,
-        onChange: e => setBirthday(e.target.value),
+        onChange: handleBirthdayChange,
         autoFocus: true
       }),
       React.createElement(Button, {
@@ -372,8 +383,8 @@ export default function WelcomeScreen({ onLogin }) {
           type: 'date',
           className: `border p-2 mb-2 w-full ${triedSubmit && !birthday ? 'border-red-500' : ''}`,
           value: birthday,
-          onFocus: () => setShowBirthdayOverlay(true),
-          onChange: e => setBirthday(e.target.value),
+          onFocus: handleBirthdayFocus,
+          onChange: handleBirthdayChange,
           placeholder: 'F\u00f8dselsdag',
           required: true
         }),
