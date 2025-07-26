@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   db,
   collection,
@@ -21,6 +21,14 @@ function sanitizeInterest(i){
 export default function RealettenCallScreen({ interest, userId, onEnd }) {
   const [participants, setParticipants] = useState([]);
   const localRef = useRef(null);
+  const localStreamRef = useRef(null);
+  const setLocalVideoRef = useCallback(el => {
+    localRef.current = el;
+    if (el && localStreamRef.current) {
+      el.srcObject = localStreamRef.current;
+      try { el.play(); } catch {}
+    }
+  }, []);
   const remoteRefs = useRef({});
   const remoteStreams = useRef({});
   const pcsRef = useRef({});
@@ -30,16 +38,20 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
     (async () => {
       try {
         stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: { echoCancellation: true } });
-        if(localRef.current){
+        localStreamRef.current = stream;
+        if (localRef.current) {
           localRef.current.srcObject = stream;
-          try { localRef.current.play(); } catch(e) {}
+          try { localRef.current.play(); } catch (e) {}
         }
-      } catch(err){
+      } catch (err) {
         console.error('Failed to get media', err);
       }
     })();
     return () => {
-      stream && stream.getTracks().forEach(t => t.stop());
+      if (stream) {
+        stream.getTracks().forEach(t => t.stop());
+      }
+      localStreamRef.current = null;
     };
   }, []);
 
@@ -182,7 +194,7 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
         React.createElement('video', {
           ref: el => {
             if (isSelf) {
-              localRef.current = el;
+              setLocalVideoRef(el);
             } else if (uid) {
               if (el) {
                 remoteRefs.current[uid] = el;
