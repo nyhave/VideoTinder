@@ -54,7 +54,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
 
   useEffect(() => {
     if(!profile || isOwnProfile) return;
-    if(!progress) {
+    if(!progress || progress.stage === undefined) {
       setDoc(doc(db,'episodeProgress', progressId), {
         id: progressId,
         userId,
