@@ -33,6 +33,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const ratingRef = useRef(0);
   const progressRef = useRef(null);
   const MAX_REFLECTION_LEN = 30;
+  const today = getTodayStr();
   useEffect(() => {
     if(progress?.rating) setRating(progress.rating);
     if(progress?.lastUpdated === today && progress?.reflection){
@@ -50,7 +51,6 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
 
   const stage = isOwnProfile ? 3 : (progress?.stage || 1);
   const showReveal = progress && (progress.seenStage || 1) < stage;
-  const today = getTodayStr();
 
   useEffect(() => {
     if(!profile || isOwnProfile) return;
