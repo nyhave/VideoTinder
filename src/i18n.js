@@ -29,6 +29,14 @@ export const messages = {
     de:'Keine Profile in der Nähe. Bereich um 35 km erweitern?'
   },
   extendArea:{ en:'Expand area', da:'Udvid område', sv:'Utöka område', es:'Ampliar área', fr:'Étendre la zone', de:'Bereich erweitern' },
+  extendReload:{
+    en:'Expand area and reload',
+    da:'Udvid område og genindlæs',
+    sv:'Utöka område och ladda om',
+    es:'Ampliar área y recargar',
+    fr:'Étendre la zone et recharger',
+    de:'Bereich erweitern und neu laden'
+  },
   ok:{ en:'OK', da:'OK', sv:'OK', es:'OK', fr:'OK', de:'OK' },
   language:{ en:'Language', da:'Sprog', sv:'Språk', es:'Idioma', fr:'Langue', de:'Sprache' },
   preferredLanguages:{ en:'Preferred languages', da:'Foretrukne sprog', sv:'Föredragna språk', es:'Idiomas preferidos', fr:'Langues préférées', de:'Bevorzugte Sprachen' },

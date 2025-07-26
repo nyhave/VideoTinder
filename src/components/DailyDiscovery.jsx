@@ -122,7 +122,9 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const [hoursUntil, setHoursUntil] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
   const [showExtend, setShowExtend] = useState(false);
-  const [extendDismissed, setExtendDismissed] = useState(false);
+  const [extendShown, setExtendShown] = useState(() =>
+    window.localStorage.getItem('extendAreaShown') === '1'
+  );
   const [showArchived, setShowArchived] = useState(false);
   const [showPurchase, setShowPurchase] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
@@ -130,10 +132,10 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const [activeVideo, setActiveVideo] = useState(null);
   const [storyProfile, setStoryProfile] = useState(null);
   useEffect(() => {
-    if (!extendDismissed && activeProfiles.length === 0) {
+    if (!extendShown && activeProfiles.length === 0) {
       setShowExtend(true);
     }
-  }, [activeProfiles, extendDismissed]);
+  }, [activeProfiles, extendShown]);
   const handleExtraPurchase = async () => {
     const todayStr = getTodayStr();
     await updateDoc(doc(db, 'profiles', userId), { extraClipsDate: todayStr });
@@ -189,15 +191,21 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     const id = `${userId}-${profileId}`;
     await setDoc(doc(db,'episodeProgress', id), { removed: true }, { merge: true });
   };
+  const markExtendShown = () => {
+    setExtendShown(true);
+    window.localStorage.setItem('extendAreaShown', '1');
+  };
   const extendArea = async () => {
     const range = user.distanceRange || [0, 50];
     const newRange = [range[0], (range[1] || 0) + 35];
     await updateDoc(doc(db,'profiles', userId), { distanceRange: newRange });
+    markExtendShown();
     setShowExtend(false);
+    location.reload();
   };
   const dismissExtend = () => {
+    markExtendShown();
     setShowExtend(false);
-    setExtendDismissed(true);
   };
   useEffect(() => {
     const now = getCurrentDate();
@@ -302,6 +310,10 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       ),
       React.createElement(Button,{className:'w-full bg-gray-200 text-black',onClick:()=>setShowArchived(false)},t('cancel'))
     ),
+    activeProfiles.length === 0 && extendShown && React.createElement(Button, {
+      className:'mt-4 w-full bg-pink-500 text-white',
+      onClick: extendArea
+    }, t('extendReload')),
     React.createElement(Button, {
       className: 'mt-4 w-full bg-yellow-500 text-white',
       onClick: () => {
