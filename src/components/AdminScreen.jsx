@@ -347,7 +347,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
 
   // Developer section
   React.createElement('h3', { className: 'text-xl font-semibold mb-2 mt-4 text-blue-600' }, t('adminDevelopers')),
-    React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, t('adminDatabase')),
+    React.createElement('h4', { className: 'text-lg font-semibold mb-2 text-blue-600' }, t('adminDatabase')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => seedData().then(() => alert('Databasen er nulstillet')) }, 'Reset database'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: recoverMissing }, 'Hent mistet fra DB'),
     React.createElement('h3', { className: 'text-xl font-semibold mb-2 text-blue-600' }, t('adminPush')),
