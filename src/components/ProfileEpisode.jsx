@@ -115,7 +115,9 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     };
   }, []);
 
-  if (!profile) return null;
+  if (!profile) {
+    return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90 text-center' }, 'Profile not found');
+  }
 
   const daysLeft = progress?.daysLeft ?? expiryDays;
 
