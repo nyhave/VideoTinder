@@ -31,6 +31,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const videoSectionRef = useRef();
   const audioSectionRef = useRef();
   const aboutSectionRef = useRef();
+  const prevBirthdayRef = useRef('');
 
   const [showSnapRecorder, setShowSnapRecorder] = useState(false);
   const [showSnapVideoRecorder, setShowSnapVideoRecorder] = useState(false);
@@ -255,15 +256,24 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await updateDoc(doc(db,'profiles',userId), { name });
   };
 
-  const handleBirthdayChange = async e => {
+  const handleBirthdayChange = e => {
     const birthday = e.target.value;
-    if(birthday && getAge(birthday) < 18){
+    setProfile({ ...profile, birthday });
+  };
+
+  const handleBirthdayFocus = () => {
+    prevBirthdayRef.current = profile.birthday || '';
+  };
+
+  const handleBirthdayBlur = async e => {
+    const birthday = e.target.value;
+    if (birthday && getAge(birthday) < 18) {
       alert('Du skal v\u00e6re mindst 18 \u00e5r for at bruge appen');
+      setProfile({ ...profile, birthday: prevBirthdayRef.current });
       return;
     }
-    setProfile({ ...profile, birthday });
     const age = birthday ? getAge(birthday) : '';
-    await updateDoc(doc(db,'profiles',userId), { birthday, age });
+    await updateDoc(doc(db, 'profiles', userId), { birthday, age });
   };
 
   const updateNotificationPref = (field, value) => {
@@ -587,6 +597,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             type:'date',
             value: profile.birthday || '',
             onChange: handleBirthdayChange,
+            onFocus: handleBirthdayFocus,
+            onBlur: handleBirthdayBlur,
             className:'border p-2 rounded w-full',
             placeholder: t('chooseBirthday')
           }),
