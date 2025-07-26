@@ -25,6 +25,7 @@ import ServerLogScreen from './components/ServerLogScreen.jsx';
 import RecentLoginsScreen from './components/RecentLoginsScreen.jsx';
 import ProfileEpisode from './components/ProfileEpisode.jsx';
 import HelpOverlay from './components/HelpOverlay.jsx';
+import ConsoleLogPanel from './components/ConsoleLogPanel.jsx';
 import TaskButton from './components/TaskButton.jsx';
 import GraphicsElementsScreen from './components/GraphicsElementsScreen.jsx';
 import { getNextTask } from './tasks.js';
@@ -305,6 +306,7 @@ export default function VideotpushApp() {
       ),
       React.createElement(CalendarDays, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} })
       ),
-    showHelp && React.createElement(HelpOverlay, { onClose: ()=>setShowHelp(false) })
+    showHelp && React.createElement(HelpOverlay, { onClose: ()=>setShowHelp(false) }),
+    React.createElement(ConsoleLogPanel)
   ));
 }

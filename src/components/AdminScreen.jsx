@@ -5,6 +5,7 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
 import { db, collection, getDocs, deleteDoc, updateDoc, doc, getDoc, query, where, storage, listAll, ref, getDownloadURL, deleteObject, messaging, setExtendedLogging, isExtendedLogging, useDoc } from '../firebase.js';
+import { setConsoleCapture, isConsoleCapture } from '../consoleLogs.js';
 import { advanceDay, resetDay, getTodayStr } from '../utils.js';
 import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
@@ -16,6 +17,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   const { lang, setLang } = useLang();
   const t = useT();
   const [logEnabled, setLogEnabled] = useState(isExtendedLogging());
+  const [consoleEnabled, setConsoleEnabled] = useState(isConsoleCapture());
   const config = useDoc('config', 'app') || {};
   const invitesEnabled = config.premiumInvitesEnabled !== false;
   const showLevels = config.showLevels !== false;
@@ -25,6 +27,12 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     const val = !logEnabled;
     setLogEnabled(val);
     setExtendedLogging(val);
+  };
+
+  const toggleConsole = () => {
+    const val = !consoleEnabled;
+    setConsoleEnabled(val);
+    setConsoleCapture(val);
   };
 
   const sendPush = async body => {
@@ -303,6 +311,10 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement('label', { className: 'flex items-center mb-2' },
       React.createElement('input', { type: 'checkbox', className: 'mr-2', checked: logEnabled, onChange: toggleLog }),
       'Udvidet logning'
+    ),
+    React.createElement('label', { className: 'flex items-center mb-2' },
+      React.createElement('input', { type: 'checkbox', className: 'mr-2', checked: consoleEnabled, onChange: toggleConsole }),
+      'Vis console log'
     ),
     React.createElement('label', { className: 'flex items-center mb-2' },
       React.createElement('input', {

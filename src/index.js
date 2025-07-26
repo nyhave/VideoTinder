@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './consoleLogs.js';
 import VideotpushApp from './VideotpushApp.jsx';
 import { setFcmReg } from './swRegistration.js';
 import { firebaseConfig, logEvent } from './firebase.js';
