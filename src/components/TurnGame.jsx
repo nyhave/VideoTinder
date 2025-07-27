@@ -26,18 +26,43 @@ const questions = [
   }
 ];
 
-export default function TurnGame({ players: initialPlayers = [], onExit }) {
-  const [players, setPlayers] = useState(() => initialPlayers);
+export default function TurnGame({ players: propPlayers = [], onExit }) {
+  const [players, setPlayers] = useState(() => propPlayers);
   const [nameInput, setNameInput] = useState('');
   const [scores, setScores] = useState(() =>
-    initialPlayers.length > 1 ?
-      Object.fromEntries(initialPlayers.map(p => [p, 0])) : {});
+    propPlayers.length > 1 ?
+      Object.fromEntries(propPlayers.map(p => [p, 0])) : {});
   const [current, setCurrent] = useState(0);
   const [qIdx, setQIdx] = useState(0);
   const [choice, setChoice] = useState(null);
   const [guesses, setGuesses] = useState({});
-  const [step, setStep] = useState(initialPlayers.length > 1 ? 'play' : 'setup');
+  const [step, setStep] = useState(propPlayers.length > 1 ? 'play' : 'setup');
   const [timeLeft, setTimeLeft] = useState(10);
+
+  useEffect(() => {
+    setPlayers(prev => {
+      const set = new Set(prev);
+      let changed = false;
+      propPlayers.forEach(p => {
+        if (!set.has(p)) {
+          set.add(p);
+          changed = true;
+        }
+      });
+      return changed ? Array.from(set) : prev;
+    });
+    setScores(prev => {
+      const next = { ...prev };
+      let changed = false;
+      propPlayers.forEach(p => {
+        if (!(p in next)) {
+          next[p] = 0;
+          changed = true;
+        }
+      });
+      return changed ? next : prev;
+    });
+  }, [propPlayers]);
 
   const addPlayer = () => {
     const trimmed = nameInput.trim();
