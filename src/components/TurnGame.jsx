@@ -182,11 +182,21 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   }
 
   if (step === 'guess') {
+    if (myName && players[current] === myName) {
+      return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+        React.createElement(SectionTitle, { title: `Gæt ${players[current]}'s valg (${timeLeft})`, action: closeBtn }),
+        React.createElement('p', { className: 'mt-4 text-center' }, 'Venter på de andre...')
+      );
+    }
+
+    const guessPlayer = myName && players.includes(myName) ? myName : null;
+    const targets = guessPlayer ? [guessPlayer] : players.filter((_, i) => i !== current);
+
     return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: `Gæt ${players[current]}'s valg (${timeLeft})`, action: closeBtn }),
-      players.filter((_, i) => i !== current).map(p =>
+      targets.map(p =>
         React.createElement('div', { key: p, className: 'mb-4' },
-          React.createElement('p', { className: 'font-medium mb-1' }, p),
+          !guessPlayer && React.createElement('p', { className: 'font-medium mb-1' }, p),
           React.createElement('div', { className: 'space-y-1' },
             q.options.map((o, i) =>
               React.createElement(Button, {
