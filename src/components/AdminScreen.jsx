@@ -295,9 +295,9 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   // Daily admin section
   React.createElement('h2', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, t('adminDaily')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenReports }, 'Se anmeldt indhold'),
-    React.createElement('div', { className: 'mt-2' },
+    React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
       React.createElement(Button, {
-        className: 'bg-blue-500 text-white px-4 py-2 rounded mr-2',
+        className: 'bg-blue-500 text-white px-4 py-2 rounded',
         onClick: async () => {
           const prof = profiles.find(p => p.id === userId) || {};
           await updateDoc(doc(db, 'profiles', userId), { verified: !prof.verified });
@@ -346,14 +346,16 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: recoverMissing }, 'Hent mistet fra DB'),
     React.createElement(Button, { className: 'mt-2 bg-red-500 text-white px-4 py-2 rounded', onClick: resetInvites }, 'Reset invitations'),
     React.createElement('h4', { className: 'text-lg font-semibold mb-2 text-blue-600' }, t('adminPush')),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded mr-2', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: logClientToken }, 'Log client token'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showVapidKeys }, 'Show VAPID keys'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: compareVapidKeys }, 'Compare VAPID keys'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: showPushInfo }, 'Show push info'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: checkAuthAccess }, 'Check Firebase Auth'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenServerLog }, 'Server log'),
+    React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: logClientToken }, 'Log client token'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: showVapidKeys }, 'Show VAPID keys'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: compareVapidKeys }, 'Compare VAPID keys'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: showPushInfo }, 'Show push info'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: checkAuthAccess }, 'Check Firebase Auth'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenServerLog }, 'Server log')
+    ),
     React.createElement('h4', { className: 'text-lg font-semibold mb-2 mt-4 text-blue-600' }, t('adminLogging')),
     React.createElement('label', { className: 'flex items-center mb-2' },
       React.createElement('input', { type: 'checkbox', className: 'mr-2', checked: logEnabled, onChange: toggleLog }),
@@ -381,14 +383,18 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       }),
       'View levels'
     ),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenTextLog }, 'Se log'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenMatchLog }, 'Se matchlog'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenScoreLog }, 'Se score log'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenUserLog }, 'Følg bruger'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenTextPieces }, 'Alle tekststykker'),
+    React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenTextLog }, 'Se log'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenMatchLog }, 'Se matchlog'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenScoreLog }, 'Se score log'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenUserLog }, 'Følg bruger'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenTextPieces }, 'Alle tekststykker')
+    ),
     React.createElement('h4', { className: 'text-lg font-semibold mb-2 mt-4 text-blue-600' }, t('videoCallsTitle')),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenCallLog }, 'Se aktive opkald'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenGroupCallLog }, 'Se gruppeopkald')
+    React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenCallLog }, 'Se aktive opkald'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenGroupCallLog }, 'Se gruppeopkald')
+    )
   ),
     showBugReport && React.createElement(BugReportOverlay, { onClose: () => setShowBugReport(false) }),
     showHelp && React.createElement(AdminHelpOverlay, { onClose: () => setShowHelp(false) })
