@@ -56,12 +56,21 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   };
 
   useEffect(() => {
-    if (!sessionId || players.length) return;
-    if (propPlayers.length) {
+    if (!sessionId || !propPlayers.length) return;
+    // If the game document is empty, initialize it with all players
+    if (!players.length) {
       const init = Object.fromEntries(propPlayers.map(p => [p, 0]));
       updateGame({ players: propPlayers, scores: init, step: propPlayers.length > 1 ? 'play' : 'setup' });
+      return;
     }
-  }, [sessionId, propPlayers]);
+    // Add any missing players that joined after the game started
+    const missing = propPlayers.filter(p => !players.includes(p));
+    if (missing.length) {
+      const updatedScores = { ...scores };
+      missing.forEach(p => { updatedScores[p] = 0; });
+      updateGame({ players: [...players, ...missing], scores: updatedScores });
+    }
+  }, [sessionId, propPlayers.toString(), players.toString(), scores]);
 
   const addPlayer = () => {
     const trimmed = nameInput.trim();
