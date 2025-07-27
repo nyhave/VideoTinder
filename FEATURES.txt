@@ -27,3 +27,4 @@ Show Firestore credentials status
 Reusable profile filtering helper for Netlify Functions
 Track logs for individual users from admin
 Turn-based Realetten game uses Firestore for shared state and scoring
+Winner celebration overlay highlights top score

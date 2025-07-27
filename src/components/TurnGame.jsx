@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import WinnerOverlay from './WinnerOverlay.jsx';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
@@ -31,6 +32,7 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   const [nameInput, setNameInput] = useState('');
   const [timeLeft, setTimeLeft] = useState(10);
   const [game, setGame] = useState(null);
+  const [showWinner, setShowWinner] = useState(false);
 
   useEffect(() => {
     if (!sessionId) return;
@@ -51,6 +53,10 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   const choice = game?.choice ?? null;
   const guesses = game?.guesses || {};
   const step = game?.step || (players.length > 1 ? 'play' : 'setup');
+
+  useEffect(() => {
+    if (step === 'done') setShowWinner(true);
+  }, [step]);
 
   const updateGame = data => {
     if (!sessionId) return;
@@ -247,18 +253,24 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   }
 
   if (step === 'done') {
-    return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: 'Resultat', action: closeBtn }),
-      React.createElement('h3', { className: 'font-semibold mb-1' }, 'Slutstilling'),
-      React.createElement('ul', { className: 'mb-4 list-disc list-inside' },
-        players.map(p =>
-          React.createElement('li', { key: p }, `${p}: ${scores[p] || 0}`)
-        )
+    const maxScore = Math.max(...players.map(p => scores[p] || 0));
+    const winners = players.filter(p => (scores[p] || 0) === maxScore);
+    const overlay = showWinner ? React.createElement(WinnerOverlay, { winners, onClose: () => setShowWinner(false) }) : null;
+    return React.createElement(React.Fragment, null,
+      React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+        React.createElement(SectionTitle, { title: 'Resultat', action: closeBtn }),
+        React.createElement('h3', { className: 'font-semibold mb-1' }, 'Slutstilling'),
+        React.createElement('ul', { className: 'mb-4 list-disc list-inside' },
+          players.map(p =>
+            React.createElement('li', { key: p }, `${p}: ${scores[p] || 0}`)
+          )
+        ),
+        closeBtn || !onExit ? null : React.createElement(Button, {
+          className: 'bg-pink-500 text-white w-full',
+          onClick: onExit
+        }, 'Luk')
       ),
-      closeBtn || !onExit ? null : React.createElement(Button, {
-        className: 'bg-pink-500 text-white w-full',
-        onClick: onExit
-      }, 'Luk')
+      overlay
     );
   }
 
