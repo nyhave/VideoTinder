@@ -55,6 +55,6 @@ export default function RealettenPage({ interest, userId, onBack }) {
     React.createElement(SectionTitle,{ title:'Realetten', action }),
     React.createElement(RealettenCallScreen,{ interest, userId, onEnd:onBack, onParticipantsChange:setPlayers }),
     !showGame && startButton,
-    showGame && React.createElement(TurnGame,{ sessionId: sanitizeInterest(interest), myName, onExit:()=>setShowGame(false) })
+    showGame && React.createElement(TurnGame,{ sessionId: sanitizeInterest(interest), players: playerNames, myName, onExit:()=>setShowGame(false) })
   );
 }
