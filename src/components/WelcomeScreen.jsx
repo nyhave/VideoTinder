@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
@@ -21,9 +21,9 @@ export default function WelcomeScreen({ onLogin }) {
   const [loginPass, setLoginPass] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [gender, setGender] = useState('Kvinde');
+  const [birthdayInput, setBirthdayInput] = useState('');
   const [birthday, setBirthday] = useState('');
-  const [showBirthdayOverlay, setShowBirthdayOverlay] = useState(false);
-  const prevBirthdayRef = useRef('');
+  const [showBirthdayFormatError, setShowBirthdayFormatError] = useState(false);
   const [showMissingFields, setShowMissingFields] = useState(false);
   const [triedSubmit, setTriedSubmit] = useState(false);
   const [showAgeError, setShowAgeError] = useState(false);
@@ -31,36 +31,30 @@ export default function WelcomeScreen({ onLogin }) {
   const [createdMsg, setCreatedMsg] = useState('');
   const [createdId, setCreatedId] = useState('');
   const [showForgot, setShowForgot] = useState(false);
-  const birthdayInputRef = useRef(null);
   const { lang } = useLang();
   const t = useT();
 
-  useEffect(() => {
-    if (showBirthdayOverlay) {
-      const input = birthdayInputRef.current;
-      if (input && input.showPicker) input.showPicker();
-    }
-  }, [showBirthdayOverlay]);
 
   const handleSkip = () => {
     onLogin('101', 'admin');
   };
 
+  const parseBirthday = str => {
+    const m = str.match(/^(\d{2})[.\/-](\d{2})[.\/-](\d{4})$/);
+    if (!m) return null;
+    const day = parseInt(m[1], 10);
+    const month = parseInt(m[2], 10);
+    const year = parseInt(m[3], 10);
+    const d = new Date(year, month - 1, day);
+    if (d.getFullYear() !== year || d.getMonth() !== month - 1 || d.getDate() !== day) return null;
+    return d.toISOString().split('T')[0];
+  };
+
   const handleBirthdayChange = e => {
-    setBirthday(e.target.value);
-  };
-
-  const handleBirthdayFocus = () => {
-    prevBirthdayRef.current = birthday || '';
-    setShowBirthdayOverlay(true);
-  };
-
-  const handleBirthdayBlur = () => {
-    setShowBirthdayOverlay(false);
-    if (birthday && getAge(birthday) < 18) {
-      setBirthday(prevBirthdayRef.current);
-      setShowAgeError(true);
-    }
+    const val = e.target.value;
+    setBirthdayInput(val);
+    const iso = parseBirthday(val);
+    setBirthday(iso || '');
   };
 
   const handleLogin = async () => {
@@ -118,15 +112,21 @@ export default function WelcomeScreen({ onLogin }) {
     const trimmedName = name.trim() || (provider.displayName || '');
     const trimmedCity = city.trim();
     const trimmedUser = username.trim();
-    if (!trimmedName || !trimmedCity || !birthday || !trimmedUser) {
+    const iso = parseBirthday(birthdayInput);
+    if (!trimmedName || !trimmedCity || !trimmedUser || !birthdayInput) {
       setTriedSubmit(true);
       setShowMissingFields(true);
       return;
     }
-    if (getAge(birthday) < 18) {
+    if (!iso) {
+      setShowBirthdayFormatError(true);
+      return;
+    }
+    if (getAge(iso) < 18) {
       setShowAgeError(true);
       return;
     }
+    setBirthday(iso);
 
     let cred;
     try {
@@ -180,8 +180,8 @@ export default function WelcomeScreen({ onLogin }) {
       email: trimmedEmail,
       gender,
       interest: gender === 'Kvinde' ? 'Mand' : 'Kvinde',
-      birthday,
-      age: birthday ? getAge(birthday) : 18,
+      birthday: iso,
+      age: getAge(iso),
       language: lang,
       preferredLanguages: [lang],
       allowOtherLanguages: true,
@@ -217,16 +217,22 @@ export default function WelcomeScreen({ onLogin }) {
     const trimmedCity = city.trim();
     const trimmedEmail = email.trim();
     const trimmedUser = username.trim();
-    if (!trimmedName || !trimmedCity || !trimmedEmail || !birthday || !trimmedUser || !password) {
+    const iso = parseBirthday(birthdayInput);
+    if (!trimmedName || !trimmedCity || !trimmedEmail || !trimmedUser || !password || !birthdayInput) {
       setTriedSubmit(true);
       setShowMissingFields(true);
       return;
     }
+    if (!iso) {
+      setShowBirthdayFormatError(true);
+      return;
+    }
     // Require a valid birthday confirming the user is at least 18
-    if (!birthday || getAge(birthday) < 18) {
+    if (getAge(iso) < 18) {
       setShowAgeError(true);
       return;
     }
+    setBirthday(iso);
 
 
     const id = Date.now().toString();
@@ -271,8 +277,8 @@ export default function WelcomeScreen({ onLogin }) {
       email: trimmedEmail,
       gender,
       interest: gender === 'Kvinde' ? 'Mand' : 'Kvinde',
-      birthday,
-      age: birthday ? getAge(birthday) : 18,
+      birthday: iso,
+      age: getAge(iso),
       language: lang,
       preferredLanguages: [lang],
       allowOtherLanguages: true,
@@ -308,25 +314,6 @@ export default function WelcomeScreen({ onLogin }) {
   return React.createElement(
     React.Fragment,
     null,
-    showBirthdayOverlay && React.createElement('div', {
-      className: 'fixed inset-0 flex flex-col items-center justify-center bg-black/80 z-50'
-    },
-      React.createElement('h1', {
-        className: 'text-3xl font-bold text-pink-600 text-center mb-4 mt-10'
-      }, t('chooseBirthday')),
-      React.createElement(Input, {
-        type: 'date',
-        className: 'border p-2',
-        ref: birthdayInputRef,
-        value: birthday,
-        onChange: handleBirthdayChange,
-        autoFocus: true
-      }),
-      React.createElement(Button, {
-        className: 'mt-4 bg-pink-500 text-white px-4 py-2 rounded',
-        onClick: handleBirthdayBlur
-      }, 'Luk')
-    ),
     showMissingFields && React.createElement(InfoOverlay, {
       title: t('missingFieldsTitle'),
       onClose: () => setShowMissingFields(false)
@@ -338,6 +325,12 @@ export default function WelcomeScreen({ onLogin }) {
       onClose: () => setShowAgeError(false)
     },
       React.createElement('p', { className:'text-center' }, 'Du skal v\u00e6re mindst 18 \u00e5r for at bruge appen')
+    ),
+    showBirthdayFormatError && React.createElement(InfoOverlay, {
+      title: t('register'),
+      onClose: () => setShowBirthdayFormatError(false)
+    },
+      React.createElement('p', { className:'text-center' }, 'Ugyldigt datoformat. Brug dd.mm.yyyy')
     ),
     showCreated && React.createElement(InfoOverlay, {
       title: t('register'),
@@ -380,12 +373,11 @@ export default function WelcomeScreen({ onLogin }) {
         }),
         React.createElement('label', { className:'block mb-1' }, t('birthday')),
         React.createElement(Input, {
-          type: 'date',
+          type: 'text',
           className: `border p-2 mb-2 w-full ${triedSubmit && !birthday ? 'border-red-500' : ''}`,
-          value: birthday,
-          onFocus: handleBirthdayFocus,
+          value: birthdayInput,
           onChange: handleBirthdayChange,
-          placeholder: 'F\u00f8dselsdag',
+          placeholder: 'dd.mm.yyyy',
           required: true
         }),
         React.createElement('label', { className:'block mb-1' }, t('email')),

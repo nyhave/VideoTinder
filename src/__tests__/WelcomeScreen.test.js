@@ -65,9 +65,23 @@ test('shows age error when user is under 18', async () => {
   await userEvent.type(screen.getByPlaceholderText('you@example.com'), 'a@test.com');
   await userEvent.type(screen.getByPlaceholderText('username'), 'alice');
   await userEvent.type(screen.getByPlaceholderText('********'), 'pass123');
-  await userEvent.type(screen.getByPlaceholderText('F\u00f8dselsdag'), '2010-01-01');
+  await userEvent.type(screen.getByPlaceholderText('dd.mm.yyyy'), '01.01.2010');
   await userEvent.click(screen.getByRole('button', { name: 'Create profile' }));
   expect(await screen.findByText(/mindst 18 \u00e5r/)).toBeInTheDocument();
+});
+
+// Test invalid date format
+test('shows format error when birthday is invalid', async () => {
+  renderWelcome();
+  await userEvent.click(screen.getByRole('button', { name: 'Create profile' }));
+  await userEvent.type(screen.getByPlaceholderText('Fornavn'), 'Anna');
+  await userEvent.type(screen.getByPlaceholderText('By'), 'City');
+  await userEvent.type(screen.getByPlaceholderText('you@example.com'), 'a@test.com');
+  await userEvent.type(screen.getByPlaceholderText('username'), 'anna');
+  await userEvent.type(screen.getByPlaceholderText('********'), 'pass123');
+  await userEvent.type(screen.getByPlaceholderText('dd.mm.yyyy'), '31.02.1990');
+  await userEvent.click(screen.getByRole('button', { name: 'Create profile' }));
+  expect(await screen.findByText(/Ugyldigt datofor/)).toBeInTheDocument();
 });
 
 // Test that Google and Facebook signup buttons are shown
@@ -86,9 +100,7 @@ test('calls Firebase and onLogin when registration succeeds', async () => {
   await userEvent.click(screen.getByRole('button', { name: 'Create profile' }));
   await userEvent.type(screen.getByPlaceholderText('Fornavn'), 'Bob');
   await userEvent.type(screen.getByPlaceholderText('By'), 'Town');
-  await userEvent.type(screen.getByPlaceholderText('F\u00f8dselsdag'), '1990-01-01');
-  // Close birthday selector overlay
-  await userEvent.click(screen.getByText('Luk'));
+  await userEvent.type(screen.getByPlaceholderText('dd.mm.yyyy'), '01.01.1990');
   await userEvent.type(screen.getByPlaceholderText('you@example.com'), 'bob@test.com');
   await userEvent.type(screen.getByPlaceholderText('username'), 'bob');
   await userEvent.type(screen.getByPlaceholderText('********'), 'secret');
