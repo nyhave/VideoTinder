@@ -29,9 +29,26 @@ export function resetDay(){
   window.dispatchEvent(new Event('dayOffsetChange'));
 }
 
+export function parseBirthday(value){
+  if(!value) return null;
+  const m = value.match(/^(\d{2})[.\/-](\d{2})[.\/-](\d{4})$/);
+  if(m){
+    const [ , d, mo, y ] = m;
+    return new Date(`${y}-${mo}-${d}`);
+  }
+  return new Date(value);
+}
+
+export function birthdayToISO(value){
+  const d = parseBirthday(value);
+  if(!d || isNaN(d)) return '';
+  return d.toISOString().split('T')[0];
+}
+
 export function getAge(birthday){
   if(!birthday) return '';
-  const birth = new Date(birthday);
+  const birth = parseBirthday(birthday);
+  if(!birth || isNaN(birth)) return '';
   const today = getCurrentDate();
   let age = today.getFullYear() - birth.getFullYear();
   const m = today.getMonth() - birth.getMonth();
