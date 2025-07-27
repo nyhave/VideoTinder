@@ -18,7 +18,7 @@ function sanitizeInterest(i){
   return encodeURIComponent(i || '').replace(/%20/g,'_');
 }
 
-export default function RealettenCallScreen({ interest, userId, onEnd }) {
+export default function RealettenCallScreen({ interest, userId, onEnd, onParticipantsChange }) {
   const [participants, setParticipants] = useState([]);
   const localRef = useRef(null);
   const localStreamRef = useRef(null);
@@ -74,7 +74,9 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
     };
     const unsub = onSnapshot(ref, snap => {
       const data = snap.data();
-      setParticipants(data?.participants || []);
+      const list = data?.participants || [];
+      setParticipants(list);
+      if(onParticipantsChange) onParticipantsChange(list);
     });
     join();
     return () => {
@@ -89,6 +91,7 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
         } catch {}
       })();
       unsub();
+      if(onParticipantsChange) onParticipantsChange([]);
     };
   }, [interest, userId]);
 
