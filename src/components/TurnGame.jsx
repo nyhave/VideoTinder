@@ -27,6 +27,8 @@ const questions = [
   }
 ];
 
+const WINNING_SCORE = 3;
+
 export default function TurnGame({ sessionId, players: propPlayers = [], myName, onExit }) {
   const [nameInput, setNameInput] = useState('');
   const [timeLeft, setTimeLeft] = useState(10);
@@ -83,7 +85,7 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   const startGame = () => {
     if (players.length > 1) {
       const init = Object.fromEntries(players.map(p => [p, 0]));
-      updateGame({ scores: init, step: 'play', current: 0, qIdx: 0, choice: null, guesses: {} });
+      updateGame({ scores: init, step: 'play', current: 0, qIdx: 0, choice: null, guesses: {}, winner: null });
     }
   };
 
@@ -132,6 +134,11 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   };
 
   const nextRound = () => {
+    const entry = Object.entries(scores).find(([, s]) => s >= WINNING_SCORE);
+    if (entry) {
+      updateGame({ step: 'winner', winner: entry[0] });
+      return;
+    }
     updateGame({
       guesses: {},
       choice: null,
@@ -232,6 +239,18 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
         )
       ),
       React.createElement(Button, { className: 'bg-pink-500 text-white w-full', onClick: nextRound }, 'Næste runde')
+    );
+  }
+
+  if (step === 'winner') {
+    return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+      React.createElement(SectionTitle, { title: 'Vinder', action: closeBtn }),
+      React.createElement('p', { className: 'text-center text-2xl mb-4' }, `${game.winner} vandt! 🎉`),
+      React.createElement('h3', { className: 'font-semibold mb-1' }, 'Slutstilling'),
+      React.createElement('ul', { className: 'mb-4 list-disc list-inside' },
+        players.map(p => React.createElement('li', { key: p }, `${p}: ${scores[p] || 0}`))
+      ),
+      React.createElement(Button, { className: 'bg-pink-500 text-white w-full', onClick: startGame }, 'Spil igen')
     );
   }
 
