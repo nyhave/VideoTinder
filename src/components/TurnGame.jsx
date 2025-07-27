@@ -27,7 +27,7 @@ const questions = [
   }
 ];
 
-export default function TurnGame({ sessionId, players: propPlayers = [], onExit }) {
+export default function TurnGame({ sessionId, players: propPlayers = [], myName, onExit }) {
   const [nameInput, setNameInput] = useState('');
   const [timeLeft, setTimeLeft] = useState(10);
   const [game, setGame] = useState(null);
@@ -147,6 +147,12 @@ export default function TurnGame({ sessionId, players: propPlayers = [], onExit 
   }
 
   if (step === 'play') {
+    if (myName && players[current] !== myName) {
+      return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+        React.createElement(SectionTitle, { title: `${players[current]}: ${q.text}`, action: closeBtn }),
+        React.createElement('p', { className:'mt-4 text-center' }, `Venter på ${players[current]}...`)
+      );
+    }
     return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: `${players[current]}: ${q.text}`, action: closeBtn }),
       React.createElement('div', { className: 'space-y-2 mt-4' },
