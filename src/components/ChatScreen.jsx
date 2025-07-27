@@ -206,7 +206,10 @@ export default function ChatScreen({ userId, onStartCall }) {
                   React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
                 p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
               ),
-              React.createElement('span', null, `${p.name || ''}, ${p.birthday ? getAge(p.birthday) : p.age || ''}, ${p.city || ''}`)
+              React.createElement('div', { className: 'flex flex-col' },
+                React.createElement('span', { className: 'font-medium' }, `${p.name || ''}, ${p.birthday ? getAge(p.birthday) : p.age || ''}, ${p.city || ''}`),
+                m.lastMessage && React.createElement('span', { className: 'text-sm text-gray-500' }, m.lastMessage)
+              )
             );
           })
         ) :
