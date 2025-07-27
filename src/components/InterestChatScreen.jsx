@@ -5,7 +5,7 @@ import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
-import { useDoc, useCollection, db, doc, setDoc, arrayUnion } from '../firebase.js';
+import { useDoc, useCollection, db, doc, setDoc, arrayUnion, onSnapshot } from '../firebase.js';
 import RealettenPage from './RealettenPage.jsx';
 
 function sanitizeInterest(i){
@@ -20,6 +20,7 @@ export default function InterestChatScreen({ userId }) {
   const chat = useDoc('interestChats', interest ? sanitizeInterest(interest) : null);
   const [text, setText] = useState('');
   const [showRealetten, setShowRealetten] = useState(false);
+  const [realettenStarted, setRealettenStarted] = useState(false);
   const messagesRef = useRef(null);
   const textareaRef = useRef(null);
   const t = useT();
@@ -43,6 +44,15 @@ export default function InterestChatScreen({ userId }) {
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
     }
   }, [chat?.messages?.length]);
+
+  useEffect(() => {
+    if(!interest) return;
+    const ref = doc(db, 'turnGames', sanitizeInterest(interest));
+    const unsub = onSnapshot(ref, snap => {
+      setRealettenStarted(snap.exists());
+    });
+    return () => unsub();
+  }, [interest]);
 
   const sendMessage = async () => {
     const trimmed = text.trim();
@@ -101,7 +111,7 @@ export default function InterestChatScreen({ userId }) {
         }),
         React.createElement(Button, { className:'bg-pink-500 text-white', disabled:!text.trim(), onClick:sendMessage }, 'Send')
       ),
-      React.createElement(Button, { className:'bg-blue-600 text-white font-bold mt-2', onClick:()=>setShowRealetten(true) }, 'Tag Chancen - Pr\u00f8v Realetten')
+      React.createElement(Button, { className:'bg-blue-600 text-white font-bold mt-2', onClick:()=>setShowRealetten(true) }, realettenStarted ? 'Realetten started - Join now!' : 'Tag Chancen - Pr\u00f8v Realetten')
     )
   );
 }
