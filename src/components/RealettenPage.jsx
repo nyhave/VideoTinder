@@ -4,7 +4,7 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import RealettenCallScreen from './RealettenCallScreen.jsx';
-import RealettenGameOverlay from './RealettenGameOverlay.jsx';
+import TurnGame from './TurnGame.jsx';
 import { useCollection } from '../firebase.js';
 
 export default function RealettenPage({ interest, userId, onBack }) {
@@ -21,6 +21,6 @@ export default function RealettenPage({ interest, userId, onBack }) {
   return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1 overflow-y-auto' },
     React.createElement(SectionTitle,{ title:'Realetten', action }),
     React.createElement(RealettenCallScreen,{ interest, userId, onEnd:onBack, onParticipantsChange:setPlayers }),
-    showGame && React.createElement(RealettenGameOverlay,{ players: playerNames, onClose:()=>setShowGame(false) })
+    showGame && React.createElement(TurnGame,{ players: playerNames, onExit:()=>setShowGame(false) })
   );
 }
