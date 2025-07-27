@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BugReportOverlay from './BugReportOverlay.jsx';
+import AdminHelpOverlay from './AdminHelpOverlay.jsx';
 import { languages, useLang, useT } from '../i18n.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
@@ -18,6 +19,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   const { lang, setLang } = useLang();
   const t = useT();
   const [showBugReport, setShowBugReport] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const [logEnabled, setLogEnabled] = useState(isExtendedLogging());
   const [consoleEnabled, setConsoleEnabled] = useState(isConsoleCapture());
   const config = useDoc('config', 'app') || {};
@@ -257,7 +259,14 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
 
   return React.createElement(React.Fragment, null,
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title: t('adminTitle'), colorClass: 'text-blue-600' }),
+    React.createElement(SectionTitle, {
+      title: t('adminTitle'),
+      colorClass: 'text-blue-600',
+      action: React.createElement(Button, {
+        onClick: () => setShowHelp(true),
+        className: 'bg-blue-500 text-white px-2 py-1 rounded text-sm'
+      }, t('helpTitle'))
+    }),
     React.createElement('label', { className: 'block mb-1' }, t('chooseLanguage')),
     React.createElement('select', {
       className: 'border p-2 mb-4 w-full',
@@ -381,6 +390,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenCallLog }, 'Se aktive opkald'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenGroupCallLog }, 'Se gruppeopkald')
   ),
-    showBugReport && React.createElement(BugReportOverlay, { onClose: () => setShowBugReport(false) })
+    showBugReport && React.createElement(BugReportOverlay, { onClose: () => setShowBugReport(false) }),
+    showHelp && React.createElement(AdminHelpOverlay, { onClose: () => setShowHelp(false) })
   );
 }
