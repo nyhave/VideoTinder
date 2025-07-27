@@ -37,8 +37,10 @@ export default function InviteOverlay({ userId, onClose }) {
   };
 
   useEffect(() => {
+    if (inviteId) return;
+    if (invitesEnabled && remaining <= 0) return;
     createInvite();
-  }, []);
+  }, [inviteId, invitesEnabled, remaining]);
 
   useEffect(() => {
     if (!inviteId) return;
@@ -89,10 +91,10 @@ export default function InviteOverlay({ userId, onClose }) {
     }
   };
 
+  const noInvites = invitesEnabled && remaining <= 0;
+  const available = Math.max(0, remaining);
   const text = invitesEnabled
-    ? (remaining > 0
-        ? `Tilbyd 3 måneders gratis premium. Du har ${remaining} tilbage`
-        : 'Du har ikke flere premium invitationer')
+    ? `Tilbyd 3 måneders gratis premium. Du har ${available} tilbage`
     : t('inviteDesc');
 
   return React.createElement('div', { className: 'fixed inset-0 z-50 bg-black/50 flex items-center justify-center' },
@@ -104,9 +106,10 @@ export default function InviteOverlay({ userId, onClose }) {
         placeholder: t('firstName'),
         className: 'border p-2 rounded w-full mb-2',
         value: recipient,
-        onChange: e => setRecipient(e.target.value)
+        onChange: e => setRecipient(e.target.value),
+        disabled: noInvites
       }),
-      React.createElement('input', { type: 'text', readOnly: true, className: 'border p-2 rounded w-full mb-2', value: link }),
+      React.createElement('input', { type: 'text', readOnly: true, className: 'border p-2 rounded w-full mb-2', value: link, disabled: noInvites }),
       invites.length > 0 && React.createElement('div', { className:'mb-4' },
         React.createElement('h3', { className:'font-semibold text-sm mb-1' }, t('inviteList')),
         React.createElement('ul', { className:'text-sm space-y-1' },
@@ -116,8 +119,8 @@ export default function InviteOverlay({ userId, onClose }) {
           ))
         )
       ),
-      React.createElement(Button, { className: 'w-full bg-pink-500 text-white mb-2', onClick: share }, t('share')),
-      React.createElement(Button, { className: 'w-full', onClick: copy }, t('copyLink')),
+      React.createElement(Button, { className: 'w-full bg-pink-500 text-white mb-2', onClick: share, disabled: noInvites }, t('share')),
+      React.createElement(Button, { className: 'w-full', onClick: copy, disabled: noInvites }, t('copyLink')),
       React.createElement(Button, { className: 'w-full mt-2', onClick: onClose }, t('cancel'))
     )
   );
