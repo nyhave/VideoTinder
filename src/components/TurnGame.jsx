@@ -97,6 +97,15 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
 
   useEffect(() => {
     if (step === 'guess') {
+      const others = players.filter((_, i) => i !== current);
+      if (others.length > 0 && others.every(p => guesses[p] !== undefined)) {
+        reveal();
+      }
+    }
+  }, [guesses, step]);
+
+  useEffect(() => {
+    if (step === 'guess') {
       setTimeLeft(10);
       const id = setInterval(() => {
         setTimeLeft(t => {
@@ -182,7 +191,7 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
             q.options.map((o, i) =>
               React.createElement(Button, {
                 key: i,
-                className: 'bg-blue-500 text-white w-full',
+                className: `${guesses[p] === i ? 'bg-blue-700' : 'bg-blue-500'} text-white w-full`,
                 onClick: () => guess(p, i),
                 disabled: guesses[p] !== undefined
               }, o)
