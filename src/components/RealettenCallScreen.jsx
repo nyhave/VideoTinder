@@ -169,8 +169,12 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
       remoteStreams.current[uid] = remoteStream;
       const refEl = remoteRefs.current[uid];
       if (refEl) {
-        refEl.srcObject = remoteStream;
-        try { refEl.play(); } catch {}
+        if (refEl.srcObject !== remoteStream) {
+          refEl.srcObject = remoteStream;
+        }
+        if (refEl.paused) {
+          try { refEl.play(); } catch {}
+        }
       }
       pc.ontrack = evt => {
         evt.streams[0].getTracks().forEach(tr => remoteStream.addTrack(tr));
@@ -280,8 +284,12 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
                 remoteRefs.current[uid] = el;
                 const stream = remoteStreams.current[uid];
                 if (stream) {
-                  el.srcObject = stream;
-                  try { el.play(); } catch {}
+                  if (el.srcObject !== stream) {
+                    el.srcObject = stream;
+                  }
+                  if (el.paused) {
+                    try { el.play(); } catch {}
+                  }
                 }
               } else {
                 delete remoteRefs.current[uid];
