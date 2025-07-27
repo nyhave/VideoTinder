@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { useT } from '../i18n.js';
-import { useCollection, useDoc, db, collection, addDoc, doc, updateDoc } from '../firebase.js';
+import { useCollection, useDoc, db, collection, addDoc } from '../firebase.js';
 
 export default function InviteOverlay({ userId, onClose }) {
   const t = useT();
@@ -17,22 +17,25 @@ export default function InviteOverlay({ userId, onClose }) {
   const [link, setLink] = useState('');
   const [inviteId, setInviteId] = useState(null);
 
-  const createInvite = async () => {
+  const createInvite = async (name) => {
     try {
-      const docRef = await addDoc(collection(db,'invites'),{
-        inviterId:userId,
-        recipient:'',
-        created:new Date().toISOString(),
-        gift:invitesEnabled && remaining > 0,
-        accepted:false
+      const docRef = await addDoc(collection(db, 'invites'), {
+        inviterId: userId,
+        recipient: name,
+        created: new Date().toISOString(),
+        gift: invitesEnabled && remaining > 0,
+        accepted: false
       });
       setInviteId(docRef.id);
       const basePath = new URL('./invite.html', window.location.href).pathname;
       const base = window.location.origin + basePath;
       const giftParam = invitesEnabled && remaining > 0 ? '&gift=1' : '';
-      setLink(`${base}?id=${userId}&invite=${docRef.id}${giftParam}`);
-    } catch(err){
+      const recipientParam = name ? `&recipient=${encodeURIComponent(name)}` : '';
+      setLink(`${base}?id=${userId}&invite=${docRef.id}${giftParam}${recipientParam}`);
+      return `${base}?id=${userId}&invite=${docRef.id}${giftParam}${recipientParam}`;
+    } catch (err) {
       console.error('Failed to create invite', err);
+      return '';
     }
   };
 
@@ -46,43 +49,35 @@ export default function InviteOverlay({ userId, onClose }) {
     setLink(`${base}?id=${userId}&invite=${inviteId}${giftParam}${recipientParam}`);
   }, [recipient, inviteId]);
 
-  const updateRecipient = async () => {
-    if (!inviteId) return;
-    try {
-      await updateDoc(doc(db,'invites', inviteId), { recipient });
-    } catch(err) {
-      console.error('Failed to update invite', err);
-    }
-  };
-
   const copy = async () => {
     try {
-      if (!inviteId) await createInvite();
-      await updateRecipient();
-      await navigator.clipboard.writeText(link);
+      const newLink = await createInvite(recipient);
+      await navigator.clipboard.writeText(newLink);
       alert(t('linkCopied'));
       setRecipient('');
+      setInviteId(null);
     } catch(err) {
       console.error('Failed to copy link', err);
     }
   };
 
   const share = async () => {
-    if (!inviteId) await createInvite();
-    await updateRecipient();
+    const newLink = await createInvite(recipient);
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'RealDate', url: link });
+        await navigator.share({ title: 'RealDate', url: newLink });
         setRecipient('');
+        setInviteId(null);
         return;
       } catch (err) {
         console.error('Share failed', err);
       }
     }
     try {
-      await navigator.clipboard.writeText(link);
+      await navigator.clipboard.writeText(newLink);
       alert(t('linkCopied'));
       setRecipient('');
+      setInviteId(null);
     } catch (err) {
       console.error('Failed to copy link', err);
     }
