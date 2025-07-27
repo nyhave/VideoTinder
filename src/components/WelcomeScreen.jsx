@@ -7,7 +7,7 @@ import ForgotPasswordOverlay from './ForgotPasswordOverlay.jsx';
 import { UserPlus, LogIn } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
 import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithGoogle, signInWithFacebook } from '../firebase.js';
-import { getAge, getCurrentDate } from '../utils.js';
+import { getAge, getCurrentDate, parseBirthday } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
   const [showRegister, setShowRegister] = useState(false);
@@ -26,6 +26,7 @@ export default function WelcomeScreen({ onLogin }) {
   const [showMissingFields, setShowMissingFields] = useState(false);
   const [triedSubmit, setTriedSubmit] = useState(false);
   const [showAgeError, setShowAgeError] = useState(false);
+  const [showBirthdayError, setShowBirthdayError] = useState(false);
   const [showCreated, setShowCreated] = useState(false);
   const [createdMsg, setCreatedMsg] = useState('');
   const [createdId, setCreatedId] = useState('');
@@ -36,12 +37,6 @@ export default function WelcomeScreen({ onLogin }) {
 
   const handleSkip = () => {
     onLogin('101', 'admin');
-  };
-
-  const parseBirthday = str => {
-    const m = str.match(/^(\d{2})[.\/-](\d{2})[.\/-](\d{4})$/);
-    if (!m) return '';
-    return `${m[3]}-${m[2]}-${m[1]}`;
   };
 
   const handleBirthdayChange = e => {
@@ -106,12 +101,19 @@ export default function WelcomeScreen({ onLogin }) {
     const trimmedName = name.trim() || (provider.displayName || '');
     const trimmedCity = city.trim();
     const trimmedUser = username.trim();
-    if (!trimmedName || !trimmedCity || !birthday || !trimmedUser) {
+    const parsedBirthday = birthdayInput ? parseBirthday(birthdayInput) : '';
+    if (!trimmedName || !trimmedCity || !birthdayInput || !trimmedUser) {
       setTriedSubmit(true);
       setShowMissingFields(true);
       return;
     }
-    if (getAge(birthday) < 18) {
+    if (!parsedBirthday) {
+      setTriedSubmit(true);
+      setShowBirthdayError(true);
+      return;
+    }
+    setBirthday(parsedBirthday);
+    if (getAge(parsedBirthday) < 18) {
       setShowAgeError(true);
       return;
     }
@@ -168,8 +170,8 @@ export default function WelcomeScreen({ onLogin }) {
       email: trimmedEmail,
       gender,
       interest: gender === 'Kvinde' ? 'Mand' : 'Kvinde',
-      birthday,
-      age: birthday ? getAge(birthday) : 18,
+      birthday: parsedBirthday,
+      age: parsedBirthday ? getAge(parsedBirthday) : 18,
       language: lang,
       preferredLanguages: [lang],
       allowOtherLanguages: true,
@@ -205,13 +207,20 @@ export default function WelcomeScreen({ onLogin }) {
     const trimmedCity = city.trim();
     const trimmedEmail = email.trim();
     const trimmedUser = username.trim();
-    if (!trimmedName || !trimmedCity || !trimmedEmail || !birthday || !trimmedUser || !password) {
+    const parsedBirthday = birthdayInput ? parseBirthday(birthdayInput) : '';
+    if (!trimmedName || !trimmedCity || !trimmedEmail || !birthdayInput || !trimmedUser || !password) {
       setTriedSubmit(true);
       setShowMissingFields(true);
       return;
     }
+    if (!parsedBirthday) {
+      setTriedSubmit(true);
+      setShowBirthdayError(true);
+      return;
+    }
+    setBirthday(parsedBirthday);
     // Require a valid birthday confirming the user is at least 18
-    if (!birthday || getAge(birthday) < 18) {
+    if (getAge(parsedBirthday) < 18) {
       setShowAgeError(true);
       return;
     }
@@ -307,6 +316,12 @@ export default function WelcomeScreen({ onLogin }) {
       onClose: () => setShowAgeError(false)
     },
       React.createElement('p', { className:'text-center' }, 'Du skal v\u00e6re mindst 18 \u00e5r for at bruge appen')
+    ),
+    showBirthdayError && React.createElement(InfoOverlay, {
+      title: t('register'),
+      onClose: () => setShowBirthdayError(false)
+    },
+      React.createElement('p', { className:'text-center' }, 'Ugyldigt datoformat. Brug dd.mm.\u00e5\u00e5\u00e5\u00e5')
     ),
     showCreated && React.createElement(InfoOverlay, {
       title: t('register'),
