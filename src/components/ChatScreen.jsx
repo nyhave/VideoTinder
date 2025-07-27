@@ -195,6 +195,8 @@ export default function ChatScreen({ userId, onStartCall }) {
         React.createElement('ul', { className: 'space-y-4 flex-1' },
           chats.map(m => {
             const p = profileMap[m.profileId] || {};
+            const last = (m.messages || []).at(-1);
+            const lastFromOther = last && last.from === m.profileId;
             return React.createElement('li', {
               key: m.id,
               className: 'flex items-center gap-4 bg-pink-50 p-2 rounded cursor-pointer',
@@ -204,7 +206,8 @@ export default function ChatScreen({ userId, onStartCall }) {
                 p.photoURL ?
                   React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
                   React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
-                p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
+                p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified'),
+                lastFromOther && React.createElement('span', { className: 'text-sm text-blue-600 font-semibold' }, 'Your turn!')
               ),
               React.createElement('div', { className: 'flex flex-col' },
                 React.createElement('span', { className: 'font-medium' }, `${p.name || ''}, ${p.birthday ? getAge(p.birthday) : p.age || ''}, ${p.city || ''}`),
