@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
+import { db, doc, setDoc, onSnapshot } from '../firebase.js';
 
 const questions = [
   {
@@ -26,48 +27,46 @@ const questions = [
   }
 ];
 
-export default function TurnGame({ players: propPlayers = [], onExit }) {
-  const [players, setPlayers] = useState(() => propPlayers);
+export default function TurnGame({ sessionId, players: propPlayers = [], onExit }) {
   const [nameInput, setNameInput] = useState('');
-  const [scores, setScores] = useState(() =>
-    propPlayers.length > 1 ?
-      Object.fromEntries(propPlayers.map(p => [p, 0])) : {});
-  const [current, setCurrent] = useState(0);
-  const [qIdx, setQIdx] = useState(0);
-  const [choice, setChoice] = useState(null);
-  const [guesses, setGuesses] = useState({});
-  const [step, setStep] = useState(propPlayers.length > 1 ? 'play' : 'setup');
   const [timeLeft, setTimeLeft] = useState(10);
+  const [game, setGame] = useState(null);
 
   useEffect(() => {
-    setPlayers(prev => {
-      const set = new Set(prev);
-      let changed = false;
-      propPlayers.forEach(p => {
-        if (!set.has(p)) {
-          set.add(p);
-          changed = true;
-        }
-      });
-      return changed ? Array.from(set) : prev;
+    if (!sessionId) return;
+    const ref = doc(db, 'turnGames', sessionId);
+    const unsub = onSnapshot(ref, snap => {
+      setGame(snap.exists() ? snap.data() : null);
     });
-    setScores(prev => {
-      const next = { ...prev };
-      let changed = false;
-      propPlayers.forEach(p => {
-        if (!(p in next)) {
-          next[p] = 0;
-          changed = true;
-        }
-      });
-      return changed ? next : prev;
-    });
-  }, [propPlayers]);
+    return () => unsub();
+  }, [sessionId]);
+
+  const players = game?.players || propPlayers;
+  const scores = game?.scores ||
+    (propPlayers.length > 1 ? Object.fromEntries(propPlayers.map(p => [p, 0])) : {});
+  const current = game?.current || 0;
+  const qIdx = game?.qIdx || 0;
+  const choice = game?.choice ?? null;
+  const guesses = game?.guesses || {};
+  const step = game?.step || (players.length > 1 ? 'play' : 'setup');
+
+  const updateGame = data => {
+    if (!sessionId) return;
+    setDoc(doc(db, 'turnGames', sessionId), data, { merge: true }).catch(console.error);
+  };
+
+  useEffect(() => {
+    if (!sessionId || players.length) return;
+    if (propPlayers.length) {
+      const init = Object.fromEntries(propPlayers.map(p => [p, 0]));
+      updateGame({ players: propPlayers, scores: init, step: propPlayers.length > 1 ? 'play' : 'setup' });
+    }
+  }, [sessionId, propPlayers]);
 
   const addPlayer = () => {
     const trimmed = nameInput.trim();
     if (trimmed && !players.includes(trimmed)) {
-      setPlayers(p => [...p, trimmed]);
+      updateGame({ players: [...players, trimmed], scores: { ...scores, [trimmed]: 0 } });
       setNameInput('');
     }
   };
@@ -75,18 +74,16 @@ export default function TurnGame({ players: propPlayers = [], onExit }) {
   const startGame = () => {
     if (players.length > 1) {
       const init = Object.fromEntries(players.map(p => [p, 0]));
-      setScores(init);
-      setStep('play');
+      updateGame({ scores: init, step: 'play', current: 0, qIdx: 0, choice: null, guesses: {} });
     }
   };
 
   const selectOption = idx => {
-    setChoice(idx);
-    setStep('guess');
+    updateGame({ choice: idx, step: 'guess', guesses: {} });
   };
 
   const guess = (player, idx) => {
-    setGuesses(g => ({ ...g, [player]: idx }));
+    updateGame({ guesses: { ...guesses, [player]: idx } });
   };
 
   useEffect(() => {
@@ -107,24 +104,23 @@ export default function TurnGame({ players: propPlayers = [], onExit }) {
   }, [step]);
 
   const reveal = () => {
-    setStep('reveal');
-    setScores(s => {
-      const n = { ...s };
-      players.forEach((p, i) => {
-        if (i !== current && guesses[p] === choice) {
-          n[p] = (n[p] || 0) + 1;
-        }
-      });
-      return n;
+    const n = { ...scores };
+    players.forEach((p, i) => {
+      if (i !== current && guesses[p] === choice) {
+        n[p] = (n[p] || 0) + 1;
+      }
     });
+    updateGame({ scores: n, step: 'reveal' });
   };
 
   const nextRound = () => {
-    setGuesses({});
-    setChoice(null);
-    setCurrent((current + 1) % players.length);
-    setQIdx((qIdx + 1) % questions.length);
-    setStep('play');
+    updateGame({
+      guesses: {},
+      choice: null,
+      current: (current + 1) % players.length,
+      qIdx: (qIdx + 1) % questions.length,
+      step: 'play'
+    });
   };
 
   const q = questions[qIdx];
