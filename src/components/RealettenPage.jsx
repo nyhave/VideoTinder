@@ -5,14 +5,18 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import RealettenCallScreen from './RealettenCallScreen.jsx';
 import TurnGame from './TurnGame.jsx';
-import { useCollection, db, doc, setDoc, onSnapshot } from '../firebase.js';
+import { useCollection, db, doc, setDoc, onSnapshot, updateDoc, getDoc, arrayUnion, arrayRemove } from '../firebase.js';
 
 function sanitizeInterest(i){
   return encodeURIComponent(i || '').replace(/%20/g,'_');
 }
 
+const BOT_ID = 'AI';
+const BOT_NAME = 'AI';
+
 export default function RealettenPage({ interest, userId, onBack }) {
   const [players, setPlayers] = useState([]);
+  const [botActive, setBotActive] = useState(true);
   const profiles = useCollection('profiles');
   const profileMap = Object.fromEntries(profiles.map(p => [p.id, p]));
   const [showGame, setShowGame] = useState(false);
@@ -25,11 +29,56 @@ export default function RealettenPage({ interest, userId, onBack }) {
     });
     return () => unsub();
   }, [interest]);
-  const playerNames = players.map(id => profileMap[id]?.name || id);
+
+  useEffect(() => {
+    if (!interest || !botActive) return;
+    const id = sanitizeInterest(interest);
+    const ref = doc(db, 'realetten', id);
+    const join = async () => {
+      try {
+        const snap = await getDoc(ref);
+        if (!snap.exists()) {
+          await setDoc(ref, { interest, participants: [BOT_ID] });
+        } else {
+          await updateDoc(ref, { participants: arrayUnion(BOT_ID) });
+        }
+      } catch (err) {
+        console.error('Failed to add bot', err);
+      }
+    };
+    join();
+    return () => {
+      updateDoc(ref, { participants: arrayRemove(BOT_ID) }).catch(() => {});
+    };
+  }, [interest, botActive]);
+  const playerNames = players.map(id => id === BOT_ID ? BOT_NAME : (profileMap[id]?.name || id));
   const myName = profileMap[userId]?.name || userId;
+  const kickBot = async () => {
+    setBotActive(false);
+    const id = sanitizeInterest(interest);
+    try {
+      await updateDoc(doc(db, 'realetten', id), { participants: arrayRemove(BOT_ID) });
+    } catch {}
+    try {
+      const gref = doc(db, 'turnGames', id);
+      const snap = await getDoc(gref);
+      if (snap.exists()) {
+        const data = snap.data() || {};
+        const newPlayers = (data.players || []).filter(p => p !== BOT_NAME);
+        const newScores = { ...(data.scores || {}) };
+        delete newScores[BOT_NAME];
+        await updateDoc(gref, { players: newPlayers, scores: newScores });
+      }
+    } catch {}
+  };
+
+  const kickBtn = botActive ?
+    React.createElement(Button, { className:'bg-yellow-600 text-white', onClick:kickBot }, 'Fjern AI') : null;
+
   const action = React.createElement('div',{className:'flex gap-2'},
     React.createElement(Button,{ className:'flex items-center gap-1', onClick:onBack },
-      React.createElement(ArrowLeft,{ className:'w-4 h-4' }), 'Tilbage')
+      React.createElement(ArrowLeft,{ className:'w-4 h-4' }), 'Tilbage'),
+    kickBtn
   );
   const startGame = async () => {
     const gameId = sanitizeInterest(interest);
@@ -54,8 +103,8 @@ export default function RealettenPage({ interest, userId, onBack }) {
   }, 'Start spil');
   return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1 overflow-y-auto' },
     React.createElement(SectionTitle,{ title:'Realetten', action }),
-    React.createElement(RealettenCallScreen,{ interest, userId, onEnd:onBack, onParticipantsChange:setPlayers }),
+    React.createElement(RealettenCallScreen,{ interest, userId, botId:BOT_ID, onEnd:onBack, onParticipantsChange:setPlayers }),
     !showGame && startButton,
-    showGame && React.createElement(TurnGame,{ sessionId: sanitizeInterest(interest), players: playerNames, myName, onExit:()=>setShowGame(false) })
+    showGame && React.createElement(TurnGame,{ sessionId: sanitizeInterest(interest), players: playerNames, myName, botName:BOT_NAME, onExit:()=>setShowGame(false) })
   );
 }
