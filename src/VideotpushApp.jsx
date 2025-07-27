@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { LanguageProvider } from './i18n.js';
 import { User as UserIcon, Shield, HelpCircle } from 'lucide-react';
-import { VideoCameraIcon, HeartIcon, ChatBubbleOvalLeftIcon, CalendarDaysIcon, UserGroupIcon } from '@heroicons/react/24/solid';
+import { VideoCameraIcon, HeartIcon, ChatBubbleOvalLeftIcon, CalendarDaysIcon, UserGroupIcon, PuzzlePieceIcon } from '@heroicons/react/24/solid';
 import WelcomeScreen from './components/WelcomeScreen.jsx';
 import DailyDiscovery from './components/DailyDiscovery.jsx';
 import LikesScreen from './components/LikesScreen.jsx';
@@ -31,6 +31,7 @@ import HelpOverlay from './components/HelpOverlay.jsx';
 import ConsoleLogPanel from './components/ConsoleLogPanel.jsx';
 import TaskButton from './components/TaskButton.jsx';
 import GraphicsElementsScreen from './components/GraphicsElementsScreen.jsx';
+import TurnGame from './components/TurnGame.jsx';
 import { getNextTask } from './tasks.js';
 import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment, logEvent, auth, isAdminUser, signOutUser } from './firebase.js';
 import { getCurrentDate } from './utils.js';
@@ -268,6 +269,7 @@ export default function VideotpushApp() {
           ),
           tab==='chat' && React.createElement(ChatScreen, { userId, onStartCall: id => setVideoCallId(id) }),
           tab==='interestchat' && React.createElement(InterestChatScreen, { userId }),
+          tab==='game' && React.createElement(TurnGame, null),
           tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
           tab==='profile' && React.createElement(ProfileSettings, {
             userId,
@@ -310,6 +312,7 @@ export default function VideotpushApp() {
         hasUnread && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full min-w-4 h-4 flex items-center justify-center px-1' }, unreadCount)
       ),
       React.createElement(UserGroupIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('interestchat'); setViewProfile(null);} }),
+      React.createElement(PuzzlePieceIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('game'); setViewProfile(null);} }),
       React.createElement(CalendarDaysIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} })
       ),
     showHelp && React.createElement(HelpOverlay, { onClose: ()=>setShowHelp(false) }),

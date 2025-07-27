@@ -186,7 +186,8 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   yourProfileTitle:{ en:'Your profile', da:'Din profil', sv:'Din profil', es:'Tu perfil', fr:'Votre profil', de:'Dein Profil' },
   notificationsTitle:{ en:'Notifications', da:'Notifikationer', sv:'Notiser', es:'Notificaciones', fr:'Notifications', de:'Benachrichtigungen' },
   likesTitle:{ en:'Who likes you?', da:'Hvem synes om dig?', sv:'Vem gillar dig?', es:'\u00bfA qui le gustas?', fr:'Qui vous aime ?', de:'Wer mag dich?' },
-  interestChatsTitle:{ en:'Interest chats', da:'Interessechats', sv:'Intressechattar', es:'Chats de interés', fr:'Discussions par intérêt', de:'Interessenchats' }
+  interestChatsTitle:{ en:'Interest chats', da:'Interessechats', sv:'Intressechattar', es:'Chats de interés', fr:'Discussions par intérêt', de:'Interessenchats' },
+  gameTitle:{ en:'Guess My Choice', da:'Gæt mit valg' },
 };
 
 const LangContext = createContext({ lang: 'en', setLang: () => {} });
