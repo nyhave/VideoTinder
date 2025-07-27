@@ -326,7 +326,12 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     React.createElement(Button, {
       className: 'mt-4 w-full bg-yellow-500 text-white',
       onClick: () => {
-        if(user.extraClipsDate === today){
+        const hasSub = hasActiveSub(user);
+        const extra = user.extraClipsDate === today ? 3 : 0;
+        const limit = (hasSub ? 6 : 3) + extra;
+        if (filtered.length < limit) {
+          setShowExtend(true);
+        } else if (user.extraClipsDate === today) {
           setShowInfo(true);
         } else {
           setShowPurchase(true);
