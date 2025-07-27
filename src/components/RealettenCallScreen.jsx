@@ -13,12 +13,15 @@ import {
   arrayRemove,
   getDoc
 } from '../firebase.js';
+import { deleteField } from 'firebase/firestore';
 
 function sanitizeInterest(i){
   return encodeURIComponent(i || '').replace(/%20/g,'_');
 }
 
 export default function RealettenCallScreen({ interest, userId, botId, onEnd, onParticipantsChange }) {
+  const HEARTBEAT_INTERVAL = 10000;
+  const STALE_TIMEOUT = 30000;
   const [participants, setParticipants] = useState([]);
   const [count, setCount] = useState(null);
   const [connectFailed, setConnectFailed] = useState(false);
@@ -60,7 +63,7 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
     if (participants.length < 4) {
       const id = sanitizeInterest(interest);
       const ref = doc(db, 'realetten', id);
-      updateDoc(ref, { participants: arrayUnion(userId) }).catch(() => {});
+      updateDoc(ref, { participants: arrayUnion(userId), [`heartbeat.${userId}`]: new Date().toISOString() }).catch(() => {});
     }
   }, [participants, interest, userId, connectFailed]);
 
@@ -94,25 +97,34 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
     const join = async () => {
       const snap = await getDoc(ref);
       if(!snap.exists()) {
-        await setDoc(ref, { interest, participants: [userId] });
+        await setDoc(ref, { interest, participants: [userId], heartbeat: { [userId]: new Date().toISOString() } });
       } else {
         const data = snap.data() || {};
         if((data.participants || []).length < 4) {
-          await updateDoc(ref, { participants: arrayUnion(userId) });
+          await updateDoc(ref, { participants: arrayUnion(userId), [`heartbeat.${userId}`]: new Date().toISOString() });
         }
       }
     };
     const unsub = onSnapshot(ref, snap => {
       const data = snap.data();
       const list = data?.participants || [];
-      setParticipants(list);
-      if (onParticipantsChange) onParticipantsChange(list);
+      const hb = data?.heartbeat || {};
+      const now = Date.now();
+      const stale = list.filter(uid => uid !== userId && now - new Date(hb[uid] || 0).getTime() > STALE_TIMEOUT);
+      if (stale.length) {
+        stale.forEach(uid => {
+          updateDoc(ref, { participants: arrayRemove(uid), [`heartbeat.${uid}`]: deleteField() }).catch(() => {});
+        });
+      }
+      const activeList = list.filter(uid => !stale.includes(uid));
+      setParticipants(activeList);
+      if (onParticipantsChange) onParticipantsChange(activeList);
     });
     join();
     return () => {
       (async () => {
         try {
-          await updateDoc(ref, { participants: arrayRemove(userId) });
+          await updateDoc(ref, { participants: arrayRemove(userId), [`heartbeat.${userId}`]: deleteField() });
           const snap = await getDoc(ref);
           const data = snap.data() || {};
           if (!snap.exists() || !(data.participants || []).length) {
@@ -123,6 +135,18 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
       unsub();
       if (onParticipantsChange) onParticipantsChange([]);
     };
+  }, [interest, userId]);
+
+  useEffect(() => {
+    if (!interest) return;
+    const id = sanitizeInterest(interest);
+    const ref = doc(db, 'realetten', id);
+    const send = () => {
+      updateDoc(ref, { [`heartbeat.${userId}`]: new Date().toISOString() }).catch(() => {});
+    };
+    send();
+    const t = setInterval(send, HEARTBEAT_INTERVAL);
+    return () => clearInterval(t);
   }, [interest, userId]);
 
   useEffect(() => {
