@@ -26,15 +26,17 @@ const questions = [
   }
 ];
 
-export default function TurnGame() {
-  const [players, setPlayers] = useState([]);
+export default function TurnGame({ players: initialPlayers = [], onExit }) {
+  const [players, setPlayers] = useState(() => initialPlayers);
   const [nameInput, setNameInput] = useState('');
-  const [scores, setScores] = useState({});
+  const [scores, setScores] = useState(() =>
+    initialPlayers.length > 1 ?
+      Object.fromEntries(initialPlayers.map(p => [p, 0])) : {});
   const [current, setCurrent] = useState(0);
   const [qIdx, setQIdx] = useState(0);
   const [choice, setChoice] = useState(null);
   const [guesses, setGuesses] = useState({});
-  const [step, setStep] = useState('setup');
+  const [step, setStep] = useState(initialPlayers.length > 1 ? 'play' : 'setup');
   const [timeLeft, setTimeLeft] = useState(10);
 
   const addPlayer = () => {
@@ -101,10 +103,12 @@ export default function TurnGame() {
   };
 
   const q = questions[qIdx];
+  const closeBtn = onExit ?
+    React.createElement(Button, { className:'bg-gray-500 text-white', onClick:onExit }, 'Luk') : null;
 
   if (step === 'setup') {
     return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: 'Gæt mit valg' }),
+      React.createElement(SectionTitle, { title: 'Gæt mit valg', action: closeBtn }),
       React.createElement('div', { className: 'flex mb-2' },
         React.createElement('input', {
           className: 'border flex-1 mr-2 p-1',
@@ -123,7 +127,7 @@ export default function TurnGame() {
 
   if (step === 'play') {
     return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: `${players[current]}: ${q.text}` }),
+      React.createElement(SectionTitle, { title: `${players[current]}: ${q.text}`, action: closeBtn }),
       React.createElement('div', { className: 'space-y-2 mt-4' },
         q.options.map((o, i) =>
           React.createElement(Button, { key: i, className: 'bg-pink-500 text-white w-full', onClick: () => selectOption(i) }, o)
@@ -134,7 +138,7 @@ export default function TurnGame() {
 
   if (step === 'guess') {
     return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: `Gæt ${players[current]}'s valg (${timeLeft})` }),
+      React.createElement(SectionTitle, { title: `Gæt ${players[current]}'s valg (${timeLeft})`, action: closeBtn }),
       players.filter((_, i) => i !== current).map(p =>
         React.createElement('div', { key: p, className: 'mb-4' },
           React.createElement('p', { className: 'font-medium mb-1' }, p),
@@ -155,7 +159,7 @@ export default function TurnGame() {
 
   if (step === 'reveal') {
     return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: 'Resultat' }),
+      React.createElement(SectionTitle, { title: 'Resultat', action: closeBtn }),
       React.createElement('p', { className: 'mb-2' }, `Rigtigt svar: ${q.options[choice]}`),
       React.createElement('ul', { className: 'mb-4 list-disc list-inside' },
         players.map((p, i) => {
