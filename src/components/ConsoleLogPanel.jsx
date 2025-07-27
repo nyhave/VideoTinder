@@ -16,6 +16,15 @@ export default function ConsoleLogPanel() {
     return () => removeLogListener(handler);
   }, []);
 
+  const copyLogs = async () => {
+    try {
+      const text = logs.map(l => `[${l.timestamp}] ${l.msg}`).join('\n');
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error('Failed to copy logs', err);
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('consolePanelVisible', visible ? 'true' : 'false');
@@ -27,6 +36,10 @@ export default function ConsoleLogPanel() {
   return React.createElement('div', {
       className: 'fixed left-0 right-0 bottom-0 max-h-40 overflow-y-auto bg-black text-white text-xs p-2 z-50 opacity-80'
     },
+    React.createElement('button', {
+      className: 'absolute right-8 top-1 bg-blue-600 text-white px-1 rounded',
+      onClick: copyLogs
+    }, 'Copy'),
     React.createElement('button', {
       className: 'absolute right-1 top-1 text-white',
       onClick: () => setVisible(false)
