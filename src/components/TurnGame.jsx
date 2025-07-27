@@ -130,6 +130,23 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   }, [step]);
 
   useEffect(() => {
+    if (step === 'play') {
+      setTimeLeft(10);
+      const id = setInterval(() => {
+        setTimeLeft(t => {
+          if (t <= 1) {
+            clearInterval(id);
+            if (choice === null) drawRound();
+            return 0;
+          }
+          return t - 1;
+        });
+      }, 1000);
+      return () => clearInterval(id);
+    }
+  }, [step, choice]);
+
+  useEffect(() => {
     if (!botName) return;
     if (step === 'play' && players[current] === botName && choice === null) {
       const id = setTimeout(() => {
@@ -152,6 +169,11 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   }, [botName, step, guesses, current, qIdx, players]);
 
   const reveal = () => {
+    const others = players.filter((_, i) => i !== current);
+    if (others.some(p => guesses[p] === undefined)) {
+      drawRound();
+      return;
+    }
     const n = { ...scores };
     players.forEach((p, i) => {
       if (i !== current && guesses[p] === choice) {
@@ -162,6 +184,21 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   };
 
   const nextRound = () => {
+    if (round >= maxRounds) {
+      updateGame({ step: 'done' });
+      return;
+    }
+    updateGame({
+      round: round + 1,
+      guesses: {},
+      choice: null,
+      current: (current + 1) % players.length,
+      qIdx: (qIdx + 1) % questions.length,
+      step: 'play'
+    });
+  };
+
+  const drawRound = () => {
     if (round >= maxRounds) {
       updateGame({ step: 'done' });
       return;
@@ -202,12 +239,12 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   if (step === 'play') {
     if (myName && players[current] !== myName) {
       return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-        React.createElement(SectionTitle, { title: `${players[current]}: ${q.text}`, action: closeBtn }),
+        React.createElement(SectionTitle, { title: `${players[current]}: ${q.text} (${timeLeft})`, action: closeBtn }),
         React.createElement('p', { className:'mt-4 text-center' }, `Venter på ${players[current]}...`)
       );
     }
     return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: `${players[current]}: ${q.text}`, action: closeBtn }),
+      React.createElement(SectionTitle, { title: `${players[current]}: ${q.text} (${timeLeft})`, action: closeBtn }),
       React.createElement('div', { className: 'space-y-2 mt-4' },
         q.options.map((o, i) =>
           React.createElement(Button, { key: i, className: 'bg-pink-500 text-white w-full', onClick: () => selectOption(i) }, o)
