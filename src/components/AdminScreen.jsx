@@ -311,8 +311,10 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
 
   // Business section
   React.createElement('h2', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, t('adminBusiness')),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenStats }, 'Vis statistik'),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenRecentLogins }, 'Se seneste logins'),
+    React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenStats }, 'Vis statistik'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenRecentLogins }, 'Se seneste logins')
+    ),
 
   // Tester section
   React.createElement('h2', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, t('adminTesters')),
@@ -328,8 +330,10 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       }, 'Reset dag')
     ),
     React.createElement('h4', { className: 'text-lg font-semibold mb-2 text-blue-600' }, t('adminBugReports')),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenBugReports }, 'Se alle fejlmeldinger'),
-    React.createElement(Button, { className: 'mt-2 bg-pink-500 text-white px-4 py-2 rounded', onClick: () => setShowBugReport(true) }, 'Fejlmeld'),
+    React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenBugReports }, 'Se alle fejlmeldinger'),
+      React.createElement(Button, { className: 'bg-pink-500 text-white px-4 py-2 rounded', onClick: () => setShowBugReport(true) }, 'Fejlmeld')
+    ),
     React.createElement('h4', { className: 'text-lg font-semibold mb-2 mt-4 text-blue-600' }, t('adminDatabase')),
     React.createElement(Button, { className: 'mt-2 bg-red-500 text-white px-4 py-2 rounded', onClick: resetAllCandidates }, 'Reset all candidates'),
     React.createElement('h4', { className: 'text-lg font-semibold mb-2 mt-4 text-blue-600' }, t('adminHaptics')),
