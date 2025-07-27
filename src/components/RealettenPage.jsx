@@ -5,7 +5,7 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import RealettenCallScreen from './RealettenCallScreen.jsx';
 import TurnGame from './TurnGame.jsx';
-import { useCollection, db, doc, setDoc, onSnapshot, updateDoc, getDoc, arrayUnion, arrayRemove } from '../firebase.js';
+import { useCollection, db, doc, setDoc, onSnapshot, updateDoc, getDoc, deleteDoc, arrayUnion, arrayRemove } from '../firebase.js';
 
 function sanitizeInterest(i){
   return encodeURIComponent(i || '').replace(/%20/g,'_');
@@ -48,7 +48,17 @@ export default function RealettenPage({ interest, userId, onBack }) {
     };
     join();
     return () => {
-      updateDoc(ref, { participants: arrayRemove(BOT_ID) }).catch(() => {});
+      (async () => {
+        try {
+          await updateDoc(ref, { participants: arrayRemove(BOT_ID) });
+          const snap = await getDoc(ref);
+          const data = snap.data() || {};
+          if (!snap.exists() || !(data.participants || []).length) {
+            await deleteDoc(ref);
+            await deleteDoc(doc(db, 'turnGames', id)).catch(() => {});
+          }
+        } catch {}
+      })();
     };
   }, [interest, botActive]);
   const playerNames = players.map(id => id === BOT_ID ? BOT_NAME : (profileMap[id]?.name || id));

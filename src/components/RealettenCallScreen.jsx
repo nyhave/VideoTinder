@@ -129,6 +129,7 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
           const data = snap.data() || {};
           if (!snap.exists() || !(data.participants || []).length) {
             await deleteDoc(ref);
+            await deleteDoc(doc(db, 'turnGames', id)).catch(() => {});
           }
         } catch {}
       })();
