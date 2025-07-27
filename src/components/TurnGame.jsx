@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import WinnerOverlay from './WinnerOverlay.jsx';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
@@ -53,6 +53,8 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   const choice = game?.choice ?? null;
   const guesses = game?.guesses || {};
   const step = game?.step || (players.length > 1 ? 'play' : 'setup');
+  const stepRef = useRef(step);
+  useEffect(() => { stepRef.current = step; }, [step]);
 
   useEffect(() => {
     if (step === 'done') setShowWinner(true);
@@ -168,7 +170,17 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
     }
   }, [botName, step, guesses, current, qIdx, players]);
 
+  useEffect(() => {
+    if (step === 'reveal') {
+      const id = setTimeout(() => {
+        if (stepRef.current === 'reveal') nextRound();
+      }, 3000);
+      return () => clearTimeout(id);
+    }
+  }, [step]);
+
   const reveal = () => {
+    if (stepRef.current !== 'guess') return;
     const others = players.filter((_, i) => i !== current);
     if (others.some(p => guesses[p] === undefined)) {
       drawRound();
