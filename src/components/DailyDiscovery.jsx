@@ -54,9 +54,11 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     const extra = user.extraClipsDate === today ? 3 : 0;
     const limit = (hasSub ? 6 : 3) + extra;
     let createdToday = progresses.filter(pr => pr.addedDate === today).length;
+    const rankMap = new Map(filtered.map((p,i)=>[p.id,i]));
     filtered.forEach(p => {
       const id = `${userId}-${p.id}`;
       const prog = progresses.find(pr => pr.id === id);
+      const rank = rankMap.get(p.id);
       if(!prog && createdToday < limit){
         const days = hasActiveSub(p) ? 10 : 5;
         setDoc(doc(db,'episodeProgress', id), {
@@ -67,9 +69,12 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           seenStage: 1,
           lastUpdated: today,
           addedDate: today,
-          daysLeft: days
+          daysLeft: days,
+          rank
         }, { merge: true }).catch(err => console.error('Failed to init progress', err));
         createdToday++;
+      } else if(prog && prog.rank === undefined){
+        setDoc(doc(db,'episodeProgress', id), { rank }, { merge: true }).catch(err=>console.error('Failed to set rank', err));
       }
     });
   }, [filtered, progresses, userId]);
@@ -101,14 +106,17 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     });
   }, [progresses, userId]);
 
-  const progressMap = new Map(progresses.map(pr => [pr.profileId, pr]));
-  const activeProfiles = scored.filter(p => {
-    const prog = progressMap.get(p.id);
-    if(!prog) return false;
-    if(prog.removed) return false;
-    if(prog.daysLeft === undefined) return true;
-    return prog.daysLeft >= 0;
-  });
+  const activeProgresses = progresses
+    .filter(pr => {
+      if(pr.removed) return false;
+      if(pr.daysLeft === undefined) return true;
+      return pr.daysLeft >= 0;
+    })
+    .sort((a,b)=>(a.rank ?? 0)-(b.rank ?? 0));
+
+  const activeProfiles = activeProgresses
+    .map(pr => profiles.find(p => p.id === pr.profileId))
+    .filter(Boolean);
   const likedIds = new Set(likes.map(l => l.profileId));
   const archivedProfiles = progresses
     .filter(pr => {
@@ -116,6 +124,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       const shouldShow = pr.rating >= 3 || likedIds.has(pr.profileId);
       return (pr.removed || expired) && shouldShow;
     })
+    .sort((a,b)=>(a.rank ?? 0)-(b.rank ?? 0))
     .map(pr => profiles.find(p => p.id === pr.profileId))
     .filter(Boolean);
 
