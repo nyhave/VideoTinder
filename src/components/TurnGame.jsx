@@ -227,7 +227,7 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
 
   const q = questions[qIdx];
   const closeBtn = onExit ?
-    React.createElement(Button, { className:'bg-gray-500 text-white', onClick:onExit }, 'Luk') : null;
+    React.createElement(Button, { className:'bg-gray-500 text-white', onClick:onExit }, 'Luk spil') : null;
 
   if (step === 'setup') {
     return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
@@ -339,7 +339,7 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
         closeBtn || !onExit ? null : React.createElement(Button, {
           className: 'bg-pink-500 text-white w-full',
           onClick: onExit
-        }, 'Luk')
+        }, 'Luk spil')
       ),
       overlay
     );
