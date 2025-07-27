@@ -265,7 +265,7 @@ const modules = [
         ]
       },
       {
-        title: 'Gift 3 months of premium with up to five invites',
+        title: 'Gift 3 months of premium with up to ten invites',
         expected: [
           'Premium gift enabled when invites are available',
           'Remaining gift count is displayed',

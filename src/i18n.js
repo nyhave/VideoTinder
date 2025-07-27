@@ -114,7 +114,7 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   helpTitle:{ en:'Help', da:'Hjælp', sv:'Hjälp', es:'Ayuda', fr:'Aide', de:'Hilfe' },
   helpLevels:{ en:'On the Daily Life page each profile has three levels. Watch clips to unlock more content.', da:'På siden Dagens liv har hver profil tre niveauer. Se klip for at låse mere op.' },
   helpSupport:{ en:'Need assistance? Choose "Report bug" on the About page to contact support.', da:'Brug for hjælp? Vælg \"Fejlmeld\" på Om RealDate-siden for at kontakte support.' },
-  helpInvites:{ en:'You can send up to five invitations. Follow each invitation until your friend has created a profile.', da:'Du kan sende op til fem invitationer. Følg hver invitation, indtil din ven har oprettet en profil.' },
+  helpInvites:{ en:'You can send up to ten invitations. Follow each invitation until your friend has created a profile.', da:'Du kan sende op til ti invitationer. Følg hver invitation, indtil din ven har oprettet en profil.' },
   dailyHelpLabel:{ en:'Need help?', da:'Need help?' },
   dailyHelpTitle:{ en:'Daily Clips Help', da:'Hjælp til Dagens klip' },
   dailyHelpText:{
