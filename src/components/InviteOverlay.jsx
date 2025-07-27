@@ -36,11 +36,6 @@ export default function InviteOverlay({ userId, onClose }) {
     }
   };
 
-  useEffect(() => {
-    if (inviteId) return;
-    if (invitesEnabled && remaining <= 0) return;
-    createInvite();
-  }, [inviteId, invitesEnabled, remaining]);
 
   useEffect(() => {
     if (!inviteId) return;
@@ -62,6 +57,7 @@ export default function InviteOverlay({ userId, onClose }) {
 
   const copy = async () => {
     try {
+      if (!inviteId) await createInvite();
       await updateRecipient();
       await navigator.clipboard.writeText(link);
       alert(t('linkCopied'));
@@ -72,6 +68,7 @@ export default function InviteOverlay({ userId, onClose }) {
   };
 
   const share = async () => {
+    if (!inviteId) await createInvite();
     await updateRecipient();
     if (navigator.share) {
       try {
