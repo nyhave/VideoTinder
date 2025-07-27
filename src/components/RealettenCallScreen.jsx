@@ -18,7 +18,7 @@ function sanitizeInterest(i){
   return encodeURIComponent(i || '').replace(/%20/g,'_');
 }
 
-export default function RealettenCallScreen({ interest, userId, onEnd, onParticipantsChange }) {
+export default function RealettenCallScreen({ interest, userId, botId, onEnd, onParticipantsChange }) {
   const [participants, setParticipants] = useState([]);
   const localRef = useRef(null);
   const localStreamRef = useRef(null);
@@ -101,6 +101,7 @@ export default function RealettenCallScreen({ interest, userId, onEnd, onPartici
     const id = sanitizeInterest(interest);
 
     const connect = async uid => {
+      if (botId && uid === botId) return;
       if (pcsRef.current[uid]) return;
       const pairId = [userId, uid].sort().join('_');
       const callDoc = doc(db, 'realetten', id, 'calls', pairId);
@@ -232,6 +233,7 @@ export default function RealettenCallScreen({ interest, userId, onEnd, onPartici
           playsInline:true
         }),
         !uid && React.createElement('div',{className:'absolute inset-0 flex items-center justify-center text-white bg-black/60'},'Venter...'),
+        uid === botId && React.createElement('div',{className:'absolute inset-0 flex items-center justify-center text-white bg-black/60'},'\u{1F916}'),
         uid && !isSelf && React.createElement('div',{className:'absolute bottom-1 right-1 text-xs text-white bg-black/40 px-1 rounded'},uid)
       );
     })
