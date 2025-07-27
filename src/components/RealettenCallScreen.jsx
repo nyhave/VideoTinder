@@ -20,6 +20,8 @@ function sanitizeInterest(i){
 
 export default function RealettenCallScreen({ interest, userId, botId, onEnd, onParticipantsChange }) {
   const [participants, setParticipants] = useState([]);
+  const [count, setCount] = useState(null);
+  const [connectFailed, setConnectFailed] = useState(false);
   const localRef = useRef(null);
   const localStreamRef = useRef(null);
   const [localReady, setLocalReady] = useState(false);
@@ -33,6 +35,34 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
   const remoteRefs = useRef({});
   const remoteStreams = useRef({});
   const pcsRef = useRef({});
+
+  useEffect(() => {
+    if (participants.includes(userId)) {
+      setCount(null);
+      setConnectFailed(false);
+    } else if (participants.length >= 4 && count === null && !connectFailed) {
+      setCount(10);
+    }
+  }, [participants, userId, count, connectFailed]);
+
+  useEffect(() => {
+    if (count === null) return;
+    if (count === 0) {
+      setConnectFailed(true);
+      return;
+    }
+    const t = setTimeout(() => setCount(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [count]);
+
+  useEffect(() => {
+    if (!interest || participants.includes(userId) || connectFailed) return;
+    if (participants.length < 4) {
+      const id = sanitizeInterest(interest);
+      const ref = doc(db, 'realetten', id);
+      updateDoc(ref, { participants: arrayUnion(userId) }).catch(() => {});
+    }
+  }, [participants, interest, userId, connectFailed]);
 
   useEffect(() => {
     let stream;
@@ -205,7 +235,14 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
 
   const slots = [0,1,2,3];
 
-  return React.createElement('div', { className:'grid grid-cols-2 gap-2 flex-1' },
+  const overlay = (count !== null || connectFailed) ?
+    React.createElement('div', {
+      className:'absolute inset-0 flex items-center justify-center bg-black/60 text-white text-xl'
+    }, connectFailed ? 'could not connect' : `trying to connect... ${count}`)
+    : null;
+
+  return React.createElement('div', { className:'relative grid grid-cols-2 gap-2 flex-1' },
+    overlay,
     slots.map((slot,i) => {
       const uid = participants[i];
       const isSelf = uid === userId;
