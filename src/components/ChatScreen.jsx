@@ -145,9 +145,9 @@ export default function ChatScreen({ userId, onStartCall }) {
           ),
           React.createElement('p', { className: 'flex-1 font-medium' }, `${activeProfile.name || ''}, ${activeProfile.birthday ? getAge(activeProfile.birthday) : activeProfile.age || ''}, ${activeProfile.city || ''}`),
           React.createElement(Button, {
-            className: 'bg-pink-500 text-white',
-            onClick: () => onStartCall && onStartCall([userId, active.profileId].sort().join('-'))
-          }, incomingCall ? 'Deltag i opkald' : 'Foretag opkald')
+            className: 'bg-red-500 text-white',
+            onClick: unmatch
+          }, 'Unmatch')
         ),
         React.createElement('div', { ref: messagesRef, className: 'flex-1 bg-gray-100 p-4 rounded space-y-3 flex flex-col overflow-y-auto' },
           (active.messages || []).map((m,i) => {
@@ -185,9 +185,9 @@ export default function ChatScreen({ userId, onStartCall }) {
             )
           ),
           React.createElement(Button, {
-            className: 'bg-red-500 text-white',
-            onClick: unmatch
-          }, 'Unmatch')
+            className: 'bg-pink-500 text-white',
+            onClick: () => onStartCall && onStartCall([userId, active.profileId].sort().join('-'))
+          }, incomingCall ? 'Deltag i opkald' : 'Foretag opkald')
         )
       )
     ) : (
