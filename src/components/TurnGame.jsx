@@ -46,6 +46,8 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
     (propPlayers.length > 1 ? Object.fromEntries(propPlayers.map(p => [p, 0])) : {});
   const current = game?.current || 0;
   const qIdx = game?.qIdx || 0;
+  const round = game?.round || 1;
+  const maxRounds = 5;
   const choice = game?.choice ?? null;
   const guesses = game?.guesses || {};
   const step = game?.step || (players.length > 1 ? 'play' : 'setup');
@@ -60,7 +62,7 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
     // If the game document is empty, initialize it with all players
     if (!players.length) {
       const init = Object.fromEntries(propPlayers.map(p => [p, 0]));
-      updateGame({ players: propPlayers, scores: init, step: propPlayers.length > 1 ? 'play' : 'setup' });
+      updateGame({ players: propPlayers, scores: init, step: propPlayers.length > 1 ? 'play' : 'setup', round: 1 });
       return;
     }
     // Add any missing players that joined after the game started
@@ -83,7 +85,7 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   const startGame = () => {
     if (players.length > 1) {
       const init = Object.fromEntries(players.map(p => [p, 0]));
-      updateGame({ scores: init, step: 'play', current: 0, qIdx: 0, choice: null, guesses: {} });
+      updateGame({ scores: init, step: 'play', current: 0, qIdx: 0, round: 1, choice: null, guesses: {} });
     }
   };
 
@@ -132,7 +134,12 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
   };
 
   const nextRound = () => {
+    if (round >= maxRounds) {
+      updateGame({ step: 'done' });
+      return;
+    }
     updateGame({
+      round: round + 1,
       guesses: {},
       choice: null,
       current: (current + 1) % players.length,
@@ -231,7 +238,27 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
           React.createElement('li', { key: p }, `${p}: ${scores[p] || 0}`)
         )
       ),
-      React.createElement(Button, { className: 'bg-pink-500 text-white w-full', onClick: nextRound }, 'Næste runde')
+      React.createElement('p', { className: 'mb-2' }, `Runde ${round} / ${maxRounds}`),
+      React.createElement(Button, {
+        className: 'bg-pink-500 text-white w-full',
+        onClick: nextRound
+      }, round >= maxRounds ? 'Afslut spil' : 'Næste runde')
+    );
+  }
+
+  if (step === 'done') {
+    return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+      React.createElement(SectionTitle, { title: 'Resultat', action: closeBtn }),
+      React.createElement('h3', { className: 'font-semibold mb-1' }, 'Slutstilling'),
+      React.createElement('ul', { className: 'mb-4 list-disc list-inside' },
+        players.map(p =>
+          React.createElement('li', { key: p }, `${p}: ${scores[p] || 0}`)
+        )
+      ),
+      closeBtn || !onExit ? null : React.createElement(Button, {
+        className: 'bg-pink-500 text-white w-full',
+        onClick: onExit
+      }, 'Luk')
     );
   }
 
