@@ -12,7 +12,7 @@ export default function InviteOverlay({ userId, onClose }) {
   const invitesUsed = invites.filter(inv => inv.gift).length;
   const config = useDoc('config','app') || {};
   const invitesEnabled = config.premiumInvitesEnabled !== false;
-  const remaining = 5 - invitesUsed;
+  const remaining = 10 - invitesUsed;
   const [recipient, setRecipient] = useState('');
   const [link, setLink] = useState('');
   const [inviteId, setInviteId] = useState(null);

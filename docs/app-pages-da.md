@@ -41,7 +41,7 @@
 
 ## Om RealDate
 - Fejlmelding med mulighed for vedhæftet skærmbillede.
-- Inviter op til fem venner og tilbyd gratis premium-abonnement. 
+- Inviter op til ti venner og tilbyd gratis premium-abonnement.
   Når en invitation er sendt, følges der med i, om brugeren opretter profil.
 
 ## Du er blevet liket
