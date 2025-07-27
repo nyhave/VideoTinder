@@ -78,7 +78,16 @@ export default function RealettenCallScreen({ interest, userId, onEnd }) {
     });
     join();
     return () => {
-      updateDoc(ref, { participants: arrayRemove(userId) }).catch(()=>{});
+      (async () => {
+        try {
+          await updateDoc(ref, { participants: arrayRemove(userId) });
+          const snap = await getDoc(ref);
+          const data = snap.data() || {};
+          if (!snap.exists() || !(data.participants || []).length) {
+            await deleteDoc(ref);
+          }
+        } catch {}
+      })();
       unsub();
     };
   }, [interest, userId]);
