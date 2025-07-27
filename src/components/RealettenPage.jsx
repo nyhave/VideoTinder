@@ -39,6 +39,7 @@ export default function RealettenPage({ interest, userId, onBack }) {
       scores: init,
       current: 0,
       qIdx: 0,
+      round: 1,
       step: 'play',
       choice: null,
       guesses: {},
