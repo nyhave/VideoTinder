@@ -70,6 +70,20 @@ test('shows age error when user is under 18', async () => {
   expect(await screen.findByText(/mindst 18 \u00e5r/)).toBeInTheDocument();
 });
 
+test('shows birthday format error when date is invalid', async () => {
+  renderWelcome();
+  await userEvent.click(screen.getByRole('button', { name: 'Create profile' }));
+  await userEvent.type(screen.getByPlaceholderText('Fornavn'), 'Alice');
+  await userEvent.type(screen.getByPlaceholderText('By'), 'City');
+  await userEvent.type(screen.getByPlaceholderText('you@example.com'), 'a@test.com');
+  await userEvent.type(screen.getByPlaceholderText('username'), 'alice');
+  await userEvent.type(screen.getByPlaceholderText('********'), 'pass123');
+  const bday = screen.getByPlaceholderText('dd.mm.yyyy');
+  await userEvent.type(bday, '32.13.2020');
+  await userEvent.tab();
+  expect(await screen.findByText(/Ugyldigt datoformat/)).toBeInTheDocument();
+});
+
 // Test that Google and Facebook signup buttons are shown
 test('shows provider signup buttons', async () => {
   renderWelcome();

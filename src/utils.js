@@ -41,6 +41,21 @@ export function getAge(birthday){
   return age;
 }
 
+export function parseBirthday(str){
+  const m = str.match(/^(\d{2})[.\/-](\d{2})[.\/-](\d{4})$/);
+  if(!m) return '';
+  const day = parseInt(m[1], 10);
+  const month = parseInt(m[2], 10);
+  const year = parseInt(m[3], 10);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  if(
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() + 1 !== month ||
+    date.getUTCDate() !== day
+  ) return '';
+  return date.toISOString().split('T')[0];
+}
+
 export function detectOS(){
   if (typeof navigator === 'undefined') return '';
   const ua = navigator.userAgent || '';

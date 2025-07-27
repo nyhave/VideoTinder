@@ -1,4 +1,4 @@
-import { getCurrentDate, getAge, getTodayStr, getDaysLeft } from '../utils.js';
+import { getCurrentDate, getAge, getTodayStr, getDaysLeft, parseBirthday } from '../utils.js';
 
 // Control time for deterministic tests
 beforeEach(() => {
@@ -39,4 +39,9 @@ test('getDaysLeft rounds down at midnight', () => {
   expect(getDaysLeft(expires)).toBe(5);
   jest.setSystemTime(new Date('2024-05-21T08:00:00Z'));
   expect(getDaysLeft(expires)).toBe(4);
+});
+
+test('parseBirthday validates and converts date string', () => {
+  expect(parseBirthday('01.02.2000')).toBe('2000-02-01');
+  expect(parseBirthday('32.13.2000')).toBe('');
 });
