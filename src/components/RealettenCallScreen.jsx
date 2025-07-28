@@ -31,8 +31,12 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
   const setLocalVideoRef = useCallback(el => {
     localRef.current = el;
     if (el && localStreamRef.current) {
-      el.srcObject = localStreamRef.current;
-      try { el.play(); } catch {}
+      if (el.srcObject !== localStreamRef.current) {
+        el.srcObject = localStreamRef.current;
+      }
+      if (el.paused) {
+        try { el.play(); } catch {}
+      }
     }
   }, []);
   const remoteRefs = useRef({});
