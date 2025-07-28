@@ -152,7 +152,7 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
     if (!botName) return;
     if (step === 'play' && players[current] === botName && choice === null) {
       const id = setTimeout(() => {
-        const idx = Math.floor(Math.random() * questions[qIdx].options.length);
+        const idx = 0; // Deterministic choice for easier testing
         selectOption(idx);
       }, 800);
       return () => clearTimeout(id);
@@ -163,7 +163,7 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
     if (!botName) return;
     if (step === 'guess' && players[current] !== botName && guesses[botName] === undefined) {
       const id = setTimeout(() => {
-        const idx = Math.floor(Math.random() * questions[qIdx].options.length);
+        const idx = 0; // Deterministic guess for easier testing
         guess(botName, idx);
       }, 800);
       return () => clearTimeout(id);
