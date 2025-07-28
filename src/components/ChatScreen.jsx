@@ -198,7 +198,7 @@ export default function ChatScreen({ userId, onStartCall }) {
             const lastMessages = m.messages || [];
             const lastSorted = [...lastMessages].sort((a, b) => (a.ts || 0) - (b.ts || 0));
             const last = lastSorted[lastSorted.length - 1];
-            const lastFromOther = last && last.from !== userId;
+            const lastFromSelf = last && last.from === userId;
             return React.createElement('li', {
               key: m.id,
               className: 'flex items-center gap-4 bg-pink-50 p-2 rounded cursor-pointer',
@@ -209,7 +209,7 @@ export default function ChatScreen({ userId, onStartCall }) {
                   React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
                   React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
                 p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified'),
-                lastFromOther && React.createElement('span', { className: 'text-sm text-blue-600 font-semibold' }, 'Your turn!')
+                !lastFromSelf && React.createElement('span', { className: 'text-sm text-blue-600 font-semibold' }, 'Your turn!')
               ),
               React.createElement('div', { className: 'flex flex-col' },
                 React.createElement('span', { className: 'font-medium' }, `${p.name || ''}, ${p.birthday ? getAge(p.birthday) : p.age || ''}, ${p.city || ''}`),
