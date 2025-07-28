@@ -271,6 +271,13 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         await deleteDoc(docSnap.ref);
         await deleteDoc(doc(db, 'turnGames', docSnap.id)).catch(() => {});
       }
+
+      // Remove any stray turnGames documents that may remain
+      const games = await getDocs(collection(db, 'turnGames'));
+      for (const game of games.docs) {
+        await deleteDoc(game.ref).catch(() => {});
+      }
+
       alert('Alle Realetten sessions slettet');
     } catch (err) {
       alert('Failed: ' + err.message);
