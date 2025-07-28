@@ -39,6 +39,25 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
   const remoteStreams = useRef({});
   const pcsRef = useRef({});
 
+  const disconnectPeer = async uid => {
+    const data = pcsRef.current[uid];
+    if (!data) return;
+    const { pc, unsubOff, unsubAns, unsubDoc, callDoc, offerCandidates, answerCandidates } = data;
+    pc.close();
+    unsubOff && unsubOff();
+    unsubAns && unsubAns();
+    unsubDoc && unsubDoc();
+    try {
+      const offSnap = await getDocs(offerCandidates);
+      await Promise.all(offSnap.docs.map(d => deleteDoc(d.ref)));
+      const ansSnap = await getDocs(answerCandidates);
+      await Promise.all(ansSnap.docs.map(d => deleteDoc(d.ref)));
+      await deleteDoc(callDoc);
+    } catch {}
+    delete pcsRef.current[uid];
+    delete remoteStreams.current[uid];
+  };
+
   useEffect(() => {
     if (participants.includes(userId)) {
       setCount(null);
@@ -246,34 +265,18 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
       pcsRef.current[uid] = { pc, remoteStream, callDoc, offerCandidates, answerCandidates, unsubOff, unsubAns };
     };
 
-    const disconnect = async uid => {
-      const data = pcsRef.current[uid];
-      if (!data) return;
-      const { pc, unsubOff, unsubAns, unsubDoc, callDoc, offerCandidates, answerCandidates } = data;
-      pc.close();
-      unsubOff && unsubOff();
-      unsubAns && unsubAns();
-      unsubDoc && unsubDoc();
-      try {
-        const offSnap = await getDocs(offerCandidates);
-        await Promise.all(offSnap.docs.map(d => deleteDoc(d.ref)));
-        const ansSnap = await getDocs(answerCandidates);
-        await Promise.all(ansSnap.docs.map(d => deleteDoc(d.ref)));
-        await deleteDoc(callDoc);
-      } catch {}
-      delete pcsRef.current[uid];
-      delete remoteStreams.current[uid];
-    };
-
     const others = participants.filter(p => p !== userId);
     others.forEach(connect);
     Object.keys(pcsRef.current).forEach(uid => {
-      if (!others.includes(uid)) disconnect(uid);
+      if (!others.includes(uid)) disconnectPeer(uid);
     });
-    return () => {
-      others.forEach(disconnect);
-    };
   }, [participants, interest, localReady]);
+
+  useEffect(() => {
+    return () => {
+      Object.keys(pcsRef.current).forEach(disconnectPeer);
+    };
+  }, []);
 
   const slots = [0,1,2,3];
 
