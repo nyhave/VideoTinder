@@ -175,6 +175,32 @@ curl -X POST http://localhost:8888/.netlify/functions/send-push \
 Make sure the Firebase credentials (`FIREBASE_*`) and VAPID keys (`WEB_PUSH_PUBLIC_KEY` and `WEB_PUSH_PRIVATE_KEY`) are set in your `.env` file so the functions can authenticate.
 
 
+## Service Worker Cache Updates
+
+To ensure users receive new versions, update the `CACHE_NAME` constant near the top of `public/service-worker.js` whenever cached files change:
+
+```javascript
+// Bump the cache name whenever cached files change to ensure
+// clients receive the latest versions.
+const CACHE_NAME = 'videotpush-v1';
+```
+
+Change the value (for example to `videotpush-v2`) when deploying a new build. During activation the service worker deletes caches that do not match this name:
+
+```javascript
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+      )
+    )
+  );
+});
+```
+
+Old resources are removed automatically and clients load the updated assets on the next visit.
+
 ## Planned Payment Integration
 
 Payment processing is not yet active while testers explore the current prototype. When we enable payments, we expect to handle transactions through [Stripe](https://dashboard.stripe.com/register). For now, please ignore any payment flows.
