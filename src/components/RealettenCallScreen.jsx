@@ -21,7 +21,7 @@ function sanitizeInterest(i){
 
 export default function RealettenCallScreen({ interest, userId, botId, onEnd, onParticipantsChange }) {
   const HEARTBEAT_INTERVAL = 10000;
-  const STALE_TIMEOUT = 30000;
+  const STALE_TIMEOUT = 60000; // allow more time before removing inactive participants (bots ignored)
   const [participants, setParticipants] = useState([]);
   const [count, setCount] = useState(null);
   const [connectFailed, setConnectFailed] = useState(false);
@@ -110,7 +110,11 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
       const list = data?.participants || [];
       const hb = data?.heartbeat || {};
       const now = Date.now();
-      const stale = list.filter(uid => uid !== userId && now - new Date(hb[uid] || 0).getTime() > STALE_TIMEOUT);
+      const stale = list.filter(uid =>
+        uid !== userId &&
+        uid !== botId &&
+        now - new Date(hb[uid] || 0).getTime() > STALE_TIMEOUT
+      );
       if (stale.length) {
         stale.forEach(uid => {
           updateDoc(ref, { participants: arrayRemove(uid), [`heartbeat.${uid}`]: deleteField() }).catch(() => {});
