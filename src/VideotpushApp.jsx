@@ -267,7 +267,7 @@ export default function VideotpushApp() {
               })
           ),
           tab==='chat' && React.createElement(ChatScreen, { userId, onStartCall: id => setVideoCallId(id) }),
-          tab==='interestchat' && React.createElement(InterestChatScreen, { userId }),
+          tab==='interestchat' && React.createElement(InterestChatScreen, { userId, onSelectProfile: selectProfile }),
           tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
           tab==='profile' && React.createElement(ProfileSettings, {
             userId,
