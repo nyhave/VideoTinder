@@ -5,7 +5,7 @@ import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
-import { useDoc, useCollection, db, doc, setDoc, arrayUnion, onSnapshot } from '../firebase.js';
+import { useDoc, useCollection, db, doc, setDoc, arrayUnion, onSnapshot, getDoc } from '../firebase.js';
 import RealettenPage from './RealettenPage.jsx';
 
 function sanitizeInterest(i){
@@ -48,6 +48,7 @@ export default function InterestChatScreen({ userId }) {
   useEffect(() => {
     if(!interest) return;
     const ref = doc(db, 'turnGames', sanitizeInterest(interest));
+    getDoc(ref).then(snap => setRealettenStarted(snap.exists()));
     const unsub = onSnapshot(ref, snap => {
       setRealettenStarted(snap.exists());
     });
