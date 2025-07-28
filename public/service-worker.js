@@ -1,6 +1,6 @@
 // Bump the cache name whenever cached files change to ensure
 // clients receive the latest versions.
-const CACHE_NAME = 'videotpush-v1';
+const CACHE_NAME = 'videotpush-v2';
 // Cache for images, audio and video so large media files work offline
 const MEDIA_CACHE = 'media-cache-v1';
 const URLS_TO_CACHE = [
