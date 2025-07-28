@@ -152,6 +152,8 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
           if (!orderedOthers.includes(id)) orderedOthers.push(id);
         });
         const ordered = [userId, ...orderedOthers];
+        const same = ordered.length === prev.length && ordered.every((v,i) => v === prev[i]);
+        if (same) return prev;
         if (onParticipantsChange) onParticipantsChange(ordered);
         return ordered;
       });
