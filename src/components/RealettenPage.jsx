@@ -91,6 +91,7 @@ export default function RealettenPage({ interest, userId, onBack }) {
     kickBtn
   );
   const startGame = async () => {
+    setBotActive(true);
     const gameId = sanitizeInterest(interest);
     const init = Object.fromEntries(playerNames.map(p => [p, 0]));
     await setDoc(doc(db, 'turnGames', gameId), {
