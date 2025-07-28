@@ -121,8 +121,9 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
         });
       }
       const activeList = list.filter(uid => !stale.includes(uid));
-      setParticipants(activeList);
-      if (onParticipantsChange) onParticipantsChange(activeList);
+      const ordered = [userId, ...activeList.filter(uid => uid !== userId)];
+      setParticipants(ordered);
+      if (onParticipantsChange) onParticipantsChange(ordered);
     });
     join();
     return () => {
