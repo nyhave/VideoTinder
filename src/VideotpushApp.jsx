@@ -52,6 +52,7 @@ export default function VideotpushApp() {
   const [ageRange,setAgeRange]=useState([35,55]);
   const [tab,setTab]=useState('admin');
   const [viewProfile,setViewProfile]=useState(null);
+  const [returnTab,setReturnTab]=useState('discovery');
   const [videoCallId,setVideoCallId]=useState(null);
   const [showHelp,setShowHelp]=useState(false);
   const [activeTask, setActiveTask] = useState(null);
@@ -69,8 +70,9 @@ export default function VideotpushApp() {
   }, [currentUser, activeTask]);
 
   const openDailyClips = () => {
-    setTab('discovery');
+    setTab(returnTab);
     setViewProfile(null);
+    setReturnTab('discovery');
   };
 
   const openProfileSettings = () => {
@@ -119,6 +121,7 @@ export default function VideotpushApp() {
   };
 
   const viewOwnPublicProfile = () => {
+    setReturnTab('profile');
     setViewProfile(userId);
     setTab('discovery');
   };
@@ -201,6 +204,7 @@ export default function VideotpushApp() {
     } })
   );
   const selectProfile = async id => {
+    setReturnTab(tab);
     setViewProfile(id);
     setTab('discovery');
     try {
