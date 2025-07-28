@@ -196,7 +196,8 @@ export default function ChatScreen({ userId, onStartCall }) {
           chats.map(m => {
             const p = profileMap[m.profileId] || {};
             const lastMessages = m.messages || [];
-            const last = lastMessages[lastMessages.length - 1];
+            const lastSorted = [...lastMessages].sort((a, b) => (a.ts || 0) - (b.ts || 0));
+            const last = lastSorted[lastSorted.length - 1];
             const lastFromOther = last && last.from !== userId;
             return React.createElement('li', {
               key: m.id,
