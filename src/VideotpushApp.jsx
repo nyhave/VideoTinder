@@ -35,6 +35,7 @@ import { getNextTask } from './tasks.js';
 import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment, logEvent, auth, isAdminUser, signOutUser } from './firebase.js';
 import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
+import version from './version.js';
 export default function VideotpushApp() {
   const [lang, setLang] = useState(() =>
     localStorage.getItem('lang') || 'en'
@@ -234,6 +235,10 @@ export default function VideotpushApp() {
         className: 'absolute top-1/2 right-16 -translate-y-1/2 cursor-pointer',
         onClick: () => setShowHelp(true)
       }),
+      React.createElement('span', {
+        className: 'absolute text-xs text-white',
+        style: { right: '4rem', top: 'calc(50% + 1rem)' }
+      }, `v${version}`),
       userId && React.createElement('div', {
         className: 'absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer',
         onClick: openProfileSettings
