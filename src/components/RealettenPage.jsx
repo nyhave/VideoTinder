@@ -6,6 +6,7 @@ import SectionTitle from './SectionTitle.jsx';
 import RealettenCallScreen from './RealettenCallScreen.jsx';
 import TurnGame from './TurnGame.jsx';
 import { useCollection, db, doc, setDoc, onSnapshot, updateDoc, getDoc, deleteDoc, arrayUnion, arrayRemove } from '../firebase.js';
+import { deleteField } from 'firebase/firestore';
 
 function sanitizeInterest(i){
   return encodeURIComponent(i || '').replace(/%20/g,'_');
@@ -38,9 +39,16 @@ export default function RealettenPage({ interest, userId, onBack }) {
       try {
         const snap = await getDoc(ref);
         if (!snap.exists()) {
-          await setDoc(ref, { interest, participants: [BOT_ID] });
+          await setDoc(ref, {
+            interest,
+            participants: [BOT_ID],
+            heartbeat: { [BOT_ID]: new Date().toISOString() }
+          });
         } else {
-          await updateDoc(ref, { participants: arrayUnion(BOT_ID) });
+          await updateDoc(ref, {
+            participants: arrayUnion(BOT_ID),
+            [`heartbeat.${BOT_ID}`]: new Date().toISOString()
+          });
         }
       } catch (err) {
         console.error('Failed to add bot', err);
@@ -50,7 +58,10 @@ export default function RealettenPage({ interest, userId, onBack }) {
     return () => {
       (async () => {
         try {
-          await updateDoc(ref, { participants: arrayRemove(BOT_ID) });
+          await updateDoc(ref, {
+            participants: arrayRemove(BOT_ID),
+            [`heartbeat.${BOT_ID}`]: deleteField()
+          });
           const snap = await getDoc(ref);
           const data = snap.data() || {};
           if (!snap.exists() || !(data.participants || []).length) {
@@ -61,13 +72,28 @@ export default function RealettenPage({ interest, userId, onBack }) {
       })();
     };
   }, [interest, botActive]);
+
+  useEffect(() => {
+    if (!interest || !botActive) return;
+    const id = sanitizeInterest(interest);
+    const ref = doc(db, 'realetten', id);
+    const send = () => {
+      updateDoc(ref, { [`heartbeat.${BOT_ID}`]: new Date().toISOString() }).catch(() => {});
+    };
+    send();
+    const t = setInterval(send, 10000);
+    return () => clearInterval(t);
+  }, [interest, botActive]);
   const playerNames = players.map(id => id === BOT_ID ? BOT_NAME : (profileMap[id]?.name || id));
   const myName = profileMap[userId]?.name || userId;
   const kickBot = async () => {
     setBotActive(false);
     const id = sanitizeInterest(interest);
     try {
-      await updateDoc(doc(db, 'realetten', id), { participants: arrayRemove(BOT_ID) });
+      await updateDoc(doc(db, 'realetten', id), {
+        participants: arrayRemove(BOT_ID),
+        [`heartbeat.${BOT_ID}`]: deleteField()
+      });
     } catch {}
     try {
       const gref = doc(db, 'turnGames', id);
