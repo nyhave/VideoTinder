@@ -26,7 +26,8 @@ export default function RealettenPage({ interest, userId, onBack }) {
     const gameId = sanitizeInterest(interest);
     const ref = doc(db, 'turnGames', gameId);
     const unsub = onSnapshot(ref, snap => {
-      setShowGame(snap.exists());
+      const data = snap.data() || {};
+      setShowGame(snap.exists() && data.step !== 'done');
     });
     return () => unsub();
   }, [interest]);
