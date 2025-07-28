@@ -182,7 +182,7 @@ To ensure users receive new versions, update the `CACHE_NAME` constant near the 
 ```javascript
 // Bump the cache name whenever cached files change to ensure
 // clients receive the latest versions.
-const CACHE_NAME = 'videotpush-v1';
+const CACHE_NAME = 'videotpush-v2';
 ```
 
 Change the value (for example to `videotpush-v2`) when deploying a new build. During activation the service worker deletes caches that do not match this name:
