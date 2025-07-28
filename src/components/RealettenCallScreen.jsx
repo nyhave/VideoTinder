@@ -121,9 +121,17 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
         });
       }
       const activeList = list.filter(uid => !stale.includes(uid));
-      const ordered = [userId, ...activeList.filter(uid => uid !== userId)];
-      setParticipants(ordered);
-      if (onParticipantsChange) onParticipantsChange(ordered);
+      setParticipants(prev => {
+        const prevOthers = prev.filter(id => id !== userId);
+        const newOthers = activeList.filter(id => id !== userId);
+        const orderedOthers = prevOthers.filter(id => newOthers.includes(id));
+        newOthers.forEach(id => {
+          if (!orderedOthers.includes(id)) orderedOthers.push(id);
+        });
+        const ordered = [userId, ...orderedOthers];
+        if (onParticipantsChange) onParticipantsChange(ordered);
+        return ordered;
+      });
     });
     join();
     return () => {
