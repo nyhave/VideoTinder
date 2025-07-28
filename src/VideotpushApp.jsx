@@ -52,6 +52,7 @@ export default function VideotpushApp() {
   const [ageRange,setAgeRange]=useState([35,55]);
   const [tab,setTab]=useState('admin');
   const [viewProfile,setViewProfile]=useState(null);
+  const [profileBackTab, setProfileBackTab] = useState('discovery');
   const [videoCallId,setVideoCallId]=useState(null);
   const [showHelp,setShowHelp]=useState(false);
   const [activeTask, setActiveTask] = useState(null);
@@ -77,6 +78,12 @@ export default function VideotpushApp() {
     setActiveTask(null);
     setTab('profile');
     setViewProfile(null);
+  };
+
+  const closeProfileView = () => {
+    setTab(profileBackTab);
+    setViewProfile(null);
+    setProfileBackTab('discovery');
   };
 
   const handleTaskClick = () => {
@@ -200,7 +207,8 @@ export default function VideotpushApp() {
       logEvent('login');
     } })
   );
-  const selectProfile = async id => {
+  const selectProfile = async (id, backTab = 'discovery') => {
+    setProfileBackTab(backTab);
     setViewProfile(id);
     setTab('discovery');
     try {
@@ -263,11 +271,11 @@ export default function VideotpushApp() {
               React.createElement(ProfileEpisode, {
                 userId,
                 profileId: viewProfile,
-                onBack: openDailyClips
+                onBack: closeProfileView
               })
           ),
           tab==='chat' && React.createElement(ChatScreen, { userId, onStartCall: id => setVideoCallId(id) }),
-          tab==='interestchat' && React.createElement(InterestChatScreen, { userId }),
+          tab==='interestchat' && React.createElement(InterestChatScreen, { userId, onSelectProfile: id => selectProfile(id, 'interestchat') }),
           tab==='checkin' && React.createElement(DailyCheckIn, { userId }),
           tab==='profile' && React.createElement(ProfileSettings, {
             userId,

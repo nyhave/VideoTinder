@@ -12,7 +12,7 @@ function sanitizeInterest(i){
   return encodeURIComponent(i || '').replace(/%20/g,'_');
 }
 
-export default function InterestChatScreen({ userId }) {
+export default function InterestChatScreen({ userId, onSelectProfile = null }) {
   const profile = useDoc('profiles', userId);
   const profiles = useCollection('profiles');
   const profileMap = Object.fromEntries(profiles.map(p => [p.id, p]));
@@ -104,7 +104,14 @@ export default function InterestChatScreen({ userId }) {
           const nameAge = p.name ? `${p.name}, ${p.birthday?getAge(p.birthday):p.age||''}` : '';
           return React.createElement('div',{key:i,className:`flex ${fromSelf?'justify-end':'justify-start'}`},
             React.createElement('div',{className:'space-y-1 max-w-[75%]'},
-              React.createElement('div',{className:'text-xs text-gray-500'}, nameAge?`${nameAge} \u2013 ${time}`:time),
+              React.createElement('div',{className:'text-xs text-gray-500'},
+                nameAge ?
+                  React.createElement('span', {
+                    className: onSelectProfile ? 'text-blue-600 underline cursor-pointer' : undefined,
+                    onClick: onSelectProfile ? ()=>onSelectProfile(m.from) : undefined
+                  }, `${nameAge} \u2013 ${time}`) :
+                  time
+              ),
               React.createElement('div',{className:`inline-block px-3 py-2 rounded-lg ${fromSelf?'bg-pink-500 text-white':'bg-gray-200 text-black'}`}, m.text)
             )
           );
