@@ -47,12 +47,21 @@ export default function InterestChatScreen({ userId }) {
 
   useEffect(() => {
     if(!interest) return;
+    let ignore = false;
+    // reset state immediately when switching interests so
+    // the button text doesn't momentarily show outdated info
+    setRealettenStarted(false);
     const ref = doc(db, 'turnGames', sanitizeInterest(interest));
-    getDoc(ref).then(snap => setRealettenStarted(snap.exists()));
-    const unsub = onSnapshot(ref, snap => {
-      setRealettenStarted(snap.exists());
+    getDoc(ref).then(snap => {
+      if(!ignore) setRealettenStarted(snap.exists());
     });
-    return () => unsub();
+    const unsub = onSnapshot(ref, snap => {
+      if(!ignore) setRealettenStarted(snap.exists());
+    });
+    return () => {
+      ignore = true;
+      unsub();
+    };
   }, [interest]);
 
   const sendMessage = async () => {
