@@ -307,7 +307,7 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
           playsInline:true
         }),
         !uid && React.createElement('div',{className:'absolute inset-0 flex items-center justify-center text-white bg-black/60'},'Venter...'),
-        uid === botId && React.createElement('div',{className:'absolute inset-0 flex items-center justify-center text-white bg-black/60'},'\u{1F916}'),
+        uid === botId && React.createElement('div',{className:'absolute inset-0 flex items-center justify-center text-white bg-black/60 text-6xl'},'\u{1F916}'),
         uid && !isSelf && React.createElement('div',{className:'absolute bottom-1 right-1 text-xs text-white bg-black/40 px-1 rounded'},uid)
       );
     })
