@@ -12,7 +12,7 @@ import ReportOverlay from './ReportOverlay.jsx';
 import DeleteAccountOverlay from './DeleteAccountOverlay.jsx';
 import { useCollection, useDoc, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject, deleteAccount } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
-import InterestsOverlay from './InterestsOverlay.jsx';
+import InterestsSelect from './InterestsSelect.jsx';
 import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
 import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
@@ -36,7 +36,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [showSnapRecorder, setShowSnapRecorder] = useState(false);
   const [showSnapVideoRecorder, setShowSnapVideoRecorder] = useState(false);
   const [showSub, setShowSub] = useState(false);
-  const [showInterests, setShowInterests] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
   const [editInfo, setEditInfo] = useState(false);
@@ -646,10 +645,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement(SectionTitle, { title: t('interests'), action: !publicView && (editInterests ?
         React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditInterests(false) }, 'Gem ændringer') :
         React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditInterests(true) }) ) }),
-      editInterests && !publicView && React.createElement(Button, {
-        className:'bg-blue-500 text-white mt-2 mb-2',
-        onClick: () => setShowInterests(true)
-      }, 'Tilføj interesse'),
+      editInterests && !publicView && React.createElement(InterestsSelect, {
+        className:'mb-2',
+        value: profile.interests || [],
+        onChange: handleSaveInterests
+      }),
       React.createElement('div', { className: 'flex flex-wrap gap-2 mb-2' },
         (profile.interests || []).map(i => {
           const cat = getInterestCategory(i);
@@ -801,11 +801,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement('li', null, '⏳ Bliv på set i længere tid på listen af profiler (+5 dage)')
         )
       ),
-    showInterests && React.createElement(InterestsOverlay, {
-        current: profile.interests || [],
-        onSave: handleSaveInterests,
-        onClose: () => setShowInterests(false)
-      }),
     matchedProfile && React.createElement(MatchOverlay, {
         name: matchedProfile.name,
         onClose: () => setMatchedProfile(null)
