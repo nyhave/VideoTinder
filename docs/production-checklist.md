@@ -30,8 +30,12 @@ This document tracks the remaining technical tasks required to deploy the RealDa
 ## 6. Domain and HTTPS
 - Choose a custom domain for the site and configure DNS records to point to GitHub Pages or another hosting provider.
 - Enable HTTPS and HSTS for secure communication.
+- Add your site domain under **Authentication → Settings → Authorized Domains** in Firebase so password reset emails work.
 
-## 7. Monitoring
+## 7. Authentication
+- Enable the **Email/Password** sign-in method in the Firebase console.
+
+## 8. Monitoring
 - Monitor Firebase and Netlify logs for errors after deployment.
 - Periodically review the client and server logs for unexpected issues.
 
