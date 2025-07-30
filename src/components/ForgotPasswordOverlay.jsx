@@ -3,7 +3,7 @@ import InfoOverlay from './InfoOverlay.jsx';
 import { Input } from './ui/input.js';
 import { Button } from './ui/button.js';
 import { useT } from '../i18n.js';
-import { auth, sendPasswordResetEmail } from '../firebase.js';
+import { auth, sendPasswordResetEmail, fetchSignInMethodsForEmail } from '../firebase.js';
 
 export default function ForgotPasswordOverlay({ onClose }) {
   const t = useT();
@@ -13,6 +13,11 @@ export default function ForgotPasswordOverlay({ onClose }) {
   const sendReset = async () => {
     setStatus('');
     try {
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      if (!methods || methods.length === 0) {
+        setStatus(t('resetEmailUserNotFound'));
+        return;
+      }
       await sendPasswordResetEmail(auth, email);
       setStatus(t('resetEmailSent'));
     } catch (err) {

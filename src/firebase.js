@@ -35,6 +35,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  fetchSignInMethodsForEmail,
   onAuthStateChanged,
   signOut,
   deleteUser,
@@ -319,6 +320,7 @@ export {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  fetchSignInMethodsForEmail,
   onAuthStateChanged,
   signOut
 };

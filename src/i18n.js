@@ -77,6 +77,7 @@ export const messages = {
   sendReset:{ en:'Send reset email', da:'Send nulstillingsmail', sv:'Skicka återställningsmail', es:'Enviar correo de restablecimiento', fr:"Envoyer l'e-mail de réinitialisation", de:'Zurücksetzungs-E-Mail senden' },
   resetEmailSent:{ en:'Password reset email sent', da:'E-mail til nulstilling sendt', sv:'Återställningsmail skickat', es:'Correo de restablecimiento enviado', fr:"E-mail de réinitialisation envoyé", de:'E-Mail zum Zurücksetzen gesendet' },
   resetEmailFailed:{ en:'Failed to send reset email', da:'Kunne ikke sende nulstillingsmail', sv:'Kunde inte skicka återställningsmail', es:'No se pudo enviar el correo de restablecimiento', fr:"Échec de l'envoi de l'e-mail de réinitialisation", de:'Senden der Zurücksetzungs-E-Mail fehlgeschlagen' },
+  resetEmailUserNotFound:{ en:'No account found with that email', da:'Ingen konto fundet med den e-mail', sv:'Inget konto med den e-postadressen', es:'No existe una cuenta con ese correo', fr:"Aucun compte trouvé avec cet e-mail", de:'Kein Konto mit dieser E-Mail gefunden' },
   chooseBirthday:{ en:'Select your birthday', da:'Vælg din fødselsdag', sv:'Välj din födelsedag', es:'Selecciona tu cumpleaños', fr:'Sélectionnez votre anniversaire', de:'Wähle deinen Geburtstag' },
   gender:{ en:'Gender', da:'Køn', sv:'Kön', es:'Género', fr:'Genre', de:'Geschlecht' },
   loginCtaTitle:{ en:"Already have a profile?", da:"Har du en profil?", sv:"Har du en profil?", es:"¿Ya tienes perfil?", fr:"Vous avez déjà un profil ?", de:"Hast du ein Profil?" },
