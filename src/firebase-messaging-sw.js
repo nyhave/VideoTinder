@@ -1,10 +1,13 @@
 importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js');
 
+console.log('Firebase messaging service worker loaded');
+
 let messaging;
 
 self.addEventListener('message', event => {
   if (event.data && event.data.type === 'INIT_FIREBASE') {
+    console.log('ServiceWorker INIT_FIREBASE');
     firebase.initializeApp(event.data.config);
     messaging = firebase.messaging();
     handleBackgroundMessages();
@@ -15,6 +18,7 @@ self.addEventListener('message', event => {
 function handleBackgroundMessages() {
   if (!messaging) return;
   messaging.onBackgroundMessage(payload => {
+    console.log('Background message', payload);
     const n = payload.notification || {};
     const d = payload.data || {};
     const title = n.title || 'RealDate';
@@ -28,10 +32,12 @@ function handleBackgroundMessages() {
 }
 
 self.addEventListener('push', event => {
+  console.log('Push event received');
   let data = {};
   if (event.data) {
     try { data = event.data.json(); } catch { data = { body: event.data.text() }; }
   }
+  console.log('Push payload', data);
   const title = data.title || 'RealDate';
   const body = data.body || title;
   event.waitUntil((async () => {
@@ -48,6 +54,7 @@ self.addEventListener('push', event => {
 });
 
 self.addEventListener('notificationclick', event => {
+  console.log('Notification click');
   event.notification.close();
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientsArr => {

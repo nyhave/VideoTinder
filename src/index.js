@@ -14,20 +14,28 @@ if ('serviceWorker' in navigator) {
     const swUrl = new URL('../public/service-worker.js', import.meta.url);
     const baseScope = new URL('../', swUrl).pathname;
     // Register the main service worker generated in the production build
-    await navigator.serviceWorker
-      .register(swUrl, { scope: baseScope })
-      .catch(err => console.error('SW registration failed', err));
+    let mainReg = null;
+    try {
+      mainReg = await navigator.serviceWorker.register(swUrl, { scope: baseScope });
+      logEvent('serviceWorker registered');
+    } catch (err) {
+      console.error('SW registration failed', err);
+      logEvent('serviceWorker register error', { error: err.message });
+    }
 
     // Register the Firebase messaging service worker now located under src
-    const fcmReg = await navigator.serviceWorker
-      .register(
+    let fcmReg = null;
+    try {
+      fcmReg = await navigator.serviceWorker.register(
         new URL('./firebase-messaging-sw.js', import.meta.url),
         { scope: baseScope }
-      )
-      .catch(err => {
-        console.error('SW registration failed', err);
-        throw err;
-      });
+      );
+      logEvent('fcm serviceWorker registered');
+    } catch (err) {
+      console.error('SW registration failed', err);
+      logEvent('fcm serviceWorker register error', { error: err.message });
+      throw err;
+    }
     // Send Firebase config to the service worker so it can initialize
     const sw = fcmReg.active || fcmReg.waiting || fcmReg.installing;
     sw?.postMessage({ type: 'INIT_FIREBASE', config: firebaseConfig });

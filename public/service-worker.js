@@ -1,6 +1,7 @@
 // Bump the cache name whenever cached files change to ensure
 // clients receive the latest versions.
 const CACHE_NAME = 'videotpush-v2';
+console.log('ServiceWorker script loaded', CACHE_NAME);
 // Cache for images, audio and video so large media files work offline
 const MEDIA_CACHE = 'media-cache-v1';
 const URLS_TO_CACHE = [
@@ -9,6 +10,7 @@ const URLS_TO_CACHE = [
 ];
 
 self.addEventListener('install', event => {
+  console.log('ServiceWorker installing', CACHE_NAME);
   event.waitUntil(
     caches
       .open(CACHE_NAME)
@@ -22,6 +24,7 @@ self.addEventListener('install', event => {
 
 // Remove old caches on activate so updates are picked up immediately
 self.addEventListener('activate', event => {
+  console.log('ServiceWorker activating');
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
@@ -32,6 +35,7 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  console.log('ServiceWorker fetch', event.request.url);
   const dest = event.request.destination;
   if (['image', 'video', 'audio'].includes(dest)) {
     event.respondWith(

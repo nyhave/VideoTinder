@@ -46,6 +46,7 @@ const headers = {
 };
 
 exports.handler = async function(event) {
+  console.log('send-push function triggered');
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
