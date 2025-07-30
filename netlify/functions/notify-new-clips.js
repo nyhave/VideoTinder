@@ -117,6 +117,7 @@ async function sendAll(userId, title, body, tokensByUser, subsByUser) {
 }
 
 exports.handler = async function(event) {
+  console.log('notify-new-clips function triggered');
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
