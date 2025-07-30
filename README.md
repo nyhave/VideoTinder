@@ -69,6 +69,15 @@ Appen bruger generelt en rød/lyserød farveskala. Adminknapperne er blå, mens 
 4. Open the provided local URL (typically http://localhost:1234) in your browser.
 5. Sign up with your name to start swiping.
 
+## Password Reset Setup
+
+If you plan to use the "Forgot password?" link, make sure your Firebase project
+is configured for it:
+
+1. Under **Authentication → Sign-in method** enable **Email/Password**.
+2. Add your site domain to **Authentication → Settings → Authorized Domains**.
+   Without the domain entry, Firebase will silently fail to send reset emails.
+
 To create a production build run:
 ```bash
 npm run build
