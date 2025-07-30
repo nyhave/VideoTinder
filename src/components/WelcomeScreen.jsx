@@ -11,6 +11,7 @@ import { getAge, getCurrentDate, parseBirthday } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
   const [showRegister, setShowRegister] = useState(false);
+  const [showRegisterChoice, setShowRegisterChoice] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
@@ -98,26 +99,6 @@ export default function WelcomeScreen({ onLogin }) {
   };
 
   const registerWithProvider = async provider => {
-    const trimmedName = name.trim() || (provider.displayName || '');
-    const trimmedCity = city.trim();
-    const trimmedUser = username.trim();
-    const parsedBirthday = birthdayInput ? parseBirthday(birthdayInput) : '';
-    if (!trimmedName || !trimmedCity || !birthdayInput || !trimmedUser) {
-      setTriedSubmit(true);
-      setShowMissingFields(true);
-      return;
-    }
-    if (!parsedBirthday) {
-      setTriedSubmit(true);
-      setShowBirthdayError(true);
-      return;
-    }
-    setBirthday(parsedBirthday);
-    if (getAge(parsedBirthday) < 18) {
-      setShowAgeError(true);
-      return;
-    }
-
     let cred;
     try {
       cred = provider === 'google' ? await signInWithGoogle() : await signInWithFacebook();
@@ -125,6 +106,18 @@ export default function WelcomeScreen({ onLogin }) {
       console.error('Provider signup failed', err);
       setLoginError(true);
       return;
+    }
+
+    const trimmedName = name.trim() || cred.user.displayName || '';
+    const trimmedCity = city.trim();
+    const trimmedUser = username.trim();
+    const parsedBirthday = birthdayInput ? parseBirthday(birthdayInput) : '';
+    if (parsedBirthday) {
+      setBirthday(parsedBirthday);
+      if (getAge(parsedBirthday) < 18) {
+        setShowAgeError(true);
+        return;
+      }
     }
 
     const id = Date.now().toString();
@@ -418,7 +411,7 @@ export default function WelcomeScreen({ onLogin }) {
           }, t('register')),
           React.createElement(Button, {
             variant: 'outline',
-            onClick: () => setShowRegister(false)
+            onClick: () => { setShowRegister(false); setShowRegisterChoice(true); }
           }, t('cancel'))
         ),
         React.createElement(Button, {
@@ -429,6 +422,27 @@ export default function WelcomeScreen({ onLogin }) {
           className: 'mt-2 bg-blue-600 text-white w-full',
           onClick: handleFacebookRegister
         }, t('registerFacebook'))
+      )
+    ) : showRegisterChoice ? (
+      React.createElement(React.Fragment, null,
+        React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, t('register')),
+        React.createElement(Button, {
+          className: 'bg-white text-gray-800 border w-full mb-2',
+          onClick: handleGoogleRegister
+        }, t('registerGoogle')),
+        React.createElement(Button, {
+          className: 'bg-blue-600 text-white w-full mb-2',
+          onClick: handleFacebookRegister
+        }, t('registerFacebook')),
+        React.createElement(Button, {
+          className: 'bg-pink-500 text-white w-full',
+          onClick: () => { setShowRegister(true); setShowRegisterChoice(false); }
+        }, t('useEmail')),
+        React.createElement(Button, {
+          variant: 'outline',
+          className: 'mt-2 w-full',
+          onClick: () => setShowRegisterChoice(false)
+        }, t('cancel'))
       )
     ) : showLoginForm ? (
       React.createElement(React.Fragment, null,
@@ -480,7 +494,7 @@ export default function WelcomeScreen({ onLogin }) {
         React.createElement('div', { className: 'flex gap-2' },
           React.createElement(Button, {
             className: 'bg-pink-500 text-white flex-1',
-            onClick: () => { setShowRegister(true); setName(''); setCity(''); }
+            onClick: () => { setShowRegisterChoice(true); setName(''); setCity(''); }
           }, t('register')),
           React.createElement(Button, {
             className: 'bg-blue-500 text-white flex-1',
