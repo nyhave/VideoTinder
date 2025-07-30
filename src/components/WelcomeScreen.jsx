@@ -22,6 +22,7 @@ export default function WelcomeScreen({ onLogin }) {
   const [loginPass, setLoginPass] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [registerError, setRegisterError] = useState(false);
+  const [registerErrorMsg, setRegisterErrorMsg] = useState('');
   const [gender, setGender] = useState('Kvinde');
   const [birthdayInput, setBirthdayInput] = useState('');
   const [birthday, setBirthday] = useState('');
@@ -105,6 +106,11 @@ export default function WelcomeScreen({ onLogin }) {
       cred = provider === 'google' ? await signInWithGoogle() : await signInWithFacebook();
     } catch (err) {
       console.error('Provider signup failed', err);
+      if (err?.code === 'auth/account-exists-with-different-credential' || err?.code === 'auth/email-already-in-use') {
+        setRegisterErrorMsg('registerEmailExists');
+      } else {
+        setRegisterErrorMsg('registerFailed');
+      }
       setRegisterError(true);
       return;
     }
@@ -190,7 +196,13 @@ export default function WelcomeScreen({ onLogin }) {
       }
     }
 
-    await finalizeRegistration(id, profile, cred.user.uid, inviteId, inviteValid, giftFrom);
+    try {
+      await finalizeRegistration(id, profile, cred.user.uid, inviteId, inviteValid, giftFrom);
+    } catch (err) {
+      console.error('Finalize registration failed', err);
+      setRegisterErrorMsg('registerFailed');
+      setRegisterError(true);
+    }
   };
 
   const handleGoogleRegister = () => registerWithProvider('google');
@@ -291,10 +303,21 @@ export default function WelcomeScreen({ onLogin }) {
       userCred = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
     } catch (err) {
       console.error('Failed to create user', err);
+      if (err?.code === 'auth/email-already-in-use') {
+        setRegisterErrorMsg('registerEmailExists');
+      } else {
+        setRegisterErrorMsg('registerFailed');
+      }
       setRegisterError(true);
       return;
     }
-    await finalizeRegistration(id, profile, userCred.user.uid, inviteId, inviteValid, giftFrom);
+    try {
+      await finalizeRegistration(id, profile, userCred.user.uid, inviteId, inviteValid, giftFrom);
+    } catch (err) {
+      console.error('Finalize registration failed', err);
+      setRegisterErrorMsg('registerFailed');
+      setRegisterError(true);
+    }
   };
   return React.createElement(
     React.Fragment,
@@ -325,9 +348,9 @@ export default function WelcomeScreen({ onLogin }) {
     ),
     registerError && React.createElement(InfoOverlay, {
       title: t('register'),
-      onClose: () => setRegisterError(false)
+      onClose: () => { setRegisterError(false); setRegisterErrorMsg(''); }
     },
-      React.createElement('p', { className:'text-center' }, t('registerFailed'))
+      React.createElement('p', { className:'text-center' }, t(registerErrorMsg || 'registerFailed'))
     ),
     loginError && React.createElement(InfoOverlay, {
       title: t('login'),
