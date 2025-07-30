@@ -213,4 +213,5 @@ Old resources are removed automatically and clients load the updated assets on t
 ## Planned Payment Integration
 
 Payment processing is not yet active while testers explore the current prototype. When we enable payments, we expect to handle transactions through [Stripe](https://dashboard.stripe.com/register). For now, please ignore any payment flows.
+Stribe can be integrated with Firebase Auth. See Firebase Auth and click Extensions
 
