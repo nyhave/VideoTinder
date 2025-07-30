@@ -21,6 +21,7 @@ export default function WelcomeScreen({ onLogin }) {
   const [loginUser, setLoginUser] = useState('');
   const [loginPass, setLoginPass] = useState('');
   const [loginError, setLoginError] = useState(false);
+  const [registerError, setRegisterError] = useState(false);
   const [gender, setGender] = useState('Kvinde');
   const [birthdayInput, setBirthdayInput] = useState('');
   const [birthday, setBirthday] = useState('');
@@ -104,7 +105,7 @@ export default function WelcomeScreen({ onLogin }) {
       cred = provider === 'google' ? await signInWithGoogle() : await signInWithFacebook();
     } catch (err) {
       console.error('Provider signup failed', err);
-      setLoginError(true);
+      setRegisterError(true);
       return;
     }
 
@@ -290,7 +291,7 @@ export default function WelcomeScreen({ onLogin }) {
       userCred = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
     } catch (err) {
       console.error('Failed to create user', err);
-      setLoginError(true);
+      setRegisterError(true);
       return;
     }
     await finalizeRegistration(id, profile, userCred.user.uid, inviteId, inviteValid, giftFrom);
@@ -321,6 +322,12 @@ export default function WelcomeScreen({ onLogin }) {
       onClose: () => { setShowCreated(false); onLogin(createdId); }
     },
       React.createElement('p', { className:'text-center' }, createdMsg)
+    ),
+    registerError && React.createElement(InfoOverlay, {
+      title: t('register'),
+      onClose: () => setRegisterError(false)
+    },
+      React.createElement('p', { className:'text-center' }, t('registerFailed'))
     ),
     loginError && React.createElement(InfoOverlay, {
       title: t('login'),
