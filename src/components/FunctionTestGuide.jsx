@@ -69,21 +69,29 @@ export default function FunctionTestGuide() {
   return (
     React.createElement(React.Fragment, null,
       !visible && React.createElement('div', {
-        className:'fixed top-1/2 right-0 -translate-y-1/2 bg-pink-600 text-white px-2 py-1 rounded-l cursor-pointer z-40',
+        className: 'fixed top-1/2 right-0 -translate-y-1/2 bg-pink-600 text-white px-2 py-1 rounded-l cursor-pointer z-40',
         onClick: () => setVisible(true)
       }, '▶'),
       visible && React.createElement('div', {
-        className:'fixed inset-0 z-40 bg-black/50 flex items-center justify-center',
+        className: 'fixed inset-0 z-40 bg-black/50 flex items-center justify-center',
         onTouchStart,
         onTouchEnd
       },
-        React.createElement(Card, { className:'bg-white p-4 rounded shadow-xl max-w-xs w-full' },
-          React.createElement('h3', { className:'font-bold mb-2 text-pink-600 text-center' }, mod.name),
-          React.createElement('div', { className:'font-medium mb-1' }, feature.title),
-          React.createElement('ul', { className:'list-disc ml-5 text-sm mb-2' },
-            feature.expected.map((ex, i) => React.createElement('li', { key:i }, ex))
+        React.createElement(Card, { className: 'bg-white p-4 rounded shadow-xl max-w-xs w-full' },
+          React.createElement('h3', { className: 'font-bold mb-2 text-pink-600 text-center' }, mod.name),
+          React.createElement('div', { className: 'font-medium mb-1' }, feature.title),
+          React.createElement('ul', { className: 'list-disc ml-5 text-sm mb-2' },
+            feature.expected.map((ex, i) => React.createElement('li', { key: i }, ex))
           ),
-          React.createElement(Button, { className:'bg-blue-500 text-white w-full', onClick: next }, stepIndex + 1 < mod.features.length ? 'Next' : 'Finish')
+          feature.action && React.createElement(Button, {
+            className: 'bg-pink-600 text-white w-full mb-2',
+            onClick: () => {
+              window.dispatchEvent(new CustomEvent('functionTestAction', { detail: feature.action.event }));
+              setVisible(false);
+            }
+          }, feature.action.label),
+          React.createElement('div', { className: 'text-center text-xs text-gray-500 mb-2' }, 'Swipe right to hide ▶'),
+          React.createElement(Button, { className: 'bg-blue-500 text-white w-full', onClick: next }, stepIndex + 1 < mod.features.length ? 'Next' : 'Finish')
         )
       )
     )
