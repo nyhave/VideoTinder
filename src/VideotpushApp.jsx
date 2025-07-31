@@ -96,6 +96,9 @@ export default function VideotpushApp() {
         case 'openProfileSettings':
           openProfileSettings();
           break;
+        case 'openBugReports':
+          openBugReports();
+          break;
         case 'logout':
           logout();
           break;
@@ -124,6 +127,11 @@ export default function VideotpushApp() {
       return;
     }
     setTab('admin');
+    setViewProfile(null);
+  };
+
+  const openBugReports = () => {
+    setTab('bugs');
     setViewProfile(null);
   };
 
