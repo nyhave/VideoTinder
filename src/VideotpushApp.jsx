@@ -83,6 +83,17 @@ export default function VideotpushApp() {
     setViewProfile(null);
   };
 
+  useEffect(() => {
+    const handler = e => {
+      if (e.detail === 'dailyClips') {
+        setTab('discovery');
+        setViewProfile(null);
+      }
+    };
+    window.addEventListener('functionTestAction', handler);
+    return () => window.removeEventListener('functionTestAction', handler);
+  }, []);
+
   const handleTaskClick = () => {
     const task = getNextTask(currentUser);
     if (!task) return;

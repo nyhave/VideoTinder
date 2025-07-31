@@ -8,7 +8,8 @@ export const modules = [
           'New clips become available every day',
           'Free users see up to 3 clips, subscribers see 6',
           'The list resets the next day'
-        ]
+        ],
+        action: { label: 'Go to Daily Clips', event: 'dailyClips' }
       },
       {
         title: 'Option to buy 3 extra clips for the day',
