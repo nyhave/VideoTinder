@@ -15,14 +15,14 @@
 - Videoklip kan maksimalt vare 10 sekunder, og en timer tæller ned under optagelsen.
 
 ## Dagens klip
-- Ved indgang vises listen med kandidatprofiler samt eventuelle arkiverede profiler.
+- Ved indgang vises listen med kandidatprofiler samt eventuelle ratede eller likede profiler.
 - Listen indeholder aktive profiler fra tidligere dage plus dagens nye (3 eller 6).
 - Hvis serveren returnerer for få nye profiler, kan brugeren udvide maks-afstanden.
 - **Handlinger på kandidatlisten**
   - Åbn en profil for at se den offentlige kandidatprofil.
   - Vælg "Like" (kan blive til et match).
   - Vælg "Remove" for at fjerne profilen helt, medmindre rating 3 eller 4 er givet 
-    (så vises den under arkiverede profiler).
+    (så vises den under ratede eller likede profiler).
 - Brugeren kan én gang dagligt købe ekstra profiler.
 
 ### Offentlig kandidatprofil
