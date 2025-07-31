@@ -14,25 +14,40 @@ if ('serviceWorker' in navigator) {
     const swUrl = new URL('../public/service-worker.js', import.meta.url);
     const baseScope = new URL('../', swUrl).pathname;
     // Register the main service worker generated in the production build
+    console.log('Attempting SW registration', swUrl.href, { scope: baseScope });
     let mainReg = null;
     try {
       mainReg = await navigator.serviceWorker.register(swUrl, { scope: baseScope });
       logEvent('serviceWorker registered');
     } catch (err) {
-      console.error('SW registration failed', err);
+      console.error('SW registration failed', {
+        message: err.message,
+        name: err.name,
+        stack: err.stack,
+        swUrl: swUrl.href,
+        scope: baseScope
+      });
       logEvent('serviceWorker register error', { error: err.message });
     }
 
     // Register the Firebase messaging service worker now located under src
     let fcmReg = null;
+    const fcmUrl = new URL('./firebase-messaging-sw.js', import.meta.url);
+    console.log('Attempting FCM SW registration', fcmUrl.href, { scope: baseScope });
     try {
       fcmReg = await navigator.serviceWorker.register(
-        new URL('./firebase-messaging-sw.js', import.meta.url),
+        fcmUrl,
         { scope: baseScope }
       );
       logEvent('fcm serviceWorker registered');
     } catch (err) {
-      console.error('SW registration failed', err);
+      console.error('FCM SW registration failed', {
+        message: err.message,
+        name: err.name,
+        stack: err.stack,
+        swUrl: fcmUrl.href,
+        scope: baseScope
+      });
       logEvent('fcm serviceWorker register error', { error: err.message });
       throw err;
     }
