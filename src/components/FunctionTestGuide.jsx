@@ -10,22 +10,34 @@ export default function FunctionTestGuide() {
   const startX = useRef(0);
 
   useEffect(() => {
-    const stored = localStorage.getItem('functionTestGuide');
-    if (stored) {
-      try {
-        const data = JSON.parse(stored);
-        setModuleIndex(data.module);
-        setStepIndex(data.step || 0);
-      } catch {}
-    }
+    const read = () => {
+      const stored = localStorage.getItem('functionTestGuide');
+      if (stored) {
+        try {
+          const data = JSON.parse(stored);
+          setModuleIndex(data.module);
+          setStepIndex(data.step || 0);
+          return;
+        } catch {}
+      }
+      setModuleIndex(null);
+    };
+    read();
+    window.addEventListener('storage', read);
+    window.addEventListener('functionTestGuideChange', read);
+    return () => {
+      window.removeEventListener('storage', read);
+      window.removeEventListener('functionTestGuideChange', read);
+    };
   }, []);
 
   useEffect(() => {
     if (moduleIndex === null) {
       localStorage.removeItem('functionTestGuide');
-      return;
+    } else {
+      localStorage.setItem('functionTestGuide', JSON.stringify({ module: moduleIndex, step: stepIndex }));
     }
-    localStorage.setItem('functionTestGuide', JSON.stringify({ module: moduleIndex, step: stepIndex }));
+    window.dispatchEvent(new Event('functionTestGuideChange'));
   }, [moduleIndex, stepIndex]);
 
   if (moduleIndex === null) return null;

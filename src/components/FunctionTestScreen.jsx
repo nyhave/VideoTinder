@@ -113,8 +113,9 @@ export default function FunctionTestScreen({ onBack }) {
 
   const module = modules[activeModule];
   const startGuide = () => {
-    localStorage.setItem("functionTestGuide", JSON.stringify({ module: activeModule, step: 0 }));
-    alert("Test guide started");
+    localStorage.setItem('functionTestGuide', JSON.stringify({ module: activeModule, step: 0 }));
+    window.dispatchEvent(new Event('functionTestGuideChange'));
+    alert('Test guide started');
   };
   return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title:module.name, colorClass:'text-blue-600', action: React.createElement("div", { className:"flex gap-2" }, React.createElement(Button, { className:"bg-green-500 text-white px-2 py-1 rounded", onClick: startGuide }, "Run"), React.createElement(Button, { onClick: () => setActiveModule(-1) }, t("back"))) }),
