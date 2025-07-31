@@ -85,7 +85,7 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
   }
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1', style:{maxHeight:'calc(100vh - 10rem)', overflow:'hidden'} },
-    React.createElement(SectionTitle, { title: t('interestChatsTitle') }),
+    React.createElement(SectionTitle, { title: interest ? `${t('interestChatsTitle')} - ${interest}` : t('interestChatsTitle') }),
     React.createElement('div', { className:'flex gap-2 mb-4 overflow-x-auto' },
       (profile.interests || []).map(i =>
         React.createElement(Button, {
