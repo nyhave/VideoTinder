@@ -40,6 +40,13 @@ export default function FunctionTestGuide() {
     window.dispatchEvent(new Event('functionTestGuideChange'));
   }, [moduleIndex, stepIndex]);
 
+  // Ensure the handle is visible whenever a new test starts
+  useEffect(() => {
+    if (moduleIndex !== null) {
+      setVisible(false);
+    }
+  }, [moduleIndex]);
+
   if (moduleIndex === null) return null;
   const mod = modules[moduleIndex];
   if (!mod) return null;
