@@ -51,6 +51,15 @@ export default function VideotpushApp() {
   const [loginMethod, setLoginMethod] = useState('password');
   const profiles = useCollection('profiles');
   const chats = useCollection('matches', 'userId', userId);
+  const likesReceived = useCollection('likes', 'profileId', userId);
+  const [seenLikes, setSeenLikes] = useState(() => {
+    if (typeof localStorage === 'undefined' || !userId) return [];
+    try {
+      return JSON.parse(localStorage.getItem(`seenLikes-${userId}`) || '[]');
+    } catch {
+      return [];
+    }
+  });
   const [ageRange,setAgeRange]=useState([35,55]);
   const [tab,setTab]=useState('admin');
   const [viewProfile,setViewProfile]=useState(null);
@@ -61,7 +70,27 @@ export default function VideotpushApp() {
   const [taskClicks, setTaskClicks] = useState(0);
   const unreadCount = chats.filter(c => c.unreadByUser || c.newMatch).length;
   const hasUnread = unreadCount > 0;
+  const unseenLikesCount = likesReceived.filter(l => !seenLikes.includes(l.id)).length;
+  const hasUnseenLikes = unseenLikesCount > 0;
   const currentUser = profiles.find(p => p.id === userId) || {};
+
+  useEffect(() => {
+    if (!userId) return;
+    try {
+      const stored = JSON.parse(localStorage.getItem(`seenLikes-${userId}`) || '[]');
+      setSeenLikes(stored);
+    } catch {
+      setSeenLikes([]);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (tab === 'likes' && likesReceived.loaded && userId) {
+      const ids = likesReceived.map(l => l.id);
+      localStorage.setItem(`seenLikes-${userId}`, JSON.stringify(ids));
+      setSeenLikes(ids);
+    }
+  }, [tab, likesReceived, userId]);
 
   useEffect(() => {
     if (!activeTask) return;
@@ -347,7 +376,10 @@ export default function VideotpushApp() {
       style: { paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }
     },
       React.createElement(VideoCameraIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('discovery'); setViewProfile(null);} }),
-      React.createElement(HeartIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('likes'); setViewProfile(null);} }),
+      React.createElement('div', { className: 'relative', onClick: ()=>{setTab('likes'); setViewProfile(null);} },
+        React.createElement(HeartIcon, { className: 'w-8 h-8 text-pink-600' }),
+        hasUnseenLikes && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full min-w-4 h-4 flex items-center justify-center px-1' }, '1')
+      ),
       React.createElement('div', { className: 'relative', onClick: ()=>{setTab('chat'); setViewProfile(null);} },
         React.createElement(ChatBubbleOvalLeftIcon, { className: 'w-8 h-8 text-pink-600' }),
         hasUnread && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full min-w-4 h-4 flex items-center justify-center px-1' }, unreadCount)
