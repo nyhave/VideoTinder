@@ -60,6 +60,14 @@ export default function FunctionTestGuide() {
     }
   };
 
+  const runActions = async events => {
+    setVisible(false);
+    for (const ev of events) {
+      window.dispatchEvent(new CustomEvent('functionTestAction', { detail: ev }));
+      await new Promise(r => setTimeout(r, 600));
+    }
+  };
+
   const onTouchStart = e => { startX.current = e.touches[0].clientX; };
   const onTouchEnd = e => {
     const dx = e.changedTouches[0].clientX - startX.current;
@@ -85,13 +93,25 @@ export default function FunctionTestGuide() {
           ),
           feature.action && React.createElement(Button, {
             className: 'bg-pink-600 text-white w-full mb-2',
-            onClick: () => {
-              window.dispatchEvent(new CustomEvent('functionTestAction', { detail: feature.action.event }));
-              setVisible(false);
+            onClick: async () => {
+              const events = Array.isArray(feature.action.events)
+                ? feature.action.events
+                : [feature.action.event].filter(Boolean);
+              if (events.length) {
+                await runActions(events);
+              }
             }
           }, feature.action.label),
           React.createElement('div', { className: 'text-center text-xs text-gray-500 mb-2' }, 'Swipe right to hide ▶'),
-          React.createElement(Button, { className: 'bg-blue-500 text-white w-full', onClick: next }, stepIndex + 1 < mod.features.length ? 'Next' : 'Finish')
+          React.createElement(Button, { className: 'bg-blue-500 text-white w-full', onClick: async () => {
+            const events = feature.action ? (Array.isArray(feature.action.events) ? feature.action.events : [feature.action.event].filter(Boolean)) : [];
+            if (events.length) {
+              await runActions(events);
+            }
+            const more = stepIndex + 1 < mod.features.length;
+            next();
+            if (more) setVisible(true);
+          } }, stepIndex + 1 < mod.features.length ? 'Next' : 'Finish')
         )
       )
     )
