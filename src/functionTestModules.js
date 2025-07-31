@@ -91,7 +91,8 @@ export const modules = [
           'Settings screen allows editing basic info',
           'Admin mode adds extra controls',
           'Only admins can access the admin menu'
-        ]
+        ],
+        action: { label: 'Open Profile', event: 'openProfileSettings' }
       },
       {
         title: 'Preferred languages with option to allow other languages',
@@ -181,7 +182,8 @@ export const modules = [
           'Admin screen lists available test profiles',
           'Selecting a profile switches the current user',
           'Switching back restores admin access'
-        ]
+        ],
+        action: { label: 'Open Admin', event: 'openAdmin' }
       },
       {
         title: 'Daily stats saved automatically and shown as graphs in admin',
@@ -234,7 +236,8 @@ export const modules = [
           'Existing user can log in with correct credentials',
           'Invalid credentials show an error message',
           'Successful login opens discovery'
-        ]
+        ],
+        action: { label: 'Auto Login', events: ['showLogin','fillLoginUser','fillLoginPass','submitLogin'] }
       },
       {
         title: 'Reset password with "Forgot Password"',

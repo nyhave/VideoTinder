@@ -85,6 +85,29 @@ export default function WelcomeScreen({ onLogin }) {
     }
   };
 
+  React.useEffect(() => {
+    const handler = e => {
+      switch (e.detail) {
+        case 'showLogin':
+          setShowLoginForm(true);
+          break;
+        case 'fillLoginUser':
+          setLoginUser('test@example.com');
+          break;
+        case 'fillLoginPass':
+          setLoginPass('password');
+          break;
+        case 'submitLogin':
+          handleLogin();
+          break;
+        default:
+          break;
+      }
+    };
+    window.addEventListener('functionTestAction', handler);
+    return () => window.removeEventListener('functionTestAction', handler);
+  }, []);
+
   const finalizeRegistration = async (id, profile, uid, inviteId, inviteValid, giftFrom) => {
     await setDoc(doc(db, 'profiles', id), { ...profile, uid });
     await setDoc(doc(db, 'users', uid), { profileId: id });
