@@ -147,8 +147,22 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   },
   max10Sec:{ en:'Max 10 sec', da:'Max 10 sek', sv:'Max 10 sek', es:'M\u00e1x 10 seg', fr:'Max 10 s', de:'Max 10 Sek' },
   remove:{ en:'Remove', da:'Fjern', sv:'Ta bort', es:'Eliminar', fr:'Supprimer', de:'Entfernen' },
-  showArchived:{ en:'Show archived profiles', da:'Vis ratede eller likede profiler', sv:'Visa arkiverade profiler', es:'Mostrar perfiles archivados', fr:'Afficher les profils archivés', de:'Archivierte Profile anzeigen' },
-  archivedProfiles:{ en:'Archived profiles', da:'Ratede eller likede profiler', sv:'Tidigare profiler', es:'Perfiles archivados', fr:'Profils archivés', de:'Archivierte Profile' },
+  showArchived:{
+    en:'Show rated or liked profiles',
+    da:'Vis ratede eller likede profiler',
+    sv:'Visa gillade eller betygsatta profiler',
+    es:"Mostrar perfiles valorados o con 'like'",
+    fr:'Afficher les profils notés ou likés',
+    de:'Bewertete oder gelikte Profile anzeigen'
+  },
+  archivedProfiles:{
+    en:'Rated or liked profiles',
+    da:'Ratede eller likede profiler',
+    sv:'Gillade eller betygsatta profiler',
+    es:"Perfiles valorados o con 'like'",
+    fr:'Profils notés ou likés',
+    de:'Bewertete oder gelikte Profile'
+  },
   qrOpen:{
     en:'Scan to open RealDate',
     da:'Scan for at \u00e5bne RealDate',
