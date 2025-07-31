@@ -75,7 +75,7 @@ export default function FunctionTestScreen({ onBack }) {
   };
 
   const capture = async (mIndex, fIndex) => {
-    const mod = await import('https://cdn.skypack.dev/html2canvas');
+    const mod = await import('html2canvas');
     const canvas = await mod.default(document.body);
     return new Promise(resolve => {
       canvas.toBlob(blob => {

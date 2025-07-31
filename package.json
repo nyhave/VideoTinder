@@ -11,10 +11,11 @@
     "screenshots": "node scripts/capture-screens.js"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.18",
     "firebase": "^9.23.0",
     "firebase-admin": "^11.10.0",
+    "html2canvas": "^1.4.1",
     "lucide-react": "^0.322.0",
-    "@heroicons/react": "^2.0.18",
     "qrcode.react": "^4.2.0",
     "rc-slider": "^11.1.8",
     "react": "^17.0.0",
