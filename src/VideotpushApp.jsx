@@ -195,6 +195,7 @@ export default function VideotpushApp() {
     React.createElement(WelcomeScreen, { onLogin: (id, method = 'password') => {
       setLoggedIn(true);
       setUserId(id);
+      localStorage.setItem(LAST_USER_KEY, id);
       setLoginMethod(method);
       if (method === 'admin') {
         setTab('admin');
