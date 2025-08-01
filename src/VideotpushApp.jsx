@@ -33,7 +33,7 @@ import FunctionTestGuide from './components/FunctionTestGuide.jsx';
 import TaskButton from './components/TaskButton.jsx';
 import GraphicsElementsScreen from './components/GraphicsElementsScreen.jsx';
 import { getNextTask } from './tasks.js';
-import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, updateDoc, increment, logEvent, auth, isAdminUser, signOutUser } from './firebase.js';
+import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, getDoc, updateDoc, increment, logEvent, auth, isAdminUser, signOutUser } from './firebase.js';
 import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 import version from './version.js';
@@ -203,12 +203,27 @@ export default function VideotpushApp() {
   }, [lang]);
 
 
-  // Removed automatic seeding of the database on app startup.
+  // Ensure the current profile matches the authenticated user
   useEffect(()=>{
     if(!loggedIn){
       setUserId(null);
       return;
     }
+
+    if(!userId && auth.currentUser){
+      (async ()=>{
+        try{
+          const snap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+          const pid = snap.exists() ? snap.data().profileId : auth.currentUser.uid;
+          setUserId(pid);
+          localStorage.setItem(LAST_USER_KEY, pid);
+        }catch(err){
+          console.error('Failed to load user profile', err);
+        }
+      })();
+      return;
+    }
+
     if(!userId && profiles.length){
       const savedId = localStorage.getItem(LAST_USER_KEY);
       const defaultProfile =
