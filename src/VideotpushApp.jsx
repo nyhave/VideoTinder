@@ -128,6 +128,10 @@ export default function VideotpushApp() {
         case 'openBugReports':
           openBugReports();
           break;
+        case 'openChat':
+          setTab('chat');
+          setViewProfile(null);
+          break;
         case 'logout':
           logout();
           break;

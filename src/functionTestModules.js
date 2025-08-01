@@ -51,10 +51,11 @@ export const modules = [
       {
         title: 'Basic chat between matched profiles with option to unmatch',
         expected: [
-          'Matched users can exchange messages',
-          'Unmatching removes the chat for both',
-          'Messages update in real time'
-        ]
+          'Send a message as one user',
+          'Log in as the matched user, reply, and confirm the first user sees it',
+          'Unmatching removes the chat for both'
+        ],
+        action: { label: 'Open Chat', event: 'openChat' }
       },
       {
         title: 'Improved chat layout with timestamps',
