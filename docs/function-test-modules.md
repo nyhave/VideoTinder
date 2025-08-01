@@ -25,7 +25,7 @@ Use the admin menu to open *Funktionstest* and choose a module to start testing.
 
 ### Chat & Reflections
 
-- Send a chat message to a match and confirm it appears on both devices.
+- Start a chat by sending a message as one user. Log in as the matched user, reply, and confirm the first user sees the response.
 - Trigger the match celebration overlay and make sure it can be dismissed.
 - Open the reflection calendar and verify ratings or notes appear on the correct dates.
 
