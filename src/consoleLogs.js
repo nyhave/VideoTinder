@@ -60,3 +60,10 @@ export function setConsoleCapture(val) {
 export function isConsoleCapture() {
   return capture;
 }
+
+export function showConsolePanel() {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('consolePanelVisible', 'true');
+    window.dispatchEvent(new Event('consolePanelShow'));
+  }
+}

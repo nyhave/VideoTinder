@@ -7,7 +7,7 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
 import { db, collection, getDocs, deleteDoc, updateDoc, doc, getDoc, query, where, storage, listAll, ref, getDownloadURL, deleteObject, messaging, setExtendedLogging, isExtendedLogging, useDoc } from '../firebase.js';
-import { setConsoleCapture, isConsoleCapture } from '../consoleLogs.js';
+import { setConsoleCapture, isConsoleCapture, showConsolePanel } from '../consoleLogs.js';
 import { advanceDay, resetDay, getTodayStr } from '../utils.js';
 import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
@@ -36,6 +36,10 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     const val = !consoleEnabled;
     setConsoleEnabled(val);
     setConsoleCapture(val);
+  };
+
+  const showConsoleLog = () => {
+    showConsolePanel();
   };
 
   const sendPush = async body => {
@@ -402,6 +406,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       React.createElement('input', { type: 'checkbox', className: 'mr-2', checked: consoleEnabled, onChange: toggleConsole }),
       'Vis console log'
     ),
+    React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded mb-2', onClick: showConsoleLog }, 'Åbn console vindue'),
     React.createElement('label', { className: 'flex items-center mb-2' },
       React.createElement('input', {
         type: 'checkbox',
