@@ -16,6 +16,18 @@ export default function ConsoleLogPanel() {
     return () => removeLogListener(handler);
   }, []);
 
+  useEffect(() => {
+    const handler = () => setVisible(true);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('consolePanelShow', handler);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('consolePanelShow', handler);
+      }
+    };
+  }, []);
+
   const copyLogs = async () => {
     try {
       const text = logs.map(l => `[${l.timestamp}] ${l.msg}`).join('\n');
