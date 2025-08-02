@@ -185,6 +185,7 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   revealTestTitle:{ en:'Reveal test', da:'Reveal test', sv:'Reveal test', es:'Prueba de revelaci\u00f3n', fr:'Test de r\u00e9v\u00e9lation', de:'Reveal-Test' },
   videoCallsTitle:{ en:'Video calls', da:'Videoopkald', sv:'Videosamtal', es:'Llamadas de video', fr:'Appels vidéo', de:'Videoanrufe' },
   activeCallsTitle:{ en:'Active calls', da:'Aktive opkald', sv:'Aktiva samtal', es:'Llamadas activas', fr:'Appels actifs', de:'Aktive Anrufe' },
+  activeNow:{ en:'Active now', da:'Aktiv nu', sv:'Aktiv nu', es:'Activo ahora', fr:'Actif maintenant', de:'Jetzt aktiv' },
   groupCallsTitle:{ en:'Group calls', da:'Gruppeopkald', sv:'Gruppsamtal', es:'Llamadas grupales', fr:'Appels de groupe', de:'Gruppenanrufe' },
   bugReportsTitle:{ en:'Bug reports', da:'Fejlmeldinger', sv:'Buggrapporter', es:'Informes de errores', fr:'Rapports de bugs', de:'Fehlermeldungen' },
   matchLogTitle:{ en:'Match log', da:'Matchlog', sv:'Matchlogg', es:'Registro de coincidencias', fr:'Journal des correspondances', de:'Matchprotokoll' },
