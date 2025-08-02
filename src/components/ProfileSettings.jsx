@@ -54,6 +54,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const progressId = publicView && viewerId && viewerId !== userId ? `${viewerId}-${userId}` : null;
   const progress = useDoc('episodeProgress', progressId);
   const stage = isOwnProfile ? 3 : (progress?.stage || 1);
+  const activeNow = profile?.lastActive
+    ? (getCurrentDate().getTime() - new Date(profile.lastActive).getTime()) < 3 * 60 * 60 * 1000
+    : false;
 
   const handlePurchase = async () => {
     const now = getCurrentDate();
@@ -541,7 +544,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           }, 'Gem ændringer')
         ) :
         React.createElement('div', { className:'flex items-center justify-between w-full' },
-          React.createElement(SectionTitle, { title: `${profile.name}, ${profile.birthday ? getAge(profile.birthday) : profile.age}${profile.city ? ', ' + profile.city : ''}` })
+          React.createElement(SectionTitle, {
+            title: `${profile.name}, ${profile.birthday ? getAge(profile.birthday) : profile.age}${profile.city ? ', ' + profile.city : ''}`,
+            action: publicView && activeNow ? React.createElement('span', { className: 'text-sm text-green-600 font-medium' }, t('activeNow')) : null
+          })
         ),
       isOwnProfile && !publicView && profile.email && React.createElement('p', { className:'text-center text-sm text-gray-600 mt-1' }, profile.email),
       !publicView && profile.subscriptionExpires && React.createElement('p', {
