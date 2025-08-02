@@ -31,7 +31,6 @@ export default function StatsScreen({ onBack }) {
       const openBugs = bugSnap.docs.filter(d => !d.data().closed).length;
       const closedBugs = bugSnap.size - openBugs;
       const videoCount = profilesSnap.docs.reduce((acc, d) => acc + ((d.data().videoClips || []).length), 0);
-      const audioCount = profilesSnap.docs.reduce((acc, d) => acc + ((d.data().audioClips || []).length), 0);
       const viewCount = profilesSnap.docs.reduce((acc, d) => acc + (d.data().viewCount || 0), 0);
       const inviteCount = profilesSnap.docs.reduce((acc, d) => acc + (d.data().premiumInvitesUsed || 0), 0);
       const activeSince = Date.now() - 30 * 24 * 60 * 60 * 1000;
@@ -66,7 +65,6 @@ export default function StatsScreen({ onBack }) {
         bugOpen: openBugs,
         bugClosed: closedBugs,
         videos: videoCount,
-        audios: audioCount,
         views: viewCount,
         activeUsers,
         invites: inviteCount
@@ -92,7 +90,7 @@ export default function StatsScreen({ onBack }) {
       React.createElement(StatsChart, { data: history, fields: 'reflections', title: 'Refleksioner over tid' }),
       React.createElement(StatsChart, { data: history, fields: 'bugOpen', title: '\u00C5bne fejl over tid' }),
       React.createElement(StatsChart, { data: history, fields: 'bugClosed', title: 'Lukkede fejl over tid' }),
-      React.createElement(StatsChart, { data: history, fields: ['videos','audios'], title: 'Uploads over tid' }),
+      React.createElement(StatsChart, { data: history, fields: 'videos', title: 'Uploads over tid' }),
       React.createElement(StatsChart, { data: history, fields: 'views', title: 'Profilvisninger over tid' }),
       React.createElement(StatsChart, { data: history, fields: 'activeUsers', title: 'Aktive brugere over tid' }),
       React.createElement(StatsChart, { data: history, fields: 'invites', title: 'Premium invitationer over tid' }),

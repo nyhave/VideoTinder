@@ -6,7 +6,6 @@ import { useT } from '../i18n.js';
 
 export default function StoryLineOverlay({ profile, progress, onClose, onMatch }) {
   const videoUrl = (profile.videoClips && profile.videoClips[0]) ? (profile.videoClips[0].url || profile.videoClips[0]) : null;
-  const audioUrl = (profile.audioClips && profile.audioClips[0]) ? (profile.audioClips[0].url || profile.audioClips[0]) : null;
 
   const t = useT();
 
@@ -18,10 +17,6 @@ export default function StoryLineOverlay({ profile, progress, onClose, onMatch }
   }
   steps.push('clip');
   titles.push('About me');
-  if(audioUrl){
-    steps.push('audio');
-    titles.push('Sound (3 sec)');
-  }
   steps.push('rating');
   titles.push('Your reflections');
 
@@ -52,7 +47,6 @@ export default function StoryLineOverlay({ profile, progress, onClose, onMatch }
       React.createElement('div', { className:`transition-opacity duration-500 ${fade ? 'opacity-0' : 'opacity-100'}` },
         steps[step] === 'video' && React.createElement('video', { src: videoUrl, autoPlay:true, className:'w-full rounded' }),
         steps[step] === 'clip' && React.createElement('p', { className:'text-lg mb-2' }, `“${profile.clip || ''}”`),
-        steps[step] === 'audio' && React.createElement('audio', { src: audioUrl, autoPlay:true, className:'w-full', controls:false }),
         steps[step] === 'rating' && React.createElement('div', { className:'space-y-2' },
           progress?.rating && React.createElement('div', { className:'flex justify-center gap-1' },
             [1,2,3,4].map(n => React.createElement(Star, {

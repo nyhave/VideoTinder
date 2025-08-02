@@ -28,14 +28,14 @@ Profiles are presented as short episodes rather than a catalog of faces. Each ep
 * Delete your account from the settings page
 * Preferred languages with option to allow other languages
 * Choose up to five personal interests in profile settings
-* Profile pictures, audio clips and video clips cached for offline viewing
+* Profile pictures and video clips cached for offline viewing
 * Push-notifications when new clips are ready with configurable do-not-disturb period and per-type preferences
 * Premium page showing who liked you (subscription required)
 * Invite friends with a shareable link
 * Seed data includes 11 mandlige profiler der matcher standardbrugeren så du kan teste premium og ekstra klip
-* Video- og lydklip begrænset til 10 sekunder
+* Videoklip begrænset til 10 sekunder
   (optagelser lidt over 10s accepteres for at håndtere kodningsforsinkelser)
-* Animation med nedtælling viser hvor lang tid der er tilbage under lyd- og videooptagelse
+* Animation med nedtælling viser hvor lang tid der er tilbage under videooptagelse
 * Daglige statistikker gemmes automatisk og vises som grafer i adminområdet
 * Statistik over hvor mange gange profiler bliver åbnet
 * Graf over antallet af premium invitationer og lagkage over hvor mange der gav oprettelse
@@ -123,8 +123,7 @@ VAPID keys are used on both GitHub Pages and Netlify. The Firebase Cloud Messagi
 
 If you host the app on your own domain, the browser uploads directly
 to Firebase Storage. The bucket must allow cross‑origin requests from your
-site. If you see errors about CORS or failed preflight requests during video or
-audio uploads, update the bucket's CORS rules:
+site. If you see errors about CORS or failed preflight requests during video uploads, update the bucket's CORS rules:
 
 1. Edit the provided `cors.json` and replace the example origin with your
    domain.

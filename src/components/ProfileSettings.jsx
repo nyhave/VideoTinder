@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { Mic, Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart, Flag } from 'lucide-react';
+import { Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart, Flag } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
@@ -13,7 +13,6 @@ import DeleteAccountOverlay from './DeleteAccountOverlay.jsx';
 import { useCollection, useDoc, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject, deleteAccount } from '../firebase.js';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import InterestsOverlay from './InterestsOverlay.jsx';
-import SnapAudioRecorder from "./SnapAudioRecorder.jsx";
 import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
 import { languages, useT } from '../i18n.js';
@@ -24,16 +23,13 @@ import { triggerHaptic } from '../haptics.js';
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId = userId, onBack, activeTask, taskTrigger = 0 }) {
   const [profile,setProfile]=useState(null);
   const t = useT();
-  const audioRef = useRef();
   const videoRef = useRef();
   const photoRef = useRef();
   const photoSectionRef = useRef();
   const videoSectionRef = useRef();
-  const audioSectionRef = useRef();
   const aboutSectionRef = useRef();
   const prevBirthdayRef = useRef('');
 
-  const [showSnapRecorder, setShowSnapRecorder] = useState(false);
   const [showSnapVideoRecorder, setShowSnapVideoRecorder] = useState(false);
   const [showSub, setShowSub] = useState(false);
   const [showInterests, setShowInterests] = useState(false);
@@ -94,7 +90,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     const ref =
       activeTask === 'photo' ? photoSectionRef :
       activeTask === 'video1' || activeTask === 'video2' ? videoSectionRef :
-      activeTask === 'audio' ? audioSectionRef :
       activeTask === 'about' ? aboutSectionRef : null;
     ref?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [activeTask, taskTrigger, profile]);
@@ -115,12 +110,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     profile.subscriptionExpires &&
     new Date(profile.subscriptionExpires) > getCurrentDate();
 
-  const maxAudios = (profile.audioClips || []).length >= 3;
 
   const highlightPhoto = activeTask === 'photo';
   const highlightVideo1 = activeTask === 'video1';
   const highlightVideo2 = activeTask === 'video2';
-  const highlightAudio = activeTask === 'audio';
   const highlightAbout = activeTask === 'about';
 
   const uploadFile = async (file, field) => {
@@ -163,9 +156,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   // MediaRecorder output can be slightly longer than the requested
   // duration due to encoding overhead.
   const checkDuration = file => new Promise(resolve => {
-    const el = document.createElement(
-      file.type.startsWith('audio') ? 'audio' : 'video'
-    );
+    const el = document.createElement('video');
     el.preload = 'metadata';
     el.src = URL.createObjectURL(file);
     el.onloadedmetadata = () => {
@@ -207,16 +198,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   };
 
 
-  const handleAudioChange = async e => {
-    const file = e.target.files[0];
-    if(!file) return;
-    if(!(await checkDuration(file))){
-      alert('Lydklip må højest være 10 sekunder');
-      return;
-    }
-    uploadFile(file, 'audioClips');
-  };
-
   const handleVideoChange = async e => {
     const file = e.target.files[0];
     if(!file) return;
@@ -230,15 +211,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const handleAgeRangeChange = async range => {
     onChangeAgeRange(range);
     await updateDoc(doc(db,'profiles',userId), { ageRange: range });
-  };
-
-  const handleSnapRecorded = async file => {
-    if(!(await checkDuration(file))){
-      alert("Lydklip må højest være 10 sekunder");
-      return;
-    }
-    setShowSnapRecorder(false);
-    uploadFile(file, "audioClips");
   };
 
   const handleVideoRecorded = async file => {
@@ -449,65 +421,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded })
   );
 
-  const audioClips = profile.audioClips || [];
-  const remainingAudios = Math.max(0, 3 - audioClips.length);
-
-  const audioSection = React.createElement(React.Fragment, null,
-    React.createElement(SectionTitle, {
-      title: t('audioClips'),
-      action: publicView && !isOwnProfile ? React.createElement(Heart, {
-        className: `w-6 h-6 cursor-pointer ${liked ? 'text-pink-500' : 'text-gray-400'}`,
-        onClick: toggleLike
-      }) : null
-    }),
-    React.createElement('div', { className: 'space-y-2 mb-4' },
-      audioClips.map((clip, i) => {
-        const url = clip && clip.url ? clip.url : clip;
-        const locked = i >= stage;
-        return React.createElement('div', { key: i, className: `flex items-center relative ${locked ? 'pointer-events-none' : ''}` },
-          React.createElement('audio', { src: url, controls: true, controlsList: 'nodownload noplaybackrate', onRateChange:e=>{e.currentTarget.playbackRate=1;}, className: 'flex-1 mr-2' }),
-          locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2' },
-            React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('dayLabel').replace('{day}', i + 1))
-          ),
-          !publicView && React.createElement(Button, {
-            className: 'ml-2 bg-pink-500 text-white p-1 rounded w-[20%] flex items-center justify-center',
-            onClick: () => deleteFile('audioClips', i)
-          }, React.createElement(TrashIcon, { className: 'w-4 h-4' })),
-          publicView && reportMode && React.createElement(Flag, {
-            className: 'w-5 h-5 text-red-500 absolute top-1 right-1 cursor-pointer',
-            onClick: () => setReportItem({ clipURL: url })
-          })
-        )
-      })
-    ),
-    remainingAudios > 0 && !publicView && React.createElement('div', { className: 'flex gap-4 justify-center mb-4' },
-      Array.from({ length: remainingAudios }).map((_, i) =>
-        React.createElement('div', { key: i, className:'flex flex-col items-center' },
-          React.createElement(Mic, {
-            className: `w-8 h-8 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
-            onClick: !publicView ? () => setShowSnapRecorder(true) : undefined
-          }),
-          React.createElement('span', { className:'text-xs text-gray-500 mt-1' }, t('max10Sec'))
-        )
-      )
-    ),
-    !publicView && React.createElement('div', { className:'flex justify-center mb-2' },
-      React.createElement(Button, {
-        className:'bg-pink-500 text-white',
-        onClick: () => audioRef.current && audioRef.current.click()
-      }, 'Evas upload knap')
-    ),
-    !publicView && React.createElement(React.Fragment, null,
-      React.createElement('input', {
-        type: 'file',
-        accept: 'audio/*',
-        ref: audioRef,
-        onChange: handleAudioChange,
-        className: 'hidden'
-      }),
-      showSnapRecorder && React.createElement(SnapAudioRecorder, { onCancel: () => setShowSnapRecorder(false), onRecorded: handleSnapRecorded })
-    )
-  );
 
   return React.createElement('div', { className:'mt-8' },
     !publicView && React.createElement(Card, { className: 'p-4 m-4 shadow-xl bg-white/90' },
@@ -641,7 +554,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`)
       ),
     React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightVideo1 || highlightVideo2 ? 'ring-4 ring-green-500' : ''}`, ref: videoSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } }, videoSection),
-    React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightAudio ? 'ring-4 ring-green-500' : ''}`, ref: audioSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } }, audioSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: t('interests'), action: !publicView && (editInterests ?
         React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditInterests(false) }, 'Gem ændringer') :

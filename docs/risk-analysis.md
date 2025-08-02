@@ -16,7 +16,7 @@ This document outlines potential risks in the RealDate/VideoTinder project. It i
 - **Data Retention Compliance**: The data retention policy states that user data is deleted within 30 days of account deletion. Failure to enforce this could violate regulations such as GDPR.
 
 ## User Safety
-- **Inappropriate Content**: Users can upload videos and audio clips. Without moderation, harmful or offensive content may appear on the platform.
+- **Inappropriate Content**: Users can upload videos. Without moderation, harmful or offensive content may appear on the platform.
 - **Harassment or Abuse**: Chat features may be used to harass others. The Terms of Service mention account suspension, but the implementation details are unclear.
 
 ## Future Considerations

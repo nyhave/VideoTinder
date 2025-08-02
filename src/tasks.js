@@ -15,11 +15,6 @@ export const tasks = [
     check: p => !!(p.clip && p.clip.trim())
   },
   {
-    key: 'audio',
-    label: 'Add sound clip',
-    check: p => (p.audioClips || []).length >= 1
-  },
-  {
     key: 'video2',
     label: 'Add second video clip',
     check: p => (p.videoClips || []).length >= 2
