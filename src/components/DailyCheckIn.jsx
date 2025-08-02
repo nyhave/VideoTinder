@@ -5,7 +5,7 @@ import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
-import { useCollection, db, doc, setDoc } from '../firebase.js';
+import { useCollection, db, doc, setDoc, collection } from '../firebase.js';
 
 export default function DailyCheckIn({ userId }) {
   const refs = useCollection('reflections','userId',userId);
@@ -26,10 +26,9 @@ export default function DailyCheckIn({ userId }) {
   const save = async () => {
     const trimmed = text.trim();
     if(!trimmed) return;
-    const now = getCurrentDate();
     const date = getTodayStr();
-    const id = `${userId}-${date}`;
-    await setDoc(doc(db,'reflections',id),{id,userId,date,text:trimmed});
+    const refDoc = doc(collection(db,'reflections'));
+    await setDoc(refDoc,{id:refDoc.id,userId,date,text:trimmed});
     setText('');
   };
 
@@ -68,8 +67,10 @@ export default function DailyCheckIn({ userId }) {
     ),
     React.createElement('ul', { className: 'list-disc list-inside mb-4' },
       monthRefs.map(r => {
-        const d = parseInt(r.date.split('-')[2],10);
-        let info = `${d}: ${r.text}`;
+        const [,m,d] = (r.date || '').split('-');
+        const dayNum = parseInt(d,10);
+        const monthNum = parseInt(m,10);
+        let info = `${dayNum}/${monthNum}: ${r.text}`;
         if(r.profileName) info += ` \u2013 ${r.profileName}`;
         if(r.rating) info += ` (${r.rating}\u2605)`;
         return React.createElement('li', { key: r.id }, info);
