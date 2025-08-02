@@ -200,6 +200,7 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   functionTestTitle:{ en:'Function test', da:'Funktionstest', sv:'Funktionstest', es:'Prueba de funciones', fr:'Test de fonction', de:'Funktionstest' },
   yourProfileTitle:{ en:'Your profile', da:'Din profil', sv:'Din profil', es:'Tu perfil', fr:'Votre profil', de:'Dein Profil' },
   notificationsTitle:{ en:'Notifications', da:'Notifikationer', sv:'Notiser', es:'Notificaciones', fr:'Notifications', de:'Benachrichtigungen' },
+  noNotifications:{ en:'No notifications yet', da:'Ingen notifikationer endnu', sv:'Inga notiser ännu', es:'Aún no hay notificaciones', fr:"Aucune notification pour l'instant", de:'Noch keine Benachrichtigungen' },
   likesTitle:{ en:'Who likes you?', da:'Hvem synes om dig?', sv:'Vem gillar dig?', es:'\u00bfA qui le gustas?', fr:'Qui vous aime ?', de:'Wer mag dich?' },
   interestChatsTitle:{
     en:'Interest chat',
