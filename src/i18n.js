@@ -44,7 +44,6 @@ export const messages = {
   yes:{ en:'Yes', da:'Ja', sv:'Ja', es:'Sí', fr:'Oui', de:'Ja' },
   no:{ en:'No', da:'Nej', sv:'Nej', es:'No', fr:'Non', de:'Nein' },
   videoClips:{ en:'Video clips', da:'Video-klip', sv:'Videoklipp', es:'Clips de video', fr:'Clips vidéo', de:'Videoclips' },
-  audioClips:{ en:'Audio clips', da:'Lyd-klip', sv:'Ljudklipp', es:'Clips de audio', fr:'Clips audio', de:'Audioclips' },
   interestedIn:{ en:'Interested in', da:'Interesseret i', sv:'Intresserad av', es:'Interesado en', fr:'Intéressé par', de:'Interessiert an' },
   interests:{ en:'Interests', da:'Interesser', sv:'Intressen', es:'Intereses', fr:'Centres d\'intérêt', de:'Interessen' },
   chooseInterests:{ en:'Select up to 5 interests', da:'Vælg op til 5 interesser', sv:'Välj upp till 5 intressen', es:'Elige hasta 5 intereses', fr:'Choisissez jusqu\'à 5 centres d\'intérêt', de:'Wähle bis zu 5 Interessen' },
@@ -86,8 +85,6 @@ export const messages = {
   registerCtaDesc:{ en:"Create a profile to get started", da:"Opret en profil for at komme i gang", sv:"Skapa en profil för att komme igång", es:"Crea un perfil para comenzar", fr:"Créez un profil pour commencer", de:"Erstelle ein Profil, um zu starten" },
   videoCtaTitle:{ en:'Add video clips', da:'Tilføj videoer', sv:'Lägg till videoklipp', es:'Añadir videoclips', fr:'Ajouter des clips vidéo', de:'Videoclips hinzufügen' },
   videoCtaDesc:{ en:'Upload short clips to showcase yourself', da:'Upload korte videoklip for at vise dig frem', sv:'Ladda upp korta klipp för att visa dig', es:'Sube clips cortos para mostrarte', fr:'Téléchargez de courts clips pour vous présenter', de:'Lade kurze Clips hoch, um dich zu zeigen' },
-  audioCtaTitle:{ en:'Add audio clips', da:'Tilføj lyde', sv:'Lägg till ljudklipp', es:'Añadir clips de audio', fr:'Ajouter des clips audio', de:'Audioclips hinzufügen' },
-  audioCtaDesc:{ en:'Upload short audio clips to share your voice', da:'Upload korte lydklip for at dele din stemme', sv:'Ladda upp korta lydklipp för att dela din röst', es:'Sube clips de audio para compartir tu voz', fr:'Téléchargez de courts clips audio pour partager votre voix', de:'Lade kurze Audioclips hoch, um deine Stimme zu teilen' },
   clip1:{ en:'Introduction', da:'Introduktion', sv:'Introduktion', es:'Introducción', fr:'Introduction', de:'Einführung' },
   clip2:{ en:'Biggest interest', da:'Største interesse', sv:'Största intresse', es:'Mayor interés', fr:'Plus grand intérêt', de:'Größtes Interesse' },
   clip3:{ en:'Free', da:'Fri', sv:'Fritt', es:'Libre', fr:'Libre', de:'Frei' },
@@ -122,10 +119,10 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   dailyHelpLabel:{ en:'Need help?', da:'Need help?' },
   dailyHelpTitle:{ en:'Daily Clips Help', da:'Hjælp til Dagens klip' },
   dailyHelpText:{
-    en:'Feel the energy and consider carefully before matching. We use video clips and audio to show the person\'s energy and personality. Take your time with the profiles. We support reflection time and want to avoid endless swiping. Therefore you get video/audio one at a time and can look forward to more clips of the same person being released in the next days. To make the videos unique we ask for different content: introduction, biggest interest and free choice.',
-    da:'Føl energien og overvej grundigt inden du matcher. Vi bruger videoklip og lyd til at vise personens energi og personlighed. Brug god tid på profilerne. Vi understøtter tid til refleksion og ønsker at undgå uendelig swipe. Derfor får du video/lyd en af gangen og kan glæde dig til at der næste dage frigives flere klip af samme person. For at gøre videoerne unikke beder vi om forskelligt indhold introduktion, største interesse og frit valg.'
+    en:'Feel the energy and consider carefully before matching. We use video clips to show the person\'s energy and personality. Take your time with the profiles. We support reflection time and want to avoid endless swiping. Therefore you get one video at a time and can look forward to more clips of the same person being released in the next days. To make the videos unique we ask for different content: introduction, biggest interest and free choice.',
+    da:'Føl energien og overvej grundigt inden du matcher. Vi bruger videoklip til at vise personens energi og personlighed. Brug god tid på profilerne. Vi understøtter tid til refleksion og ønsker at undgå uendelig swipe. Derfor får du én video ad gangen og kan glæde dig til at der næste dage frigives flere klip af samme person. For at gøre videoerne unikke beder vi om forskelligt indhold: introduktion, største interesse og frit valg.'
   },
-  level2Watch:{ en:'Watch the new video or sound clip', da:'Se det nye video- eller lydklip', sv:'Titta på det nya video- eller ljudklippet', es:'Mira el nuevo vídeo o clip de sonido', fr:'Regardez la nouvelle vidéo ou le nouveau clip audio', de:'Sieh dir den neuen Video- oder Audioclip an' },
+  level2Watch:{ en:'Watch the new video clip', da:'Se det nye videoklip', sv:'Titta på det nya videoklippet', es:'Mira el nuevo videoclip', fr:'Regardez le nouveau clip vidéo', de:'Sieh dir den neuen Videoclip an' },
   level2Rate:{ en:'Give a private rating', da:'Giv en privat vurdering', sv:'Ge ett privat betyg', es:'Da una calificación privada', fr:'Donnez une évaluation privée', de:'Gib eine private Bewertung ab' },
   level2Reflect:{ en:'Write a private reflection', da:'Skriv en privat refleksion', sv:'Skriv en privat reflektion', es:'Escribe una reflexión privada', fr:'Écrivez une réflexion privée', de:'Schreibe eine private Reflexion' },
   level2Intro:{

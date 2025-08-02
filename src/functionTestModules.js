@@ -117,7 +117,7 @@ export const modules = [
     name: 'Recording & Media',
     features: [
       {
-        title: 'Profile pictures, audio clips and video clips cached for offline viewing',
+        title: 'Profile pictures and video clips cached for offline viewing',
         expected: [
           'Media is stored locally after first view',
           'Cached media plays without network connection',
@@ -125,7 +125,7 @@ export const modules = [
         ]
       },
       {
-        title: 'Video and audio clips limited to 10 seconds',
+        title: 'Video clips limited to 10 seconds',
         expected: [
           'Recording stops after 10 seconds',
           'Longer files are rejected',

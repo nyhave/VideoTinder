@@ -2,7 +2,7 @@
 // clients receive the latest versions.
 const CACHE_NAME = 'videotpush-v2';
 console.log('ServiceWorker script loaded', CACHE_NAME);
-// Cache for images, audio and video so large media files work offline
+// Cache for images and video so large media files work offline
 const MEDIA_CACHE = 'media-cache-v1';
 const URLS_TO_CACHE = [
   '/',
@@ -37,7 +37,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   console.log('ServiceWorker fetch', event.request.url);
   const dest = event.request.destination;
-  if (['image', 'video', 'audio'].includes(dest)) {
+  if (['image', 'video'].includes(dest)) {
     event.respondWith(
       caches.open(MEDIA_CACHE).then(cache =>
         cache.match(event.request).then(response => {

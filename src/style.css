@@ -97,7 +97,7 @@ button.btn-outline-red {
 }
 
 /* Simple rotation animation used for the Snapchat-style recorder */
-/* Visible rotating progress ring during audio recording */
+/* Visible rotating progress ring during recording */
 .rotate-animation {
   animation: spin 2s linear infinite;
   filter: drop-shadow(0 0 6px #ff4895);

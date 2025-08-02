@@ -1,4 +1,4 @@
-Daily discovery of short video clips or sound clips
+Daily discovery of short video clips
 Three-step episodic flow for each profile (reflection, reaction, connection)
 Four-star rating saved independently from reflection notes (ratings are private). If both exist they appear together on the reflection calendar
 Basic chat between matched profiles
@@ -8,16 +8,15 @@ Profile settings with age range filtering
 Preferred languages with "allow other languages" option
 Select up to five interests in profile settings
 Ability to upload or record video clips
-Ability to upload or record audio clips
-Video/audio duration limited to 10 seconds
-Animated countdown shown while recording audio or video
+Video duration limited to 10 seconds
+Animated countdown shown while recording video
 Reveal animation highlights newly unlocked content
 Offline support via service worker caching
 PWA manifest for standalone installation
 
 Profile view statistics
 
-Profile pictures, audio clips and video clips cached for offline viewing
+Profile pictures and video clips cached for offline viewing
 
 Admin mode
 Seed data loader for test profiles with sample clips

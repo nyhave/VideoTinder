@@ -153,7 +153,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     const profileRef = doc(db, 'profiles', userId);
     const snap = await getDoc(profileRef);
     if (!snap.exists()) return;
-    let { photoURL = '', audioClips = [], videoClips = [], language = 'en' } = snap.data();
+    let { photoURL = '', videoClips = [], language = 'en' } = snap.data();
     const listRef = ref(storage, `profiles/${userId}`);
     const { items } = await listAll(listRef);
     const updates = {};
@@ -170,11 +170,6 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         if (!videoClips.some(v => v.url === url)) {
           videoClips.push({ url, lang: language, uploadedAt: new Date().toISOString() });
           updates.videoClips = videoClips;
-        }
-      } else if (name.startsWith('audioClips-')) {
-        if (!audioClips.some(a => a.url === url)) {
-          audioClips.push({ url, lang: language, uploadedAt: new Date().toISOString() });
-          updates.audioClips = audioClips;
         }
       }
     }
