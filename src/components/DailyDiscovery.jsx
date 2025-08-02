@@ -8,7 +8,7 @@ import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
 import { useCollection, useDoc, db, doc, setDoc, deleteDoc, getDoc, updateDoc, collection } from '../firebase.js';
 import selectProfiles, { scoreProfiles } from '../selectProfiles.js';
-import PurchaseOverlay from './PurchaseOverlay.jsx';
+import MoreProfilesOverlay from './MoreProfilesOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
 import StoryLineOverlay from './StoryLineOverlay.jsx';
@@ -50,9 +50,9 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
 
   useEffect(() => {
     if(!userId || !progresses.loaded) return;
-    const hasSub = hasActiveSub(user);
-    const extra = user.extraClipsDate === today ? 3 : 0;
-    const limit = (hasSub ? 6 : 3) + extra;
+    const extraPurchased = user.extraClipsDate === today ? 3 : 0;
+    const extraFree = user.freeClipsDate === today ? 3 : 0;
+    const limit = 5 + extraFree + extraPurchased;
     let createdToday = progresses.filter(pr => pr.addedDate === today).length;
     const rankMap = new Map(filtered.map((p,i)=>[p.id,i]));
     filtered.forEach(p => {
@@ -135,7 +135,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     window.localStorage.getItem('extendAreaShown') === '1'
   );
   const [showArchived, setShowArchived] = useState(false);
-  const [showPurchase, setShowPurchase] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [activeVideo, setActiveVideo] = useState(null);
@@ -148,7 +148,12 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const handleExtraPurchase = async () => {
     const todayStr = getTodayStr();
     await updateDoc(doc(db, 'profiles', userId), { extraClipsDate: todayStr });
-    setShowPurchase(false);
+    setShowMore(false);
+  };
+  const handleFreeProfiles = async () => {
+    const todayStr = getTodayStr();
+    await updateDoc(doc(db, 'profiles', userId), { freeClipsDate: todayStr });
+    setShowMore(false);
   };
   const toggleLike = async profileId => {
     const likeId = `${userId}-${profileId}`;
@@ -329,26 +334,25 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
         const moreCandidates = scored.length > filtered.length;
         if (!moreCandidates) {
           setShowExtend(true);
-        } else if (user.extraClipsDate === today) {
+        } else if (user.extraClipsDate === today && user.freeClipsDate === today) {
           setShowInfo(true);
         } else {
-          setShowPurchase(true);
+          setShowMore(true);
         }
       }
     }, t('loadMore')),
-    showPurchase && React.createElement(PurchaseOverlay, {
-      title: 'Flere klip',
-      price: '9 kr',
-      onClose: () => setShowPurchase(false),
-      onBuy: handleExtraPurchase
-    },
-      React.createElement('p', { className: 'text-center text-sm mb-2' }, 'Få 3 ekstra klip i dag')
-    ),
+    showMore && React.createElement(MoreProfilesOverlay, {
+      hasFree: user.freeClipsDate !== today,
+      canBuy: user.extraClipsDate !== today,
+      onClaimFree: handleFreeProfiles,
+      onBuy: handleExtraPurchase,
+      onClose: () => setShowMore(false)
+    }),
     showInfo && React.createElement(InfoOverlay, {
       title: 'Flere klip',
       onClose: () => setShowInfo(false)
     },
-      React.createElement('p', { className: 'text-center text-sm' }, 'Du har allerede købt ekstra klip i dag')
+      React.createElement('p', { className: 'text-center text-sm' }, 'Du har allerede fået ekstra klip i dag')
     ),
     storyProfile && React.createElement(StoryLineOverlay, {
       profile: storyProfile,
