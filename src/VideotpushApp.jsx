@@ -323,7 +323,7 @@ export default function VideotpushApp() {
       userId && React.createElement('div', {
         className: 'absolute top-1/2 left-4 -translate-y-1/2 flex gap-4'
       },
-        React.createElement('div', { className: 'relative cursor-pointer', onClick: openAdmin },
+        isAdminUser(auth.currentUser) && React.createElement('div', { className: 'relative cursor-pointer', onClick: openAdmin },
           React.createElement(Shield, { className: 'w-6 h-6 text-white' })
         ),
         React.createElement('div', { className: 'relative cursor-pointer', onClick: openNotifications },
