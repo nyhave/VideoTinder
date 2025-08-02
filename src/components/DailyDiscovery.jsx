@@ -9,6 +9,7 @@ import { useT } from '../i18n.js';
 import { useCollection, useDoc, db, doc, setDoc, deleteDoc, getDoc, updateDoc, collection } from '../firebase.js';
 import selectProfiles, { scoreProfiles } from '../selectProfiles.js';
 import MoreProfilesOverlay from './MoreProfilesOverlay.jsx';
+import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
 import StoryLineOverlay from './StoryLineOverlay.jsx';
@@ -136,6 +137,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   );
   const [showArchived, setShowArchived] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [showPurchase, setShowPurchase] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [activeVideo, setActiveVideo] = useState(null);
@@ -148,7 +150,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
   const handleExtraPurchase = async () => {
     const todayStr = getTodayStr();
     await updateDoc(doc(db, 'profiles', userId), { extraClipsDate: todayStr });
-    setShowMore(false);
+    setShowPurchase(false);
   };
   const handleFreeProfiles = async () => {
     const todayStr = getTodayStr();
@@ -345,9 +347,17 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       hasFree: user.freeClipsDate !== today,
       canBuy: user.extraClipsDate !== today,
       onClaimFree: handleFreeProfiles,
-      onBuy: handleExtraPurchase,
+      onBuy: () => { setShowMore(false); setShowPurchase(true); },
       onClose: () => setShowMore(false)
     }),
+    showPurchase && React.createElement(PurchaseOverlay, {
+      title: '3 ekstra klip',
+      price: '9 kr',
+      onClose: () => setShowPurchase(false),
+      onBuy: handleExtraPurchase
+    },
+      React.createElement('p', { className: 'text-center text-sm' }, 'Få 3 ekstra profiler i dag')
+    ),
     showInfo && React.createElement(InfoOverlay, {
       title: 'Flere klip',
       onClose: () => setShowInfo(false)
