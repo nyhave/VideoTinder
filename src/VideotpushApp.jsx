@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LanguageProvider } from './i18n.js';
-import { User as UserIcon, Shield, HelpCircle } from 'lucide-react';
+import { User as UserIcon, Shield, HelpCircle, Bell } from 'lucide-react';
 import { VideoCameraIcon, HeartIcon, ChatBubbleOvalLeftIcon, CalendarDaysIcon, UserGroupIcon } from '@heroicons/react/24/solid';
 import WelcomeScreen from './components/WelcomeScreen.jsx';
 import DailyDiscovery from './components/DailyDiscovery.jsx';
@@ -37,6 +37,8 @@ import { useCollection, requestNotificationPermission, subscribeToWebPush, db, d
 import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 import version from './version.js';
+import { getNotifications, subscribeNotifications, markNotificationsRead } from './notifications.js';
+import NotificationsScreen from './components/NotificationsScreen.jsx';
 export default function VideotpushApp() {
   const [lang, setLang] = useState(() =>
     localStorage.getItem('lang') || 'en'
@@ -72,6 +74,9 @@ export default function VideotpushApp() {
   const hasUnread = unreadCount > 0;
   const unseenLikesCount = likesReceived.filter(l => !seenLikes.includes(l.id)).length;
   const hasUnseenLikes = unseenLikesCount > 0;
+  const [notifications, setNotifications] = useState(() => getNotifications());
+  const unreadNotifications = notifications.filter(n => !n.read).length;
+  const hasUnreadNotifications = unreadNotifications > 0;
   const currentUser = profiles.find(p => p.id === userId) || {};
 
   useEffect(() => {
@@ -112,6 +117,12 @@ export default function VideotpushApp() {
     setViewProfile(null);
   };
 
+  const openNotifications = () => {
+    setReturnTab(tab);
+    setTab('notifications');
+    markNotificationsRead();
+  };
+
   useEffect(() => {
     const handler = e => {
       switch (e.detail) {
@@ -124,6 +135,9 @@ export default function VideotpushApp() {
           break;
         case 'openProfileSettings':
           openProfileSettings();
+          break;
+        case 'openNotifications':
+          openNotifications();
           break;
         case 'openBugReports':
           openBugReports();
@@ -266,6 +280,11 @@ export default function VideotpushApp() {
     });
   }, [profiles]);
 
+  useEffect(() => {
+    const unsub = subscribeNotifications(setNotifications);
+    return () => unsub();
+  }, []);
+
 
   if(!loggedIn) return React.createElement(LanguageProvider, { value:{lang,setLang} },
     React.createElement(WelcomeScreen, { onLogin: (id, method = 'password') => {
@@ -302,10 +321,15 @@ export default function VideotpushApp() {
       style: { paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }
     },
       userId && React.createElement('div', {
-        className: 'absolute top-1/2 left-4 -translate-y-1/2 cursor-pointer',
-        onClick: openAdmin
+        className: 'absolute top-1/2 left-4 -translate-y-1/2 flex gap-4'
       },
-        React.createElement(Shield, { className: 'w-6 h-6 text-white' })
+        React.createElement('div', { className: 'relative cursor-pointer', onClick: openAdmin },
+          React.createElement(Shield, { className: 'w-6 h-6 text-white' })
+        ),
+        React.createElement('div', { className: 'relative cursor-pointer', onClick: openNotifications },
+          React.createElement(Bell, { className: 'w-6 h-6 text-white' }),
+          hasUnreadNotifications && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full min-w-4 h-4 flex items-center justify-center px-1' }, unreadNotifications)
+        )
       ),
       'RealDate',
       React.createElement(HelpCircle, {
@@ -382,6 +406,7 @@ export default function VideotpushApp() {
           tab==='serverlog' && React.createElement(ServerLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='recentlogins' && React.createElement(RecentLoginsScreen, { onBack: ()=>setTab('admin') }),
           tab==='graphics' && React.createElement(GraphicsElementsScreen, { onBack: ()=>setTab('admin') }),
+          tab==='notifications' && React.createElement(NotificationsScreen, { notifications, onBack: ()=>setTab(returnTab) }),
           tab==='about' && React.createElement(AboutScreen, { userId })
         )
     ),

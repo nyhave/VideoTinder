@@ -4,6 +4,7 @@ import './consoleLogs.js';
 import VideotpushApp from './VideotpushApp.jsx';
 import { setFcmReg } from './swRegistration.js';
 import { firebaseConfig, logEvent } from './firebase.js';
+import { addNotification } from './notifications.js';
 
 ReactDOM.render(React.createElement(VideotpushApp), document.getElementById('root'));
 
@@ -58,6 +59,8 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('message', event => {
       if (event.data && event.data.type === 'PUSH_RECEIVED') {
         logEvent('push received', event.data.payload);
+        const payload = event.data.payload || {};
+        addNotification({ title: payload.title, body: payload.body, type: 'push' });
       }
     });
   });
