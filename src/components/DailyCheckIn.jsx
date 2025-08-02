@@ -22,9 +22,10 @@ export default function DailyCheckIn({ userId }) {
     .filter(r => (r.date || '').startsWith(monthStr))
     .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   const [text,setText]=useState('');
+  const MAX_REFLECTION_LEN = 30;
 
   const save = async () => {
-    const trimmed = text.trim();
+    const trimmed = text.trim().slice(0, MAX_REFLECTION_LEN);
     if(!trimmed) return;
     const date = getTodayStr();
     const refDoc = doc(collection(db,'reflections'));
@@ -78,11 +79,14 @@ export default function DailyCheckIn({ userId }) {
     ),
     React.createElement(Textarea, {
       placeholder: 'Skriv din refleksion...',
-      className: 'mb-2',
+      className: 'mb-1',
       value: text,
-      onChange: e => setText(e.target.value),
+      maxLength: MAX_REFLECTION_LEN,
+      onChange: e => setText(e.target.value.slice(0, MAX_REFLECTION_LEN)),
       onBlur: save
     }),
+    React.createElement('p', { className:'text-xs text-right text-gray-500 mb-2' },
+      t('charactersLeft').replace('{count}', MAX_REFLECTION_LEN - text.length)),
     React.createElement('p', {
       className: 'text-sm text-gray-500 mb-4 text-center'
     }, 'Refleksioner er private'),
