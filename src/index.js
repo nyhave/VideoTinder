@@ -13,7 +13,7 @@ if ('serviceWorker' in navigator) {
     // The service worker file lives in the public folder. Use a
     // relative path so Parcel can locate it during the build.
     const swUrl = new URL('../public/service-worker.js', import.meta.url);
-    const baseScope = new URL('../', swUrl).pathname;
+    const baseScope = new URL('.', swUrl).pathname;
     // Register the main service worker generated in the production build
     console.log('Attempting SW registration', swUrl.href, { scope: baseScope });
     let mainReg = null;
