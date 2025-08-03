@@ -55,7 +55,7 @@ export const modules = [
           'Log in as the matched user, reply, and confirm the first user sees it',
           'Unmatching removes the chat for both'
         ],
-        action: { label: 'Open Chat', event: 'openChat' }
+        action: { label: 'Run chat flow', events: ['loginMaria','matchPeter','chat101to105','chat101to105Long','chat105to101','chat105to101Long'] }
       },
       {
         title: 'Improved chat layout with timestamps',
