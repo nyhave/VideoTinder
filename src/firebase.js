@@ -43,7 +43,7 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider
 } from 'firebase/auth';
-import { fcmReg } from './swRegistration.js';
+import { fcmReg, fcmRegReady } from './swRegistration.js';
 import { detectOS, detectBrowser } from './utils.js';
 
 let extendedLogging = false;
@@ -175,9 +175,10 @@ export async function requestNotificationPermission(userId, loginMethod = 'passw
 
   try {
     logEvent('requestNotificationPermission start', { userId });
+    const reg = fcmReg || await fcmRegReady;
     const token = await getToken(messaging, {
       vapidKey: process.env.FCM_VAPID_KEY,
-      serviceWorkerRegistration: fcmReg
+      serviceWorkerRegistration: reg
     });
     if (token) {
       await setDoc(doc(db, 'pushTokens', token), {
