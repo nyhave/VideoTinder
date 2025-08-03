@@ -51,11 +51,11 @@ export const modules = [
       {
         title: 'Basic chat between matched profiles with option to unmatch',
         expected: [
-          'Send a message as one user',
-          'Log in as the matched user, reply, and confirm the first user sees it',
+          'Send multiple long messages as one user',
+          'Log in as the matched user, reply with long messages, and confirm the first user sees them',
           'Unmatching removes the chat for both'
         ],
-        action: { label: 'Run chat flow', events: ['loginMaria','matchPeter','chat101to105','chat105to101'] }
+        action: { label: 'Run chat flow', events: ['loginMaria','matchPeter','chat101to105a','chat105to101a','chat101to105b','chat105to101b'] }
       },
       {
         title: 'Improved chat layout with timestamps',
