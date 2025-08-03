@@ -33,7 +33,7 @@ import FunctionTestGuide from './components/FunctionTestGuide.jsx';
 import TaskButton from './components/TaskButton.jsx';
 import GraphicsElementsScreen from './components/GraphicsElementsScreen.jsx';
 import { getNextTask } from './tasks.js';
-import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, getDoc, updateDoc, increment, logEvent, auth, isAdminUser, signOutUser } from './firebase.js';
+import { useCollection, requestNotificationPermission, subscribeToWebPush, db, doc, setDoc, updateDoc, arrayUnion, getDoc, increment, logEvent, auth, isAdminUser, signOutUser } from './firebase.js';
 import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 import version from './version.js';
@@ -123,6 +123,45 @@ export default function VideotpushApp() {
     markNotificationsRead();
   };
 
+  const matchWithPeter = async () => {
+    const m1 = { id: '101-105', userId: '101', profileId: '105', lastMessage: '', unreadByUser: false, unreadByProfile: false, newMatch: false };
+    const m2 = { id: '105-101', userId: '105', profileId: '101', lastMessage: '', unreadByUser: false, unreadByProfile: false, newMatch: true };
+    try {
+      await Promise.all([
+        setDoc(doc(db, 'matches', m1.id), m1),
+        setDoc(doc(db, 'matches', m2.id), m2)
+      ]);
+    } catch (err) {
+      console.error('Failed to create match', err);
+    }
+  };
+
+  const sendChat = async (from, to, text) => {
+    const id1 = `${from}-${to}`;
+    const id2 = `${to}-${from}`;
+    const message = { from, text, ts: Date.now() };
+    try {
+      await Promise.all([
+        updateDoc(doc(db, 'matches', id1), {
+          lastMessage: text,
+          unreadByProfile: true,
+          unreadByUser: false,
+          messages: arrayUnion(message),
+          newMatch: false
+        }),
+        updateDoc(doc(db, 'matches', id2), {
+          lastMessage: text,
+          unreadByProfile: false,
+          unreadByUser: true,
+          messages: arrayUnion(message),
+          newMatch: false
+        })
+      ]);
+    } catch (err) {
+      console.error('Failed to send message', err);
+    }
+  };
+
   useEffect(() => {
     const handler = e => {
       switch (e.detail) {
@@ -145,6 +184,28 @@ export default function VideotpushApp() {
         case 'openChat':
           setTab('chat');
           setViewProfile(null);
+          break;
+        case 'loginMaria':
+          setLoggedIn(true);
+          setUserId('101');
+          setTab('chat');
+          setViewProfile(null);
+          break;
+        case 'matchPeter':
+          matchWithPeter();
+          break;
+        case 'chat101to105':
+          sendChat('101', '105', 'Hej');
+          setTab('chat');
+          setViewProfile(null);
+          break;
+        case 'chat105to101':
+          (async () => {
+            await sendChat('105', '101', 'Hej');
+            setUserId('101');
+            setTab('chat');
+            setViewProfile(null);
+          })();
           break;
         case 'logout':
           logout();

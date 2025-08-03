@@ -100,6 +100,9 @@ export default function WelcomeScreen({ onLogin }) {
         case 'submitLogin':
           handleLogin();
           break;
+        case 'loginMaria':
+          onLogin('101', 'admin');
+          break;
         default:
           break;
       }
