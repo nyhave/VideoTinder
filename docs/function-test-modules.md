@@ -25,7 +25,12 @@ Use the admin menu to open *Funktionstest* and choose a module to start testing.
 
 ### Chat & Reflections
 
-- Start a chat by sending a message as one user. Log in as the matched user, reply, and confirm the first user sees the response.
+- Start a chat between two matched users. Each action appears as a button that runs one at a time with a short pause between presses:
+  1. Log in as Maria (user 101).
+  2. Match with Peter (user 105).
+  3. Send the chat message "Hej" from Maria to Peter.
+  4. Log in as Peter and reply "Hej" to Maria.
+  5. Confirm Maria sees Peter's reply.
 - Trigger the match celebration overlay and make sure it can be dismissed.
 - Open the reflection calendar and verify ratings or notes appear on the correct dates.
 
