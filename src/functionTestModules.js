@@ -232,7 +232,7 @@ export const modules = [
         ]
       },
       {
-        title: 'Login with username and password',
+        title: 'Login with email and password',
         expected: [
           'Existing user can log in with correct credentials',
           'Invalid credentials show an error message',
