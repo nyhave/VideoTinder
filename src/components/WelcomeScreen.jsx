@@ -16,7 +16,6 @@ export default function WelcomeScreen({ onLogin }) {
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginUser, setLoginUser] = useState('');
   const [loginPass, setLoginPass] = useState('');
@@ -143,7 +142,6 @@ export default function WelcomeScreen({ onLogin }) {
 
     const trimmedName = name.trim() || cred.user.displayName || '';
     const trimmedCity = city.trim();
-    const trimmedUser = username.trim();
     const parsedBirthday = birthdayInput ? parseBirthday(birthdayInput) : '';
     if (parsedBirthday) {
       setBirthday(parsedBirthday);
@@ -237,9 +235,8 @@ export default function WelcomeScreen({ onLogin }) {
     const trimmedName = name.trim();
     const trimmedCity = city.trim();
     const trimmedEmail = email.trim();
-    const trimmedUser = username.trim();
     const parsedBirthday = birthdayInput ? parseBirthday(birthdayInput) : '';
-    if (!trimmedName || !trimmedCity || !trimmedEmail || !birthdayInput || !trimmedUser || !password) {
+    if (!trimmedName || !trimmedCity || !trimmedEmail || !birthdayInput || !password) {
       setTriedSubmit(true);
       setShowMissingFields(true);
       return;
@@ -429,14 +426,6 @@ export default function WelcomeScreen({ onLogin }) {
           autoComplete: 'email',
           required: true
         }),
-        React.createElement('label', { className:'block mb-1' }, t('username')),
-        React.createElement(Input, {
-          className: `border p-2 mb-2 w-full ${triedSubmit && !username.trim() ? 'border-red-500' : ''}`,
-          value: username,
-          onChange: e => setUsername(e.target.value),
-          placeholder: 'username',
-          required: true
-        }),
         React.createElement('label', { className:'block mb-1' }, t('password')),
         React.createElement(Input, {
           type: 'password',
@@ -501,7 +490,7 @@ export default function WelcomeScreen({ onLogin }) {
     ) : showLoginForm ? (
       React.createElement(React.Fragment, null,
         React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, t('login')),
-        React.createElement('label', { className:'block mb-1' }, t('username')),
+        React.createElement('label', { className:'block mb-1' }, t('email')),
         React.createElement(Input, {
           className: 'border p-2 mb-2 w-full',
           value: loginUser,

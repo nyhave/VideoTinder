@@ -62,21 +62,6 @@ export function isExtendedLogging() {
   return extendedLogging;
 }
 
-function getUsernameForId(userId) {
-  if (typeof window === 'undefined') return '';
-  try {
-    const creds = JSON.parse(localStorage.getItem('userCreds') || '{}');
-    for (const [name, data] of Object.entries(creds)) {
-      if (data && data.id === userId) {
-        return name;
-      }
-    }
-  } catch (err) {
-    console.error('Failed to read userCreds', err);
-  }
-  return '';
-}
-
 export async function logEvent(event, details = {}) {
   if (!extendedLogging) return;
   try {
@@ -124,7 +109,6 @@ export async function subscribeToWebPush(userId, loginMethod = 'password') {
     await setDoc(doc(db, 'webPushSubscriptions', safeId), {
       ...sub.toJSON(),
       userId,
-      username: getUsernameForId(userId),
       os: detectOS(),
       browser: detectBrowser(),
       loginMethod
@@ -184,7 +168,6 @@ export async function requestNotificationPermission(userId, loginMethod = 'passw
       await setDoc(doc(db, 'pushTokens', token), {
         token,
         userId,
-        username: getUsernameForId(userId),
         os: detectOS(),
         browser: detectBrowser(),
         loginMethod
