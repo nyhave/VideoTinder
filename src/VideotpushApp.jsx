@@ -194,14 +194,27 @@ export default function VideotpushApp() {
         case 'matchPeter':
           matchWithPeter();
           break;
-        case 'chat101to105':
-          sendChat('101', '105', 'Hej');
+        case 'chat101to105a':
+          sendChat('101', '105', 'Hej Peter! Hvordan går det? Jeg tester den nye chat med længere beskeder.');
           setTab('chat');
           setViewProfile(null);
           break;
-        case 'chat105to101':
+        case 'chat105to101a':
           (async () => {
-            await sendChat('105', '101', 'Hej');
+            await sendChat('105', '101', 'Hej Maria, det går fint. Fedt at du tester. Lad os skrive længere beskeder for at se om alt virker.');
+            setUserId('101');
+            setTab('chat');
+            setViewProfile(null);
+          })();
+          break;
+        case 'chat101to105b':
+          sendChat('101', '105', 'Ja, jeg skriver lige en længere besked for at sikre, at alt vises korrekt og ruller ned som det skal.');
+          setTab('chat');
+          setViewProfile(null);
+          break;
+        case 'chat105to101b':
+          (async () => {
+            await sendChat('105', '101', 'Tak, det ser ud til at fungere. Lad os fortsætte for at være helt sikre.');
             setUserId('101');
             setTab('chat');
             setViewProfile(null);
