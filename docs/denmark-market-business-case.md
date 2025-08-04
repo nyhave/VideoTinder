@@ -28,6 +28,30 @@ Total estimated annual cost: **6,890,000 DKK**
 - Break-even premium users: 6,890,000 ÷ (100 × 12) ≈ **5,742 paying users**
 - Break-even total users (at 10% premium conversion): **57,420 users**
 
+## First Three Years Outlook
+To reach the full penetration and conversion assumptions above, the first few years are expected to ramp up gradually.
+
+### Year 1: Establish the product and gather feedback
+- **Penetration:** 2% of dating app users → **19,000 total users**
+- **Premium conversion:** 5% → **950 paying subscribers**
+- **Annual revenue:** 950 × 100 DKK × 12 = **1,140,000 DKK**
+- **Estimated costs:** infrastructure (380,000 DKK), marketing (1,000,000 DKK), overhead (1,500,000 DKK)
+- **Net result:** **−1,740,000 DKK** while investing in product-market fit
+
+### Year 2: Refine features and begin scaling
+- **Penetration:** 5% → **47,500 total users**
+- **Premium conversion:** 8% → **3,800 paying subscribers**
+- **Annual revenue:** 3,800 × 100 DKK × 12 = **4,560,000 DKK**
+- **Estimated costs:** infrastructure (950,000 DKK), marketing (2,000,000 DKK), overhead (1,800,000 DKK)
+- **Net result:** **−190,000 DKK**, moving toward break-even
+
+### Year 3: Expand reach and solidify monetization
+- **Penetration:** 8% → **76,000 total users**
+- **Premium conversion:** 9% → **6,840 paying subscribers**
+- **Annual revenue:** 6,840 × 100 DKK × 12 = **8,208,000 DKK**
+- **Estimated costs:** infrastructure (1,520,000 DKK), marketing (2,500,000 DKK), overhead (1,900,000 DKK)
+- **Net result:** **2,288,000 DKK** profit as adoption strengthens
+
 ## Strategic Considerations
 - High smartphone usage and a large single population support market entry
 - Localized Danish-language experience can differentiate VideoTinder from global competitors
