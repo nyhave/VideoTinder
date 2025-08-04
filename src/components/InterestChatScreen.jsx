@@ -24,6 +24,7 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
   const messagesRef = useRef(null);
   const textareaRef = useRef(null);
   const t = useT();
+  const hasInterests = (profile?.interests || []).length > 0;
 
   useEffect(() => {
     if(!interest && profile?.interests?.length){
@@ -95,6 +96,7 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
         }, i)
       )
     ),
+    !hasInterests && React.createElement('div', { className:'text-gray-600 text-center py-4' }, t('noInterestsSelected')),
     interest && React.createElement(React.Fragment, null,
       React.createElement('div', { ref:messagesRef, className:'flex-1 bg-gray-100 p-4 rounded space-y-3 flex flex-col overflow-y-auto' },
         (chat?.messages || []).map((m,i)=>{
