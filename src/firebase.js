@@ -229,7 +229,16 @@ export function isAdminUser(user) {
 export async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
   if (auth.currentUser) await signOut(auth);
-  return signInWithPopup(auth, provider);
+  try {
+    await logEvent('signInWithGoogle start');
+    const cred = await signInWithPopup(auth, provider);
+    await logEvent('signInWithGoogle success', { uid: cred.user?.uid });
+    return cred;
+  } catch (err) {
+    await logEvent('signInWithGoogle error', { error: err.message });
+    console.error('Google sign-in failed', err);
+    throw err;
+  }
 }
 
 export async function signInWithFacebook() {

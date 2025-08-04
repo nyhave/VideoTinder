@@ -6,7 +6,7 @@ import InfoOverlay from './InfoOverlay.jsx';
 import ForgotPasswordOverlay from './ForgotPasswordOverlay.jsx';
 import { UserPlus, LogIn } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
-import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithGoogle, signInWithFacebook } from '../firebase.js';
+import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithGoogle, signInWithFacebook, logEvent } from '../firebase.js';
 import { getAge, getCurrentDate, parseBirthday } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
@@ -126,10 +126,13 @@ export default function WelcomeScreen({ onLogin }) {
   };
 
   const registerWithProvider = async provider => {
+    await logEvent('registerWithProvider start', { provider });
     let cred;
     try {
       cred = provider === 'google' ? await signInWithGoogle() : await signInWithFacebook();
+      await logEvent('registerWithProvider success', { provider, uid: cred.user?.uid });
     } catch (err) {
+      await logEvent('registerWithProvider error', { provider, error: err.message });
       console.error('Provider signup failed', err);
       if (err?.code === 'auth/account-exists-with-different-credential' || err?.code === 'auth/email-already-in-use') {
         setRegisterErrorMsg('registerEmailExists');
