@@ -113,6 +113,15 @@ export async function subscribeToWebPush(userId, loginMethod = 'password') {
       browser: detectBrowser(),
       loginMethod
     });
+
+    const q = query(collection(db, 'webPushSubscriptions'), where('userId', '==', userId));
+    const snap = await getDocs(q);
+    const deletions = [];
+    snap.forEach(d => {
+      if (d.id !== safeId) deletions.push(deleteDoc(d.ref));
+    });
+    await Promise.all(deletions);
+
     logEvent('subscribeToWebPush success', { userId });
     return sub;
   } catch (err) {
