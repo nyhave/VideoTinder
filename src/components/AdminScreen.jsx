@@ -42,18 +42,18 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     showConsolePanel();
   };
 
-  const sendPush = async body => {
+  const sendPush = async text => {
     const base = process.env.FUNCTIONS_BASE_URL || '';
 
     const send = async endpoint => {
       const resp = await fetch(`${base}/.netlify/functions/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ body })
+        body: JSON.stringify({ title: text, body: text })
       });
       if (!resp.ok) {
-        const text = await resp.text();
-        throw new Error(text);
+        const message = await resp.text();
+        throw new Error(message);
       }
     };
 
