@@ -21,8 +21,8 @@ function handleBackgroundMessages() {
     console.log('Background message', payload);
     const n = payload.notification || {};
     const d = payload.data || {};
-    const title = n.title || 'RealDate';
-    const body = n.body || title;
+    const title = n.title || d.title || 'RealDate';
+    const body = n.body || d.body || title;
     self.registration.showNotification(title, {
       body,
       icon: 'icon-192.png',
