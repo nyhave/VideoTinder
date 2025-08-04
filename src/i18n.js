@@ -209,6 +209,14 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
     fr:'Discussion par intérêt',
     de:'Interessenchat'
   },
+  noInterestsSelected:{
+    en:'No interests selected. Add interests on your profile page.',
+    da:'Ingen interesser valgt. Tilføj interesser på din profilside.',
+    sv:'Inga intressen valda. Lägg till intressen på din profilsida.',
+    es:'No has seleccionado intereses. Añade intereses en tu página de perfil.',
+    fr:"Aucun centre d'intérêt sélectionné. Ajoutez des centres d'intérêt sur votre page de profil.",
+    de:'Keine Interessen ausgewählt. Füge Interessen auf deiner Profilseite hinzu.'
+  },
   gameTitle:{ en:'Guess My Choice', da:'Gæt mit valg' },
 };
 
