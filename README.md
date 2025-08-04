@@ -8,8 +8,8 @@ GitHub Pages. Serverless functions for push notifications and scoring run on Net
 
 The home page is available at <https://videotpush.netlify.app/> and the app runs from <https://nyhave.github.io/VideoTinder/>.
 
-For more background on the guiding principles, see [Vision for "Dagens profiler"](docs/vision.md).
-Der findes også en dansk [beskrivelse af appens sider](docs/app-pages-da.md).
+For more background on the guiding principles, see [Vision for "Dagens profiler"](docs/top-management/vision.md).
+Der findes også en dansk [beskrivelse af appens sider](docs/marketing/app-pages-da.md).
 Profiles are presented as short episodes rather than a catalog of faces. Each episode guides you through introduction, a behind-the-scenes prompt answer, a glimpse of daily life and space for your reaction.
 
 ## Features
@@ -88,7 +88,7 @@ The compiled files will be placed in the `dist` folder. When changes are pushed 
 
 ## Manual Function Testing
 
-The admin page contains a dedicated function test screen. Tests are organized in modules so each area can be completed separately. See [docs/function-test-modules.md](docs/function-test-modules.md) for an overview of the modules and how to submit results.
+The admin page contains a dedicated function test screen. Tests are organized in modules so each area can be completed separately. See [docs/developers/function-test-modules.md](docs/developers/function-test-modules.md) for an overview of the modules and how to submit results.
 
 ## Automated Screenshots
 
