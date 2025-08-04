@@ -16,6 +16,7 @@ import StoryLineOverlay from './StoryLineOverlay.jsx';
 import ExtendAreaOverlay from './ExtendAreaOverlay.jsx';
 import { triggerHaptic } from '../haptics.js';
 import useDayOffset from '../useDayOffset.js';
+import { sendPushNotification } from '../notifications.js';
 
 export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOpenProfile }) {
   const profiles = useCollection('profiles');
@@ -197,6 +198,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           setDoc(doc(db,'matches',m1.id),m1),
           setDoc(doc(db,'matches',m2.id),m2)
         ]);
+        sendPushNotification('Du har et match. Start samtalen', profileId);
         const prof = profiles.find(p => p.id === profileId);
         if(prof) setMatchedProfile(prof);
         triggerHaptic([100,50,100]);

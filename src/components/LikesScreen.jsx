@@ -11,6 +11,7 @@ import { useCollection, db, doc, setDoc, deleteDoc, getDoc } from '../firebase.j
 import { useT } from '../i18n.js';
 import StoryLineOverlay from './StoryLineOverlay.jsx';
 import { triggerHaptic } from '../haptics.js';
+import { sendPushNotification } from '../notifications.js';
 
 export default function LikesScreen({ userId, onSelectProfile }) {
   const profiles = useCollection('profiles');
@@ -53,6 +54,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
           setDoc(doc(db,'matches',m2.id),m2)
         ]);
         await setDoc(doc(db,'episodeProgress', `${userId}-${profileId}`), { removed: true }, { merge: true });
+        sendPushNotification('Du har et match. Start samtalen', profileId);
         const prof = profiles.find(p => p.id === profileId);
         if(prof) setMatchedProfile(prof);
         triggerHaptic([100,50,100]);

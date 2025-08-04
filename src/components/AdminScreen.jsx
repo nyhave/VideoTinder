@@ -12,6 +12,7 @@ import { advanceDay, resetDay, getTodayStr } from '../utils.js';
 import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
 import { triggerHaptic } from '../haptics.js';
+import { sendPushNotification } from '../notifications.js';
 
 
 export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenGroupCallLog, onOpenFunctionTest, onOpenRevealTest, onOpenTextLog, onOpenTextPieces, onOpenUserLog, onOpenServerLog, onOpenRecentLogins, profiles = [], userId, onSwitchProfile, onSaveUserLogout }) {
@@ -42,28 +43,6 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     showConsolePanel();
   };
 
-  const sendPush = async body => {
-    const base = process.env.FUNCTIONS_BASE_URL || '';
-
-    const send = async endpoint => {
-      const resp = await fetch(`${base}/.netlify/functions/${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ body })
-      });
-      if (!resp.ok) {
-        const text = await resp.text();
-        throw new Error(text);
-      }
-    };
-
-    try {
-      await send('send-push');
-      await send('send-webpush');
-    } catch (err) {
-      alert('Failed: ' + err.message);
-    }
-  };
 
   const logClientToken = async () => {
     try {
@@ -383,8 +362,8 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-red-500 text-white px-4 py-2 rounded', onClick: killRealettenSessions }, 'Kill Realetten sessions'),
     React.createElement('h4', { className: 'text-lg font-semibold mb-2 text-blue-600' }, t('adminPush')),
     React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
-      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
-      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: () => sendPushNotification('Dagens klip er klar') }, 'Dagens klip er klar'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: () => sendPushNotification('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: logClientToken }, 'Log client token'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: showVapidKeys }, 'Show VAPID keys'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: compareVapidKeys }, 'Compare VAPID keys'),
