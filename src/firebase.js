@@ -226,13 +226,15 @@ export function isAdminUser(user) {
   return !!user && ADMIN_EMAILS.includes(user.email || '');
 }
 
-export function signInWithGoogle() {
+export async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
+  if (auth.currentUser) await signOut(auth);
   return signInWithPopup(auth, provider);
 }
 
-export function signInWithFacebook() {
+export async function signInWithFacebook() {
   const provider = new FacebookAuthProvider();
+  if (auth.currentUser) await signOut(auth);
   return signInWithPopup(auth, provider);
 }
 
