@@ -1,6 +1,6 @@
 # Production Readiness Overview
 
-This document summarizes the major topics that still need attention before RealDate / VideoTinder can be considered production ready for a large user base. It complements the existing [production checklist](production-checklist.md) and [risk analysis](risk-analysis.md).
+This document summarizes the major topics that still need attention before RealDate / VideoTinder can be considered production ready for a large user base. It complements the existing [production checklist](../developers/production-checklist.md) and [risk analysis](risk-analysis.md).
 
 ## Security and Data Integrity
 - **Input Sanitization**: User generated content (videos, text, chat) must be sanitized to prevent XSS and other injection attacks.
