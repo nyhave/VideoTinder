@@ -5,6 +5,7 @@ export default function VideoPreview({ src, onEnded }) {
     src,
     controls: true,
     controlsList: 'nodownload noplaybackrate',
+    disablePictureInPicture: true,
     onRateChange: e => {
       e.currentTarget.playbackRate = 1;
     },
