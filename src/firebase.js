@@ -172,6 +172,14 @@ export async function requestNotificationPermission(userId, loginMethod = 'passw
         browser: detectBrowser(),
         loginMethod
       }, { merge: true });
+
+      const q = query(collection(db, 'pushTokens'), where('userId', '==', userId));
+      const snap = await getDocs(q);
+      const deletions = [];
+      snap.forEach(d => {
+        if (d.id !== token) deletions.push(deleteDoc(d.ref));
+      });
+      await Promise.all(deletions);
     }
     logEvent('requestNotificationPermission success', { userId });
     return token;
