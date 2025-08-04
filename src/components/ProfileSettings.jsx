@@ -19,6 +19,7 @@ import { languages, useT } from '../i18n.js';
 import { getInterestCategory } from '../interests.js';
 import { getAge, getCurrentDate } from '../utils.js';
 import { triggerHaptic } from '../haptics.js';
+import { sendPushNotification } from '../notifications.js';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId = userId, onBack, activeTask, taskTrigger = 0 }) {
   const [profile,setProfile]=useState(null);
@@ -354,6 +355,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           setDoc(doc(db,'matches',m2.id),m2)
         ]);
         await setDoc(doc(db,'episodeProgress', `${currentUserId}-${userId}`), { removed: true }, { merge: true });
+        sendPushNotification(userId, 'Du har et match. Start samtalen');
         setMatchedProfile(profile);
         triggerHaptic([100,50,100]);
       }

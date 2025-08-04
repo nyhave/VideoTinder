@@ -37,7 +37,7 @@ import { useCollection, requestNotificationPermission, subscribeToWebPush, db, d
 import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 import version from './version.js';
-import { getNotifications, subscribeNotifications, markNotificationsRead } from './notifications.js';
+import { getNotifications, subscribeNotifications, markNotificationsRead, sendPushNotification } from './notifications.js';
 import NotificationsScreen from './components/NotificationsScreen.jsx';
 export default function VideotpushApp() {
   const [lang, setLang] = useState(() =>
@@ -131,6 +131,7 @@ export default function VideotpushApp() {
         setDoc(doc(db, 'matches', m1.id), m1),
         setDoc(doc(db, 'matches', m2.id), m2)
       ]);
+      sendPushNotification(m2.userId, 'Du har et match. Start samtalen');
     } catch (err) {
       console.error('Failed to create match', err);
     }

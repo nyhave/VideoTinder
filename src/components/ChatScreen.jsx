@@ -7,6 +7,7 @@ import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
 import { useCollection, db, doc, updateDoc, deleteDoc, arrayUnion, onSnapshot } from '../firebase.js';
+import { sendPushNotification } from '../notifications.js';
 
 export default function ChatScreen({ userId, onStartCall }) {
   const profiles = useCollection('profiles');
@@ -64,27 +65,6 @@ export default function ChatScreen({ userId, onStartCall }) {
     }
   };
 
-  const notifyRecipient = async body => {
-    const base = process.env.FUNCTIONS_BASE_URL || '';
-    const send = async endpoint => {
-      const resp = await fetch(`${base}/.netlify/functions/${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ body, userId: active.profileId })
-      });
-      if (!resp.ok) {
-        const text = await resp.text();
-        console.error('Push failed', endpoint, text);
-      }
-    };
-    try {
-      await send('send-push');
-      await send('send-webpush');
-    } catch (err) {
-      console.error('Failed to send push', err);
-    }
-  };
-
   const sendMessage = async () => {
     const trimmed = text.trim();
     if(!trimmed || !active) return;
@@ -107,7 +87,7 @@ export default function ChatScreen({ userId, onStartCall }) {
         newMatch:false
       })
     ]);
-    notifyRecipient(trimmed);
+    sendPushNotification(active.profileId, trimmed);
     setText('');
     if(messagesRef.current){
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
