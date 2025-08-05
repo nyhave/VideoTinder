@@ -12,11 +12,12 @@
   - Videoklip 2 og 3
 - En hjælpefunktion i toppen guider brugeren gennem disse skridt.
 - Brugeren kan slette sin profil.
-- Videoklip kan maksimalt vare 10 sekunder, og en timer tæller ned under optagelsen.
+- Videoklip kan maksimalt vare 10 sekunder (15 sekunder med Gold, 25 sekunder med Platinum), en timer tæller ned under optagelsen, og der kan tilføjes baggrundsmusik.
 - **Indstillinger**
   - Vælg aldersinterval for kandidater.
   - Angiv foretrukne sprog og evt. tillad andre sprog.
   - Markér op til fem interesser, der kan bruges i interessechatten.
+  - Aktiver incognito-tilstand for anonym browsing (kun Platinum).
 - **Statistik**
   - Oversigt over hvor mange gange profilen er blevet vist.
 
@@ -30,9 +31,10 @@
 - **Handlinger på kandidatlisten**
   - Åbn en profil for at se den offentlige kandidatprofil.
   - Vælg "Like" (kan blive til et match).
+  - Vælg "Super like" for at signalere ekstra interesse (kræver abonnement).
   - Vælg "Remove" for at fjerne profilen helt, medmindre rating 3 eller 4 er givet
     (så vises den under ratede eller likede profiler).
-- Brugeren kan én gang dagligt købe ekstra profiler.
+  - Brugeren kan én gang dagligt købe ekstra profiler.
 
 ### Offentlig kandidatprofil
 - Brugerens clip er altid tilgængeligt, men videoen afsløres gradvist:

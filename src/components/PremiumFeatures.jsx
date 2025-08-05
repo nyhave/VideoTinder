@@ -5,7 +5,7 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useCollection } from '../firebase.js';
 import { useT } from '../i18n.js';
-import { User as UserIcon } from 'lucide-react';
+import { User as UserIcon, Star } from 'lucide-react';
 
 export default function PremiumFeatures({ userId, onBack, onSelectProfile }) {
   const likes = useCollection('likes', 'profileId', userId);
@@ -18,8 +18,10 @@ export default function PremiumFeatures({ userId, onBack, onSelectProfile }) {
     React.createElement(Button, { className: 'mb-4 bg-yellow-500 text-white', onClick: onBack }, t('back')),
     React.createElement('p', { className: 'mb-4 text-sm text-gray-700' }, 'Her er profiler der har liket dig:'),
     React.createElement('ul', { className: 'space-y-4' },
-      likedProfiles.length ? likedProfiles.map(p => (
-        React.createElement('li', {
+      likedProfiles.length ? likedProfiles.map(p => {
+        const like = likes.find(l => l.userId === p.id);
+        const superLike = like?.super;
+        return React.createElement('li', {
           key: p.id,
           className: 'flex items-center gap-4 bg-yellow-50 p-2 rounded cursor-pointer',
           onClick: () => onSelectProfile(p.id)
@@ -30,9 +32,11 @@ export default function PremiumFeatures({ userId, onBack, onSelectProfile }) {
               React.createElement(UserIcon, { className: 'w-10 h-10 text-yellow-500' }),
             p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
           ),
-          React.createElement('span', null, `${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`)
-        )
-      )) :
+          React.createElement('span', { className:'flex items-center gap-2' }, `${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`,
+            superLike && React.createElement(Star, { className:'w-4 h-4 text-blue-500' })
+          )
+        );
+      }) :
         React.createElement('li', { className: 'text-gray-500 text-center' }, 'Ingen har liket dig endnu')
     )
   );

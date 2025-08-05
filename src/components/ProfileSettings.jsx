@@ -121,12 +121,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const highlightVideo2 = activeTask === 'video2';
   const highlightAbout = activeTask === 'about';
 
-  const uploadFile = async (file, field) => {
+  const uploadFile = async (file, field, music) => {
     if(!file) return;
     const storageRef = ref(storage, `profiles/${userId}/${field}-${Date.now()}-${file.name}`);
     await uploadBytes(storageRef, file);
     const url = await getDownloadURL(storageRef);
     const clip = { url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() };
+    if(music){
+      const musicRef = ref(storage, `profiles/${userId}/${field}-music-${Date.now()}-${music.name}`);
+      await uploadBytes(musicRef, music);
+      clip.music = await getDownloadURL(musicRef);
+    }
     const updated = [...(profile[field] || []), clip];
     await updateDoc(doc(db,'profiles',userId), { [field]: updated });
     setProfile({ ...profile, [field]: updated });
@@ -157,16 +162,21 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     }
   };
 
+  const getMaxVideoSeconds = () => {
+    const tier = profile?.subscriptionTier;
+    return tier === 'Platinum' ? 25 : tier === 'Gold' ? 15 : 10;
+  };
+
   // Allow a small tolerance when validating clip length because the
   // MediaRecorder output can be slightly longer than the requested
   // duration due to encoding overhead.
-  const checkDuration = file => new Promise(resolve => {
+  const checkDuration = (file, limit) => new Promise(resolve => {
     const el = document.createElement('video');
     el.preload = 'metadata';
     el.src = URL.createObjectURL(file);
     el.onloadedmetadata = () => {
       URL.revokeObjectURL(el.src);
-      const max = 10.5; // accept files up to ~0.5s over the 10s limit
+      const max = (limit || 10) + 0.5; // accept files slightly over the limit
       resolve(el.duration <= max);
     };
     el.onerror = () => {
@@ -206,8 +216,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const handleVideoChange = async e => {
     const file = e.target.files[0];
     if(!file) return;
-    if(!(await checkDuration(file))){
-      alert('Video må højest være 10 sekunder');
+    const max = getMaxVideoSeconds();
+    if(!(await checkDuration(file, max))){
+      alert(t('videoTooLong').replace('{seconds}', max));
       return;
     }
     uploadFile(file, 'videoClips');
@@ -218,13 +229,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await updateDoc(doc(db,'profiles',userId), { ageRange: range });
   };
 
-  const handleVideoRecorded = async file => {
-    if(!(await checkDuration(file))){
-      alert('Video må højest være 10 sekunder');
+  const handleVideoRecorded = async (file, music) => {
+    const max = getMaxVideoSeconds();
+    if(!(await checkDuration(file, max))){
+      alert(t('videoTooLong').replace('{seconds}', max));
       return;
     }
     setShowSnapVideoRecorder(false);
-    uploadFile(file, 'videoClips');
+    uploadFile(file, 'videoClips', music);
   };
 
   const handleNameChange = async e => {
@@ -424,7 +436,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       onChange: handleVideoChange,
       className: 'hidden'
     }),
-    !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded })
+    !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded, maxDuration: getMaxVideoSeconds()*1000 })
   );
 
 
@@ -561,6 +573,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         !publicView && profile.subscriptionPurchased && React.createElement('p', {
           className: 'text-center text-sm text-gray-500'
         }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`)
+      ),
+      !publicView && subscriptionActive && profile.subscriptionTier === 'Platinum' && React.createElement('label', { className:'flex items-center justify-center gap-2 mt-2' },
+        React.createElement('input', { type:'checkbox', checked: profile.incognito || false, onChange: async e => { await updateDoc(doc(db,'profiles', userId), { incognito: e.target.checked }); setProfile({ ...profile, incognito: e.target.checked }); } }),
+        t('incognitoMode')
       ),
     React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightVideo1 || highlightVideo2 ? 'ring-4 ring-green-500' : ''}`, ref: videoSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } }, videoSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },

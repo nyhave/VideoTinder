@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getAge, getCurrentDate } from '../utils.js';
-import { User as UserIcon, PlayCircle, Heart } from 'lucide-react';
+import { User as UserIcon, PlayCircle, Heart, Star } from 'lucide-react';
 import VideoOverlay from './VideoOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import { Card } from './ui/card.js';
@@ -87,12 +87,15 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
       }, `Abonnement aktivt til ${new Date(currentUser.subscriptionExpires).toLocaleDateString('da-DK')}`),
     React.createElement('div',{className: hasSubscription ? 'flex-1' : 'flex-1 filter blur-sm pointer-events-none'},
       React.createElement('ul',{className:'space-y-4'},
-        likedProfiles.length ? likedProfiles.map(p => (
-          React.createElement('li',{
+        likedProfiles.length ? likedProfiles.map(p => {
+          const like = likes.find(l => l.userId === p.id);
+          const superLike = like?.super;
+          return React.createElement('li',{
             key:p.id,
             className:'p-4 bg-yellow-50 rounded-lg cursor-pointer shadow flex flex-col relative',
             onClick:()=>onSelectProfile(p.id)
           },
+            superLike && React.createElement(Star,{className:'w-6 h-6 absolute top-2 left-2 text-blue-500'}),
             React.createElement(Heart,{
               className:`w-8 h-8 absolute top-2 right-2 ${likes.some(l=>l.profileId===p.id)?'text-yellow-500':'text-gray-400'}`,
               onClick:e=>{e.stopPropagation(); toggleLike(p.id);}
@@ -115,8 +118,8 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
               ),
               React.createElement(Button,{size:'sm',variant:'outline',onClick:e=>{e.stopPropagation();setStoryProfile(p);}},'StoryLine')
             )
-          )
-        )) :
+          );
+        }) :
           React.createElement('li',{className:'text-center text-gray-500'},'Ingen har liket dig endnu')
       )
     ),
