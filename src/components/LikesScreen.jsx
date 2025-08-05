@@ -13,7 +13,7 @@ import StoryLineOverlay from './StoryLineOverlay.jsx';
 import { triggerHaptic } from '../haptics.js';
 import { sendPushNotification } from '../notifications.js';
 
-export default function LikesScreen({ userId, onSelectProfile }) {
+export default function LikesScreen({ userId, onSelectProfile, onBack }) {
   const profiles = useCollection('profiles');
   const likes = useCollection('likes', 'profileId', userId);
   const matches = useCollection('matches', 'userId', userId);
@@ -79,7 +79,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
   };
 
   return React.createElement(Card,{className:'relative p-6 m-4 shadow-xl bg-white/90 flex flex-col'},
-    React.createElement(SectionTitle,{title:t('likesTitle'), colorClass:'text-yellow-600'}),
+    React.createElement(SectionTitle,{title:t('likesTitle'), colorClass:'text-yellow-600', action: React.createElement(Button,{onClick:onBack, className:'bg-yellow-500 text-white'}, t('back'))}),
     React.createElement('p',{className:'mb-4 text-gray-500'},`${likedProfiles.length} profiler`),
     hasSubscription && currentUser.subscriptionExpires &&
       React.createElement('p', {

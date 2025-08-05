@@ -491,8 +491,8 @@ export default function VideotpushApp() {
     },
       React.createElement(VideoCameraIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('discovery'); setViewProfile(null);} }),
       React.createElement('div', { className: 'relative', onClick: ()=>{setTab('likes'); setViewProfile(null);} },
-        React.createElement(HeartIcon, { className: 'w-8 h-8 text-pink-600' }),
-        hasUnseenLikes && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full min-w-4 h-4 flex items-center justify-center px-1' }, '1')
+        React.createElement(HeartIcon, { className: 'w-8 h-8 text-yellow-500' }),
+        hasUnseenLikes && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full min-w-4 h-4 flex items-center justify-center px-1' }, unseenLikesCount > 9 ? '9+' : unseenLikesCount)
       ),
       React.createElement('div', { className: 'relative', onClick: ()=>{setTab('chat'); setViewProfile(null);} },
         React.createElement(ChatBubbleOvalLeftIcon, { className: 'w-8 h-8 text-pink-600' }),
