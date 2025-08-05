@@ -459,7 +459,7 @@ export default function VideotpushApp() {
         React.createElement(React.Fragment, null,
           React.createElement(TaskButton, { profile: currentUser, onClick: handleTaskClick }),
           tab==='discovery' && !viewProfile && (
-            React.createElement(DailyDiscovery, { userId, onSelectProfile: selectProfile, ageRange, onOpenProfile: openProfileSettings })
+            React.createElement(DailyDiscovery, { userId, profiles, onSelectProfile: selectProfile, ageRange, onOpenProfile: openProfileSettings })
           ),
           viewProfile && (
             viewProfile === userId ?
