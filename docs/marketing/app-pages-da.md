@@ -12,28 +12,32 @@
   - Videoklip 2 og 3
 - En hjælpefunktion i toppen guider brugeren gennem disse skridt.
 - Brugeren kan slette sin profil.
-- Videoklip kan maksimalt vare 10 sekunder (15 sekunder med Gold, 25 sekunder med Platinum), en timer tæller ned under optagelsen, og der kan tilføjes baggrundsmusik.
+- Videoklip kan maksimalt vare 10 sekunder (15 sekunder med Gold, 25 sekunder med Platinum); en timer tæller ned under optagelsen, og Gold/Platinum kan tilføje baggrundsmusik.
+- Gold og Platinum kan verificere profilen og få et badge.
 - **Indstillinger**
-  - Vælg aldersinterval for kandidater.
+  - Vælg køn og aldersinterval for kandidater; Silver kan også justere maks-afstand, mens Gold og Platinum får adgang til alle avancerede filtre.
   - Angiv foretrukne sprog og evt. tillad andre sprog.
   - Markér op til fem interesser, der kan bruges i interessechatten.
   - Aktiver incognito-tilstand for anonym browsing (kun Platinum).
+  - Boost din profil for øget synlighed (1, 2 eller 4 gange pr. måned afhængigt af abonnement).
 - **Statistik**
-  - Oversigt over hvor mange gange profilen er blevet vist.
+  - Gratis brugere ser kun antal profilvisninger. Gold får udvidede statistikker, og Platinum inkluderer avanceret analyse af videoafspilning og matchkonvertering.
 
 ## Dagens klip
 - Ved indgang vises listen med kandidatprofiler samt eventuelle ratede eller likede profiler.
-- Listen indeholder aktive profiler fra tidligere dage plus dagens nye (3 eller 6).
+- Listen indeholder aktive profiler fra tidligere dage plus dagens nye (3 gratis, 5 med Silver, 8 med Gold og 10 med Platinum).
 - Hvis serveren returnerer for få nye profiler, kan brugeren udvide maks-afstanden.
 - Episodisk flow i tre trin: refleksion, reaktion og forbindelse.
-- Brugeren kan skrive en privat refleksion og give en rating på 1–4 stjerner.
-- Ratings og refleksioner gemmes separat og kan ses i refleksionskalenderen.
+- Gratis brugere ser bannerannoncer; Silver og opefter er reklamefri.
+- Brugeren kan skrive en privat refleksion, og Gold samt Platinum kan også give en rating på 1–4 stjerner.
+- Refleksioner gemmes for alle, mens ratings for Gold og Platinum vises sammen med refleksionskalenderen.
 - **Handlinger på kandidatlisten**
   - Åbn en profil for at se den offentlige kandidatprofil.
   - Vælg "Like" (kan blive til et match).
-  - Vælg "Super like" for at signalere ekstra interesse (kræver abonnement).
+  - Vælg "Super like" for at signalere ekstra interesse (1, 3 eller 5 pr. uge afhængigt af abonnement).
   - Vælg "Remove" for at fjerne profilen helt, medmindre rating 3 eller 4 er givet
     (så vises den under ratede eller likede profiler).
+  - Silver kan fortryde den seneste "Remove"; Gold og Platinum kan fortryde flere.
   - Brugeren kan én gang dagligt købe ekstra profiler.
 
 ### Offentlig kandidatprofil
@@ -43,6 +47,7 @@
   - Efterfølgende dage: alt materiale
 - Brugeren kan se tilgængeligt materiale og skrive en refleksion med rating 1–4
   samt give et like.
+- Verificerede profiler (Gold og Platinum) viser et badge.
 
 ## Daglig check-in
 - Kalender med oversigt over egne refleksioner.
@@ -54,10 +59,12 @@
 - Chat med matchede brugere.
 - Start videokald.
 - Mulighed for at unmatche.
+- Gold og Platinum får læsekvitteringer og skriverindikatorer.
 
 ## Interessechat og Realetten
-- Chat i grupper baseret på valgte interesser.
-- Mulighed for at starte Realetten – et turbaseret spil kombineret med fælles videokald.
+- Chat i grupper baseret på valgte interesser (kræver mindst Silver).
+- Gold og Platinum får prioriteret placering i chatlisterne (Platinum med topprioritet).
+- Mulighed for at starte Realetten – et turbaseret spil kombineret med fælles videokald (kun for Silver+).
 - Realetten kan spilles sammen med andre brugere eller mod en indbygget AI.
 
 ## Notifikationer
@@ -70,8 +77,8 @@
   Når en invitation er sendt, følges der med i, om brugeren opretter profil.
 
 ## Du er blevet liket
-- Viser en liste over kandidatprofiler, hvis brugeren har premium.
-- Uden premium er listen sløret, og brugeren får tilbud om at købe premium.
+- Viser en liste over kandidatprofiler, hvis brugeren har Gold eller Platinum.
+- Uden Gold/Platinum er listen sløret, og brugeren får tilbud om at opgradere.
 
 ## Login og opret bruger
 - Log ind med e-mail, Facebook eller Google.
