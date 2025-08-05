@@ -25,6 +25,7 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
   const config = useDoc('config', 'app') || {};
   const showLevels = config.showLevels !== false;
   const user = profiles.find(p => p.id === userId) || {};
+  const showSuperLike = getSuperLikeLimit(user) > 0;
   // Trigger re-renders when the admin changes the virtual date
   useDayOffset();
   const hasActiveSub = prof =>
@@ -299,14 +300,6 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
           React.createElement('span', { className:`absolute bottom-2 left-2 ${daysLeft <= 0 ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'} text-xs font-semibold px-2 rounded` },
             daysLeft <= 0 ? t('lastDay') : t('expiresIn').replace('{days}', daysLeft)
           ),
-          React.createElement(Button, {
-            className: `absolute top-2 right-20 bg-blue-500 text-white text-xs px-2 py-1 rounded ${likes.some(l => l.profileId === p.id && l.super) ? '' : 'opacity-80'}`,
-            onClick: e => { e.stopPropagation(); sendSuperLike(p.id); }
-          }, t('superLike')),
-          React.createElement(Button, {
-            className: `absolute top-2 right-2 bg-pink-500 text-white text-xs px-2 py-1 rounded ${likes.some(l => l.profileId === p.id) ? '' : 'opacity-80'}`,
-            onClick: e => { e.stopPropagation(); toggleLike(p.id); }
-          }, likes.some(l => l.profileId === p.id) ? 'Unlike' : 'Like'),
           React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
             React.createElement('div', { className:'flex flex-col items-center' },
               (p.photoURL ?
@@ -331,12 +324,22 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
               React.createElement(Star,{key:n,className:`w-4 h-4 ${n <= prog.rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`})
             )
           ),
-          React.createElement(Button, {
-            size: 'sm',
-            variant: 'ghost',
-            className: 'self-end bg-red-500 text-white text-xs mt-1 px-2 py-1 rounded',
-            onClick: e => { e.stopPropagation(); removeProfile(p.id); }
-          }, t('remove'))
+          React.createElement('div', { className: 'flex gap-2 mt-2' },
+            [
+              React.createElement(Button, {
+                className: 'flex-1 bg-red-500 text-white text-xs px-2 py-1 rounded',
+                onClick: e => { e.stopPropagation(); removeProfile(p.id); }
+              }, t('remove')),
+              showSuperLike && React.createElement(Button, {
+                className: `flex-1 bg-blue-500 text-white text-xs px-2 py-1 rounded ${likes.some(l => l.profileId === p.id && l.super) ? '' : 'opacity-80'}`,
+                onClick: e => { e.stopPropagation(); sendSuperLike(p.id); }
+              }, t('superLike')),
+              React.createElement(Button, {
+                className: `flex-1 bg-pink-500 text-white text-xs px-2 py-1 rounded ${likes.some(l => l.profileId === p.id) ? '' : 'opacity-80'}`,
+                onClick: e => { e.stopPropagation(); toggleLike(p.id); }
+              }, likes.some(l => l.profileId === p.id) ? 'Unlike' : 'Like')
+            ].filter(Boolean)
+          )
         )
       }) :
         React.createElement('li', { className: 'text-center text-gray-500' }, t('noProfiles'))
