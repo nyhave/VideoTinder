@@ -21,7 +21,8 @@ Profiles are presented as short episodes rather than a catalog of faces. Each ep
 * Give three or four stars to keep the profile from expiring
 * Monthly subscriptions with visible expiration date and stored purchase date
 * Basic chat between matched profiles with option to unmatch
-* Improved chat layout with timestamps for better readability 
+* Improved chat layout with timestamps for better readability
+* Typing indicators show when the other person is composing a message
 * Celebration overlay when two profiles match
 * Calendar for daily reflections
 * Minimal profile settings and admin mode

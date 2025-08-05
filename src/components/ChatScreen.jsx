@@ -19,6 +19,7 @@ export default function ChatScreen({ userId, onStartCall }) {
   const [incomingCall, setIncomingCall] = useState(false);
   const messagesRef = useRef(null);
   const textareaRef = useRef(null);
+  const typingTimeout = useRef(null);
 
   useEffect(() => {
     if(textareaRef.current){
@@ -84,13 +85,37 @@ export default function ChatScreen({ userId, onStartCall }) {
         unreadByProfile: false,
         unreadByUser: true,
         messages: arrayUnion(message),
-        newMatch:false
+        newMatch:false,
+        typing:false
       })
     ]);
     sendPushNotification(active.profileId, trimmed);
     setText('');
     if(messagesRef.current){
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if(active){
+        const id = `${active.profileId}-${active.userId}`;
+        updateDoc(doc(db,'matches',id),{typing:false});
+      }
+    };
+  }, [active]);
+
+  const handleTextChange = e => {
+    const val = e.target.value;
+    setText(val);
+    if(!active) return;
+    const id = `${active.profileId}-${active.userId}`;
+    updateDoc(doc(db,'matches',id),{typing:!!val.trim()});
+    if(typingTimeout.current) clearTimeout(typingTimeout.current);
+    if(val.trim()){
+      typingTimeout.current = setTimeout(() => {
+        updateDoc(doc(db,'matches',id),{typing:false});
+      },2000);
     }
   };
 
@@ -147,13 +172,14 @@ export default function ChatScreen({ userId, onStartCall }) {
           })
         ),
         React.createElement('div', { className: 'flex flex-col gap-2 mt-2' },
+          active.typing && React.createElement('p',{className:'text-sm text-gray-500'},`${activeProfile.name || 'Someone'} is typing...`),
           React.createElement('div', { className: 'flex items-center gap-2' },
             React.createElement(Textarea, {
               className: 'flex-1',
               placeholder: 'Skriv besked...',
               rows: 3,
               value: text,
-              onChange: e => setText(e.target.value),
+              onChange: handleTextChange,
               ref: textareaRef
             }),
             React.createElement(Button, {
