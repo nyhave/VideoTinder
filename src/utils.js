@@ -83,3 +83,24 @@ export function getDailyProfileLimit(user){
   const limits = { free:3, silver:5, gold:8, platinum:10 };
   return limits[tier] ?? limits.free;
 }
+
+export function getSuperLikeLimit(user){
+  const tier = user?.subscriptionTier || 'free';
+  const limits = { free:0, silver:1, gold:3, platinum:5 };
+  return limits[tier] ?? limits.free;
+}
+
+export function getMaxVideoSeconds(user){
+  const tier = user?.subscriptionTier || 'free';
+  const caps = { free:10, silver:15, gold:15, platinum:25 };
+  return caps[tier] ?? caps.free;
+}
+
+export function getWeekId(date = getCurrentDate()){
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const day = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - day);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  const weekNo = Math.ceil(((d - yearStart)/86400000 + 1)/7);
+  return `${d.getUTCFullYear()}-${weekNo}`;
+}
