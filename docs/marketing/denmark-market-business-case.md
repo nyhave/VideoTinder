@@ -17,7 +17,7 @@ VideoTinder uses a freemium model with three paid membership levels that expand 
 | Ratings | ❌ | ❌ | ✓ | ✓ |
 | See who liked you | ❌ | ❌ | ✓ | ✓ |
 | Undo removes | ❌ | last | ✓ | ✓ |
-| Super Swipes per week | ❌ | 1 | 3 | 5 |
+| Super like per week | ❌ | 1 | 3 | 5 |
 | Boost visibility | ❌ | 1/month | 2/month | 4/month |
 | Priority placement in group chat | ❌ | ❌ | ✓ | ✓ (Top priority) |
 | Advanced filters (gender, age, distance, etc.) | gender, age | +distance | Full | Full |
