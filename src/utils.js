@@ -77,3 +77,9 @@ export function detectBrowser(){
   if (/Firefox\//.test(ua)) return 'Firefox';
   return 'Unknown';
 }
+
+export function getDailyProfileLimit(user){
+  const tier = user?.subscriptionTier || 'free';
+  const limits = { free:3, silver:5, gold:8, platinum:10 };
+  return limits[tier] ?? limits.free;
+}

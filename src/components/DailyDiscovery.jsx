@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAge, getTodayStr, getCurrentDate } from '../utils.js';
+import { getAge, getTodayStr, getCurrentDate, getDailyProfileLimit } from '../utils.js';
 import { User, PlayCircle, Star } from 'lucide-react';
 import VideoOverlay from './VideoOverlay.jsx';
 import { Card } from './ui/card.js';
@@ -54,7 +54,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     if(!userId || !progresses.loaded) return;
     const extraPurchased = user.extraClipsDate === today ? 3 : 0;
     const extraFree = user.freeClipsDate === today ? 3 : 0;
-    const limit = 5 + extraFree + extraPurchased;
+    const limit = getDailyProfileLimit(user) + extraFree + extraPurchased;
     let createdToday = progresses.filter(pr => pr.addedDate === today).length;
     const rankMap = new Map(filtered.map((p,i)=>[p.id,i]));
     filtered.forEach(p => {
