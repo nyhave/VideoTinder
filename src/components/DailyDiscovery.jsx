@@ -278,7 +278,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     setHoursUntil(Math.ceil((next - now) / 3600000));
   }, []);
 
-  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+  return React.createElement(Card, { className: 'p-6 pb-24 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: t('dailyClips'), action:
       React.createElement('span', { className:'text-sm text-blue-500 underline cursor-pointer', onClick:()=>setShowHelp(true) }, t('dailyHelpLabel'))
     }),
