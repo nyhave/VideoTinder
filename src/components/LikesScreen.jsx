@@ -23,9 +23,11 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
     likes.some(l => l.userId === p.id) && !matchedIds.includes(p.id)
   );
   const currentUser = profiles.find(p => p.id === userId) || {};
-  const hasSubscription =
+  const tier = currentUser.subscriptionTier || 'free';
+  const hasActiveSubscription =
     currentUser.subscriptionExpires &&
     new Date(currentUser.subscriptionExpires) > getCurrentDate();
+  const canSeeLikes = hasActiveSubscription && (tier === 'gold' || tier === 'platinum');
   const t = useT();
 
   const [activeVideo, setActiveVideo] = useState(null);
@@ -82,11 +84,11 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
   return React.createElement(Card,{className:'relative p-6 m-4 shadow-xl bg-white/90 flex flex-col'},
     React.createElement(SectionTitle,{title:t('likesTitle'), colorClass:'text-yellow-600', action: React.createElement(Button,{onClick:onBack, className:'bg-yellow-500 text-white'}, t('back'))}),
     React.createElement('p',{className:'mb-4 text-gray-500'},`${likedProfiles.length} profiler`),
-    hasSubscription && currentUser.subscriptionExpires &&
+    hasActiveSubscription && currentUser.subscriptionExpires &&
       React.createElement('p', {
         className: 'text-sm text-gray-600 mb-2'
       }, `Abonnement aktivt til ${new Date(currentUser.subscriptionExpires).toLocaleDateString('da-DK')}`),
-    React.createElement('div',{className: hasSubscription ? 'flex-1' : 'flex-1 filter blur-sm pointer-events-none'},
+    React.createElement('div',{className: canSeeLikes ? 'flex-1' : 'flex-1 filter blur-sm pointer-events-none'},
       React.createElement('ul',{className:'space-y-4'},
         likedProfiles.length ? likedProfiles.map(p => {
           const like = likes.find(l => l.userId === p.id);
@@ -124,8 +126,8 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
           React.createElement('li',{className:'text-center text-gray-500'},'Ingen har liket dig endnu')
       )
     ),
-    !hasSubscription && React.createElement('span',{className:'absolute inset-0 m-auto text-yellow-500 text-sm font-semibold pointer-events-none flex items-center justify-center text-center px-2'},'Kr\u00e6ver premium abonnement'),
-    !hasSubscription && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb premium'),
+    !canSeeLikes && React.createElement('span',{className:'absolute inset-0 m-auto text-yellow-500 text-sm font-semibold pointer-events-none flex items-center justify-center text-center px-2'},'Kr\u00e6ver Guld eller Platin'),
+    !canSeeLikes && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb Guld/Platin'),
     showPurchase && React.createElement(SubscriptionOverlay,{onClose:()=>setShowPurchase(false), onBuy:handlePurchase}),
     storyProfile && React.createElement(StoryLineOverlay,{profile:storyProfile, progress: progresses.find(pr=>pr.profileId===storyProfile.id), onClose:()=>setStoryProfile(null), onMatch:id=>{toggleLike(id); setStoryProfile(null);}}),
     matchedProfile && React.createElement(MatchOverlay,{name:matchedProfile.name,onClose:()=>setMatchedProfile(null)}),
