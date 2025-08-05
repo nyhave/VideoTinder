@@ -13,23 +13,16 @@ VideoTinder uses a freemium model with three paid membership levels that expand 
 | Feature | Free | Silver | Gold | Platinum |
 | --- | --- | --- | --- | --- |
 | Daily swipe limit | ✓ | Increased | Unlimited | Unlimited + Bonus |
-| Match with groups | ✓ | ✓ | ✓ | ✓ |
-| Group chat on match | ✓ | ✓ | ✓ | ✓ |
-| See who liked your group | ❌ | ✓ | ✓ | ✓ |
-| Undo last swipe | ❌ | ✓ | ✓ | ✓ |
+| Group chat | ✓ | ✓ | ✓ | ✓ |
+| See who liked you | ❌ | ✓ | ✓ | ✓ |
+| Undo removes | ❌ | last | ✓ | ✓ |
 | Super Swipes per week | ❌ | 1 | 3 | 5 |
-| Boost group visibility | ❌ | 1/month | 2/month | 4/month |
+| Boost visibility | ❌ | 1/month | 2/month | 4/month |
 | Priority placement | ❌ | ❌ | ✓ | ✓ (Top priority) |
 | Advanced filters (age, distance, etc.) | ❌ | Basic | Full | Full + AI suggestions* |
-| Incognito mode | ❌ | ❌ | ✓ | ✓ |
-| Match recall (expired matches) | ❌ | ❌ | 1/month | Unlimited |
-| Voice/video intro messaging | ❌ | ✓ | ✓ | ✓ |
-| Group performance insights | ❌ | ❌ | Basic | Full analytics* |
+| Incognito mode | ❌ | ❌ | ❌ | ✓ |
 | Video creation tools (filters/music) | ❌ | Some | All | All + Premium packs* |
-| Profile video feedback/coaching | ❌ | ❌ | Add-on | ✓ (1x/month)* |
-| Skip daily swipe timer | ❌ | ❌ | ✓ | ✓ |
-| Match retry / nudge feature | ❌ | ❌ | ✓ | ✓ |
-| Monthly "Mystery Box" rewards | ❌ | ❌ | ✓ | ✓ (Higher value) |
+| Longer videos | ❌ | ❌ | 15 sec | 25 sec |
 
 *Planned extensions beyond the current app
 
