@@ -7,7 +7,7 @@
     "dev": "parcel public/index.html",
     "prebuild": "node scripts/bump-version.js",
     "build": "parcel build public/index.html public/invite.html public/testers.html --dist-dir dist --public-url ./",
-    "test": "echo \"No tests\"",
+    "test": "jest",
     "screenshots": "node scripts/capture-screens.js"
   },
   "dependencies": {
@@ -29,7 +29,10 @@
     "@parcel/babel-preset-env": "^2.15.4",
     "@parcel/packager-raw-url": "^2.15.4",
     "@parcel/transformer-webmanifest": "^2.15.4",
+    "babel-jest": "^30.0.5",
     "express": "^5.1.0",
+    "jest": "^30.0.5",
+    "jest-environment-jsdom": "^30.0.5",
     "parcel": "^2.9.3",
     "puppeteer": "^24.14.0"
   }
