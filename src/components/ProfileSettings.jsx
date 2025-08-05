@@ -20,6 +20,8 @@ import { getInterestCategory } from '../interests.js';
 import { getAge, getCurrentDate } from '../utils.js';
 import { triggerHaptic } from '../haptics.js';
 import { sendPushNotification } from '../notifications.js';
+import ProfileAnalytics from './ProfileAnalytics.jsx';
+import VerificationBadge from './VerificationBadge.jsx';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId = userId, onBack, activeTask, taskTrigger = 0 }) {
   const [profile,setProfile]=useState(null);
@@ -35,6 +37,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [showSub, setShowSub] = useState(false);
   const [showInterests, setShowInterests] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
   const [editInfo, setEditInfo] = useState(false);
   const [editInterests, setEditInterests] = useState(false);
@@ -483,7 +486,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             },
               React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500 blinking-thumb' })
             ),
-          profile.verified && React.createElement('span', { className:'text-green-600 text-sm mt-1' }, 'Verified')
+          profile.verified && React.createElement(VerificationBadge, null)
         ),
         !publicView && editInfo && profile.photoURL && React.createElement(Button, {
           className: 'bg-pink-500 text-white p-1 rounded flex items-center justify-center',
@@ -718,6 +721,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onClick: () => setReportItem({ text: profile.clip })
       })
     ),
+    !publicView && React.createElement(Button, {
+        className: 'mt-2 w-full bg-blue-500 text-white',
+        onClick: () => setShowAnalytics(true)
+      }, t('viewAnalytics')),
     !publicView && !subscriptionActive && React.createElement(Button, {
         className: 'mt-2 w-full bg-yellow-500 text-white',
         onClick: () => setShowSub(true)
@@ -746,6 +753,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         text: reportItem.text || '',
         onClose: () => { setReportItem(null); setReportMode(false); }
       }),
+    showAnalytics && React.createElement(ProfileAnalytics, { userId, onBack: () => setShowAnalytics(false) }),
     showDelete && React.createElement(DeleteAccountOverlay, {
         onDelete: async () => { await deleteAccount(userId); onLogout && onLogout(); },
         onClose: () => setShowDelete(false)
