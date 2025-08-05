@@ -38,6 +38,7 @@ import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 import version from './version.js';
 import { getNotifications, subscribeNotifications, markNotificationsRead, sendPushNotification } from './notifications.js';
+import SubscriptionOverlay from './components/SubscriptionOverlay.jsx';
 import NotificationsScreen from './components/NotificationsScreen.jsx';
 export default function VideotpushApp() {
   const [lang, setLang] = useState(() =>
@@ -70,6 +71,7 @@ export default function VideotpushApp() {
   const [showHelp,setShowHelp]=useState(false);
   const [activeTask, setActiveTask] = useState(null);
   const [taskClicks, setTaskClicks] = useState(0);
+  const [showSubscription, setShowSubscription] = useState(false);
   const unreadCount = chats.filter(c => c.unreadByUser || c.newMatch).length;
   const hasUnread = unreadCount > 0;
   const unseenLikesCount = likesReceived.filter(l => !seenLikes.includes(l.id)).length;
@@ -161,6 +163,26 @@ export default function VideotpushApp() {
     } catch (err) {
       console.error('Failed to send message', err);
     }
+  };
+
+  const handleSubscriptionPurchase = async tier => {
+    if(!userId) return;
+    const now = getCurrentDate();
+    const current = currentUser.subscriptionExpires ? new Date(currentUser.subscriptionExpires) : now;
+    const base = current > now ? current : now;
+    const expiry = new Date(base);
+    expiry.setMonth(expiry.getMonth() + 1);
+    try {
+      await updateDoc(doc(db,'profiles',userId), {
+        subscriptionActive: true,
+        subscriptionPurchased: now.toISOString(),
+        subscriptionExpires: expiry.toISOString(),
+        subscriptionTier: tier
+      });
+    } catch(err) {
+      console.error('Failed to purchase subscription', err);
+    }
+    setShowSubscription(false);
   };
 
   useEffect(() => {
@@ -360,6 +382,12 @@ export default function VideotpushApp() {
     return () => unsub();
   }, []);
 
+  useEffect(() => {
+    const handler = () => setShowSubscription(true);
+    window.addEventListener('showSubscription', handler);
+    return () => window.removeEventListener('showSubscription', handler);
+  }, []);
+
 
   if(!loggedIn) return React.createElement(LanguageProvider, { value:{lang,setLang} },
     React.createElement(WelcomeScreen, { onLogin: (id, method = 'password') => {
@@ -501,6 +529,7 @@ export default function VideotpushApp() {
       React.createElement(UserGroupIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('interestchat'); setViewProfile(null);} }),
       React.createElement(CalendarDaysIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} })
       ),
+    showSubscription && React.createElement(SubscriptionOverlay, { onClose: () => setShowSubscription(false), onBuy: handleSubscriptionPurchase }),
     showHelp && React.createElement(HelpOverlay, { onClose: ()=>setShowHelp(false) }),
     React.createElement(ConsoleLogPanel),
     React.createElement(FunctionTestGuide)
