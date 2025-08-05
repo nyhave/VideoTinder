@@ -81,6 +81,10 @@ export default function LikesScreen({ userId, onSelectProfile }) {
   return React.createElement(Card,{className:'relative p-6 m-4 shadow-xl bg-white/90 flex flex-col'},
     React.createElement(SectionTitle,{title:t('likesTitle'), colorClass:'text-yellow-600'}),
     React.createElement('p',{className:'mb-4 text-gray-500'},`${likedProfiles.length} profiler`),
+    hasSubscription && currentUser.subscriptionExpires &&
+      React.createElement('p', {
+        className: 'text-sm text-gray-600 mb-2'
+      }, `Abonnement aktivt til ${new Date(currentUser.subscriptionExpires).toLocaleDateString('da-DK')}`),
     React.createElement('div',{className: hasSubscription ? 'flex-1' : 'flex-1 filter blur-sm pointer-events-none'},
       React.createElement('ul',{className:'space-y-4'},
         likedProfiles.length ? likedProfiles.map(p => (
