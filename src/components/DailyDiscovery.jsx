@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAge, getTodayStr, getCurrentDate, getDailyProfileLimit } from '../utils.js';
+import { getAge, getTodayStr, getCurrentDate, getDailyProfileLimit, getSuperLikeLimit, getWeekId } from '../utils.js';
 import { User, PlayCircle, Star } from 'lucide-react';
 import VideoOverlay from './VideoOverlay.jsx';
 import { Card } from './ui/card.js';
@@ -208,9 +208,17 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     }
   };
   const sendSuperLike = async profileId => {
+    const weekId = getWeekId();
+    const limit = getSuperLikeLimit(user);
+    const used = user.superLikeWeek === weekId ? (user.superLikesUsed || 0) : 0;
+    if(used >= limit){
+      alert('Ugentlig super like gr\u00e6nse n\u00e5et');
+      return;
+    }
     const likeId = `${userId}-${profileId}`;
     await setDoc(doc(db,'likes',likeId),{id:likeId,userId,profileId,super:true});
     await setDoc(doc(db,'episodeProgress', `${userId}-${profileId}`), { removed: true }, { merge: true });
+    await updateDoc(doc(db,'profiles',userId),{ superLikeWeek: weekId, superLikesUsed: used + 1 });
     triggerHaptic([200,50,200]);
     const otherLike = await getDoc(doc(db,'likes',`${profileId}-${userId}`));
     if(otherLike.exists()){

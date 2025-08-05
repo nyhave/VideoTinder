@@ -17,7 +17,7 @@ import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
 import { languages, useT } from '../i18n.js';
 import { getInterestCategory } from '../interests.js';
-import { getAge, getCurrentDate } from '../utils.js';
+import { getAge, getCurrentDate, getMaxVideoSeconds } from '../utils.js';
 import { triggerHaptic } from '../haptics.js';
 import { sendPushNotification } from '../notifications.js';
 import ProfileAnalytics from './ProfileAnalytics.jsx';
@@ -165,10 +165,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     }
   };
 
-  const getMaxVideoSeconds = () => {
-    const tier = profile?.subscriptionTier;
-    return tier === 'Platinum' ? 25 : tier === 'Gold' ? 15 : 10;
-  };
 
   // Allow a small tolerance when validating clip length because the
   // MediaRecorder output can be slightly longer than the requested
@@ -219,7 +215,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const handleVideoChange = async e => {
     const file = e.target.files[0];
     if(!file) return;
-    const max = getMaxVideoSeconds();
+    const max = getMaxVideoSeconds(profile);
     if(!(await checkDuration(file, max))){
       alert(t('videoTooLong').replace('{seconds}', max));
       return;
@@ -233,7 +229,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   };
 
   const handleVideoRecorded = async (file, music) => {
-    const max = getMaxVideoSeconds();
+    const max = getMaxVideoSeconds(profile);
     if(!(await checkDuration(file, max))){
       alert(t('videoTooLong').replace('{seconds}', max));
       return;
@@ -439,7 +435,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       onChange: handleVideoChange,
       className: 'hidden'
     }),
-    !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded, maxDuration: getMaxVideoSeconds()*1000 })
+    !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded, maxDuration: getMaxVideoSeconds(profile)*1000 })
   );
 
 
