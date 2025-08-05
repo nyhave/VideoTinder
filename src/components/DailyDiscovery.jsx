@@ -5,6 +5,8 @@ import VideoOverlay from './VideoOverlay.jsx';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
+import VerificationBadge from './VerificationBadge.jsx';
+import AdBanner from './AdBanner.jsx';
 import { useT } from '../i18n.js';
 import { useCollection, useDoc, db, doc, setDoc, deleteDoc, getDoc, updateDoc, collection } from '../firebase.js';
 import selectProfiles, { scoreProfiles } from '../selectProfiles.js';
@@ -274,6 +276,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
     }),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Nye klip om ${hoursUntil} timer`),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Tag dig god tid til at udforske dagens klip`),
+    React.createElement(AdBanner, { user }),
     React.createElement('ul', { className: 'space-y-4' },
       activeProfiles.length ? activeProfiles.map(p => {
         const prog = progresses.find(pr => pr.profileId === p.id);
@@ -303,7 +306,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
                 React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
                 React.createElement(User, { className: 'w-10 h-10 text-pink-500' })
               ),
-              p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
+              p.verified && React.createElement(VerificationBadge, null)
             ),
             React.createElement('div', null,
               React.createElement('p', { className: 'font-medium' }, `${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`),
@@ -311,7 +314,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
             )
           ),
           React.createElement('div', { className: 'flex gap-2 mt-2' },
-              React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1 bg-white text-black border border-gray-300', onClick:e=>{e.stopPropagation(); const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null; if(url) setActiveVideo(url); } },
+              React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1 bg-white text-black border border-gray-300', onClick:e=>{e.stopPropagation(); const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null; if(url) setActiveVideo({url, profileId:p.id}); } },
                 React.createElement(PlayCircle, { className: 'w-5 h-5' }), 'Afspil'
               ),
               React.createElement(Button, { size: 'sm', variant: 'outline', className: 'bg-white text-black border border-gray-300', onClick:e=>{e.stopPropagation(); setStoryProfile(p);} }, 'StoryLine')
@@ -350,7 +353,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
                 p.photoURL ?
                   React.createElement('img',{src:p.photoURL,className:'w-10 h-10 rounded object-cover'}) :
                   React.createElement(User,{className:'w-10 h-10 text-pink-500'}),
-                p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
+                p.verified && React.createElement(VerificationBadge, null)
               ),
               React.createElement('div',null,
                 React.createElement('p',{className:'font-medium'},`${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`),
@@ -415,7 +418,7 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       name: matchedProfile.name,
       onClose: () => setMatchedProfile(null)
     }),
-    activeVideo && React.createElement(VideoOverlay, { src: activeVideo, onClose: () => setActiveVideo(null) }),
+    activeVideo && React.createElement(VideoOverlay, { src: activeVideo.url, profileId: activeVideo.profileId, onClose: () => setActiveVideo(null) }),
     showExtend && React.createElement(ExtendAreaOverlay, { onExtend: extendArea, onClose: dismissExtend }),
     showHelp && React.createElement(InfoOverlay, {
       title: t('dailyHelpTitle'),

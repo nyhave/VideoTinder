@@ -12,6 +12,7 @@ import { useT } from '../i18n.js';
 import StoryLineOverlay from './StoryLineOverlay.jsx';
 import { triggerHaptic } from '../haptics.js';
 import { sendPushNotification } from '../notifications.js';
+import VerificationBadge from './VerificationBadge.jsx';
 
 export default function LikesScreen({ userId, onSelectProfile, onBack }) {
   const profiles = useCollection('profiles');
@@ -105,7 +106,7 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
                 p.photoURL ?
                   React.createElement('img',{src:p.photoURL,className:'w-10 h-10 rounded object-cover'}) :
                   React.createElement(UserIcon,{className:'w-10 h-10 text-yellow-500'}),
-                p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
+                p.verified && React.createElement(VerificationBadge, null)
               ),
               React.createElement('div',null,
                 React.createElement('p',{className:'font-medium'},`${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`),

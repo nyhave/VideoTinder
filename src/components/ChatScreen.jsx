@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getAge } from '../utils.js';
 import { User as UserIcon, Smile, MessageCircle as ChatIcon, ArrowLeft } from 'lucide-react';
+import VerificationBadge from './VerificationBadge.jsx';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
@@ -46,6 +47,12 @@ export default function ChatScreen({ userId, onStartCall }) {
   }, [active?.messages?.length]);
 
   useEffect(() => {
+    if(!active) return;
+    const otherId = `${active.profileId}-${active.userId}`;
+    updateDoc(doc(db,'matches',otherId),{lastReadByOther:Date.now()}).catch(()=>{});
+  }, [active?.messages?.length, active?.id]);
+
+  useEffect(() => {
     if (!active) {
       setIncomingCall(false);
       return;
@@ -64,6 +71,8 @@ export default function ChatScreen({ userId, onStartCall }) {
     if(chat.unreadByUser || chat.newMatch){
       updateDoc(doc(db,'matches',chat.id),{unreadByUser:false,newMatch:false});
     }
+    const otherId = `${chat.profileId}-${chat.userId}`;
+    updateDoc(doc(db,'matches',otherId),{lastReadByOther:Date.now()}).catch(()=>{});
   };
 
   const sendMessage = async () => {
@@ -132,6 +141,7 @@ export default function ChatScreen({ userId, onStartCall }) {
   };
 
   const activeProfile = active ? profileMap[active.profileId] || {} : null;
+  const lastSelf = active ? [...(active.messages || [])].filter(m => m.from === userId).slice(-1)[0] : null;
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1 touch-none', style:{maxHeight:'calc(100vh - 10rem)', overflow:'hidden', touchAction:'none'} },
     React.createElement(SectionTitle, {
@@ -146,7 +156,7 @@ export default function ChatScreen({ userId, onStartCall }) {
             activeProfile.photoURL ?
               React.createElement('img', { src: activeProfile.photoURL, className: 'w-16 h-16 rounded-lg object-cover' }) :
               React.createElement(UserIcon, { className: 'w-16 h-16 text-pink-500' }),
-            activeProfile.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified')
+            activeProfile.verified && React.createElement(VerificationBadge, null)
           ),
           React.createElement('p', { className: 'flex-1 font-medium' }, `${activeProfile.name || ''}, ${activeProfile.birthday ? getAge(activeProfile.birthday) : activeProfile.age || ''}, ${activeProfile.city || ''}`),
           React.createElement(Button, {
@@ -166,7 +176,9 @@ export default function ChatScreen({ userId, onStartCall }) {
                 React.createElement('div', { className: 'text-xs text-gray-500' }, time),
                 React.createElement('div', {
                   className: `inline-block px-3 py-2 rounded-lg ${fromSelf ? 'bg-pink-500 text-white' : 'bg-gray-200 text-black'}`
-                }, m.text)
+                }, m.text),
+                fromSelf && lastSelf && m.ts === lastSelf.ts && active.lastReadByOther && active.lastReadByOther >= m.ts &&
+                  React.createElement('div',{className:'text-xs text-gray-500 text-right'},'Seen')
               )
             );
           })
@@ -214,7 +226,7 @@ export default function ChatScreen({ userId, onStartCall }) {
                 p.photoURL ?
                   React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
                   React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
-                p.verified && React.createElement('span', { className:'text-green-600 text-xs' }, 'Verified'),
+                p.verified && React.createElement(VerificationBadge, null),
                 !lastFromSelf && React.createElement('span', { className: 'text-sm text-blue-600 font-semibold' }, 'Your turn!')
               ),
               React.createElement('div', { className: 'flex flex-col' },
