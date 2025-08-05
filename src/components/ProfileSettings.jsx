@@ -573,7 +573,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           className: 'text-center text-sm text-gray-500'
         }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`)
       ),
-      !publicView && subscriptionActive && profile.subscriptionTier === 'Platinum' && React.createElement('label', { className:'flex items-center justify-center gap-2 mt-2' },
+      !publicView && subscriptionActive && profile.subscriptionTier === 'platinum' && React.createElement('label', { className:'flex items-center justify-center gap-2 mt-2' },
         React.createElement('input', { type:'checkbox', checked: profile.incognito || false, onChange: async e => { await updateDoc(doc(db,'profiles', userId), { incognito: e.target.checked }); setProfile({ ...profile, incognito: e.target.checked }); } }),
         t('incognitoMode')
       ),
