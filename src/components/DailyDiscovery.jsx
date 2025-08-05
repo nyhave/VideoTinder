@@ -20,8 +20,7 @@ import { triggerHaptic } from '../haptics.js';
 import useDayOffset from '../useDayOffset.js';
 import { sendPushNotification } from '../notifications.js';
 
-export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOpenProfile }) {
-  const profiles = useCollection('profiles');
+export default function DailyDiscovery({ userId, profiles = [], onSelectProfile, ageRange, onOpenProfile }) {
   const t = useT();
   const config = useDoc('config', 'app') || {};
   const showLevels = config.showLevels !== false;
