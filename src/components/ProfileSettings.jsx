@@ -11,7 +11,7 @@ import VideoPreview from './VideoPreview.jsx';
 import ReportOverlay from './ReportOverlay.jsx';
 import DeleteAccountOverlay from './DeleteAccountOverlay.jsx';
 import { useCollection, useDoc, db, storage, getDoc, doc, updateDoc, setDoc, deleteDoc, ref, uploadBytes, getDownloadURL, listAll, deleteObject, deleteAccount } from '../firebase.js';
-import PurchaseOverlay from './PurchaseOverlay.jsx';
+import SubscriptionOverlay from './SubscriptionOverlay.jsx';
 import InterestsOverlay from './InterestsOverlay.jsx';
 import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
@@ -59,7 +59,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     ? (getCurrentDate().getTime() - new Date(profile.lastActive).getTime()) < 3 * 60 * 60 * 1000
     : false;
 
-  const handlePurchase = async () => {
+  const handlePurchase = async (tier) => {
     const now = getCurrentDate();
     const current = profile.subscriptionExpires ? new Date(profile.subscriptionExpires) : now;
     const base = current > now ? current : now;
@@ -69,9 +69,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       subscriptionActive: true,
       subscriptionPurchased: now.toISOString(),
       subscriptionExpires: expiry.toISOString(),
-      subscriptionTier: 'silver'
+      subscriptionTier: tier
     });
-    setProfile({ ...profile, subscriptionActive: true, subscriptionPurchased: now.toISOString(), subscriptionExpires: expiry.toISOString(), subscriptionTier: 'silver' });
+    setProfile({ ...profile, subscriptionActive: true, subscriptionPurchased: now.toISOString(), subscriptionExpires: expiry.toISOString(), subscriptionTier: tier });
     setShowSub(false);
   };
 
@@ -710,18 +710,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'mt-6 w-full bg-red-500 text-white',
         onClick: () => setShowDelete(true)
       }, t('deleteAccount')),
-    showSub && React.createElement(PurchaseOverlay, {
-        title: 'Månedligt abonnement',
-        price: '59 kr/md',
+    showSub && React.createElement(SubscriptionOverlay, {
         onClose: () => setShowSub(false),
         onBuy: handlePurchase
-      },
-        React.createElement('ul', { className: 'list-disc list-inside text-sm space-y-1' },
-          React.createElement('li', null, '🎞️ Få adgang til at se flere nye klip hver dag (+3 profiler)'),
-          React.createElement('li', null, '🧠 Få indsigt i hvem der har liket dig (ubegrænset)'),
-          React.createElement('li', null, '⏳ Bliv på set i længere tid på listen af profiler (+5 dage)')
-        )
-      ),
+      }),
     showInterests && React.createElement(InterestsOverlay, {
         current: profile.interests || [],
         onSave: handleSaveInterests,
