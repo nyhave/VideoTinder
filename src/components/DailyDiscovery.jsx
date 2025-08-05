@@ -205,6 +205,41 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
       }
     }
   };
+  const sendSuperLike = async profileId => {
+    const likeId = `${userId}-${profileId}`;
+    await setDoc(doc(db,'likes',likeId),{id:likeId,userId,profileId,super:true});
+    await setDoc(doc(db,'episodeProgress', `${userId}-${profileId}`), { removed: true }, { merge: true });
+    triggerHaptic([200,50,200]);
+    const otherLike = await getDoc(doc(db,'likes',`${profileId}-${userId}`));
+    if(otherLike.exists()){
+      const m1 = {
+        id:`${userId}-${profileId}`,
+        userId,
+        profileId,
+        lastMessage:'',
+        unreadByUser:false,
+        unreadByProfile:false,
+        newMatch:false
+      };
+      const m2 = {
+        id:`${profileId}-${userId}`,
+        userId:profileId,
+        profileId:userId,
+        lastMessage:'',
+        unreadByUser:false,
+        unreadByProfile:false,
+        newMatch:true
+      };
+      await Promise.all([
+        setDoc(doc(db,'matches',m1.id),m1),
+        setDoc(doc(db,'matches',m2.id),m2)
+      ]);
+      sendPushNotification(profileId, 'Du har et match. Start samtalen');
+      const prof = profiles.find(p => p.id === profileId);
+      if(prof) setMatchedProfile(prof);
+      triggerHaptic([100,50,100]);
+    }
+  };
   const removeProfile = async profileId => {
     const id = `${userId}-${profileId}`;
     await setDoc(doc(db,'episodeProgress', id), { removed: true }, { merge: true });
@@ -254,6 +289,10 @@ export default function DailyDiscovery({ userId, onSelectProfile, ageRange, onOp
           React.createElement('span', { className:`absolute bottom-2 left-2 ${daysLeft <= 0 ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'} text-xs font-semibold px-2 rounded` },
             daysLeft <= 0 ? t('lastDay') : t('expiresIn').replace('{days}', daysLeft)
           ),
+          React.createElement(Button, {
+            className: `absolute top-2 right-20 bg-blue-500 text-white text-xs px-2 py-1 rounded ${likes.some(l => l.profileId === p.id && l.super) ? '' : 'opacity-80'}`,
+            onClick: e => { e.stopPropagation(); sendSuperLike(p.id); }
+          }, t('superLike')),
           React.createElement(Button, {
             className: `absolute top-2 right-2 bg-pink-500 text-white text-xs px-2 py-1 rounded ${likes.some(l => l.profileId === p.id) ? '' : 'opacity-80'}`,
             onClick: e => { e.stopPropagation(); toggleLike(p.id); }

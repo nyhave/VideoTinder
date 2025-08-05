@@ -115,6 +115,7 @@ export function scoreProfiles(user, profiles, ageRange) {
       const matchesLang = preferred.length === 0 || preferred.includes(p.language || 'en');
       return (
         p.id !== user.id &&
+        !p.incognito &&
         p.gender === interest &&
         (p.birthday ? getAge(p.birthday) : p.age) >= ageRange[0] &&
         (p.birthday ? getAge(p.birthday) : p.age) <= ageRange[1] &&

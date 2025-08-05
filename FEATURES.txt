@@ -29,3 +29,6 @@ Track logs for individual users from admin
 Turn-based Realetten game uses Firestore for shared state and scoring
 Winner celebration overlay highlights top score
 Kill all Realetten sessions from admin
+Super likes to signal strong interest and improve match rates
+Incognito mode lets subscribers browse profiles anonymously
+Video creation tools with music and longer uploads for richer profiles

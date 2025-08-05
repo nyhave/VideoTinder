@@ -34,8 +34,11 @@ Profiles are presented as short episodes rather than a catalog of faces. Each ep
 * Premium page showing who liked you (subscription required)
 * Invite friends with a shareable link
 * Seed data includes 11 mandlige profiler der matcher standardbrugeren så du kan teste premium og ekstra klip
-* Videoklip begrænset til 10 sekunder
-  (optagelser lidt over 10s accepteres for at håndtere kodningsforsinkelser)
+* Super likes let you signal strong interest and improve match rates
+* Incognito mode allows subscribers to browse profiles anonymously
+* Video creation tools add background music and support longer uploads
+* Videoklip begrænset til 10 sekunder (op til 25 sekunder med premium)
+  (optagelser lidt over grænsen accepteres for at håndtere kodningsforsinkelser)
 * Animation med nedtælling viser hvor lang tid der er tilbage under videooptagelse
 * Daglige statistikker gemmes automatisk og vises som grafer i adminområdet
 * Statistik over hvor mange gange profiler bliver åbnet

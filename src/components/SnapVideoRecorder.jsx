@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Camera as CameraIcon } from 'lucide-react';
+import { useT } from '../i18n.js';
 
-export default function SnapVideoRecorder({ onCancel, onRecorded }) {
+export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 10000 }) {
   const streamRef = useRef();
   const recorderRef = useRef();
   const chunksRef = useRef([]);
@@ -10,6 +11,8 @@ export default function SnapVideoRecorder({ onCancel, onRecorded }) {
   const [recording, setRecording] = useState(false);
   const [progress, setProgress] = useState(0);
   const startTimeRef = useRef(null);
+  const [music, setMusic] = useState(null);
+  const t = useT();
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ video: true, audio: { echoCancellation: true } }).then(stream => {
@@ -36,15 +39,15 @@ export default function SnapVideoRecorder({ onCancel, onRecorded }) {
     recorder.onstop = () => {
       const blob = new Blob(chunksRef.current, { type: recorder.mimeType });
       const file = new File([blob], `video-${Date.now()}.webm`, { type: blob.type });
-      onRecorded && onRecorded(file);
+      onRecorded && onRecorded(file, music);
     };
     recorder.start();
     setRecording(true);
     startTimeRef.current = Date.now();
     const tick = () => {
       const elapsed = Date.now() - startTimeRef.current;
-      setProgress(Math.min(elapsed / 10000, 1));
-      if(elapsed >= 10000){
+      setProgress(Math.min(elapsed / maxDuration, 1));
+      if(elapsed >= maxDuration){
         stop();
       } else {
         timeoutRef.current = requestAnimationFrame(tick);
@@ -71,12 +74,16 @@ export default function SnapVideoRecorder({ onCancel, onRecorded }) {
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - progress);
   const remainingSeconds = startTimeRef.current
-    ? Math.max(0, 10 - Math.floor((Date.now() - startTimeRef.current) / 1000))
-    : 10;
+    ? Math.max(0, Math.ceil((maxDuration - (Date.now() - startTimeRef.current)) / 1000))
+    : Math.round(maxDuration / 1000);
 
   return React.createElement('div', { className:'fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60' },
     React.createElement('div', { className:'flex-1 flex items-center justify-center w-full' },
       React.createElement('div', { className:'relative w-72 h-72' },
+        React.createElement('label', { className:'absolute -top-10 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-2 py-1 rounded cursor-pointer' },
+          t('addMusic'),
+          React.createElement('input', { type:'file', accept:'audio/*', className:'hidden', onChange:e=>setMusic(e.target.files[0]) })
+        ),
         React.createElement('svg', { className:'absolute inset-0 w-full h-full rotate-animation pointer-events-none z-10', viewBox:'0 0 100 100' },
           React.createElement('circle', { cx:'50', cy:'50', r:radius, stroke:'#9ca3af', strokeWidth:'8', fill:'none' }),
           React.createElement('circle', {
