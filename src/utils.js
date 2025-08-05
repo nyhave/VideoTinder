@@ -92,7 +92,7 @@ export function getSuperLikeLimit(user){
 
 export function getMaxVideoSeconds(user){
   const tier = user?.subscriptionTier || 'free';
-  const caps = { free:10, silver:15, gold:15, platinum:25 };
+  const caps = { free:10, silver:10, gold:15, platinum:25 };
   return caps[tier] ?? caps.free;
 }
 
