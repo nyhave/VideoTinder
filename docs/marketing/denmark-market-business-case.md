@@ -13,13 +13,12 @@ VideoTinder uses a freemium model with three paid membership levels that expand 
 | Feature | Free | Silver | Gold | Platinum |
 | --- | --- | --- | --- | --- |
 | Daily profile limit | 3 | 5 | 8 | 10 |
-| Group chat | ❌ | ✓ | ✓ | ✓ |
+| Group chat based on interests | ❌ | ✓ | ✓ | ✓ |
 | Ratings | ❌ | ❌ | ✓ | ✓ |
 | See who liked you | ❌ | ❌ | ✓ | ✓ |
 | Undo removes | ❌ | last | ✓ | ✓ |
 | Super like per week | ❌ | 1 | 3 | 5 |
 | Boost visibility | ❌ | 1/month | 2/month | 4/month |
-| Priority placement in group chat | ❌ | ❌ | ✓ | ✓ (Top priority) |
 | Advanced filters (gender, age, distance, etc.) | gender, age | +distance | Full | Full |
 | Incognito mode | ❌ | ❌ | ❌ | ✓ |
 | Video creation tools (music) | ❌ | ❌ | ✓ | ✓ |
