@@ -4,7 +4,7 @@ import { User as UserIcon, PlayCircle, Heart } from 'lucide-react';
 import VideoOverlay from './VideoOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import { Card } from './ui/card.js';
-import PurchaseOverlay from './PurchaseOverlay.jsx';
+import SubscriptionOverlay from './SubscriptionOverlay.jsx';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useCollection, db, doc, setDoc, deleteDoc, getDoc } from '../firebase.js';
@@ -63,7 +63,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
   };
 
   const [showPurchase, setShowPurchase] = useState(false);
-  const handlePurchase = async () => {
+  const handlePurchase = async (tier) => {
     const now = getCurrentDate();
     const current = currentUser.subscriptionExpires ? new Date(currentUser.subscriptionExpires) : now;
     const base = current > now ? current : now;
@@ -73,7 +73,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
       subscriptionActive:true,
       subscriptionPurchased: now.toISOString(),
       subscriptionExpires: expiry.toISOString(),
-      subscriptionTier: 'silver'
+      subscriptionTier: tier
     },{ merge:true });
     setShowPurchase(false);
   };
@@ -122,13 +122,7 @@ export default function LikesScreen({ userId, onSelectProfile }) {
     ),
     !hasSubscription && React.createElement('span',{className:'absolute inset-0 m-auto text-yellow-500 text-sm font-semibold pointer-events-none flex items-center justify-center text-center px-2'},'Kr\u00e6ver premium abonnement'),
     !hasSubscription && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb premium'),
-    showPurchase && React.createElement(PurchaseOverlay,{title:'Månedligt abonnement', price:'59 kr/md', onClose:()=>setShowPurchase(false), onBuy:handlePurchase},
-      React.createElement('ul',{className:'list-disc list-inside text-sm space-y-1'},
-        React.createElement('li',null,'🎞️ Få adgang til at se flere nye klip hver dag (+3 profiler)'),
-        React.createElement('li',null,'🧠 Få indsigt i hvem der har liket dig (ubegrænset)'),
-        React.createElement('li',null,'⏳ Bliv på set i længere tid på listen af profiler (+5 dage)')
-      )
-    ),
+    showPurchase && React.createElement(SubscriptionOverlay,{onClose:()=>setShowPurchase(false), onBuy:handlePurchase}),
     storyProfile && React.createElement(StoryLineOverlay,{profile:storyProfile, progress: progresses.find(pr=>pr.profileId===storyProfile.id), onClose:()=>setStoryProfile(null), onMatch:id=>{toggleLike(id); setStoryProfile(null);}}),
     matchedProfile && React.createElement(MatchOverlay,{name:matchedProfile.name,onClose:()=>setMatchedProfile(null)}),
     activeVideo && React.createElement(VideoOverlay,{src:activeVideo,onClose:()=>setActiveVideo(null)})
