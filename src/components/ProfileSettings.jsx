@@ -68,9 +68,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await updateDoc(doc(db, 'profiles', userId), {
       subscriptionActive: true,
       subscriptionPurchased: now.toISOString(),
-      subscriptionExpires: expiry.toISOString()
+      subscriptionExpires: expiry.toISOString(),
+      subscriptionTier: 'silver'
     });
-    setProfile({ ...profile, subscriptionActive: true, subscriptionPurchased: now.toISOString(), subscriptionExpires: expiry.toISOString() });
+    setProfile({ ...profile, subscriptionActive: true, subscriptionPurchased: now.toISOString(), subscriptionExpires: expiry.toISOString(), subscriptionTier: 'silver' });
     setShowSub(false);
   };
 

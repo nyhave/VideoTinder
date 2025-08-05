@@ -72,7 +72,8 @@ export default function LikesScreen({ userId, onSelectProfile }) {
     await setDoc(doc(db,'profiles',userId),{
       subscriptionActive:true,
       subscriptionPurchased: now.toISOString(),
-      subscriptionExpires: expiry.toISOString()
+      subscriptionExpires: expiry.toISOString(),
+      subscriptionTier: 'silver'
     },{ merge:true });
     setShowPurchase(false);
   };
