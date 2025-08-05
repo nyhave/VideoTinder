@@ -4,9 +4,9 @@ import { Button } from './ui/button.js';
 
 export default function SubscriptionOverlay({ onClose, onBuy }) {
   const plans = [
-    { tier: 'silver', title: 'Sølv', price: '59 kr/md', benefit: '+2 profiler' },
-    { tier: 'gold', title: 'Guld', price: '99 kr/md', benefit: '+5 profiler' },
-    { tier: 'platinum', title: 'Platin', price: '149 kr/md', benefit: '+7 profiler' }
+    { tier: 'silver', title: 'Sølv', price: '39 kr/md', daily: 5 },
+    { tier: 'gold', title: 'Guld', price: '79 kr/md', daily: 8 },
+    { tier: 'platinum', title: 'Platin', price: '139 kr/md', daily: 10 }
   ];
   const [selected, setSelected] = useState('silver');
   return React.createElement('div', { className: 'fixed inset-0 z-50 bg-black/50 flex items-center justify-center' },
@@ -20,7 +20,7 @@ export default function SubscriptionOverlay({ onClose, onBuy }) {
               onClick: () => setSelected(p.tier)
             },
               React.createElement('span', { className: 'font-medium' }, `${p.title} – ${p.price}`),
-              React.createElement('span', { className: 'text-sm' }, `Dagligt kliplimit ${p.benefit}`)
+              React.createElement('span', { className: 'text-sm' }, `Dagligt kliplimit ${p.daily}`)
             )
           )
         ))
