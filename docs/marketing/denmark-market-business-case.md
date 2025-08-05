@@ -24,6 +24,16 @@ VideoTinder uses a freemium model with three paid membership levels that expand 
 | Incognito mode | ❌ | ❌ | ❌ | ✓ |
 | Video creation tools (music) | ❌ | ❌ | ✓ | ✓ |
 | Longer videos | ❌ | ❌ | 15 sec | 25 sec |
+| Ad-free experience | Ads | ✓ | ✓ (priority) | ✓ (priority) |
+| Profile verification badge | ❌ | ❌ | ✓ | ✓ |
+| Read receipts & typing indicators | ❌ | ❌ | ✓ | ✓ |
+| Advanced profile analytics | ❌ | ❌ | ✓ (basic) | ✓ (advanced) |
+
+Additional premium perks:
+- **Profile verification badge** (Gold, Platinum) builds trust and discourages fake accounts.
+- **Ad-free experience** (Silver+, priority for Gold and Platinum) removes banner and interstitial ads.
+- **Read receipts and typing indicators** (Gold+) enhance messaging transparency.
+- **Advanced profile analytics** (Gold+, deeper analytics for Platinum) track profile views, video watch time, and match conversion.
 
 Daily refers to days where the user is active
 
