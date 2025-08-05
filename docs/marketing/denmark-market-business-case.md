@@ -44,7 +44,8 @@ Assumptions:
 - Expected market penetration for VideoTinder: **10%** of dating app users -> **94,500 users**
 - Premium conversion: **10%** of VideoTinder users -> **9,450 paying subscribers**
 - Tier distribution: **60% Silver**, **30% Gold**, **10% Platinum**
-
+- Average income pr user pr year **10%** of 0,6 Silver × 39 DKK × 12 + 0,30 Gold × 79 DKK × 12 + 0,1 Platinum × 139 DKK × 12 = **73,2 DKK** (≈12 USD)
+  
 Annual revenue:
 - 5,670 Silver × 39 DKK × 12 + 2,835 Gold × 79 DKK × 12 + 945 Platinum × 139 DKK × 12 = **6,917,400 DKK** (≈1.0M USD)
 
