@@ -44,10 +44,12 @@ Assumptions:
 - Expected market penetration for VideoTinder: **10%** of dating app users -> **94,500 users**
 - Premium conversion: **10%** of VideoTinder users -> **9,450 paying subscribers**
 - Tier distribution: **60% Silver**, **30% Gold**, **10% Platinum**
-- Average income pr user pr year **10%** of 0,6 Silver × 39 DKK × 12 + 0,30 Gold × 79 DKK × 12 + 0,1 Platinum × 139 DKK × 12 = **73,2 DKK** (≈12 USD)
-  
+- Average income pr user pr year **10%** of 0,6 Silver × 39 DKK × 12 + 0,30 Gold × 79 DKK × 12 + 0,1 Platinum × 139 DKK × 12 + banner ads (300 impressions/user/month × 7 DKK CPM) = **98,4 DKK** (≈15 USD)
+
 Annual revenue:
-- 5,670 Silver × 39 DKK × 12 + 2,835 Gold × 79 DKK × 12 + 945 Platinum × 139 DKK × 12 = **6,917,400 DKK** (≈1.0M USD)
+- Subscriptions: 5,670 Silver × 39 DKK × 12 + 2,835 Gold × 79 DKK × 12 + 945 Platinum × 139 DKK × 12 = **6,917,400 DKK**
+- Banner ads (bottom placement): 94,500 users × 300 impressions/user/month × 12 months ÷ 1,000 × 7 DKK ≈ **2,381,400 DKK**
+- **Total:** **9,298,800 DKK** (≈1.3M USD)
 
 ## Cost Estimate
 - Infrastructure and support: **20 DKK** per user per year -> 94,500 × 20 = **1,890,000 DKK**
@@ -57,9 +59,9 @@ Annual revenue:
 Total estimated annual cost: **6,890,000 DKK**
 
 ## Break-even Analysis
-- Estimated annual profit: 6,917,400 − 6,890,000 = **27,400 DKK**
-- Break-even premium users: 6,890,000 ÷ (61 × 12) ≈ **9,413 paying users**
-- Break-even total users (at 10% premium conversion): **94,130 users**
+- Estimated annual profit: 9,298,800 − 6,890,000 = **2,408,800 DKK**
+- Break-even premium users: (6,890,000 − 2,381,400) ÷ (61 × 12) ≈ **6,160 paying users**
+- Break-even total users (at 10% premium conversion): **61,600 users**
 
 ## First Three Years Outlook
 To reach the full penetration and conversion assumptions above, the first few years are expected to ramp up gradually.
@@ -67,23 +69,23 @@ To reach the full penetration and conversion assumptions above, the first few ye
 ### Year 1: Establish the product and gather feedback
 - **Penetration:** 2% of dating app users → **19,000 total users**
 - **Premium conversion:** 5% → **950 paying subscribers**
-- **Annual revenue:** 570 Silver, 285 Gold, 95 Platinum → **695,400 DKK**
+- **Annual revenue:** 570 Silver, 285 Gold, 95 Platinum + banner ads (~478,800 DKK) → **1,174,200 DKK**
 - **Estimated costs:** infrastructure (380,000 DKK), marketing (1,000,000 DKK), overhead (1,500,000 DKK)
-- **Net result:** **−2,184,600 DKK** while investing in product-market fit
+- **Net result:** **−1,705,800 DKK** while investing in product-market fit
 
 ### Year 2: Refine features and begin scaling
 - **Penetration:** 5% → **47,500 total users**
 - **Premium conversion:** 8% → **3,800 paying subscribers**
-- **Annual revenue:** 2,280 Silver, 1,140 Gold, 380 Platinum → **2,781,600 DKK**
+- **Annual revenue:** 2,280 Silver, 1,140 Gold, 380 Platinum + banner ads (~1,197,000 DKK) → **3,978,600 DKK**
 - **Estimated costs:** infrastructure (950,000 DKK), marketing (2,000,000 DKK), overhead (1,800,000 DKK)
-- **Net result:** **−1,968,400 DKK**, moving toward break-even
+- **Net result:** **−771,400 DKK**, moving toward break-even
 
 ### Year 3: Expand reach and solidify monetization
 - **Penetration:** 8% → **76,000 total users**
 - **Premium conversion:** 9% → **6,840 paying subscribers**
-- **Annual revenue:** 4,104 Silver, 2,052 Gold, 684 Platinum → **5,006,880 DKK**
+- **Annual revenue:** 4,104 Silver, 2,052 Gold, 684 Platinum + banner ads (~1,915,200 DKK) → **6,922,080 DKK**
 - **Estimated costs:** infrastructure (1,520,000 DKK), marketing (2,500,000 DKK), overhead (1,900,000 DKK)
-- **Net result:** **−913,120 DKK** as tiered pricing narrows the gap
+- **Net result:** **1,002,080 DKK** as tiered pricing and ads drive profitability
 
 ## Strategic Considerations
 - High smartphone usage and a large single population support market entry
