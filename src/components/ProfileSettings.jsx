@@ -17,7 +17,7 @@ import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
 import { languages, useT } from '../i18n.js';
 import { getInterestCategory } from '../interests.js';
-import { getAge, getCurrentDate, getMaxVideoSeconds } from '../utils.js';
+import { getAge, getCurrentDate, getMaxVideoSeconds, getMonthlyBoostLimit } from '../utils.js';
 import PremiumIcon from './PremiumIcon.jsx';
 import { triggerHaptic } from '../haptics.js';
 import { sendPushNotification } from '../notifications.js';
@@ -82,6 +82,34 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     setShowSub(false);
   };
 
+  const handleBoost = async () => {
+    const now = getCurrentDate();
+    if (profile.boostExpires && new Date(profile.boostExpires) > now) {
+      window.alert('Boost allerede aktiv');
+      return;
+    }
+    const month = now.toISOString().slice(0, 7);
+    const limit = getMonthlyBoostLimit(profile);
+    const used = profile.boostMonth === month ? (profile.boostsUsed || 0) : 0;
+    if (used >= limit) {
+      window.alert('Ingen boosts tilbage denne måned');
+      return;
+    }
+    const expires = new Date(now.getTime() + 30 * 60 * 1000);
+    await updateDoc(doc(db, 'profiles', userId), {
+      boostExpires: expires.toISOString(),
+      boostsUsed: used + 1,
+      boostMonth: month
+    });
+    setProfile({
+      ...profile,
+      boostExpires: expires.toISOString(),
+      boostsUsed: used + 1,
+      boostMonth: month
+    });
+    triggerHaptic();
+  };
+
   useEffect(() => {
     if (!userId) return;
     getDoc(doc(db, 'profiles', userId))
@@ -121,6 +149,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const subscriptionActive =
     profile.subscriptionExpires &&
     new Date(profile.subscriptionExpires) > getCurrentDate();
+
+  const boostActive =
+    profile.boostExpires && new Date(profile.boostExpires) > getCurrentDate();
+  const boostsLeft = (() => {
+    const limit = getMonthlyBoostLimit(profile);
+    if (limit === 0) return 0;
+    const now = getCurrentDate();
+    const month = now.toISOString().slice(0, 7);
+    const used = profile.boostMonth === month ? (profile.boostsUsed || 0) : 0;
+    return limit - used;
+  })();
 
 
   const highlightPhoto = activeTask === 'photo';
@@ -728,6 +767,16 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'mt-2 w-full bg-blue-500 text-white',
         onClick: () => setShowAnalytics(true)
       }, t('viewAnalytics')),
+    !publicView && boostActive && React.createElement('p', {
+        className: 'mt-2 text-center text-sm text-purple-700'
+      }, 'Boost aktiv'),
+    !publicView && !boostActive && boostsLeft > 0 && React.createElement(Button, {
+        className: 'mt-2 w-full bg-purple-600 text-white',
+        onClick: handleBoost
+      }, `Boost profil (${boostsLeft} tilbage)`),
+    !publicView && !boostActive && boostsLeft <= 0 && getMonthlyBoostLimit(profile) > 0 && React.createElement('p', {
+        className: 'mt-2 text-center text-sm text-gray-500'
+      }, 'Ingen boosts tilbage denne måned'),
     !publicView && !subscriptionActive && React.createElement(Button, {
         className: 'mt-2 w-full bg-yellow-500 text-white',
         onClick: () => setShowSub(true)
