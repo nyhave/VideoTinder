@@ -56,6 +56,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [reportMode, setReportMode] = useState(false);
   const [reportItem, setReportItem] = useState(null);
+  const [boostCountdown, setBoostCountdown] = useState('');
   const progressId = publicView && viewerId && viewerId !== userId ? `${viewerId}-${userId}` : null;
   const progress = useDoc('episodeProgress', progressId);
   const stage = isOwnProfile ? 3 : (progress?.stage || 1);
@@ -160,6 +161,27 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     const used = profile.boostMonth === month ? (profile.boostsUsed || 0) : 0;
     return limit - used;
   })();
+
+  useEffect(() => {
+    let timer;
+    if (boostActive) {
+      const updateCountdown = () => {
+        const diff = new Date(profile.boostExpires) - getCurrentDate();
+        if (diff > 0) {
+          const minutes = Math.floor(diff / 60000);
+          const seconds = Math.floor((diff % 60000) / 1000);
+          setBoostCountdown(`${minutes}:${seconds.toString().padStart(2,'0')}`);
+        } else {
+          setBoostCountdown('');
+        }
+      };
+      updateCountdown();
+      timer = setInterval(updateCountdown, 1000);
+    } else {
+      setBoostCountdown('');
+    }
+    return () => clearInterval(timer);
+  }, [boostActive, profile?.boostExpires]);
 
 
   const highlightPhoto = activeTask === 'photo';
@@ -769,7 +791,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       }, t('viewAnalytics')),
     !publicView && boostActive && React.createElement('p', {
         className: 'mt-2 text-center text-sm text-purple-700'
-      }, 'Boost aktiv'),
+      }, `Boost aktiv${boostCountdown ? ` (${boostCountdown})` : ''}`),
     !publicView && !boostActive && boostsLeft > 0 && React.createElement(Button, {
         className: 'mt-2 w-full bg-purple-600 text-white',
         onClick: handleBoost
