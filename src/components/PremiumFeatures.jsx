@@ -15,7 +15,7 @@ export default function PremiumFeatures({ userId, onBack, onSelectProfile }) {
   const t = useT();
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-    React.createElement(SectionTitle, { title: t('premiumTitle'), colorClass: 'text-yellow-600' }),
+    React.createElement(SectionTitle, { title: t('premiumTitle'), colorClass: 'text-yellow-600', premium: true }),
     React.createElement(Button, { className: 'mb-4 bg-yellow-500 text-white', onClick: onBack }, t('back')),
     React.createElement('p', { className: 'mb-4 text-sm text-gray-700' }, 'Her er profiler der har liket dig:'),
     React.createElement('ul', { className: 'space-y-4' },

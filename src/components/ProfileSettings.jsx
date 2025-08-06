@@ -18,6 +18,7 @@ import MatchOverlay from './MatchOverlay.jsx';
 import { languages, useT } from '../i18n.js';
 import { getInterestCategory } from '../interests.js';
 import { getAge, getCurrentDate, getMaxVideoSeconds } from '../utils.js';
+import PremiumIcon from './PremiumIcon.jsx';
 import { triggerHaptic } from '../haptics.js';
 import { sendPushNotification } from '../notifications.js';
 import ProfileAnalytics from './ProfileAnalytics.jsx';
@@ -565,10 +566,13 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         ),
       isOwnProfile && !publicView && profile.email && React.createElement('p', { className:'text-center text-sm text-gray-600 mt-1' }, profile.email),
       !publicView && profile.subscriptionExpires && React.createElement('p', {
-        className: 'text-center text-sm mt-2 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
-      }, subscriptionActive
-        ? `Premium abonnement aktivt til ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
-        : `Premium abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`),
+        className: 'text-center text-sm mt-2 flex items-center justify-center gap-1 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
+      },
+        !subscriptionActive && React.createElement(PremiumIcon, null),
+        subscriptionActive
+          ? `Premium abonnement aktivt til ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
+          : `Premium abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
+      ),
         !publicView && profile.subscriptionPurchased && React.createElement('p', {
           className: 'text-center text-sm text-gray-500'
         }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`)
