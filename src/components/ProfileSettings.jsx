@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Slider from 'rc-slider';
+import Slider from 'rc-slider'; // Ensure slider component is available
 import 'rc-slider/assets/index.css';
 import { Camera as CameraIcon, User as UserIcon, Trash2 as TrashIcon, Pencil as EditIcon, Heart, Flag } from 'lucide-react';
 import { Card } from './ui/card.js';
