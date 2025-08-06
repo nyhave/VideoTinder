@@ -7,7 +7,6 @@ import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
 import { useDoc, useCollection, db, doc, setDoc, arrayUnion, onSnapshot, getDoc } from '../firebase.js';
 import RealettenPage from './RealettenPage.jsx';
-import CoopShootingGame from './CoopShootingGame.jsx';
 
 function sanitizeInterest(i){
   return encodeURIComponent(i || '').replace(/%20/g,'_');
@@ -22,8 +21,6 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
   const [text, setText] = useState('');
   const [showRealetten, setShowRealetten] = useState(false);
   const [realettenStarted, setRealettenStarted] = useState(false);
-  const [showShooter, setShowShooter] = useState(false);
-  const [shooterStarted, setShooterStarted] = useState(false);
   const messagesRef = useRef(null);
   const textareaRef = useRef(null);
   const t = useT();
@@ -72,23 +69,6 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
     };
   }, [interest]);
 
-  useEffect(() => {
-    if(!interest) return;
-    let ignore = false;
-    setShooterStarted(false);
-    const ref = doc(db, 'coopShooter', sanitizeInterest(interest));
-    getDoc(ref).then(snap => {
-      if(!ignore) setShooterStarted(snap.exists());
-    });
-    const unsub = onSnapshot(ref, snap => {
-      if(!ignore) setShooterStarted(snap.exists());
-    });
-    return () => {
-      ignore = true;
-      unsub();
-    };
-  }, [interest]);
-
   const sendMessage = async () => {
     const trimmed = text.trim();
     if(!trimmed || !interest) return;
@@ -115,10 +95,6 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
   if(showRealetten && interest){
     return React.createElement(RealettenPage, { interest, userId, onBack:()=>setShowRealetten(false) });
   }
-  if(showShooter && interest){
-    return React.createElement(CoopShootingGame, { interest, userId, onBack:()=>setShowShooter(false) });
-  }
-
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1', style:{maxHeight:'calc(100vh - 10rem)', overflow:'hidden'} },
     React.createElement(SectionTitle, { title: interest ? `${t('interestChatsTitle')} - ${interest}` : t('interestChatsTitle') }),
     React.createElement('div', { className:'flex gap-2 mb-4 overflow-x-auto' },
@@ -164,8 +140,7 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
         }),
         React.createElement(Button, { className:'bg-pink-500 text-white', disabled:!text.trim(), onClick:sendMessage }, 'Send')
       ),
-      React.createElement(Button, { className:'bg-blue-600 text-white font-bold mt-2', onClick:()=>setShowRealetten(true) }, realettenStarted ? 'Realetten started - Join now!' : 'Tag Chancen - Pr\u00f8v Realetten'),
-      React.createElement(Button, { className:'bg-green-600 text-white font-bold mt-2', onClick:()=>setShowShooter(true) }, shooterStarted ? 'Shooter active - Join!' : 'Start Co-op Shooter')
+      React.createElement(Button, { className:'bg-blue-600 text-white font-bold mt-2', onClick:()=>setShowRealetten(true) }, realettenStarted ? 'Realetten started - Join now!' : 'Tag Chancen - Pr\u00f8v Realetten')
     )
   );
 }
