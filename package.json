@@ -11,7 +11,7 @@
     "screenshots": "node scripts/capture-screens.js"
   },
   "dependencies": {
-    "@heroicons/react": "^2.0.18",
+    "@heroicons/react": "^2.2.0",
     "firebase": "^9.23.0",
     "firebase-admin": "^11.10.0",
     "html2canvas": "^1.4.1",
