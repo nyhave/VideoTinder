@@ -9,7 +9,6 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useCollection, db, doc, setDoc, deleteDoc, getDoc } from '../firebase.js';
 import { useT } from '../i18n.js';
-import StoryLineOverlay from './StoryLineOverlay.jsx';
 import { triggerHaptic } from '../haptics.js';
 import { sendPushNotification } from '../notifications.js';
 import VerificationBadge from './VerificationBadge.jsx';
@@ -32,8 +31,6 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
 
   const [activeVideo, setActiveVideo] = useState(null);
   const [matchedProfile, setMatchedProfile] = useState(null);
-  const [storyProfile, setStoryProfile] = useState(null);
-  const progresses = useCollection('episodeProgress','userId', userId);
   const toggleLike = async profileId => {
     const likeId = `${userId}-${profileId}`;
     const exists = likes.some(l => l.profileId === profileId);
@@ -118,8 +115,7 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
             React.createElement('div',{className:'flex gap-2 mt-2'},
               React.createElement(Button,{size:'sm',variant:'outline',className:'flex items-center gap-1',onClick:e=>{e.stopPropagation();const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null;if(url)setActiveVideo(url);}},
                 React.createElement(PlayCircle,{className:'w-5 h-5'}),'Afspil'
-              ),
-              React.createElement(Button,{size:'sm',variant:'outline',onClick:e=>{e.stopPropagation();setStoryProfile(p);}},'StoryLine')
+              )
             )
           );
         }) :
@@ -129,7 +125,6 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
     !canSeeLikes && React.createElement('span',{className:'absolute inset-0 m-auto text-yellow-500 text-sm font-semibold pointer-events-none flex items-center justify-center text-center px-2'},'Kr\u00e6ver Guld eller Platin'),
     !canSeeLikes && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb Guld/Platin'),
     showPurchase && React.createElement(SubscriptionOverlay,{onClose:()=>setShowPurchase(false), onBuy:handlePurchase}),
-    storyProfile && React.createElement(StoryLineOverlay,{profile:storyProfile, progress: progresses.find(pr=>pr.profileId===storyProfile.id), onClose:()=>setStoryProfile(null), onMatch:id=>{toggleLike(id); setStoryProfile(null);}}),
     matchedProfile && React.createElement(MatchOverlay,{name:matchedProfile.name,onClose:()=>setMatchedProfile(null)}),
     activeVideo && React.createElement(VideoOverlay,{src:activeVideo,onClose:()=>setActiveVideo(null)})
   );
