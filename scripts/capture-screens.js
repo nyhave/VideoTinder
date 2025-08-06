@@ -64,6 +64,8 @@ async function capture() {
     const url = `http://localhost:${port}/?tab=${route.tab}`;
     const file = path.join(shotsDir, `${route.name}.png`);
     await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
+    // Allow extra time for client-side data to render before capturing
+    await page.waitForTimeout(1000);
     await page.screenshot({ path: file, fullPage: true });
     console.log('Saved', file);
   }
