@@ -28,6 +28,7 @@ Reusable profile filtering helper for Netlify Functions
 Track logs for individual users from admin
 Turn-based Realetten game uses Firestore for shared state and scoring
 Simple 2D co-op shooting game where every player must score to win, now with touch controls for iPhone
+Co-op shooter now playable inside Realetten video calls so players can see and talk to each other
 Winner celebration overlay highlights top score
 Kill all Realetten sessions from admin
 Super likes to signal strong interest and improve match rates

@@ -5,6 +5,7 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import RealettenCallScreen from './RealettenCallScreen.jsx';
 import TurnGame from './TurnGame.jsx';
+import CoopShootingGame from './CoopShootingGame.jsx';
 import { useCollection, db, doc, setDoc, onSnapshot, updateDoc, getDoc, deleteDoc, arrayUnion, arrayRemove } from '../firebase.js';
 import { deleteField } from 'firebase/firestore';
 
@@ -20,14 +21,29 @@ export default function RealettenPage({ interest, userId, onBack }) {
   const [botActive, setBotActive] = useState(true);
   const profiles = useCollection('profiles');
   const profileMap = Object.fromEntries(profiles.map(p => [p.id, p]));
-  const [showGame, setShowGame] = useState(false);
+  const [game, setGame] = useState(null);
   useEffect(() => {
     if (!interest) return;
     const gameId = sanitizeInterest(interest);
     const ref = doc(db, 'turnGames', gameId);
     const unsub = onSnapshot(ref, snap => {
       const data = snap.data() || {};
-      setShowGame(snap.exists() && data.step !== 'done');
+      if (snap.exists() && data.step !== 'done') {
+        setGame(g => g || 'turn');
+      } else {
+        setGame(g => g === 'turn' ? null : g);
+      }
+    });
+    return () => unsub();
+  }, [interest]);
+  useEffect(() => {
+    if (!interest) return;
+    const gameId = sanitizeInterest(interest);
+    const ref = doc(db, 'coopShooter', gameId);
+    const unsub = onSnapshot(ref, snap => {
+      if (snap.exists()) {
+        setGame(g => g || 'shoot');
+      }
     });
     return () => unsub();
   }, [interest]);
@@ -132,17 +148,23 @@ export default function RealettenPage({ interest, userId, onBack }) {
       guesses: {},
       createdAt: new Date().toISOString()
     });
-    setShowGame(true);
+    setGame('turn');
   };
-  const startButton = React.createElement(Button, {
-    className: 'bg-pink-500 text-white mt-2 self-center',
+  const turnBtn = React.createElement(Button, {
+    className: 'bg-pink-500 text-white',
     disabled: players.length === 0,
     onClick: startGame
-  }, 'Start spil');
+  }, 'Start quiz');
+  const shooterBtn = React.createElement(Button, {
+    className: 'bg-green-600 text-white',
+    onClick: () => setGame('shoot')
+  }, 'Start shooter');
+  const buttons = React.createElement('div', { className:'flex gap-2 mt-2 self-center' }, turnBtn, shooterBtn);
   return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1 overflow-y-auto' },
     React.createElement(SectionTitle,{ title:'Realetten', action }),
     React.createElement(RealettenCallScreen,{ interest, userId, botId:BOT_ID, onEnd:onBack, onParticipantsChange:setPlayers }),
-    !showGame && startButton,
-    showGame && React.createElement(TurnGame,{ sessionId: sanitizeInterest(interest), players: playerNames, myName, botName:BOT_NAME, onExit:()=>setShowGame(false) })
+    !game && buttons,
+    game === 'turn' && React.createElement(TurnGame,{ sessionId: sanitizeInterest(interest), players: playerNames, myName, botName:BOT_NAME, onExit:()=>setGame(null) }),
+    game === 'shoot' && React.createElement(CoopShootingGame,{ interest, userId, onBack:()=>setGame(null) })
   );
 }
