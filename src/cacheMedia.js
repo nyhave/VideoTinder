@@ -8,10 +8,8 @@ export async function cacheMediaIfNewer(url, uploadedAt) {
   const stored = localStorage.getItem(key);
   if (stored === ts) return;
   try {
-    const resp = await fetch(url);
-    if (!resp.ok) throw new Error('Failed request');
     const cache = await caches.open('media-cache-v1');
-    await cache.put(url, resp.clone());
+    await cache.add(new Request(url, { mode: 'no-cors' }));
     localStorage.setItem(key, ts);
   } catch (err) {
     const msg = err && err.message ? err.message : String(err);
