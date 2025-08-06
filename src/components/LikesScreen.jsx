@@ -69,11 +69,14 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
     const base = current > now ? current : now;
     const expiry = new Date(base);
     expiry.setMonth(expiry.getMonth() + 1);
+    const month = now.toISOString().slice(0,7);
     await setDoc(doc(db,'profiles',userId),{
       subscriptionActive:true,
       subscriptionPurchased: now.toISOString(),
       subscriptionExpires: expiry.toISOString(),
-      subscriptionTier: tier
+      subscriptionTier: tier,
+      boostMonth: month,
+      boostsUsed: 0
     },{ merge:true });
     setShowPurchase(false);
   };

@@ -4,9 +4,9 @@ import { Button } from './ui/button.js';
 
 export default function SubscriptionOverlay({ onClose, onBuy }) {
   const plans = [
-    { tier: 'silver', title: 'Sølv', price: '39 kr/md', daily: 5, seconds: 10 },
-    { tier: 'gold', title: 'Guld', price: '79 kr/md', daily: 8, seconds: 15 },
-    { tier: 'platinum', title: 'Platin', price: '139 kr/md', daily: 10, seconds: 25 }
+    { tier: 'silver', title: 'Sølv', price: '39 kr/md', daily: 5, seconds: 10, boosts: 1 },
+    { tier: 'gold', title: 'Guld', price: '79 kr/md', daily: 8, seconds: 15, boosts: 2 },
+    { tier: 'platinum', title: 'Platin', price: '139 kr/md', daily: 10, seconds: 25, boosts: 4 }
   ];
   const [selected, setSelected] = useState('silver');
   return React.createElement('div', { className: 'fixed inset-0 z-50 bg-black/50 flex items-center justify-center' },
@@ -20,7 +20,8 @@ export default function SubscriptionOverlay({ onClose, onBuy }) {
               onClick: () => setSelected(p.tier)
             },
               React.createElement('span', { className: 'font-medium' }, `${p.title} – ${p.price}`),
-              React.createElement('span', { className: 'text-sm' }, `Dagligt kliplimit ${p.daily}, video op til ${p.seconds} sek`)
+              React.createElement('span', { className: 'text-sm' }, `Dagligt kliplimit ${p.daily}, video op til ${p.seconds} sek`),
+              React.createElement('span', { className: 'text-sm' }, `Boosts pr. måned ${p.boosts}`)
             )
           )
         ))
