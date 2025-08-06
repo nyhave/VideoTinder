@@ -66,7 +66,7 @@ async function capture() {
     await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
     // Allow extra time for client-side data to render before capturing
     // `waitForTimeout` was removed in newer Puppeteer versions; use a manual delay instead
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 5000));
     await page.screenshot({ path: file, fullPage: true });
     console.log('Saved', file);
   }
