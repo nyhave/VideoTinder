@@ -44,7 +44,11 @@ async function capture() {
   });
   await page.setRequestInterception(true);
   page.on('request', req => {
-    const allowed = req.url().startsWith(`http://localhost:${port}`) || req.url().startsWith('data:');
+    const url = req.url();
+    const allowed =
+      url.startsWith(`http://localhost:${port}`) ||
+      url.startsWith('data:') ||
+      url.startsWith('https://cdn.tailwindcss.com');
     allowed ? req.continue() : req.abort();
   });
   const routes = [
