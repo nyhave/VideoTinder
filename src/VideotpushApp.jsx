@@ -82,6 +82,31 @@ export default function VideotpushApp() {
   const unreadNotifications = notifications.filter(n => !n.read).length;
   const hasUnreadNotifications = unreadNotifications > 0;
   const currentUser = profiles.find(p => p.id === userId) || {};
+  const [cachedPhotoURL, setCachedPhotoURL] = useState('');
+
+  useEffect(() => {
+    if (!userId) {
+      setCachedPhotoURL('');
+      return;
+    }
+    const url = localStorage.getItem(`photoURL-${userId}`) || '';
+    const ts = localStorage.getItem(`photoUploadedAt-${userId}`) || '';
+    setCachedPhotoURL(url);
+    if (url) cacheMediaIfNewer(url, ts);
+  }, [userId]);
+
+  useEffect(() => {
+    if (!userId) return;
+    if (currentUser.photoURL) {
+      localStorage.setItem(`photoURL-${userId}`, currentUser.photoURL);
+      localStorage.setItem(`photoUploadedAt-${userId}`, currentUser.photoUploadedAt || '');
+      if (currentUser.photoURL !== cachedPhotoURL) setCachedPhotoURL(currentUser.photoURL);
+    } else {
+      localStorage.removeItem(`photoURL-${userId}`);
+      localStorage.removeItem(`photoUploadedAt-${userId}`);
+      if (cachedPhotoURL) setCachedPhotoURL('');
+    }
+  }, [userId, currentUser.photoURL, currentUser.photoUploadedAt]);
 
   useEffect(() => {
     if (!userId) return;
@@ -452,8 +477,8 @@ export default function VideotpushApp() {
         className: 'absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer',
         onClick: openProfileSettings
       },
-        currentUser.photoURL ?
-          React.createElement('img', { src: currentUser.photoURL, alt: 'Profil', className: 'w-8 h-8 rounded-lg object-cover' }) :
+        cachedPhotoURL ?
+          React.createElement('img', { src: cachedPhotoURL, alt: 'Profil', className: 'w-8 h-8 rounded-lg object-cover' }) :
           React.createElement(UserIcon, { className: 'w-8 h-8 text-white' })
       )
     ),
