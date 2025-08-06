@@ -64,7 +64,9 @@ export default function VideotpushApp() {
     }
   });
   const [ageRange,setAgeRange]=useState([35,55]);
-  const [tab,setTab]=useState('admin');
+  const params = new URLSearchParams(window.location.search);
+  const initialTab = params.get('tab') || 'admin';
+  const [tab,setTab]=useState(initialTab);
   const [viewProfile,setViewProfile]=useState(null);
   const [returnTab,setReturnTab]=useState('discovery');
   const [videoCallId,setVideoCallId]=useState(null);
