@@ -27,6 +27,7 @@ Show Firestore credentials status
 Reusable profile filtering helper for Netlify Functions
 Track logs for individual users from admin
 Turn-based Realetten game uses Firestore for shared state and scoring
+Simple 2D co-op shooting game where players work together to hit moving targets
 Winner celebration overlay highlights top score
 Kill all Realetten sessions from admin
 Super likes to signal strong interest and improve match rates
