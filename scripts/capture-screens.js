@@ -64,7 +64,9 @@ async function capture() {
       const allowed =
         url.startsWith(`http://localhost:${port}`) ||
         url.startsWith('data:') ||
-        url.startsWith('https://cdn.tailwindcss.com');
+        url.startsWith('https://cdn.tailwindcss.com') ||
+        url.includes('googleapis.com') ||
+        url.startsWith('https://firebasestorage.googleapis.com');
       allowed ? req.continue() : req.abort();
     });
     const shotsDir = path.join(__dirname, '..', 'screenshots', u.tier);
