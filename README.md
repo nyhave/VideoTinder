@@ -89,7 +89,13 @@ npm run build
 ```
 The compiled files will be placed in the `dist` folder. When changes are pushed to `main`, a GitHub Actions workflow builds the project and publishes the site to **GitHub Pages**. The workflow lives in `.github/workflows/build.yml` where the required secrets, including `FUNCTIONS_BASE_URL`, are written to a `.env` file during the build step so the app can call the Netlify functions.
 
+## Configuration dev and prod
 
+A separate “dev React” and “prod React” codebase isn’t necessary. Parcel (the bundler used here) already sets process.env.NODE_ENV to “development” when running npm run dev and “production” when running npm run build. You can keep a single set of components and switch configuration with environment variables:
+Use .env.development and .env.production to store different values (API keys, endpoints, etc.). Parcel loads the correct file based on NODE_ENV.
+Reference the variables in code (e.g., Firebase config pulls its values from process.env.FIREBASE_*).
+Gate dev‑only features with if (process.env.NODE_ENV === 'development') so they’re skipped in production builds.
+This approach keeps the codebase unified while still allowing environment‑specific behavior and configuration.
 
 ## Manual Function Testing
 
