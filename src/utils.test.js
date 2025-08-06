@@ -11,6 +11,7 @@ import {
   getDailyProfileLimit,
   getSuperLikeLimit,
   getMaxVideoSeconds,
+  hasInterestChat,
   getWeekId
 } from './utils';
 
@@ -95,6 +96,11 @@ describe('utils', () => {
   test('getMaxVideoSeconds respects tier', () => {
     expect(getMaxVideoSeconds({ subscriptionTier: 'gold' })).toBe(15);
     expect(getMaxVideoSeconds({})).toBe(10);
+  });
+
+  test('hasInterestChat requires paid tier', () => {
+    expect(hasInterestChat({ subscriptionTier: 'silver' })).toBe(true);
+    expect(hasInterestChat({ subscriptionTier: 'free' })).toBe(false);
   });
 
   test('getWeekId returns ISO week id', () => {
