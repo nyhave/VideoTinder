@@ -90,6 +90,12 @@ export function getSuperLikeLimit(user){
   return limits[tier] ?? limits.free;
 }
 
+export function getMonthlyBoostLimit(user){
+  const tier = user?.subscriptionTier || 'free';
+  const limits = { free:0, silver:1, gold:2, platinum:4 };
+  return limits[tier] ?? limits.free;
+}
+
 export function getMaxVideoSeconds(user){
   const tier = user?.subscriptionTier || 'free';
   const caps = { free:10, silver:10, gold:15, platinum:25 };

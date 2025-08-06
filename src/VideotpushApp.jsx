@@ -172,12 +172,15 @@ export default function VideotpushApp() {
     const base = current > now ? current : now;
     const expiry = new Date(base);
     expiry.setMonth(expiry.getMonth() + 1);
+    const month = now.toISOString().slice(0,7);
     try {
       await updateDoc(doc(db,'profiles',userId), {
         subscriptionActive: true,
         subscriptionPurchased: now.toISOString(),
         subscriptionExpires: expiry.toISOString(),
-        subscriptionTier: tier
+        subscriptionTier: tier,
+        boostMonth: month,
+        boostsUsed: 0
       });
     } catch(err) {
       console.error('Failed to purchase subscription', err);

@@ -226,6 +226,8 @@ export default function WelcomeScreen({ onLogin }) {
       profile.subscriptionPurchased = now.toISOString();
       profile.subscriptionExpires = expiry.toISOString();
       profile.subscriptionTier = 'silver';
+      profile.boostMonth = now.toISOString().slice(0,7);
+      profile.boostsUsed = 0;
       profile.giftedBy = giftFrom;
       try {
         await updateDoc(doc(db, 'profiles', giftFrom), { premiumInvitesUsed: increment(1) });
@@ -347,6 +349,8 @@ export default function WelcomeScreen({ onLogin }) {
       profile.subscriptionPurchased = now.toISOString();
       profile.subscriptionExpires = expiry.toISOString();
       profile.subscriptionTier = 'silver';
+      profile.boostMonth = now.toISOString().slice(0,7);
+      profile.boostsUsed = 0;
       profile.giftedBy = giftFrom;
       try {
         await updateDoc(doc(db, 'profiles', giftFrom), { premiumInvitesUsed: increment(1) });

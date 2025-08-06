@@ -69,13 +69,16 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     const base = current > now ? current : now;
     const expiry = new Date(base);
     expiry.setMonth(expiry.getMonth() + 1);
+    const month = now.toISOString().slice(0,7);
     await updateDoc(doc(db, 'profiles', userId), {
       subscriptionActive: true,
       subscriptionPurchased: now.toISOString(),
       subscriptionExpires: expiry.toISOString(),
-      subscriptionTier: tier
+      subscriptionTier: tier,
+      boostMonth: month,
+      boostsUsed: 0
     });
-    setProfile({ ...profile, subscriptionActive: true, subscriptionPurchased: now.toISOString(), subscriptionExpires: expiry.toISOString(), subscriptionTier: tier });
+    setProfile({ ...profile, subscriptionActive: true, subscriptionPurchased: now.toISOString(), subscriptionExpires: expiry.toISOString(), subscriptionTier: tier, boostMonth: month, boostsUsed: 0 });
     setShowSub(false);
   };
 

@@ -10,6 +10,7 @@ import {
   detectBrowser,
   getDailyProfileLimit,
   getSuperLikeLimit,
+  getMonthlyBoostLimit,
   getMaxVideoSeconds,
   hasInterestChat,
   getWeekId
@@ -91,6 +92,11 @@ describe('utils', () => {
   test('getSuperLikeLimit respects tier', () => {
     expect(getSuperLikeLimit({ subscriptionTier: 'platinum' })).toBe(5);
     expect(getSuperLikeLimit({})).toBe(0);
+  });
+
+  test('getMonthlyBoostLimit respects tier', () => {
+    expect(getMonthlyBoostLimit({ subscriptionTier: 'gold' })).toBe(2);
+    expect(getMonthlyBoostLimit({})).toBe(0);
   });
 
   test('getMaxVideoSeconds respects tier', () => {
