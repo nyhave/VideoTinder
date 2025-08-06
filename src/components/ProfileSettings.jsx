@@ -633,9 +633,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'text-center text-sm mt-2 flex items-center justify-center gap-1 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
       },
         !subscriptionActive && React.createElement(PremiumIcon, null),
-        subscriptionActive
-          ? `Premium abonnement aktivt til ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
-          : `Premium abonnement udløb ${new Date(profile.subscriptionExpires).toLocaleDateString('da-DK')}`
+        (() => {
+          const tierLabel = {
+            silver: t('tierSilver'),
+            gold: t('tierGold'),
+            platinum: t('tierPlatinum')
+          }[profile.subscriptionTier] || 'Premium';
+          const date = new Date(profile.subscriptionExpires).toLocaleDateString('da-DK');
+          return subscriptionActive
+            ? `${tierLabel} abonnement aktivt til ${date}`
+            : `${tierLabel} abonnement udløb ${date}`;
+        })()
       ),
         !publicView && profile.subscriptionPurchased && React.createElement('p', {
           className: 'text-center text-sm text-gray-500'
