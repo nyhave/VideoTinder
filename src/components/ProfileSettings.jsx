@@ -134,37 +134,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       activeTask === 'about' ? aboutSectionRef : null;
     ref?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [activeTask, taskTrigger, profile]);
-  if(profile === null) return React.createElement('div', { className:'mt-8' },
-    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-24 animate-pulse' }),
-    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-32 animate-pulse' }),
-    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-32 animate-pulse' }),
-    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-40 animate-pulse' })
-  );
-
-  if(profile === false) return React.createElement('div', { className:'mt-8' },
-    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 text-center' },
-      'Profile not found'
-    )
-  );
-
   const subscriptionActive =
-    profile.subscriptionExpires &&
+    profile?.subscriptionExpires &&
     new Date(profile.subscriptionExpires) > getCurrentDate();
-
   const boostActive =
-    profile.boostExpires && new Date(profile.boostExpires) > getCurrentDate();
-  const boostsLeft = (() => {
-    const limit = getMonthlyBoostLimit(profile);
-    if (limit === 0) return 0;
-    const now = getCurrentDate();
-    const month = now.toISOString().slice(0, 7);
-    const used = profile.boostMonth === month ? (profile.boostsUsed || 0) : 0;
-    return limit - used;
-  })();
-
+    profile?.boostExpires && new Date(profile.boostExpires) > getCurrentDate();
   useEffect(() => {
     let timer;
-    if (boostActive) {
+    if (boostActive && profile?.boostExpires) {
       const updateCountdown = () => {
         const diff = new Date(profile.boostExpires) - getCurrentDate();
         if (diff > 0) {
@@ -182,6 +159,26 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     }
     return () => clearInterval(timer);
   }, [boostActive, profile?.boostExpires]);
+  if(profile === null) return React.createElement('div', { className:'mt-8' },
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-24 animate-pulse' }),
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-32 animate-pulse' }),
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-32 animate-pulse' }),
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 h-40 animate-pulse' })
+  );
+
+  if(profile === false) return React.createElement('div', { className:'mt-8' },
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 text-center' },
+      'Profile not found'
+    )
+  );
+  const boostsLeft = (() => {
+    const limit = getMonthlyBoostLimit(profile);
+    if (limit === 0) return 0;
+    const now = getCurrentDate();
+    const month = now.toISOString().slice(0, 7);
+    const used = profile.boostMonth === month ? (profile.boostsUsed || 0) : 0;
+    return limit - used;
+  })();
 
 
   const highlightPhoto = activeTask === 'photo';
