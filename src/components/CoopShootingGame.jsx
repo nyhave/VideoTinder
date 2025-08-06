@@ -52,6 +52,7 @@ export default function CoopShootingGame({ interest, userId, onBack }) {
       playerPositions: {
         [userId]: { x: WIDTH / 2, y: HEIGHT - 20 }
       },
+      hits: { [userId]: false },
       targetX: Math.floor(Math.random() * WIDTH),
       targetY: Math.floor(Math.random() * HEIGHT)
     });
@@ -60,14 +61,16 @@ export default function CoopShootingGame({ interest, userId, onBack }) {
   const joinGame = async () => {
     await updateDoc(ref, {
       players: arrayUnion(userId),
-      [`playerPositions.${userId}`]: { x: WIDTH / 2, y: HEIGHT - 20 }
+      [`playerPositions.${userId}`]: { x: WIDTH / 2, y: HEIGHT - 20 },
+      [`hits.${userId}`]: false
     });
   };
 
   const leaveGame = async () => {
     await updateDoc(ref, {
       players: arrayRemove(userId),
-      [`playerPositions.${userId}`]: null
+      [`playerPositions.${userId}`]: null,
+      [`hits.${userId}`]: false
     });
   };
   const endGame = async () => {
@@ -111,7 +114,8 @@ export default function CoopShootingGame({ interest, userId, onBack }) {
           updateDoc(ref, {
             score: increment(1),
             targetX: Math.floor(Math.random() * WIDTH),
-            targetY: Math.floor(Math.random() * HEIGHT)
+            targetY: Math.floor(Math.random() * HEIGHT),
+            [`hits.${b.owner}`]: true
           });
           return false;
         }
@@ -161,7 +165,7 @@ export default function CoopShootingGame({ interest, userId, onBack }) {
       }
 
       if (keysRef.current[' ']) {
-        bulletsRef.current.push({ x, y: y - 10, dy: -4 });
+        bulletsRef.current.push({ x, y: y - 10, dy: -4, owner: userId });
         keysRef.current[' '] = false;
       }
 
@@ -182,13 +186,24 @@ export default function CoopShootingGame({ interest, userId, onBack }) {
   const players = game.players || [];
   const inGame = players.includes(userId);
   const canJoin = !inGame && players.length < 4;
-  const finished = game.score >= game.target;
+  const hits = game.hits || {};
+  const finished =
+    game.score >= game.target && players.every(p => hits[p]);
+
+  const touchStart = key => e => {
+    e.preventDefault();
+    keysRef.current[key] = true;
+  };
+  const touchEnd = key => e => {
+    e.preventDefault();
+    keysRef.current[key] = false;
+  };
 
   return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90 flex flex-col items-center' },
     React.createElement(SectionTitle, { title:'Co-op Shooter', action: React.createElement(Button, { className:'bg-gray-500 text-white', onClick:onBack }, 'Tilbage') }),
     React.createElement('p', { className:'mb-2' }, `Score: ${game.score} / ${game.target}`),
     React.createElement('p', { className:'mb-2' }, `Spillere: ${players.length}/4`),
-    React.createElement('p', { className:'mb-4' }, 'Brug piletasterne og mellemrum for at skyde'),
+    React.createElement('p', { className:'mb-4' }, 'Alle spillere skal ramme målet mindst én gang. Brug piletasterne, mellemrum eller touch-knapperne'),
     React.createElement('canvas', {
       ref: canvasRef,
       width: WIDTH,
@@ -198,7 +213,14 @@ export default function CoopShootingGame({ interest, userId, onBack }) {
     canJoin && React.createElement(Button, { className:'bg-blue-600 text-white mb-2', onClick:joinGame }, 'Join'),
     inGame && React.createElement(Button, { className:'bg-gray-700 text-white mb-2', onClick:leaveGame }, 'Leave'),
     finished && React.createElement('p', { className:'mb-2 font-semibold text-green-700' }, 'Mission complete!'),
-    React.createElement(Button, { className:'bg-yellow-600 text-white mt-2', onClick:endGame }, 'End Game')
+    React.createElement(Button, { className:'bg-yellow-600 text-white mt-2', onClick:endGame }, 'End Game'),
+    inGame && React.createElement('div', { className:'flex flex-wrap gap-2 justify-center mt-4' },
+      React.createElement(Button, { className:'bg-blue-600 text-white', onTouchStart:touchStart('ArrowLeft'), onTouchEnd:touchEnd('ArrowLeft') }, '←'),
+      React.createElement(Button, { className:'bg-blue-600 text-white', onTouchStart:touchStart('ArrowRight'), onTouchEnd:touchEnd('ArrowRight') }, '→'),
+      React.createElement(Button, { className:'bg-blue-600 text-white', onTouchStart:touchStart('ArrowUp'), onTouchEnd:touchEnd('ArrowUp') }, '↑'),
+      React.createElement(Button, { className:'bg-blue-600 text-white', onTouchStart:touchStart('ArrowDown'), onTouchEnd:touchEnd('ArrowDown') }, '↓'),
+      React.createElement(Button, { className:'bg-red-600 text-white', onTouchStart:touchStart(' '), onTouchEnd:touchEnd(' ') }, 'Shoot')
+    )
   );
 }
 
