@@ -32,6 +32,12 @@ async function capture() {
     args: ['--no-sandbox']
   });
   const page = await browser.newPage();
+  await page.setViewport({
+    width: 360,
+    height: 640,
+    deviceScaleFactor: 2,
+    isMobile: true
+  });
   await page.evaluateOnNewDocument(() => {
     localStorage.setItem('loggedIn', 'true');
     localStorage.setItem('preferredUserId', '101');
