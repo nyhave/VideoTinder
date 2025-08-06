@@ -506,11 +506,23 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   return React.createElement('div', { className:'mt-8' },
     !publicView && React.createElement(Card, { className: 'p-4 m-4 shadow-xl bg-white/90' },
-      React.createElement('div', { className: 'flex items-center justify-between gap-2' },
-        React.createElement(Button, {
-          className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
-          onClick: onViewPublicProfile
-        }, 'View public profile'),
+      React.createElement('div', { className: 'flex items-start justify-between gap-2' },
+        React.createElement('div', { className: 'flex flex-col' },
+          React.createElement(Button, {
+            className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
+            onClick: onViewPublicProfile
+          }, 'View public profile'),
+          boostActive && React.createElement('p', {
+            className: 'mt-2 text-sm text-purple-700'
+          }, `Boost aktiv${boostCountdown ? ` (${boostCountdown})` : ''}`),
+          !boostActive && boostsLeft > 0 && React.createElement(Button, {
+            className: 'mt-2 bg-purple-600 text-white',
+            onClick: handleBoost
+          }, `Boost profil (${boostsLeft} tilbage)`),
+          !boostActive && boostsLeft <= 0 && getMonthlyBoostLimit(profile) > 0 && React.createElement('p', {
+            className: 'mt-2 text-sm text-gray-500'
+          }, 'Ingen boosts tilbage denne måned')
+        ),
         onLogout && React.createElement(Button, {
           className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
           onClick: onLogout
@@ -797,16 +809,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'mt-2 w-full bg-blue-500 text-white',
         onClick: () => setShowAnalytics(true)
       }, t('viewAnalytics')),
-    !publicView && boostActive && React.createElement('p', {
-        className: 'mt-2 text-center text-sm text-purple-700'
-      }, `Boost aktiv${boostCountdown ? ` (${boostCountdown})` : ''}`),
-    !publicView && !boostActive && boostsLeft > 0 && React.createElement(Button, {
-        className: 'mt-2 w-full bg-purple-600 text-white',
-        onClick: handleBoost
-      }, `Boost profil (${boostsLeft} tilbage)`),
-    !publicView && !boostActive && boostsLeft <= 0 && getMonthlyBoostLimit(profile) > 0 && React.createElement('p', {
-        className: 'mt-2 text-center text-sm text-gray-500'
-      }, 'Ingen boosts tilbage denne måned'),
     !publicView && !subscriptionActive && React.createElement(Button, {
         className: 'mt-2 w-full bg-yellow-500 text-white',
         onClick: () => setShowSub(true)
