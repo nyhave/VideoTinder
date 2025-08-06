@@ -31,44 +31,57 @@ async function capture() {
     executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
     args: ['--no-sandbox']
   });
-  const page = await browser.newPage();
-  await page.setViewport({
-    width: 360,
-    height: 640,
-    deviceScaleFactor: 2,
-    isMobile: true
-  });
-  await page.evaluateOnNewDocument(() => {
-    localStorage.setItem('loggedIn', 'true');
-    localStorage.setItem('preferredUserId', '101');
-  });
-  await page.setRequestInterception(true);
-  page.on('request', req => {
-    const url = req.url();
-    const allowed =
-      url.startsWith(`http://localhost:${port}`) ||
-      url.startsWith('data:') ||
-      url.startsWith('https://cdn.tailwindcss.com');
-    allowed ? req.continue() : req.abort();
-  });
+
+  const users = [
+    { id: '102', tier: 'free' },
+    { id: '101', tier: 'silver' },
+    { id: '103', tier: 'gold' },
+    { id: '104', tier: 'platinum' }
+  ];
+
   const routes = [
     { tab: 'discovery', name: 'home' },
     { tab: 'profile', name: 'profile' },
     { tab: 'chat', name: 'chat' },
     { tab: 'admin', name: 'admin' }
   ];
-  const shotsDir = path.join(__dirname, '..', 'screenshots');
-  fs.mkdirSync(shotsDir, { recursive: true });
 
-  for (const route of routes) {
-    const url = `http://localhost:${port}/?tab=${route.tab}`;
-    const file = path.join(shotsDir, `${route.name}.png`);
-    await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
-    // Allow extra time for client-side data to render before capturing
-    // `waitForTimeout` was removed in newer Puppeteer versions; use a manual delay instead
-    await new Promise(resolve => setTimeout(resolve, 5000));
-    await page.screenshot({ path: file, fullPage: true });
-    console.log('Saved', file);
+  for (const u of users) {
+    const page = await browser.newPage();
+    await page.setViewport({
+      width: 360,
+      height: 640,
+      deviceScaleFactor: 2,
+      isMobile: true
+    });
+    await page.evaluateOnNewDocument(id => {
+      localStorage.setItem('loggedIn', 'true');
+      localStorage.setItem('preferredUserId', id);
+    }, u.id);
+    await page.setRequestInterception(true);
+    page.on('request', req => {
+      const url = req.url();
+      const allowed =
+        url.startsWith(`http://localhost:${port}`) ||
+        url.startsWith('data:') ||
+        url.startsWith('https://cdn.tailwindcss.com');
+      allowed ? req.continue() : req.abort();
+    });
+    const shotsDir = path.join(__dirname, '..', 'screenshots', u.tier);
+    fs.mkdirSync(shotsDir, { recursive: true });
+
+    for (const route of routes) {
+      const url = `http://localhost:${port}/?tab=${route.tab}`;
+      const file = path.join(shotsDir, `${route.name}.png`);
+      await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
+      // Allow extra time for client-side data to render before capturing
+      // `waitForTimeout` was removed in newer Puppeteer versions; use a manual delay instead
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      await page.screenshot({ path: file, fullPage: true });
+      console.log('Saved', file);
+    }
+
+    await page.close();
   }
 
   await browser.close();
