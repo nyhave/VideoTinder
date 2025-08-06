@@ -75,7 +75,10 @@ async function capture() {
     for (const route of routes) {
       const url = `http://localhost:${port}/?tab=${route.tab}`;
       const file = path.join(shotsDir, `${route.name}.png`);
-      await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
+      // Using `networkidle0` caused navigation timeouts if the app kept
+      // long‑lived network connections (e.g. polling). Rely on DOM readiness
+      // instead and disable the default timeout.
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 0 });
       // Allow extra time for client-side data to render before capturing
       // `waitForTimeout` was removed in newer Puppeteer versions; use a manual delay instead
       await new Promise(resolve => setTimeout(resolve, 5000));
