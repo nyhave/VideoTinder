@@ -32,18 +32,27 @@ async function capture() {
     args: ['--no-sandbox']
   });
   const page = await browser.newPage();
+  await page.evaluateOnNewDocument(() => {
+    localStorage.setItem('loggedIn', 'true');
+    localStorage.setItem('preferredUserId', '101');
+  });
   await page.setRequestInterception(true);
   page.on('request', req => {
     const allowed = req.url().startsWith(`http://localhost:${port}`) || req.url().startsWith('data:');
     allowed ? req.continue() : req.abort();
   });
-  const routes = ['/', '/profile', '/chat', '/admin'];
+  const routes = [
+    { tab: 'discovery', name: 'home' },
+    { tab: 'profile', name: 'profile' },
+    { tab: 'chat', name: 'chat' },
+    { tab: 'admin', name: 'admin' }
+  ];
   const shotsDir = path.join(__dirname, '..', 'screenshots');
   fs.mkdirSync(shotsDir, { recursive: true });
 
   for (const route of routes) {
-    const url = `http://localhost:${port}${route}`;
-    const file = path.join(shotsDir, `${route === '/' ? 'home' : route.substring(1)}.png`);
+    const url = `http://localhost:${port}/?tab=${route.tab}`;
+    const file = path.join(shotsDir, `${route.name}.png`);
     await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
     await page.screenshot({ path: file, fullPage: true });
     console.log('Saved', file);
