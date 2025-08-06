@@ -14,7 +14,6 @@ import MoreProfilesOverlay from './MoreProfilesOverlay.jsx';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
-import StoryLineOverlay from './StoryLineOverlay.jsx';
 import ExtendAreaOverlay from './ExtendAreaOverlay.jsx';
 import { triggerHaptic } from '../haptics.js';
 import useDayOffset from '../useDayOffset.js';
@@ -144,7 +143,6 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
   const [showInfo, setShowInfo] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [activeVideo, setActiveVideo] = useState(null);
-  const [storyProfile, setStoryProfile] = useState(null);
   useEffect(() => {
     if (!extendShown && activeProfiles.length === 0) {
       setShowExtend(true);
@@ -316,8 +314,7 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
           React.createElement('div', { className: 'flex gap-2 mt-2' },
               React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1 bg-white text-black border border-gray-300', onClick:e=>{e.stopPropagation(); const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null; if(url) setActiveVideo({url, profileId:p.id}); } },
                 React.createElement(PlayCircle, { className: 'w-5 h-5' }), 'Afspil'
-              ),
-              React.createElement(Button, { size: 'sm', variant: 'outline', className: 'bg-white text-black border border-gray-300', onClick:e=>{e.stopPropagation(); setStoryProfile(p);} }, 'StoryLine')
+              )
             ),
           prog?.rating && React.createElement('div', { className:'flex gap-1 mt-2' },
             [1,2,3,4].map(n =>
@@ -418,12 +415,6 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
     },
       React.createElement('p', { className: 'text-center text-sm' }, 'Du har allerede fået ekstra klip i dag')
     ),
-    storyProfile && React.createElement(StoryLineOverlay, {
-      profile: storyProfile,
-      progress: progresses.find(pr => pr.profileId === storyProfile.id),
-      onClose: () => setStoryProfile(null),
-      onMatch: id => { toggleLike(id); setStoryProfile(null); }
-    }),
     matchedProfile && React.createElement(MatchOverlay, {
       name: matchedProfile.name,
       onClose: () => setMatchedProfile(null)
