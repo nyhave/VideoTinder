@@ -1,6 +1,6 @@
 // Filtering helper kept separate so it can also run in a Netlify
 // Function. Netlify Functions support both JavaScript and TypeScript.
-import { getAge, getTodayStr, getDailyProfileLimit } from './utils.js';
+import { getAge, getTodayStr, getDailyProfileLimit, getCurrentDate } from './utils.js';
 import { getInterestCategory } from './interests.js';
 
 // Calculate a detailed match score for a single profile. Missing data is handled
@@ -110,6 +110,7 @@ export function scoreProfiles(user, profiles, ageRange) {
   const preferred = user.preferredLanguages || [];
   const allowOther = user.allowOtherLanguages !== false;
 
+  const now = getCurrentDate();
   return profiles
     .filter(p => {
       const matchesLang = preferred.length === 0 || preferred.includes(p.language || 'en');
@@ -124,7 +125,9 @@ export function scoreProfiles(user, profiles, ageRange) {
     })
     .map(p => {
       const { score, breakdown } = calculateMatchScoreDetailed(user, p, ageRange);
-      return { ...p, score, breakdown };
+      const boosted = p.boostExpires && new Date(p.boostExpires) > now;
+      const finalScore = boosted ? score + 100 : score;
+      return { ...p, score: finalScore, breakdown };
     })
     .sort((a, b) => b.score - a.score);
 }
