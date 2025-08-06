@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAge, getTodayStr, getCurrentDate, getDailyProfileLimit, getSuperLikeLimit, getWeekId } from '../utils.js';
-import { User, PlayCircle, Star } from 'lucide-react';
-import VideoOverlay from './VideoOverlay.jsx';
+import { User, Star } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
@@ -142,7 +141,6 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
   const [showPurchase, setShowPurchase] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
-  const [activeVideo, setActiveVideo] = useState(null);
   useEffect(() => {
     if (!extendShown && activeProfiles.length === 0) {
       setShowExtend(true);
@@ -311,11 +309,6 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
               p.clip && React.createElement('p', { className: 'text-sm text-gray-700' }, `“${p.clip}”`)
             )
           ),
-          React.createElement('div', { className: 'flex gap-2 mt-2' },
-              React.createElement(Button, { size: 'sm', variant: 'outline', className: 'flex items-center gap-1 bg-white text-black border border-gray-300', onClick:e=>{e.stopPropagation(); const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null; if(url) setActiveVideo({url, profileId:p.id}); } },
-                React.createElement(PlayCircle, { className: 'w-5 h-5' }), 'Afspil'
-              )
-            ),
           prog?.rating && React.createElement('div', { className:'flex gap-1 mt-2' },
             [1,2,3,4].map(n =>
               React.createElement(Star,{key:n,className:`w-4 h-4 ${n <= prog.rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`})
@@ -419,7 +412,6 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
       name: matchedProfile.name,
       onClose: () => setMatchedProfile(null)
     }),
-    activeVideo && React.createElement(VideoOverlay, { src: activeVideo.url, profileId: activeVideo.profileId, onClose: () => setActiveVideo(null) }),
     showExtend && React.createElement(ExtendAreaOverlay, { onExtend: extendArea, onClose: dismissExtend }),
     showHelp && React.createElement(InfoOverlay, {
       title: t('dailyHelpTitle'),
