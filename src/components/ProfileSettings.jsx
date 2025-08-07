@@ -502,7 +502,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       onChange: handleVideoChange,
       className: 'hidden'
     }),
-    !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded, maxDuration: getMaxVideoSeconds(profile)*1000 })
+    !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded, maxDuration: getMaxVideoSeconds(profile)*1000, user: profile })
   );
 
 
