@@ -37,7 +37,8 @@ Assumptions:
 - Expected market penetration for VideoTinder: **10%** of dating app users -> **94,500 users**
 - Premium conversion: **10%** of VideoTinder users -> **9,450 paying subscribers**
 - Tier distribution: **60% Silver**, **30% Gold**, **10% Platinum**
-- Average income pr user pr year **10%** of 0,6 Silver × 39 DKK × 12 + 0,30 Gold × 79 DKK × 12 + 0,1 Platinum × 139 DKK × 12 + banner ads (300 impressions/user/month × 7 DKK CPM) = **98,4 DKK** (≈15 USD)
+- App Store commission on subscriptions: **30%**
+- Average income pr user pr year: 10% premium conversion × 70% net subscription revenue (after Apple's fee) + banner ads (300 impressions/user/month × 7 DKK CPM) = **76.4 DKK** (≈12 USD)
 
 Annual revenue:
 - Subscriptions: 5,670 Silver × 39 DKK × 12 + 2,835 Gold × 79 DKK × 12 + 945 Platinum × 139 DKK × 12 = **6,917,400 DKK**
@@ -48,13 +49,14 @@ Annual revenue:
 - Infrastructure and support: **20 DKK** per user per year -> 94,500 × 20 = **1,890,000 DKK**
 - Marketing and user acquisition: **3,000,000 DKK**
 - Operational overhead (staff, legal, admin): **2,000,000 DKK**
+- Payment processing (Apple App Store 30% commission on subscriptions): **2,075,220 DKK**
 
-Total estimated annual cost: **6,890,000 DKK**
+Total estimated annual cost: **8,965,220 DKK**
 
 ## Break-even Analysis
-- Estimated annual profit: 9,298,800 − 6,890,000 = **2,408,800 DKK**
-- Break-even premium users: (6,890,000 − 2,381,400) ÷ (61 × 12) ≈ **6,160 paying users**
-- Break-even total users (at 10% premium conversion): **61,600 users**
+- Estimated annual profit: 9,298,800 − 8,965,220 = **333,580 DKK**
+- Break-even premium users: (6,890,000 − 2,381,400) ÷ (61 × 12 × 0.7) ≈ **8,800 paying users**
+- Break-even total users (at 10% premium conversion): **88,000 users**
 
 ## First Three Years Outlook
 To reach the full penetration and conversion assumptions above, the first few years are expected to ramp up gradually.
@@ -63,22 +65,22 @@ To reach the full penetration and conversion assumptions above, the first few ye
 - **Penetration:** 2% of dating app users → **19,000 total users**
 - **Premium conversion:** 5% → **950 paying subscribers**
 - **Annual revenue:** 570 Silver, 285 Gold, 95 Platinum + banner ads (~478,800 DKK) → **1,174,200 DKK**
-- **Estimated costs:** infrastructure (380,000 DKK), marketing (1,000,000 DKK), overhead (1,500,000 DKK)
-- **Net result:** **−1,705,800 DKK** while investing in product-market fit
+- **Estimated costs:** infrastructure (380,000 DKK), marketing (1,000,000 DKK), overhead (1,500,000 DKK), Apple commission (208,620 DKK)
+- **Net result:** **−1,914,420 DKK** while investing in product-market fit
 
 ### Year 2: Refine features and begin scaling
 - **Penetration:** 5% → **47,500 total users**
 - **Premium conversion:** 8% → **3,800 paying subscribers**
 - **Annual revenue:** 2,280 Silver, 1,140 Gold, 380 Platinum + banner ads (~1,197,000 DKK) → **3,978,600 DKK**
-- **Estimated costs:** infrastructure (950,000 DKK), marketing (2,000,000 DKK), overhead (1,800,000 DKK)
-- **Net result:** **−771,400 DKK**, moving toward break-even
+- **Estimated costs:** infrastructure (950,000 DKK), marketing (2,000,000 DKK), overhead (1,800,000 DKK), Apple commission (834,480 DKK)
+- **Net result:** **−1,605,880 DKK**, moving toward break-even
 
 ### Year 3: Expand reach and solidify monetization
 - **Penetration:** 8% → **76,000 total users**
 - **Premium conversion:** 9% → **6,840 paying subscribers**
 - **Annual revenue:** 4,104 Silver, 2,052 Gold, 684 Platinum + banner ads (~1,915,200 DKK) → **6,922,080 DKK**
-- **Estimated costs:** infrastructure (1,520,000 DKK), marketing (2,500,000 DKK), overhead (1,900,000 DKK)
-- **Net result:** **1,002,080 DKK** as tiered pricing and ads drive profitability
+- **Estimated costs:** infrastructure (1,520,000 DKK), marketing (2,500,000 DKK), overhead (1,900,000 DKK), Apple commission (1,502,064 DKK)
+- **Net result:** **−499,984 DKK** as tiered pricing and ads drive profitability
 
 ## Strategic Considerations
 - High smartphone usage and a large single population support market entry
