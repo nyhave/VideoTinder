@@ -17,7 +17,7 @@ import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
 import { languages, useT } from '../i18n.js';
 import { getInterestCategory } from '../interests.js';
-import { getAge, getCurrentDate, getMaxVideoSeconds, getMonthlyBoostLimit } from '../utils.js';
+import { getAge, getCurrentDate, getMaxVideoSeconds, getMonthlyBoostLimit, hasAdvancedFilters } from '../utils.js';
 import PremiumIcon from './PremiumIcon.jsx';
 import { triggerHaptic } from '../haptics.js';
 import { sendPushNotification } from '../notifications.js';
@@ -63,6 +63,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const activeNow = profile?.lastActive
     ? (getCurrentDate().getTime() - new Date(profile.lastActive).getTime()) < 3 * 60 * 60 * 1000
     : false;
+  const advancedFilters = hasAdvancedFilters(profile);
 
   const handlePurchase = async (tier) => {
     const now = getCurrentDate();
@@ -379,6 +380,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   };
 
   const handleDistanceRangeChange = async range => {
+    if (!advancedFilters) {
+      setShowSub(true);
+      return;
+    }
     setDistanceRange(range);
     await updateDoc(doc(db,'profiles',userId), { distanceRange: range });
   };
@@ -719,32 +724,41 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         min: 0,
         max: 100,
         value: distanceRange,
-        onChange: editPrefs ? handleDistanceRangeChange : undefined,
+        onChange: editPrefs && advancedFilters ? handleDistanceRangeChange : undefined,
+        disabled: editPrefs && !advancedFilters,
         className: 'w-full'
       }),
+      !advancedFilters && editPrefs && React.createElement(Button, {
+        className:'mt-2 bg-yellow-500 text-white',
+        onClick: () => setShowSub(true)
+      }, 'Opgrader for at ændre afstand'),
       React.createElement('label', { className:'mt-2' }, t('preferredLanguages')),
       editPrefs
-        ? React.createElement('select', {
-            multiple: true,
-            className:'border p-2 rounded w-full',
-            value: profile.preferredLanguages || [],
-            onChange: e => { const opts = Array.from(e.target.selectedOptions).map(o=>o.value); setProfile({ ...profile, preferredLanguages: opts }); updateDoc(doc(db,'profiles',userId), { preferredLanguages: opts }); }
-          },
-            Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
-          )
+        ? advancedFilters
+          ? React.createElement('select', {
+              multiple: true,
+              className:'border p-2 rounded w-full',
+              value: profile.preferredLanguages || [],
+              onChange: e => { const opts = Array.from(e.target.selectedOptions).map(o=>o.value); setProfile({ ...profile, preferredLanguages: opts }); updateDoc(doc(db,'profiles',userId), { preferredLanguages: opts }); }
+            },
+              Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
+            )
+          : React.createElement(Button, { className:'mt-2 bg-yellow-500 text-white', onClick: () => setShowSub(true) }, 'Opgrader for at ændre sprog')
         : React.createElement('p', { className:'mb-2' },
             (profile.preferredLanguages || []).map(c => languages[c] || c).join(', ')
           ),
       React.createElement('label', { className:'mt-2' }, t('allowOtherLanguages')),
       editPrefs
-        ? React.createElement('select', {
-            className:'border p-2 rounded block mb-2',
-            value: profile.allowOtherLanguages !== false ? 'yes' : 'no',
-            onChange: e => { const allowOtherLanguages = e.target.value === 'yes'; setProfile({ ...profile, allowOtherLanguages }); updateDoc(doc(db,'profiles',userId), { allowOtherLanguages }); }
-          },
-            React.createElement('option', { value:'yes' }, t('yes')),
-            React.createElement('option', { value:'no' }, t('no'))
-          )
+        ? advancedFilters
+          ? React.createElement('select', {
+              className:'border p-2 rounded block mb-2',
+              value: profile.allowOtherLanguages !== false ? 'yes' : 'no',
+              onChange: e => { const allowOtherLanguages = e.target.value === 'yes'; setProfile({ ...profile, allowOtherLanguages }); updateDoc(doc(db,'profiles',userId), { allowOtherLanguages }); }
+            },
+              React.createElement('option', { value:'yes' }, t('yes')),
+              React.createElement('option', { value:'no' }, t('no'))
+            )
+          : React.createElement(Button, { className:'mt-2 bg-yellow-500 text-white', onClick: () => setShowSub(true) }, 'Opgrader for at ændre sprogfiltre')
         : React.createElement('p', { className:'mb-2' },
             profile.allowOtherLanguages !== false ? t('yes') : t('no')
           )

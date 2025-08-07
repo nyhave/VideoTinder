@@ -107,6 +107,11 @@ export function hasInterestChat(user){
   return ['silver','gold','platinum'].includes(tier);
 }
 
+export function hasAdvancedFilters(user){
+  const tier = user?.subscriptionTier || 'free';
+  return tier !== 'free';
+}
+
 export function getWeekId(date = getCurrentDate()){
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   const day = d.getUTCDay() || 7;
