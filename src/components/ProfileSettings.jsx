@@ -67,6 +67,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const handlePurchase = async (tier) => {
     const now = getCurrentDate();
+    if (tier === 'free') {
+      await updateDoc(doc(db, 'profiles', userId), {
+        subscriptionActive: false,
+        subscriptionPurchased: null,
+        subscriptionExpires: null,
+        subscriptionTier: 'free'
+      });
+      setProfile({ ...profile, subscriptionActive: false, subscriptionPurchased: null, subscriptionExpires: null, subscriptionTier: 'free' });
+      setShowSub(false);
+      return;
+    }
     const current = profile.subscriptionExpires ? new Date(profile.subscriptionExpires) : now;
     const base = current > now ? current : now;
     const expiry = new Date(base);
@@ -820,17 +831,18 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'mt-2 w-full bg-blue-500 text-white',
         onClick: () => setShowAnalytics(true)
       }, t('viewAnalytics')),
-    !publicView && !subscriptionActive && React.createElement(Button, {
+    !publicView && React.createElement(Button, {
         className: 'mt-2 w-full bg-yellow-500 text-white',
         onClick: () => setShowSub(true)
-      }, 'Køb abonnement'),
+      }, subscriptionActive ? 'Skift abonnement' : 'Køb abonnement'),
     !publicView && React.createElement(Button, {
         className: 'mt-6 w-full bg-red-500 text-white',
         onClick: () => setShowDelete(true)
       }, t('deleteAccount')),
     showSub && React.createElement(SubscriptionOverlay, {
         onClose: () => setShowSub(false),
-        onBuy: handlePurchase
+        onBuy: handlePurchase,
+        allowFree: subscriptionActive
       }),
     showInterests && React.createElement(InterestsOverlay, {
         current: profile.interests || [],
