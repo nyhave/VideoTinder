@@ -14,6 +14,7 @@ import {
   getMaxVideoSeconds,
   hasInterestChat,
   hasAdvancedFilters,
+  hasReadReceipts,
   getWeekId
 } from './utils';
 
@@ -113,6 +114,12 @@ describe('utils', () => {
   test('hasAdvancedFilters requires paid tier', () => {
     expect(hasAdvancedFilters({ subscriptionTier: 'silver' })).toBe(true);
     expect(hasAdvancedFilters({ subscriptionTier: 'free' })).toBe(false);
+  });
+
+  test('hasReadReceipts only for gold and above', () => {
+    expect(hasReadReceipts({ subscriptionTier: 'gold' })).toBe(true);
+    expect(hasReadReceipts({ subscriptionTier: 'platinum' })).toBe(true);
+    expect(hasReadReceipts({ subscriptionTier: 'silver' })).toBe(false);
   });
 
   test('getWeekId returns ISO week id', () => {

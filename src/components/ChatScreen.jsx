@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getAge } from '../utils.js';
+import { getAge, hasReadReceipts } from '../utils.js';
 import { User as UserIcon, Smile, MessageCircle as ChatIcon, ArrowLeft } from 'lucide-react';
 import VerificationBadge from './VerificationBadge.jsx';
 import { Card } from './ui/card.js';
@@ -15,6 +15,8 @@ export default function ChatScreen({ userId, onStartCall }) {
   const chats = useCollection('matches', 'userId', userId);
   const t = useT();
   const profileMap = Object.fromEntries(profiles.map(p => [p.id, p]));
+  const currentUser = profileMap[userId] || {};
+  const showReadReceipts = hasReadReceipts(currentUser);
   const [active, setActive] = useState(null);
   const [text, setText] = useState('');
   const [incomingCall, setIncomingCall] = useState(false);
@@ -177,14 +179,14 @@ export default function ChatScreen({ userId, onStartCall }) {
                 React.createElement('div', {
                   className: `inline-block px-3 py-2 rounded-lg ${fromSelf ? 'bg-pink-500 text-white' : 'bg-gray-200 text-black'}`
                 }, m.text),
-                fromSelf && lastSelf && m.ts === lastSelf.ts && active.lastReadByOther && active.lastReadByOther >= m.ts &&
+                showReadReceipts && fromSelf && lastSelf && m.ts === lastSelf.ts && active.lastReadByOther && active.lastReadByOther >= m.ts &&
                   React.createElement('div',{className:'text-xs text-gray-500 text-right'},'Seen')
               )
             );
           })
         ),
         React.createElement('div', { className: 'flex flex-col gap-2 mt-2' },
-          active.typing && React.createElement('p',{className:'text-sm text-gray-500'},`${activeProfile.name || 'Someone'} is typing...`),
+          showReadReceipts && active.typing && React.createElement('p',{className:'text-sm text-gray-500'},`${activeProfile.name || 'Someone'} is typing...`),
           React.createElement('div', { className: 'flex items-center gap-2' },
             React.createElement(Textarea, {
               className: 'flex-1',
