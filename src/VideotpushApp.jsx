@@ -96,7 +96,7 @@ export default function VideotpushApp() {
   }, [userId]);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !profiles.loaded) return;
     if (currentUser.photoURL) {
       localStorage.setItem(`photoURL-${userId}`, currentUser.photoURL);
       localStorage.setItem(`photoUploadedAt-${userId}`, currentUser.photoUploadedAt || '');
@@ -106,7 +106,7 @@ export default function VideotpushApp() {
       localStorage.removeItem(`photoUploadedAt-${userId}`);
       if (cachedPhotoURL) setCachedPhotoURL('');
     }
-  }, [userId, currentUser.photoURL, currentUser.photoUploadedAt]);
+  }, [userId, profiles.loaded, currentUser.photoURL, currentUser.photoUploadedAt]);
 
   useEffect(() => {
     if (!userId) return;
