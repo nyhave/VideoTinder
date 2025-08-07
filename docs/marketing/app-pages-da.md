@@ -21,7 +21,7 @@
   - Aktiver incognito-tilstand for anonym browsing (kun Platinum).
   - Boost din profil for øget synlighed (1, 2 eller 4 gange pr. måned afhængigt af abonnement).
 - **Statistik**
-  - Gratis brugere ser kun antal profilvisninger. Gold får udvidede statistikker, og Platinum inkluderer avanceret analyse af videoafspilning og matchkonvertering.
+  - Alle kan se grundlæggende profilstatistik (visninger, seertid og matches). Gold får udvidede statistikker, og Platinum inkluderer avanceret analyse af videoafspilning og matchkonvertering.
 
 ## Dagens klip
 - Ved indgang vises listen med kandidatprofiler samt eventuelle ratede eller likede profiler.
