@@ -43,7 +43,7 @@ export const modules = [
       {
         title: 'Four-star rating stored with each reflection (ratings are private)',
         expected: [
-          'Users can select 1-4 stars when writing a reflection',
+          'Gold and Platinum can select 1-4 stars when writing a reflection',
           'Rating is saved together with the reflection',
           'Ratings are only visible to the user'
         ]

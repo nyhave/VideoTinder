@@ -117,6 +117,11 @@ export function hasReadReceipts(user){
   return ['gold','platinum'].includes(tier);
 }
 
+export function hasRatings(user){
+  const tier = user?.subscriptionTier || 'free';
+  return ['gold','platinum'].includes(tier);
+}
+
 export function getWeekId(date = getCurrentDate()){
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   const day = d.getUTCDay() || 7;
