@@ -15,6 +15,7 @@ import {
   hasInterestChat,
   hasAdvancedFilters,
   hasReadReceipts,
+  hasRatings,
   getWeekId
 } from './utils';
 
@@ -120,6 +121,12 @@ describe('utils', () => {
     expect(hasReadReceipts({ subscriptionTier: 'gold' })).toBe(true);
     expect(hasReadReceipts({ subscriptionTier: 'platinum' })).toBe(true);
     expect(hasReadReceipts({ subscriptionTier: 'silver' })).toBe(false);
+  });
+
+  test('hasRatings only for gold and above', () => {
+    expect(hasRatings({ subscriptionTier: 'gold' })).toBe(true);
+    expect(hasRatings({ subscriptionTier: 'platinum' })).toBe(true);
+    expect(hasRatings({ subscriptionTier: 'silver' })).toBe(false);
   });
 
   test('getWeekId returns ISO week id', () => {
