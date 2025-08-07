@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 
-export default function SubscriptionOverlay({ onClose, onBuy }) {
+export default function SubscriptionOverlay({ onClose, onBuy, allowFree = false }) {
   const plans = [
+    ...(allowFree ? [{ tier: 'free', title: 'Freemium', price: '0 kr/md', daily: 3, seconds: 10, boosts: 0 }] : []),
     { tier: 'silver', title: 'Sølv', price: '39 kr/md', daily: 5, seconds: 10, boosts: 1 },
     { tier: 'gold', title: 'Guld', price: '79 kr/md', daily: 8, seconds: 15, boosts: 2 },
     { tier: 'platinum', title: 'Platin', price: '139 kr/md', daily: 10, seconds: 25, boosts: 4 }
   ];
-  const [selected, setSelected] = useState('silver');
+  const [selected, setSelected] = useState(plans[0].tier);
   return React.createElement('div', { className: 'fixed inset-0 z-50 bg-black/50 flex items-center justify-center' },
     React.createElement(Card, { className: 'bg-white p-6 rounded shadow-xl max-w-sm w-full' },
       React.createElement('h2', { className: 'text-xl font-semibold mb-4 text-yellow-600 text-center' }, 'Vælg abonnement'),
