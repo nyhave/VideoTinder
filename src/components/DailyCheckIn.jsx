@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { getCurrentDate, getTodayStr } from '../utils.js';
+import { getCurrentDate, getTodayStr, hasRatings } from '../utils.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
-import { useCollection, db, doc, setDoc, collection } from '../firebase.js';
+import { useCollection, db, doc, setDoc, collection, useDoc } from '../firebase.js';
 
 export default function DailyCheckIn({ userId }) {
   const refs = useCollection('reflections','userId',userId);
+  const profile = useDoc('profiles', userId);
   const t = useT();
   const [month,setMonth]=useState(()=>{
     const d=getCurrentDate();
@@ -23,6 +24,10 @@ export default function DailyCheckIn({ userId }) {
     .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   const [text,setText]=useState('');
   const MAX_REFLECTION_LEN = 30;
+  const hasActiveSubscription =
+    profile?.subscriptionExpires &&
+    new Date(profile.subscriptionExpires) > getCurrentDate();
+  const canRate = hasActiveSubscription && hasRatings(profile);
 
   const save = async () => {
     const trimmed = text.trim().slice(0, MAX_REFLECTION_LEN);
@@ -73,7 +78,7 @@ export default function DailyCheckIn({ userId }) {
         const monthNum = parseInt(m,10);
         let info = `${dayNum}/${monthNum}: ${r.text}`;
         if(r.profileName) info += ` \u2013 ${r.profileName}`;
-        if(r.rating) info += ` (${r.rating}\u2605)`;
+        if(canRate && r.rating) info += ` (${r.rating}\u2605)`;
         return React.createElement('li', { key: r.id }, info);
       })
     ),

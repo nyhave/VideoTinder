@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDoc, db, doc, setDoc } from '../firebase.js';
-import { getTodayStr, getCurrentDate, getAge } from '../utils.js';
+import { getTodayStr, getCurrentDate, getAge, hasRatings } from '../utils.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
@@ -17,6 +17,10 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const progress = useDoc('episodeProgress', progressId);
   const profile = useDoc('profiles', profileId);
   const viewer = useDoc('profiles', userId);
+  const hasActiveSubscription =
+    viewer?.subscriptionExpires &&
+    new Date(viewer.subscriptionExpires) > getCurrentDate();
+  const canRate = hasActiveSubscription && hasRatings(viewer);
   const isOwnProfile = userId === profileId;
   // Listen for day changes from admin page
   useDayOffset();
@@ -32,17 +36,19 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const reflectionRef = useRef('');
   const ratingRef = useRef(0);
   const progressRef = useRef(null);
+  const canRateRef = useRef(false);
   const MAX_REFLECTION_LEN = 30;
   const today = getTodayStr();
   useEffect(() => {
-    if(progress?.rating) setRating(progress.rating);
+    if(canRate && progress?.rating) setRating(progress.rating);
     if(progress?.lastUpdated === today && progress?.reflection){
       setReflection(progress.reflection);
     }
-  }, [progress, today]);
+  }, [progress, today, canRate]);
   useEffect(()=>{ reflectionRef.current = reflection; }, [reflection]);
   useEffect(()=>{ ratingRef.current = rating; }, [rating]);
   useEffect(()=>{ progressRef.current = progress; }, [progress]);
+  useEffect(()=>{ canRateRef.current = canRate; }, [canRate]);
   const stepLabels = [
     'Level 1',
     'Level 2',
@@ -88,16 +94,17 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   useEffect(() => {
     return () => {
       const text = reflectionRef.current.trim();
-      const r = ratingRef.current;
+      const r = canRateRef.current ? ratingRef.current : 0;
       const prog = progressRef.current;
-      if (!text && r === (prog?.rating || 0)) return;
+      const canRate = canRateRef.current;
+      if (!text && (!canRate || r === (prog?.rating || 0))) return;
       const data = {
         id: progressId,
         userId,
         profileId,
-        lastUpdated: today,
-        rating: r
+        lastUpdated: today
       };
+      if (canRate && r > 0) data.rating = r;
       if (text) data.reflection = text;
       setDoc(doc(db, 'episodeProgress', progressId), data, { merge: true })
         .catch(err => console.error('Failed to save progress on unmount', err));
@@ -106,9 +113,9 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         id: refId,
         userId,
         date: today,
-        rating: r,
         profileName: profile?.name
       };
+      if (canRate && r > 0) refData.rating = r;
       if (text) refData.text = text;
       setDoc(doc(db, 'reflections', refId), refData, { merge: true })
         .catch(err => console.error('Failed to save reflection on unmount', err));
@@ -124,14 +131,14 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
 
   const saveReflection = async (givenRating = rating) => {
     const text = reflection.trim();
-    if (!text && givenRating === (progress?.rating || 0)) return;
+    if (!text && (!canRate || givenRating === (progress?.rating || 0))) return;
     const data = {
       id: progressId,
       userId,
       profileId,
-      lastUpdated: today,
-      rating: givenRating
+      lastUpdated: today
     };
+    if (canRate && givenRating > 0) data.rating = givenRating;
     if (text) data.reflection = text;
     await setDoc(doc(db, 'episodeProgress', progressId), data, { merge: true });
     const refId = `${userId}-${today}-${profileId}`;
@@ -139,9 +146,9 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       id: refId,
       userId,
       date: today,
-      rating: givenRating,
       profileName: profile?.name
     };
+    if (canRate && givenRating > 0) refData.rating = givenRating;
     if (text) refData.text = text;
     await setDoc(doc(db, 'reflections', refId), refData, { merge: true });
   };
@@ -212,7 +219,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       })
     ),
     stage === 1 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
-      React.createElement('div', { className: 'flex justify-center gap-1 mb-2' },
+      canRate && React.createElement('div', { className: 'flex justify-center gap-1 mb-2' },
         [1,2,3,4].map(n => (
           React.createElement(Star, {
             key: n,
@@ -224,8 +231,8 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
           })
         ))
       ),
-      rating >= 3 && React.createElement('p', { className:'text-xs text-green-700 font-medium text-center' }, t('keepProfile')),
-      React.createElement('p', { className: 'text-sm text-gray-500 mb-2 text-center' }, 'Ratingen er privat'),
+      canRate && rating >= 3 && React.createElement('p', { className:'text-xs text-green-700 font-medium text-center' }, t('keepProfile')),
+      canRate && React.createElement('p', { className: 'text-sm text-gray-500 mb-2 text-center' }, 'Ratingen er privat'),
       React.createElement(Textarea, {
         value: reflection,
         maxLength: MAX_REFLECTION_LEN,
@@ -240,7 +247,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     stage === 2 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
       progress?.reflection &&
         React.createElement('p', { className: 'italic text-gray-700 mb-2' }, `“${progress.reflection}”`),
-      progress?.rating && React.createElement('div', { className:'flex justify-center gap-1 mb-2' },
+      canRate && progress?.rating && React.createElement('div', { className:'flex justify-center gap-1 mb-2' },
         [1,2,3,4].map(n => (
           React.createElement(Star, {
             key:n,
@@ -248,7 +255,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
           })
         ))
       ),
-      progress?.rating >= 3 && React.createElement('p', { className:'text-xs text-green-700 font-medium text-center mb-2' }, t('keepProfile')),
+      canRate && progress?.rating >= 3 && React.createElement('p', { className:'text-xs text-green-700 font-medium text-center mb-2' }, t('keepProfile')),
       React.createElement(Textarea, {
         value: reaction,
         onChange: e => setReaction(e.target.value),

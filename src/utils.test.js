@@ -14,6 +14,7 @@ import {
   getMaxVideoSeconds,
   hasInterestChat,
   hasAdvancedFilters,
+  hasRatings,
   getWeekId
 } from './utils';
 
@@ -113,6 +114,13 @@ describe('utils', () => {
   test('hasAdvancedFilters requires paid tier', () => {
     expect(hasAdvancedFilters({ subscriptionTier: 'silver' })).toBe(true);
     expect(hasAdvancedFilters({ subscriptionTier: 'free' })).toBe(false);
+  });
+
+  test('hasRatings requires gold or platinum', () => {
+    expect(hasRatings({ subscriptionTier: 'gold' })).toBe(true);
+    expect(hasRatings({ subscriptionTier: 'platinum' })).toBe(true);
+    expect(hasRatings({ subscriptionTier: 'silver' })).toBe(false);
+    expect(hasRatings({})).toBe(false);
   });
 
   test('getWeekId returns ISO week id', () => {

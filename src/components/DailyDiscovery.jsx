@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAge, getTodayStr, getCurrentDate, getDailyProfileLimit, getSuperLikeLimit, getWeekId } from '../utils.js';
+import { getAge, getTodayStr, getCurrentDate, getDailyProfileLimit, getSuperLikeLimit, getWeekId, hasRatings } from '../utils.js';
 import { User, Star } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
@@ -24,6 +24,8 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
   const showLevels = config.showLevels !== false;
   const user = profiles.find(p => p.id === userId) || {};
   const showSuperLike = getSuperLikeLimit(user) > 0;
+  const hasActiveSubscription = hasActiveSub(user);
+  const canRate = hasActiveSubscription && hasRatings(user);
   // Trigger re-renders when the admin changes the virtual date
   useDayOffset();
   const hasActiveSub = prof =>
@@ -309,7 +311,7 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
               p.clip && React.createElement('p', { className: 'text-sm text-gray-700' }, `“${p.clip}”`)
             )
           ),
-          prog?.rating && React.createElement('div', { className:'flex gap-1 mt-2' },
+          canRate && prog?.rating && React.createElement('div', { className:'flex gap-1 mt-2' },
             [1,2,3,4].map(n =>
               React.createElement(Star,{key:n,className:`w-4 h-4 ${n <= prog.rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`})
             )
@@ -360,7 +362,7 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
                 p.clip && React.createElement('p',{className:'text-sm text-gray-700'},`“${p.clip}”`)
               )
             ),
-            prog.rating && React.createElement('div',{className:'flex gap-1 mt-2'},
+            canRate && prog.rating && React.createElement('div',{className:'flex gap-1 mt-2'},
               [1,2,3,4].map(n =>
                 React.createElement(Star,{key:n,className:`w-4 h-4 ${n <= prog.rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`})
               )
