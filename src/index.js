@@ -19,6 +19,7 @@ if ('serviceWorker' in navigator) {
     let mainReg = null;
     try {
       mainReg = await navigator.serviceWorker.register(swUrl, { scope: baseScope });
+      console.log('SW registration success', swUrl.href, { scope: baseScope });
       logEvent('serviceWorker registered');
     } catch (err) {
       console.error('SW registration failed', {
@@ -40,6 +41,7 @@ if ('serviceWorker' in navigator) {
         fcmUrl,
         { scope: baseScope }
       );
+      console.log('FCM SW registration success', fcmUrl.href, { scope: baseScope });
       logEvent('fcm serviceWorker registered');
     } catch (err) {
       console.error('FCM SW registration failed', {
@@ -55,7 +57,14 @@ if ('serviceWorker' in navigator) {
     // Send Firebase config to the service worker so it can initialize
     const sw = fcmReg.active || fcmReg.waiting || fcmReg.installing;
     sw?.postMessage({ type: 'INIT_FIREBASE', config: firebaseConfig });
+    console.log('Sent INIT_FIREBASE to FCM SW');
     setFcmReg(fcmReg);
+    navigator.serviceWorker.ready.then(reg => {
+      console.log('Service worker ready', reg);
+    });
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      console.log('Service worker controller changed', navigator.serviceWorker.controller?.scriptURL);
+    });
     navigator.serviceWorker.addEventListener('message', event => {
       if (event.data && event.data.type === 'PUSH_RECEIVED') {
         logEvent('push received', event.data.payload);
