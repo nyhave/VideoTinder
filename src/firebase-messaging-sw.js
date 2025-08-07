@@ -10,6 +10,7 @@ self.addEventListener('message', event => {
     console.log('ServiceWorker INIT_FIREBASE');
     firebase.initializeApp(event.data.config);
     messaging = firebase.messaging();
+    console.log('Firebase messaging initialized');
     handleBackgroundMessages();
   }
 });
