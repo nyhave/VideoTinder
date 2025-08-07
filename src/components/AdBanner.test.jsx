@@ -7,9 +7,7 @@ jest.mock('../i18n.js', () => ({
     const map = {
       adBannerText: 'Upgrade to {tier}',
       adBannerButton: 'Upgrade',
-      tierSilver: 'Silver',
-      tierGold: 'Gold',
-      tierPlatinum: 'Platinum'
+      tierSilver: 'Silver'
     };
     return map[key] || key;
   }
@@ -33,14 +31,14 @@ describe('AdBanner', () => {
     expect(container.textContent).toContain('Upgrade to Silver');
   });
 
-  test('shows upgrade to Gold for silver tier', () => {
+  test('renders nothing for silver tier', () => {
     ReactDOM.render(<AdBanner user={{ subscriptionTier: 'silver' }} />, container);
-    expect(container.textContent).toContain('Upgrade to Gold');
+    expect(container.innerHTML).toBe('');
   });
 
-  test('shows upgrade to Platinum for gold tier', () => {
+  test('renders nothing for gold tier', () => {
     ReactDOM.render(<AdBanner user={{ subscriptionTier: 'gold' }} />, container);
-    expect(container.textContent).toContain('Upgrade to Platinum');
+    expect(container.innerHTML).toBe('');
   });
 
   test('renders nothing for platinum tier', () => {

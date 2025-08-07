@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { useT } from '../i18n.js';
@@ -6,17 +6,8 @@ import { useT } from '../i18n.js';
 export default function AdBanner({ user }){
   const t = useT();
   const tier = user?.subscriptionTier || 'free';
-  const tiers = ['free','silver','gold','platinum'];
-  const next = useMemo(()=>{
-    const idx = tiers.indexOf(tier);
-    return idx >= 0 ? tiers[idx+1] : null;
-  },[tier]);
-  if(!next) return null;
-  const tierLabel = {
-    silver: t('tierSilver'),
-    gold: t('tierGold'),
-    platinum: t('tierPlatinum')
-  }[next];
+  if(tier !== 'free') return null;
+  const tierLabel = t('tierSilver');
   return React.createElement(Card, {
     className:'fixed inset-x-0 p-4 bg-yellow-100 text-center shadow-lg z-20',
     style:{ bottom:'calc(env(safe-area-inset-bottom, 0px) + 4rem)' }
