@@ -13,6 +13,7 @@ import {
   getMonthlyBoostLimit,
   getMaxVideoSeconds,
   hasInterestChat,
+  hasAdvancedFilters,
   getWeekId
 } from './utils';
 
@@ -107,6 +108,11 @@ describe('utils', () => {
   test('hasInterestChat requires paid tier', () => {
     expect(hasInterestChat({ subscriptionTier: 'silver' })).toBe(true);
     expect(hasInterestChat({ subscriptionTier: 'free' })).toBe(false);
+  });
+
+  test('hasAdvancedFilters requires paid tier', () => {
+    expect(hasAdvancedFilters({ subscriptionTier: 'silver' })).toBe(true);
+    expect(hasAdvancedFilters({ subscriptionTier: 'free' })).toBe(false);
   });
 
   test('getWeekId returns ISO week id', () => {
