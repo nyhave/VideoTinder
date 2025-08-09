@@ -5,6 +5,7 @@ import VideotpushApp from './VideotpushApp.jsx';
 import { setFcmReg } from './swRegistration.js';
 import { firebaseConfig, logEvent } from './firebase.js';
 import { addNotification } from './notifications.js';
+import { detectOS, detectBrowser } from './utils.js';
 
 ReactDOM.render(React.createElement(VideotpushApp), document.getElementById('root'));
 
@@ -29,7 +30,12 @@ if ('serviceWorker' in navigator) {
         swUrl: swUrl.href,
         scope: baseScope
       });
-      logEvent('serviceWorker register error', { error: err.message });
+      logEvent('serviceWorker register error', {
+        error: err.message,
+        os: detectOS(),
+        browser: detectBrowser(),
+        timestamp: new Date().toISOString()
+      });
     }
 
     // Register the Firebase messaging service worker now located under src
@@ -51,7 +57,12 @@ if ('serviceWorker' in navigator) {
         swUrl: fcmUrl.href,
         scope: baseScope
       });
-      logEvent('fcm serviceWorker register error', { error: err.message });
+      logEvent('fcm serviceWorker register error', {
+        error: err.message,
+        os: detectOS(),
+        browser: detectBrowser(),
+        timestamp: new Date().toISOString()
+      });
       throw err;
     }
     // Send Firebase config to the service worker so it can initialize
@@ -64,6 +75,17 @@ if ('serviceWorker' in navigator) {
     });
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       console.log('Service worker controller changed', navigator.serviceWorker.controller?.scriptURL);
+    });
+    navigator.serviceWorker.addEventListener('error', event => {
+      logEvent('serviceWorker error', {
+        message: event.message,
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+        os: detectOS(),
+        browser: detectBrowser(),
+        timestamp: new Date().toISOString()
+      });
     });
     navigator.serviceWorker.addEventListener('message', event => {
       if (event.data && event.data.type === 'PUSH_RECEIVED') {
