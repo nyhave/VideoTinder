@@ -229,7 +229,7 @@ export default function ChatScreen({ userId, onStartCall }) {
                   React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
                   React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
                 p.verified && React.createElement(VerificationBadge, null),
-                !lastFromSelf && React.createElement('span', { className: 'text-sm text-blue-600 font-semibold' }, 'Your turn!')
+                !lastFromSelf && React.createElement('span', { className: 'text-sm text-blue-600 font-semibold' }, 'Din tur!')
               ),
               React.createElement('div', { className: 'flex flex-col' },
                 React.createElement('span', { className: 'font-medium' }, `${p.name || ''}, ${p.birthday ? getAge(p.birthday) : p.age || ''}, ${p.city || ''}`),
