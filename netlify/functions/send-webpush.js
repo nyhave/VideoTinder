@@ -77,6 +77,13 @@ exports.handler = async (event) => {
 
   // Hent subs
   const subscriptions = await loadSubscriptions(userId);
+  console.log(`send-webpush: ${subscriptions.length} subscription(s)`, {
+    title,
+    url,
+    tag,
+    silent,
+    userId,
+  });
   if (!subscriptions.length) {
     return okJson({ success: true, count: 0, errors: 0, results: [] });
   }
@@ -92,11 +99,13 @@ exports.handler = async (event) => {
         TTL: 4500,
         urgency: 'normal',
       });
+      console.log('send-webpush OK', sub.endpoint);
       results.push({ endpoint: sub.endpoint, ok: true });
     } catch (err) {
       errors++;
       const status = err.statusCode || err.status || 0;
       const msg = String(err.body || err.message || err);
+      console.warn('send-webpush FAIL', sub.endpoint, status, msg);
       results.push({ endpoint: sub.endpoint, ok: false, status, msg });
 
       // Ryd op ved 404/410 (stale endpoint)
@@ -114,6 +123,10 @@ exports.handler = async (event) => {
       }
     }
   }
+
+  console.log(
+    `send-webpush complete: ${subscriptions.length - errors} ok, ${errors} error(s)`
+  );
 
   return okJson({
     success: true,
