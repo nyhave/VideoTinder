@@ -95,7 +95,10 @@ export async function subscribeToWebPush(userId, loginMethod = 'password') {
     const reg = await navigator.serviceWorker.ready;
     let sub = await reg.pushManager.getSubscription();
     if (!sub) {
-      const appKey = urlB64ToUint8Array(process.env.WEB_PUSH_PUBLIC_KEY);
+      const rawKey = process.env.WEB_PUSH_PUBLIC_KEY;
+      // Temporary debug output of VAPID key - remove before production.
+      console.log('DEBUG: WEB_PUSH_PUBLIC_KEY', rawKey); // TODO: Remove before production
+      const appKey = urlB64ToUint8Array(rawKey);
       sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: appKey
@@ -169,6 +172,8 @@ export async function requestNotificationPermission(userId, loginMethod = 'passw
   try {
     logEvent('requestNotificationPermission start', { userId });
     const reg = fcmReg || await fcmRegReady;
+    // Temporary debug output of VAPID key - remove before production.
+    console.log('DEBUG: FCM_VAPID_KEY', process.env.FCM_VAPID_KEY); // TODO: Remove before production
     const token = await getToken(messaging, {
       vapidKey: process.env.FCM_VAPID_KEY,
       serviceWorkerRegistration: reg

@@ -25,6 +25,10 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   const config = useDoc('config', 'app') || {};
   const invitesEnabled = config.premiumInvitesEnabled !== false;
   const showLevels = config.showLevels !== false;
+  // Temporary debug output of VAPID keys - remove before production.
+  console.log('DEBUG: FCM_VAPID_KEY', process.env.FCM_VAPID_KEY); // TODO: Remove before production
+  console.log('DEBUG: WEB_PUSH_PUBLIC_KEY', process.env.WEB_PUSH_PUBLIC_KEY); // TODO: Remove before production
+  console.log('DEBUG: WEB_PUSH_PRIVATE_KEY', process.env.WEB_PUSH_PRIVATE_KEY); // TODO: Remove before production
 
   const toggleLog = () => {
     const val = !logEnabled;
@@ -67,6 +71,8 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
 
   const logClientToken = async () => {
     try {
+      // Temporary debug output of VAPID key - remove before production.
+      console.log('DEBUG: FCM_VAPID_KEY (logClientToken)', process.env.FCM_VAPID_KEY); // TODO: Remove before production
       const token = await getToken(messaging, {
         vapidKey: process.env.FCM_VAPID_KEY,
         serviceWorkerRegistration: fcmReg
@@ -84,6 +90,9 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   const showVapidKeys = () => {
     const pub = process.env.WEB_PUSH_PUBLIC_KEY || '';
     const priv = process.env.WEB_PUSH_PRIVATE_KEY || '';
+    // Temporary debug output of VAPID keys - remove before production.
+    console.log('DEBUG: WEB_PUSH_PUBLIC_KEY (showVapidKeys)', pub); // TODO: Remove before production
+    console.log('DEBUG: WEB_PUSH_PRIVATE_KEY (showVapidKeys)', priv); // TODO: Remove before production
     alert('Public: ' + pub + '\nPrivate: ' + priv);
   };
 
@@ -92,6 +101,9 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     const toHex = buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
     const hash = async str => toHex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)));
     try {
+      // Temporary debug output of VAPID keys - remove before production.
+      console.log('DEBUG: WEB_PUSH_PUBLIC_KEY (compareVapidKeys)', process.env.WEB_PUSH_PUBLIC_KEY); // TODO: Remove before production
+      console.log('DEBUG: WEB_PUSH_PRIVATE_KEY (compareVapidKeys)', process.env.WEB_PUSH_PRIVATE_KEY); // TODO: Remove before production
       const resp = await fetch(`${base}/.netlify/functions/vapid-info`);
       if (!resp.ok) throw new Error('status ' + resp.status);
       const server = await resp.json();
@@ -113,6 +125,9 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   };
 
   const showPushInfo = async () => {
+    // Temporary debug output of VAPID keys - remove before production.
+    console.log('DEBUG: WEB_PUSH_PUBLIC_KEY (showPushInfo)', process.env.WEB_PUSH_PUBLIC_KEY); // TODO: Remove before production
+    console.log('DEBUG: WEB_PUSH_PRIVATE_KEY (showPushInfo)', process.env.WEB_PUSH_PRIVATE_KEY); // TODO: Remove before production
     const values = {
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
       FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
@@ -448,6 +463,10 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenCallLog }, 'Se aktive opkald'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenGroupCallLog }, 'Se gruppeopkald')
+    ),
+    // Temporary debug output of VAPID keys - remove before production.
+    React.createElement('pre', { className: 'mt-4 p-2 bg-gray-100 text-xs break-words' },
+      `FCM_VAPID_KEY: ${process.env.FCM_VAPID_KEY}\nWEB_PUSH_PUBLIC_KEY: ${process.env.WEB_PUSH_PUBLIC_KEY}\nWEB_PUSH_PRIVATE_KEY: ${process.env.WEB_PUSH_PRIVATE_KEY}`
     )
   ),
     showBugReport && React.createElement(BugReportOverlay, { onClose: () => setShowBugReport(false) }),
