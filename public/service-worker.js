@@ -1,6 +1,6 @@
 // Bump the cache name whenever cached files change to ensure
 // clients receive the latest versions.
-const CACHE_NAME = 'videotpush-v2';
+const CACHE_NAME = 'VideoTinder-v3';
 console.log('ServiceWorker script loaded', CACHE_NAME);
 // Cache for images and video so large media files work offline
 const MEDIA_CACHE = 'media-cache-v1';
