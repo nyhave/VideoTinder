@@ -230,6 +230,14 @@ export function useDoc(collectionName, docId) {
   return data;
 }
 
+export function listenToDoc(collectionName, docId, callback) {
+  if (!docId) return () => {};
+  const d = doc(db, collectionName, docId);
+  return onSnapshot(d, snap => {
+    callback(snap.exists() ? { id: snap.id, ...snap.data() } : null);
+  });
+}
+
 export function useAuth() {
   const [user, setUser] = useState(null);
   useEffect(() => {
