@@ -457,14 +457,15 @@ export default function VideotpushApp() {
         )
       ),
       'RealDate',
-      React.createElement(HelpCircle, {
-        className: 'absolute top-1/2 right-16 -translate-y-1/2 cursor-pointer',
-        onClick: () => setShowHelp(true)
-      }),
-      React.createElement('span', {
-        className: 'absolute text-xs text-white',
-        style: { right: '4rem', top: 'calc(50% + 1rem)' }
-      }, `v${version}`),
+      React.createElement('div', {
+        className: 'absolute top-1/2 right-16 -translate-y-1/2 flex items-center gap-1'
+      },
+        React.createElement('span', { className: 'text-xs leading-none' }, `v${version}`),
+        React.createElement(HelpCircle, {
+          className: 'w-6 h-6 cursor-pointer',
+          onClick: () => setShowHelp(true)
+        })
+      ),
       userId && React.createElement('div', {
         className: 'absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer',
         onClick: openProfileSettings
