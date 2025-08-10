@@ -9,17 +9,14 @@ import { detectOS, detectBrowser } from './utils.js';
 
 ReactDOM.render(React.createElement(VideotpushApp), document.getElementById('root'));
 
+// >>> Service Worker registration for GitHub Pages subpath <<<
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    // BASE_URL er typisk '/VideoTinder/' når du hoster på GH Pages
-    const base = (import.meta && import.meta.env && import.meta.env.BASE_URL) || '/VideoTinder/';
-    const swUrl = `${base}service-worker.js`;
-
+    const base = '/VideoTinder/';                 // GH Pages repo path
+    const swUrl = `${base}service-worker.js`;     // SW file under public/
     navigator.serviceWorker
-      .register('/VideoTinder/service-worker.js', { scope: '/VideoTinder/' })
-      .then((reg) => {
-        console.log('SW registered with scope:', reg.scope);
-      })
-      .catch((err) => console.error('SW register failed:', err));
+      .register(swUrl, { scope: base })
+      .then(reg => console.log('SW scope:', reg.scope))
+      .catch(err => console.error('SW register failed:', err));
   });
 }
