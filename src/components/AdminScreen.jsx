@@ -12,6 +12,7 @@ import { advanceDay, resetDay, getTodayStr } from '../utils.js';
 import { getToken } from 'firebase/messaging';
 import { fcmReg } from '../swRegistration.js';
 import { triggerHaptic } from '../haptics.js';
+import { ensureWebPush } from '../ensureWebPush.js';
 
 
 export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenGroupCallLog, onOpenFunctionTest, onOpenRevealTest, onOpenTextLog, onOpenTextPieces, onOpenUserLog, onOpenServerLog, onOpenRecentLogins, profiles = [], userId, onSwitchProfile, onSaveUserLogout }) {
@@ -109,6 +110,15 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       alert(lines.join('\n'));
     } catch (err) {
       alert('Comparison failed: ' + err.message);
+    }
+  };
+
+  const refreshVapidKeys = async () => {
+    try {
+      await ensureWebPush();
+      alert('Web push subscription refreshed');
+    } catch (err) {
+      alert('Failed: ' + err.message);
     }
   };
 
@@ -404,6 +414,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: logClientToken }, 'Log client token'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: showVapidKeys }, 'Show VAPID keys'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: compareVapidKeys }, 'Compare VAPID keys'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: refreshVapidKeys }, 'Refresh VAPID keys'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: showPushInfo }, 'Show push info'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: testServiceWorker }, t('adminTestSW')),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: checkAuthAccess }, 'Check Firebase Auth'),
