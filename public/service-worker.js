@@ -1,6 +1,6 @@
 // Bump the cache name whenever cached files change to ensure
 // clients receive the latest versions.
-const CACHE_NAME = 'VideoTinder-v3';
+const CACHE_NAME = 'VideoTinder-cache-v5';
 console.log('ServiceWorker script loaded', CACHE_NAME);
 // Cache for images and video so large media files work offline
 const MEDIA_CACHE = 'media-cache-v1';
@@ -8,6 +8,8 @@ const URLS_TO_CACHE = [
   '/',
   '/public/index.html',
 ];
+
+const rel = (p) => new URL(p, self.registration.scope).href;
 
 self.addEventListener('install', event => {
   console.log('ServiceWorker installing', CACHE_NAME);
@@ -34,6 +36,7 @@ self.addEventListener('activate', event => {
   );
 });
 
+// Vis notifikationer ved push (iOS Safari m.fl.)
 self.addEventListener('push', (event) => {
   let data = {};
   try { data = event.data ? event.data.json() : {}; } catch { data = {}; }
@@ -41,21 +44,24 @@ self.addEventListener('push', (event) => {
   const body  = data.body  || '';
   const options = {
     body,
-    icon: '/icons/icon-192.png',
-    badge: '/icons/badge.png',
+    icon: rel('icons/icon-192.png'),
+    badge: rel('icons/badge.png'),
     tag: data.tag || 'videotpush',
     renotify: true,
-    data: { url: data.url || '/' }
+    data: { url: data.url || rel('') }
   };
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
+// Klik-adfærd: fokusér åben fane eller åbn URL
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const target = (event.notification.data && event.notification.data.url) || '/';
+  const target = (event.notification.data && event.notification.data.url) || rel('');
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
-      for (const client of list) if ('focus' in client) return client.focus();
+      for (const client of list) {
+        if ('focus' in client) return client.focus();
+      }
       if (clients.openWindow) return clients.openWindow(target);
     })
   );
