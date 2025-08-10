@@ -40,7 +40,7 @@ import version from './version.js';
 import { getNotifications, subscribeNotifications, markNotificationsRead, sendPushNotification } from './notifications.js';
 import SubscriptionOverlay from './components/SubscriptionOverlay.jsx';
 import NotificationsScreen from './components/NotificationsScreen.jsx';
-import { ensureWebPush } from './push/ensureWebPush';
+import { ensureWebPush } from './ensureWebPush.js';
 
 export default function VideotpushApp() {
   const [lang, setLang] = useState(() =>
