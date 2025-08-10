@@ -100,6 +100,14 @@ export const messages = {
   clip1:{ en:'Introduction', da:'Introduktion', sv:'Introduktion', es:'Introducción', fr:'Introduction', de:'Einführung' },
   clip2:{ en:'Biggest interest', da:'Største interesse', sv:'Största intresse', es:'Mayor interés', fr:'Plus grand intérêt', de:'Größtes Interesse' },
   clip3:{ en:'Free', da:'Fri', sv:'Fritt', es:'Libre', fr:'Libre', de:'Frei' },
+  recordIntro:{
+    en:'You are about to record {clip}. You have {seconds} seconds. A countdown will appear before recording starts.',
+    da:'Du skal til at optage {clip}. Du har {seconds} sekunder. Der kommer en nedtælling før optagelsen starter.',
+    sv:'Du ska spela in {clip}. Du har {seconds} sekunder. En nedräkning visas innan inspelningen startar.',
+    es:'Vas a grabar {clip}. Tienes {seconds} segundos. Aparecerá una cuenta regresiva antes de que comience la grabación.',
+    fr:'Vous allez enregistrer {clip}. Vous avez {seconds} secondes. Un compte à rebours apparaîtra avant que l\'enregistrement ne commence.',
+    de:'Du wirst {clip} aufnehmen. Du hast {seconds} Sekunden. Ein Countdown erscheint, bevor die Aufnahme startet.'
+  },
 inviteFriend:{ en:'Invite a friend', da:'Inviter en ven', sv:'Bjud in en vän', es:'Invitar a un amigo', fr:'Inviter un ami', de:'Einen Freund einladen' },
 inviteDesc:{ en:'Share the link below to invite others to RealDate', da:'Del linket nedenfor for at invitere andre til RealDate', sv:'Dela länken nedan för at bjuda in andra til RealDate', es:'Comparte el enlace de abajo para invitar a otros a RealDate', fr:"Partagez le lien ci-dessous pour inviter d'autres sur RealDate", de:'Teile den Link unten, um andere zu RealDate einzuladen' },
 share:{ en:'Share', da:'Del', sv:'Dela', es:'Compartir', fr:'Partager', de:'Teilen' },

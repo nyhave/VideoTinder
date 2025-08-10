@@ -35,6 +35,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const prevBirthdayRef = useRef('');
 
   const [showSnapVideoRecorder, setShowSnapVideoRecorder] = useState(false);
+  const [recordClipIndex, setRecordClipIndex] = useState(null);
   const [showSub, setShowSub] = useState(false);
   const [showInterests, setShowInterests] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
@@ -258,13 +259,19 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     };
   });
 
-  const replaceFile = async (file, field, index) => {
+  const replaceFile = async (file, field, index, music) => {
     if(!file) return;
     const storageRef = ref(storage, `profiles/${userId}/${field}-${Date.now()}-${file.name}`);
     await uploadBytes(storageRef, file);
     const url = await getDownloadURL(storageRef);
+    const clip = { url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() };
+    if(music){
+      const musicRef = ref(storage, `profiles/${userId}/${field}-music-${Date.now()}-${music.name}`);
+      await uploadBytes(musicRef, music);
+      clip.music = await getDownloadURL(musicRef);
+    }
     const updated = [...(profile[field] || [])];
-    updated[index] = { url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() };
+    updated[index] = clip;
     await updateDoc(doc(db,'profiles',userId), { [field]: updated });
     setProfile({...profile, [field]: updated});
   };
@@ -309,7 +316,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       return;
     }
     setShowSnapVideoRecorder(false);
-    uploadFile(file, 'videoClips', music);
+    replaceFile(file, 'videoClips', recordClipIndex, music);
+    setRecordClipIndex(null);
   };
 
   const handleNameChange = async e => {
@@ -481,7 +489,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             : React.createElement('div', { className:'flex flex-col items-center' },
                 React.createElement(CameraIcon, {
                   className: `w-10 h-10 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
-                  onClick: !publicView ? () => setShowSnapVideoRecorder(true) : undefined
+                  onClick: !publicView ? () => { setRecordClipIndex(i); setShowSnapVideoRecorder(true); } : undefined
                 }),
                 React.createElement('span', { className:'text-xs text-gray-500 mt-1' }, t('max10Sec'))
               ),
@@ -513,7 +521,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       onChange: handleVideoChange,
       className: 'hidden'
     }),
-    !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => setShowSnapVideoRecorder(false), onRecorded: handleVideoRecorded, maxDuration: getMaxVideoSeconds(profile)*1000, user: profile })
+    !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => { setShowSnapVideoRecorder(false); setRecordClipIndex(null); }, onRecorded: handleVideoRecorded, maxDuration: getMaxVideoSeconds(profile)*1000, user: profile, clipIndex: recordClipIndex })
   );
 
 
