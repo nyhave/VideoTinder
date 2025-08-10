@@ -281,6 +281,7 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
     }),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Nye klip om ${hoursUntil} timer`),
     React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Tag dig god tid til at udforske dagens klip`),
+    React.createElement('blockquote', { className: 'm-4 italic text-center text-gray-600' }, `“En kop kaffe er aldrig nok. Der skal meget mere til.” – Bente, Hotel Romantik`),
     React.createElement(AdBanner, { user }),
     React.createElement('ul', { className: 'space-y-4' },
       activeProfiles.length ? activeProfiles.map(p => {
