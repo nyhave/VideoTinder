@@ -28,6 +28,11 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
     new Date(currentUser.subscriptionExpires) > getCurrentDate();
   const canSeeLikes = hasActiveSubscription && (tier === 'gold' || tier === 'platinum');
   const t = useT();
+  const tierLabel = {
+    silver: t('tierSilver'),
+    gold: t('tierGold'),
+    platinum: t('tierPlatinum')
+  }[tier] || 'Premium';
 
   const [activeVideo, setActiveVideo] = useState(null);
   const [matchedProfile, setMatchedProfile] = useState(null);
@@ -87,7 +92,7 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
     hasActiveSubscription && currentUser.subscriptionExpires &&
       React.createElement('p', {
         className: 'text-sm text-gray-600 mb-2'
-      }, `Abonnement aktivt til ${new Date(currentUser.subscriptionExpires).toLocaleDateString('da-DK')}`),
+      }, `${tierLabel} abonnement aktivt til ${new Date(currentUser.subscriptionExpires).toLocaleDateString('da-DK')}`),
     React.createElement('div',{className: canSeeLikes ? 'flex-1' : 'flex-1 filter blur-sm pointer-events-none'},
       React.createElement('ul',{className:'space-y-4'},
         likedProfiles.length ? likedProfiles.map(p => {
