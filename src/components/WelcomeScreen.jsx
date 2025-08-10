@@ -6,7 +6,7 @@ import InfoOverlay from './InfoOverlay.jsx';
 import ForgotPasswordOverlay from './ForgotPasswordOverlay.jsx';
 import { UserPlus, LogIn } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
-import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithGoogle, signInWithFacebook, logEvent } from '../firebase.js';
+import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithGoogle, signInWithFacebook, logEvent, requestNotificationPermission, subscribeToWebPush } from '../firebase.js';
 import { getAge, getCurrentDate, parseBirthday } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
@@ -38,6 +38,15 @@ export default function WelcomeScreen({ onLogin }) {
   const t = useT();
 
 
+  const requestPushPermissions = async (pid, method = 'password') => {
+    if (typeof Notification === 'undefined') return;
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted') return;
+    await requestNotificationPermission(pid, method);
+    await subscribeToWebPush(pid, method);
+  };
+
+
   const handleSkip = () => {
     onLogin('101', 'admin');
   };
@@ -54,6 +63,7 @@ export default function WelcomeScreen({ onLogin }) {
       const cred = await signInWithEmailAndPassword(auth, loginUser.trim(), loginPass);
       const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
       const pid = userDoc.exists() ? userDoc.data().profileId : cred.user.uid;
+      await requestPushPermissions(pid, 'password');
       onLogin(pid);
     } catch (err) {
       console.error('Login failed', err);
@@ -66,6 +76,7 @@ export default function WelcomeScreen({ onLogin }) {
       const cred = await signInWithGoogle();
       const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
       const pid = userDoc.exists() ? userDoc.data().profileId : cred.user.uid;
+      await requestPushPermissions(pid, 'google');
       onLogin(pid, 'google');
     } catch (err) {
       console.error('Google login failed', err);
@@ -78,6 +89,7 @@ export default function WelcomeScreen({ onLogin }) {
       const cred = await signInWithFacebook();
       const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
       const pid = userDoc.exists() ? userDoc.data().profileId : cred.user.uid;
+      await requestPushPermissions(pid, 'facebook');
       onLogin(pid, 'facebook');
     } catch (err) {
       console.error('Facebook login failed', err);
@@ -111,7 +123,7 @@ export default function WelcomeScreen({ onLogin }) {
     return () => window.removeEventListener('functionTestAction', handler);
   }, []);
 
-  const finalizeRegistration = async (id, profile, uid, inviteId, inviteValid, giftFrom) => {
+  const finalizeRegistration = async (id, profile, uid, inviteId, inviteValid, giftFrom, loginMethod) => {
     await setDoc(doc(db, 'profiles', id), { ...profile, uid });
     await setDoc(doc(db, 'users', uid), { profileId: id });
     if (inviteId && inviteValid) {
@@ -121,6 +133,7 @@ export default function WelcomeScreen({ onLogin }) {
         console.error('Failed to update invite', err);
       }
     }
+    await requestPushPermissions(id, loginMethod);
     setCreatedMsg(t(giftFrom && inviteValid ? 'profileCreatedGift' : 'profileCreated'));
     setCreatedId(id);
     setShowCreated(true);
@@ -237,7 +250,7 @@ export default function WelcomeScreen({ onLogin }) {
     }
 
     try {
-      await finalizeRegistration(id, profile, cred.user.uid, inviteId, inviteValid, giftFrom);
+      await finalizeRegistration(id, profile, cred.user.uid, inviteId, inviteValid, giftFrom, provider);
       setPendingProvider(null);
     } catch (err) {
       console.error('Finalize registration failed', err);
@@ -372,7 +385,7 @@ export default function WelcomeScreen({ onLogin }) {
       return;
     }
     try {
-      await finalizeRegistration(id, profile, userCred.user.uid, inviteId, inviteValid, giftFrom);
+      await finalizeRegistration(id, profile, userCred.user.uid, inviteId, inviteValid, giftFrom, 'password');
     } catch (err) {
       console.error('Finalize registration failed', err);
       setRegisterErrorMsg('registerFailed');
