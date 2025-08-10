@@ -139,7 +139,7 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   helpLevels:{ en:'On the Daily Life page each profile has three levels. Watch clips to unlock more content.', da:'På siden Dagens liv har hver profil tre niveauer. Se klip for at låse mere op.' },
   helpSupport:{ en:'Need assistance? Choose "Report bug" on the About page to contact support.', da:'Brug for hjælp? Vælg \"Fejlmeld\" på Om RealDate-siden for at kontakte support.' },
   helpInvites:{ en:'You can send up to ten invitations. Follow each invitation until your friend has created a profile.', da:'Du kan sende op til ti invitationer. Følg hver invitation, indtil din ven har oprettet en profil.' },
-  dailyHelpLabel:{ en:'Need help?', da:'Need help?' },
+  dailyHelpLabel:{ en:'Need help?', da:'Brug for hjælp?' },
   dailyHelpTitle:{ en:'Daily Clips Help', da:'Hjælp til Dagens klip' },
   dailyHelpText:{
     en:'Feel the energy and consider carefully before matching. We use video clips to show the person\'s energy and personality. Take your time with the profiles. We support reflection time and want to avoid endless swiping. Therefore you get one video at a time and can look forward to more clips of the same person being released in the next days. To make the videos unique we ask for different content: introduction, biggest interest and free choice.',

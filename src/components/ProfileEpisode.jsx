@@ -188,7 +188,7 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       stage === 1 && React.createElement('p', {
         className: 'text-xs text-blue-500 underline cursor-pointer',
         onClick: () => setShowHelp(true)
-      }, 'Need help?')
+      }, t('dailyHelpLabel'))
     ),
     // The old level 2 intro box has been removed
     React.createElement(SectionTitle, { title: `${profile.name || ''}, ${profile.birthday ? getAge(profile.birthday) : profile.age || ''}${profile.city ? ', ' + profile.city : ''}` }),
@@ -260,10 +260,10 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
       React.createElement(Button, { className: 'bg-pink-500 text-white', onClick: saveReaction }, 'Gem')
     )
   ),
-  showHelp && React.createElement(InfoOverlay, {
-    title: 'Need help?',
-    onClose: () => setShowHelp(false)
-  },
+    showHelp && React.createElement(InfoOverlay, {
+      title: t('dailyHelpTitle'),
+      onClose: () => setShowHelp(false)
+    },
     React.createElement('p', { className:'text-sm text-center' },
       t('level2Intro')
         .replace('{name}', profile.name || '')
