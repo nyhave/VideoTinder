@@ -49,9 +49,12 @@ button{margin-top:1em;padding:0.5em 1em;}
       const parts = [];
       if (target === 'ios' || target === 'both') {
         const data = await post('/.netlify/functions/send-webpush', { title, body, silent });
-        parts.push('iOS: ' + (data.count ?? '?') + ' subscriptions');
-        if (Array.isArray(data.subscriptions)) {
-          subsEl.textContent = JSON.stringify(data.subscriptions, null, 2);
+        parts.push('iOS: ' + (data.count ?? '?') + ' subscriptions, ' + (data.errors ?? 0) + ' errors');
+        if (Array.isArray(data.results)) {
+          subsEl.textContent = JSON.stringify(data.results, null, 2);
+        }
+        if (data.note) {
+          subsEl.textContent += (subsEl.textContent ? '\n' : '') + data.note;
         }
       }
       if (target === 'other' || target === 'both') {
