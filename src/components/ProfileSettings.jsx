@@ -842,7 +842,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     !publicView && React.createElement(Button, {
         className: 'mt-2 w-full bg-yellow-500 text-white',
         onClick: () => setShowSub(true)
-      }, subscriptionActive ? 'Skift abonnement' : 'Køb abonnement'),
+      }, subscriptionActive ? 'Skift abonnement' : 'Køb abonnement (ikke implementeret)'),
     !publicView && React.createElement(Button, {
         className: 'mt-6 w-full bg-red-500 text-white',
         onClick: () => setShowDelete(true)

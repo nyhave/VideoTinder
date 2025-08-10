@@ -38,7 +38,7 @@
   - Vælg "Remove" for at fjerne profilen helt, medmindre rating 3 eller 4 er givet
     (så vises den under ratede eller likede profiler).
   - Silver kan fortryde den seneste "Remove"; Gold og Platinum kan fortryde flere.
-  - Brugeren kan én gang dagligt købe ekstra profiler.
+  - Brugeren kan én gang dagligt købe ekstra profiler (ikke implementeret).
 
 ### Offentlig kandidatprofil
 - Brugerens clip er altid tilgængeligt, men videoen afsløres gradvist:

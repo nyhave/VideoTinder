@@ -8,7 +8,7 @@ export default function PurchaseOverlay({ title, price, children, onClose, onBuy
       React.createElement('h2', { className: 'text-xl font-semibold mb-4 text-yellow-600 text-center' }, title),
       children,
       price && React.createElement('p', { className: 'text-center font-bold my-4' }, price),
-      React.createElement(Button, { className: 'w-full bg-yellow-500 text-white mb-2', onClick: onBuy }, 'Køb'),
+      React.createElement(Button, { className: 'w-full bg-yellow-500 text-white mb-2', onClick: onBuy }, 'Køb (ikke implementeret)'),
       React.createElement(Button, { className: 'w-full bg-gray-200 text-black', onClick: onClose }, 'Luk')
     )
   );
