@@ -297,10 +297,12 @@ export async function deleteAccount(profileId) {
     try {
       const list = await listAll(ref(storage, `profiles/${profileId}`));
       await Promise.all(list.items.map(i => deleteObject(i)));
-    } catch {}
+    } catch (err) {}
 
     if (auth.currentUser) {
-      try { await deleteUser(auth.currentUser); } catch {}
+      try {
+        await deleteUser(auth.currentUser);
+      } catch (err) {}
     }
   } catch (err) {
     console.error('Failed to delete account', err);

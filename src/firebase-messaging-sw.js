@@ -36,7 +36,11 @@ self.addEventListener('push', event => {
   console.log('Push event received');
   let data = {};
   if (event.data) {
-    try { data = event.data.json(); } catch { data = { body: event.data.text() }; }
+    try {
+      data = event.data.json();
+    } catch (err) {
+      data = { body: event.data.text() };
+    }
   }
   console.log('Push payload', data);
   const title = data.title || 'RealDate';
