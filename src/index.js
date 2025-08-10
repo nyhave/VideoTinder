@@ -9,7 +9,7 @@ import { detectOS, detectBrowser } from './utils.js';
 
 ReactDOM.render(React.createElement(VideotpushApp), document.getElementById('root'));
 
-// >>> Service Worker registration for GitHub Pages subpath <<<
+// >>> Service Worker registration for GitHub Pages  subpath <<<
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     const base = '/VideoTinder/';                 // GH Pages repo path
