@@ -147,6 +147,28 @@ gsutil cors set cors.json gs://<your-storage-bucket>
 After this configuration, uploads from your site will succeed without CORS
 errors.
 
+## Real-time Firestore Updates
+
+Avoid calling Firestore's REST `Listen` endpoint directly from the browser. It
+does not return the CORS headers required by `fetch`, which triggers access
+control errors. Instead, rely on the Firebase Web SDK's `onSnapshot` helper to
+receive live updates.
+
+This project exports a small wrapper in `src/firebase.js`:
+
+```javascript
+import { listenToDoc } from './firebase.js';
+
+const unsub = listenToDoc('collection', 'docId', data => {
+  console.log('Document data:', data);
+});
+
+// later call unsub() to stop listening
+```
+
+`listenToDoc` handles authentication and long‑polling so the browser can listen
+to changes without hitting CORS issues.
+
 ## Development Notes
 
 The profile filtering logic used on the Daily Discovery page lives in `src/selectProfiles.js`. Keeping this code in its own module makes it easy to reuse the same logic in a Netlify Function when needed. Netlify Functions run on Node.js with a generous free plan, so the helper can be moved to the server with minimal changes. An example implementation lives in `netlify/functions/select-profiles.js`.
