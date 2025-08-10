@@ -9,14 +9,18 @@ import { detectOS, detectBrowser } from './utils.js';
 
 ReactDOM.render(React.createElement(VideotpushApp), document.getElementById('root'));
 
-// >>> Service Worker registration for GitHub Pages  subpath <<<
+// >>> Service Worker registration with dynamic base path <<<
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    const base = '/VideoTinder/';                 // GH Pages repo path
-    const swUrl = `${base}service-worker.js`;     // SW file under public/
+    // Determine the base path of the application (e.g. "/" or "/VideoTinder/")
+    const base = window.location.pathname.replace(/[^/]*$/, '');
+    const swUrl = `${base}service-worker.js`;
     navigator.serviceWorker
       .register(swUrl, { scope: base })
-      .then(reg => console.log('SW scope:', reg.scope))
+      .then(reg => {
+        console.log('SW scope:', reg.scope);
+        setFcmReg(reg);
+      })
       .catch(err => console.error('SW register failed:', err));
   });
 }
