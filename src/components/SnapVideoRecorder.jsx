@@ -3,7 +3,7 @@ import { Camera as CameraIcon } from 'lucide-react';
 import { useT } from '../i18n.js';
 import { getCurrentDate } from '../utils.js';
 
-export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 10000, user }) {
+export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 10000, user, clipIndex }) {
   const streamRef = useRef();
   const recorderRef = useRef();
   const chunksRef = useRef([]);
@@ -13,6 +13,9 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   const [progress, setProgress] = useState(0);
   const startTimeRef = useRef(null);
   const [music, setMusic] = useState(null);
+  const [stage, setStage] = useState('intro');
+  const [count, setCount] = useState(3);
+  const countdownRef = useRef();
   const t = useT();
   const tier = user?.subscriptionTier || 'free';
   const hasActiveSubscription =
@@ -26,14 +29,30 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
         videoRef.current.srcObject = stream;
         videoRef.current.play();
       }
-      start();
     });
     return () => {
       if(streamRef.current){
         streamRef.current.getTracks().forEach(t => t.stop());
       }
+      clearInterval(countdownRef.current);
     };
   }, []);
+
+  const startCountdown = () => {
+    setStage('countdown');
+    setCount(3);
+    countdownRef.current = setInterval(() => {
+      setCount(prev => {
+        if(prev <= 1){
+          clearInterval(countdownRef.current);
+          setStage('recording');
+          start();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
 
   const start = () => {
     if(!streamRef.current) return;
@@ -82,6 +101,29 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
     ? Math.max(0, Math.ceil((maxDuration - (Date.now() - startTimeRef.current)) / 1000))
     : Math.round(maxDuration / 1000);
 
+  if(stage === 'intro'){
+    const clipLabel = clipIndex != null ? t(`clip${clipIndex+1}`) : '';
+    const seconds = Math.round(maxDuration/1000);
+    return React.createElement('div', { className:'fixed inset-0 z-50 flex items-center justify-center bg-black/60' },
+      React.createElement('div', { className:'bg-white p-4 rounded max-w-sm text-center' },
+        React.createElement('p', { className:'mb-4' }, t('recordIntro').replace('{clip}', clipLabel).replace('{seconds}', seconds)),
+        React.createElement('div', { className:'flex justify-center gap-2' },
+          React.createElement('button', { onClick: startCountdown, className:'bg-pink-500 text-white px-4 py-2 rounded' }, t('ok')),
+          React.createElement('button', { onClick: cancel, className:'bg-gray-200 text-gray-700 px-4 py-2 rounded' }, t('cancel'))
+        )
+      )
+    );
+  }
+
+  if(stage === 'countdown'){
+    return React.createElement('div', { className:'fixed inset-0 z-50 flex items-center justify-center bg-black/60' },
+      React.createElement('div', { className:'flex-1 flex items-center justify-center w-full relative' },
+        React.createElement('video', { ref: videoRef, className:'w-72 h-72 object-cover rounded', autoPlay:true, muted:true, playsInline:true }),
+        React.createElement('div', { className:'absolute inset-0 flex items-center justify-center text-white text-6xl font-bold' }, count)
+      )
+    );
+  }
+
   return React.createElement('div', { className:'fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60' },
     React.createElement('div', { className:'flex-1 flex items-center justify-center w-full' },
       React.createElement('div', { className:'relative w-72 h-72' },
@@ -100,7 +142,7 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
           React.createElement(CameraIcon, { className:'w-10 h-10' })
         ),
         React.createElement('div', { className:'absolute inset-0 flex items-center justify-center text-white text-4xl font-bold pointer-events-none' }, remainingSeconds),
-        React.createElement('button', { onClick: cancel, className:'absolute -bottom-12 left-1/2 -translate-x-1/2 text-white bg-black/40 px-4 py-1 rounded' }, 'Annuller')
+        React.createElement('button', { onClick: cancel, className:'absolute -bottom-12 left-1/2 -translate-x-1/2 text-white bg-black/40 px-4 py-1 rounded' }, t('cancel'))
       )
     ),
     React.createElement('div', { className:'flex-1 flex items-center justify-center w-full' },
