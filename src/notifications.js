@@ -4,7 +4,7 @@ function read() {
   if (typeof localStorage === 'undefined') return [];
   try {
     return JSON.parse(localStorage.getItem('notifications') || '[]');
-  } catch {
+  } catch (err) {
     return [];
   }
 }

@@ -41,7 +41,7 @@ export async function ensureWebPush({
   try {
     const old = await reg.pushManager.getSubscription();
     if (old) await old.unsubscribe();
-  } catch {
+  } catch (err) {
     // ignore
   }
 

@@ -39,7 +39,11 @@ self.addEventListener('activate', event => {
 // Vis notifikationer ved push (iOS Safari m.fl.)
 self.addEventListener('push', (event) => {
   let data = {};
-  try { data = event.data ? event.data.json() : {}; } catch { data = {}; }
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch (err) {
+    data = {};
+  }
   const title = data.title || 'Notifikation';
   const body  = data.body  || '';
   const options = {

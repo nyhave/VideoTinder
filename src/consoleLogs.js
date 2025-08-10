@@ -17,7 +17,7 @@ function add(type, args) {
     if (typeof a === 'object') {
       try {
         return JSON.stringify(a);
-      } catch {
+      } catch (err) {
         return String(a);
       }
     }
