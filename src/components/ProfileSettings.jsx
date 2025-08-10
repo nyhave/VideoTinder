@@ -532,7 +532,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement(Button, {
             className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
             onClick: onViewPublicProfile
-          }, 'View public profile'),
+          }, t('viewPublicProfile')),
           boostActive && React.createElement('p', {
             className: 'mt-2 text-sm text-purple-700'
           }, `Boost aktiv${boostCountdown ? ` (${boostCountdown})` : ''}`),
