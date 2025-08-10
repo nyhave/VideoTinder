@@ -43,7 +43,7 @@ import NotificationsScreen from './components/NotificationsScreen.jsx';
 
 export default function VideotpushApp() {
   const [lang, setLang] = useState(() =>
-    localStorage.getItem('lang') || 'en'
+    localStorage.getItem('lang') || 'da'
   );
   const [loggedIn, setLoggedIn] = useState(() => {
     const stored = localStorage.getItem('loggedIn');

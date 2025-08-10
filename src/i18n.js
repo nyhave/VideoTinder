@@ -275,7 +275,7 @@ export const adminKeys = [
   'textPiecesTitle',
   'trackUserTitle',
 ];
-const LangContext = createContext({ lang: 'en', setLang: () => {} });
+const LangContext = createContext({ lang: 'da', setLang: () => {} });
 
 export const LanguageProvider = LangContext.Provider;
 
