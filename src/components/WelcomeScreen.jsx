@@ -39,7 +39,12 @@ export default function WelcomeScreen({ onLogin }) {
 
 
   const requestPushPermissions = async (pid, method = 'password') => {
-    if (typeof Notification === 'undefined') return;
+    if (typeof Notification === 'undefined' || !('serviceWorker' in navigator)) return;
+    await navigator.serviceWorker.ready;
+    if (!navigator.serviceWorker.controller) {
+      console.log('Service worker er endnu ikke aktiv; prøv at genindlæse siden.');
+      return;
+    }
     const perm = await Notification.requestPermission();
     if (perm !== 'granted') return;
     await requestNotificationPermission(pid, method);
