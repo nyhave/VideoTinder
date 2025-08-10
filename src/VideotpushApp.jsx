@@ -40,6 +40,8 @@ import version from './version.js';
 import { getNotifications, subscribeNotifications, markNotificationsRead, sendPushNotification } from './notifications.js';
 import SubscriptionOverlay from './components/SubscriptionOverlay.jsx';
 import NotificationsScreen from './components/NotificationsScreen.jsx';
+import { ensureWebPush } from './push/ensureWebPush';
+
 export default function VideotpushApp() {
   const [lang, setLang] = useState(() =>
     localStorage.getItem('lang') || 'en'
@@ -385,14 +387,17 @@ export default function VideotpushApp() {
     }
   }, [loggedIn, userId, loginMethod]);
 
-  useEffect(() => {
-    if (loggedIn && userId) {
-      (async () => {
-        await requestNotificationPermission(userId, loginMethod);
-        await subscribeToWebPush(userId, loginMethod);
-      })();
-    }
-  }, [loggedIn, userId, loginMethod]);
+useEffect(() => {
+  if (loggedIn && userId) {
+    (async () => {
+      const perm = await Notification.requestPermission();
+      if (perm !== 'granted') return;
+
+      await ensureWebPush(); // sørger for korrekt (re)subscription med serverens key og gemmer i Firestore
+    })();
+  }
+}, [loggedIn, userId]);
+
 
   useEffect(() => {
     profiles.forEach(p => {
