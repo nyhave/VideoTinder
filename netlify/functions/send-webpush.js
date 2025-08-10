@@ -1,128 +1,126 @@
-const admin = require('firebase-admin');
-const fs = require('fs');
-const path = require('path');
-const webPush = require('web-push');
+// netlify/functions/send-webpush.js
+// Minimal, robust Web Push til iOS (Safari) + desktop/Android via standard Web Push.
+// Læser subscriptions fra Firestore 'webPushSubscriptions' og sender payload med title/body/url.
+// Svarer med detaljer pr. endpoint så du kan se præcis hvorfor noget fejler.
 
+const webpush = require('web-push');
+const admin = require('firebase-admin');
+
+// Init Firebase Admin én gang
 if (!admin.apps.length) {
-  try {
-    let serviceAccount = null;
-    if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
-      serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
-    } else {
-      const credPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-      if (fs.existsSync(credPath)) {
-        serviceAccount = require(credPath);
-      } else {
-        console.error('Firebase credential file missing:', credPath);
-      }
-    }
-    if (serviceAccount) {
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount)
-      });
-    }
-  } catch (err) {
-    console.error('Failed to load Firebase credentials:', err);
+  // Brug enten GOOGLE_APPLICATION_CREDENTIALS eller FIREBASE_SERVICE_ACCOUNT_JSON
+  if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+    admin.initializeApp({
+      credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON)),
+    });
+  } else {
+    admin.initializeApp(); // antager GOOGLE_APPLICATION_CREDENTIALS
   }
 }
+
 const db = admin.firestore();
 
-const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type'
-};
+// VAPID nøgler SKAL matche dem, klienten er subscribet med
+const PUBLIC_KEY = process.env.WEB_PUSH_PUBLIC_KEY;
+const PRIVATE_KEY = process.env.WEB_PUSH_PRIVATE_KEY;
 
-webPush.setVapidDetails(
-  'mailto:nyhave@gmail.com',
-  process.env.WEB_PUSH_PUBLIC_KEY,
-  process.env.WEB_PUSH_PRIVATE_KEY
-);
-
-function checkEnv() {
-  if (!process.env.WEB_PUSH_PUBLIC_KEY || !process.env.WEB_PUSH_PRIVATE_KEY) {
-    console.error('WEB_PUSH_* environment variables are not set');
-    return false;
-  }
-  return true;
+if (!PUBLIC_KEY || !PRIVATE_KEY) {
+  console.warn('WEB_PUSH_PUBLIC_KEY / WEB_PUSH_PRIVATE_KEY mangler');
 }
 
-exports.handler = async function(event) {
-  console.log('send-webpush function triggered');
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
-  }
+webpush.setVapidDetails(
+  // Brug en gyldig subject (mailto eller https)
+  process.env.WEB_PUSH_SUBJECT || 'mailto:admin@example.com',
+  PUBLIC_KEY,
+  PRIVATE_KEY
+);
+
+// Hjælpere
+const okJson = (obj) => ({ statusCode: 200, body: JSON.stringify(obj) });
+const badJson = (code, obj) => ({ statusCode: code, body: JSON.stringify(obj) });
+
+// Læs alle subs (evtl. filtrer på userId hvis medsendt)
+async function loadSubscriptions(userId) {
+  let q = db.collection('webPushSubscriptions');
+  if (userId) q = q.where('userId', '==', userId);
+  const snap = await q.get();
+  return snap.docs.map((d) => d.data());
+}
+
+exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers, body: 'Method Not Allowed' };
-  }
-  if (!checkEnv()) {
-    return { statusCode: 500, headers, body: 'Server configuration error' };
+    return badJson(405, { success: false, error: 'Method not allowed' });
   }
 
-  let parsedBody;
+  let payloadIn;
   try {
-    parsedBody = JSON.parse(event.body || '{}');
-  } catch (err) {
-    console.error('Failed to parse request body:', event.body, err);
-    return { statusCode: 400, headers, body: 'Invalid JSON payload' };
+    payloadIn = JSON.parse(event.body || '{}');
+  } catch (_e) {
+    return badJson(400, { success: false, error: 'Invalid JSON' });
   }
 
-  try {
-    const { title = 'RealDate', body, userId, silent } = parsedBody;
-    if (!body) {
-      return { statusCode: 400, headers, body: 'Invalid payload: body required' };
-    }
-  let subsSnap;
-  if (userId) {
-    subsSnap = await db.collection('webPushSubscriptions').where('userId','==', userId).get();
-  } else {
-    subsSnap = await db.collection('webPushSubscriptions').get();
-  }
-  const subs = subsSnap.docs.map(d => d.data());
-  const payload = JSON.stringify({ title, body, silent: !!silent });
-  const failed = [];
-  await Promise.all(
-    subs.map(async sub => {
-      try {
-        await webPush.sendNotification(sub, payload);
-      } catch (err) {
-        console.error('Failed to send push to', sub.endpoint, err);
-        if (err.statusCode === 410 || err.statusCode === 404) {
-          const safeId = Buffer.from(sub.endpoint)
-            .toString('base64')
-            .replace(/\+/g, '-')
-            .replace(/\//g, '_')
-            .replace(/=+$/, '');
-          db.collection('webPushSubscriptions').doc(safeId).delete().catch(() => {});
-        }
-        failed.push(sub.endpoint);
-      }
-    })
-  );
+  const title = payloadIn.title || 'Notifikation';
+  const body = payloadIn.body || '';
+  const url = payloadIn.url || '/';
+  const tag = payloadIn.tag || 'videotpush';
+  const userId = payloadIn.userId || null;
+  const silent = !!payloadIn.silent;
 
-  await db.collection('serverLogs').add({
-    timestamp: new Date().toISOString(),
-    type: 'send-webpush',
+  // Det her er det eneste, SW har brug for til at vise korrekt titel/tekst
+  const payload = {
+    title,
     body,
-    subscriptions: subs.length,
-    failed: failed.length
-  }).catch(() => {});
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify({
-      success: true,
-      count: subs.length,
-      errors: failed.length,
-      subscriptions: subs
-    })
+    url,
+    tag,
+    silent,
   };
-  } catch (err) {
-    console.error(err);
-    await db.collection('serverLogs').add({
-      timestamp: new Date().toISOString(),
-      type: 'send-webpush',
-      error: err.message
-    }).catch(() => {});
-    return { statusCode: 500, headers, body: 'Server error!' };
+
+  // Hent subs
+  const subscriptions = await loadSubscriptions(userId);
+  if (!subscriptions.length) {
+    return okJson({ success: true, count: 0, errors: 0, results: [] });
   }
+
+  // Send én for én for at få klar fejlkode
+  const results = [];
+  let errors = 0;
+
+  for (const sub of subscriptions) {
+    try {
+      // webpush forventer det rene subscription-objekt fra PushManager.subscribe().toJSON()
+      await webpush.sendNotification(sub, JSON.stringify(payload), {
+        TTL: 4500,
+        urgency: 'normal',
+      });
+      results.push({ endpoint: sub.endpoint, ok: true });
+    } catch (err) {
+      errors++;
+      const status = err.statusCode || err.status || 0;
+      const msg = String(err.body || err.message || err);
+      results.push({ endpoint: sub.endpoint, ok: false, status, msg });
+
+      // Ryd op ved 404/410 (stale endpoint)
+      if (status === 404 || status === 410) {
+        try {
+          // doc-id kan være gemt som encoded endpoint; vi forsøger begge veje:
+          const snap = await db
+            .collection('webPushSubscriptions')
+            .where('endpoint', '==', sub.endpoint)
+            .get();
+          for (const d of snap.docs) await d.ref.delete();
+        } catch (_) {
+          // ignorer oprydningsfejl
+        }
+      }
+    }
+  }
+
+  return okJson({
+    success: true,
+    count: subscriptions.length,
+    errors,
+    results,
+    note:
+      'Hvis du ser 401/403/400, er det næsten altid VAPID-mismatch. 404/410 betyder typisk stale subscription – resubscribe på enheden.',
+  });
 };
