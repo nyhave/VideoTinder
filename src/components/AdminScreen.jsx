@@ -138,6 +138,22 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     alert(lines.join('\n'));
   };
 
+  const testServiceWorker = () => {
+    if (!navigator.serviceWorker?.controller) {
+      alert('No active Service Worker');
+      return;
+    }
+    const channel = new MessageChannel();
+    const timer = setTimeout(() => {
+      alert('No response from Service Worker');
+    }, 2000);
+    channel.port1.onmessage = () => {
+      clearTimeout(timer);
+      alert('Service Worker responded');
+    };
+    navigator.serviceWorker.controller.postMessage({ type: 'PING' }, [channel.port2]);
+  };
+
   const checkAuthAccess = async () => {
     const base = process.env.FUNCTIONS_BASE_URL || '';
     try {
@@ -389,6 +405,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: showVapidKeys }, 'Show VAPID keys'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: compareVapidKeys }, 'Compare VAPID keys'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: showPushInfo }, 'Show push info'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: testServiceWorker }, t('adminTestSW')),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: checkAuthAccess }, 'Check Firebase Auth'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenServerLog }, 'Server log')
     ),
