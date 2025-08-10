@@ -32,6 +32,8 @@ export async function ensureWebPush({
   // 1) Hent serverens public key (kilden til sandhed)
   const res = await fetch('/.netlify/functions/get-vapid-public-key', { cache: 'no-store' });
   const { publicKey } = await res.json();
+  // Temporary debug output of VAPID key - remove before production.
+  console.log('DEBUG: WEB_PUSH_PUBLIC_KEY (ensureWebPush)', publicKey); // TODO: Remove before production
   if (!publicKey) throw new Error('Missing publicKey from server');
 
   // 2) Sørg for service worker er klar

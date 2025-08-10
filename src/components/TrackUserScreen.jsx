@@ -14,6 +14,9 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
   const hasReceivedNotification = logs.some(l => l.event === 'push received');
   const t = useT();
 
+  // Temporary debug output of VAPID key - remove before production.
+  console.log('DEBUG: FCM_VAPID_KEY (TrackUserScreen)', process.env.FCM_VAPID_KEY); // TODO: Remove before production
+
   const [checkResult, setCheckResult] = useState({});
 
   useEffect(() => {
@@ -35,6 +38,8 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
       } catch {}
       if (messaging && permission === 'granted') {
         try {
+          // Temporary debug output of VAPID key - remove before production.
+          console.log('DEBUG: FCM_VAPID_KEY (runChecks)', process.env.FCM_VAPID_KEY); // TODO: Remove before production
           const tok = await getToken(messaging, { vapidKey: process.env.FCM_VAPID_KEY, serviceWorkerRegistration: fcmReg });
           fcmToken = !!tok;
         } catch {}
@@ -114,6 +119,8 @@ export default function TrackUserScreen({ profiles = [], onBack }) {
           )
         )
       ) :
-      React.createElement('p', { className: 'text-center mt-4 text-gray-500' }, 'Ingen logs')
+      React.createElement('p', { className: 'text-center mt-4 text-gray-500' }, 'Ingen logs'),
+    // Temporary debug output of VAPID key - remove before production.
+    React.createElement('pre', { className: 'mt-4 p-2 bg-gray-100 text-xs break-words' }, `FCM_VAPID_KEY: ${process.env.FCM_VAPID_KEY}`)
   );
 }
