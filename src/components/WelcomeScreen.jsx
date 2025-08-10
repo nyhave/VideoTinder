@@ -47,7 +47,8 @@ export default function WelcomeScreen({ onLogin }) {
   };
 
 
-  const handleSkip = () => {
+  const handleSkip = async () => {
+    await requestPushPermissions('101', 'admin');
     onLogin('101', 'admin');
   };
 
