@@ -442,8 +442,11 @@ export default function VideotpushApp() {
     React.createElement('div', { className: 'flex flex-col min-h-[100dvh] w-screen bg-gradient-to-br from-pink-100 to-white pb-24 overflow-hidden' },
 
     React.createElement('div', {
-      className: 'p-4 bg-pink-600 text-white text-center font-bold fixed top-0 left-0 right-0 z-30',
-      style: { paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }
+      className: 'px-4 bg-pink-600 text-white text-center font-bold fixed top-0 left-0 right-0 z-30 flex items-center justify-center',
+      style: {
+        paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)',
+        paddingBottom: '0.5rem'
+      }
     },
       userId && React.createElement('div', {
         className: 'absolute top-1/2 left-4 -translate-y-1/2 flex gap-4'
