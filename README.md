@@ -193,6 +193,16 @@ curl -X POST http://localhost:8888/.netlify/functions/send-push \
 
 Make sure the Firebase credentials (`FIREBASE_*`) and VAPID keys (`WEB_PUSH_PUBLIC_KEY` and `WEB_PUSH_PRIVATE_KEY`) are set in your `.env` file so the functions can authenticate.
 
+## ensureWebPush helper
+
+The helper `src/ensureWebPush.js` keeps a browser's standard Web Push subscription in sync with the server. It fetches the current VAPID public key from `/.netlify/functions/get-vapid-public-key`, unsubscribes any existing subscription, and then subscribes again with the latest key. The resulting subscription is saved to Firestore by default, but you can supply your own `saveSubscription` function if you store subscriptions elsewhere.
+
+```javascript
+import { ensureWebPush } from './src/ensureWebPush';
+
+await ensureWebPush();
+```
+
 
 ## Service Worker Cache Updates
 
