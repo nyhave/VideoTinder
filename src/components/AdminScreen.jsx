@@ -409,7 +409,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         checked: invitesEnabled,
         onChange: () => updateDoc(doc(db, 'config', 'app'), { premiumInvitesEnabled: !invitesEnabled })
       }),
-      'Premium invites'
+      t('premiumInvites')
     ),
     React.createElement('label', { className: 'flex items-center mb-2' },
       React.createElement('input', {
@@ -418,7 +418,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         checked: showLevels,
         onChange: () => updateDoc(doc(db, 'config', 'app'), { showLevels: !showLevels })
       }),
-      'View levels'
+      t('viewLevels')
     ),
     React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenTextLog }, 'Se log'),
