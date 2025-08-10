@@ -4,12 +4,11 @@ const CACHE_NAME = 'VideoTinder-cache-v5';
 console.log('ServiceWorker script loaded', CACHE_NAME);
 // Cache for images and video so large media files work offline
 const MEDIA_CACHE = 'media-cache-v1';
-const URLS_TO_CACHE = [
-  '/',
-  '/public/index.html',
-];
-
 const rel = (p) => new URL(p, self.registration.scope).href;
+const URLS_TO_CACHE = [
+  rel(''),
+  rel('index.html'),
+];
 
 self.addEventListener('install', event => {
   console.log('ServiceWorker installing', CACHE_NAME);
