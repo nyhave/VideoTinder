@@ -104,7 +104,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         const localHash = await hash(v);
         const serverInfo = server[k] || { length: 0, sha256: '' };
         const match = localLen === serverInfo.length && localHash === serverInfo.sha256;
-        return `${k}: ${match ? '✔' : '✖'} local ${localLen}, server ${serverInfo.length}`;
+        return `${k}: ${match ? '✔' : '✖'} local len ${localLen} hash ${localHash}, server len ${serverInfo.length} hash ${serverInfo.sha256}`;
       }));
       alert(lines.join('\n'));
     } catch (err) {
