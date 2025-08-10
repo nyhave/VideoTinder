@@ -6,7 +6,7 @@
     "start": "npx serve .",
     "dev": "parcel public/index.html",
     "prebuild": "node scripts/bump-version.js",
-    "build": "parcel build public/index.html public/invite.html public/testers.html --dist-dir dist --public-url ./",
+    "build": "parcel build public/index.html public/invite.html public/testers.html --dist-dir dist --public-url ./ && cp public/service-worker.js dist/ && cp src/firebase-messaging-sw.js dist/",
     "test": "jest",
     "screenshots": "node scripts/capture-screens.js"
   },
