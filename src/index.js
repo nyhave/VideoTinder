@@ -19,8 +19,8 @@ if ('serviceWorker' in navigator) {
       .register(swUrl, { scope: base })
       .then(reg => {
         console.log('SW scope:', reg.scope);
-        setFcmReg(reg);
       })
       .catch(err => console.error('SW register failed:', err));
+    navigator.serviceWorker.ready.then(setFcmReg);
   });
 }
