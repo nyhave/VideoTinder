@@ -30,7 +30,7 @@ if (!PUBLIC_KEY || !PRIVATE_KEY) {
 
 webpush.setVapidDetails(
   // Brug en gyldig subject (mailto eller https)
-  process.env.WEB_PUSH_SUBJECT || 'mailto:admin@example.com',
+  process.env.WEB_PUSH_SUBJECT || 'mailto:nyhave@gmail.com',
   PUBLIC_KEY,
   PRIVATE_KEY
 );
