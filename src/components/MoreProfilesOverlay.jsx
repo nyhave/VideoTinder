@@ -14,7 +14,7 @@ export default function MoreProfilesOverlay({ hasFree, canBuy, onClaimFree, onBu
         )}
         {canBuy && (
           <Button className="w-full bg-yellow-500 text-white mb-2" onClick={onBuy}>
-            Køb 3 ekstra for 9 kr
+            Køb 3 ekstra for 9 kr (ikke implementeret)
           </Button>
         )}
         <Button className="w-full bg-gray-200 text-black" onClick={onClose}>
