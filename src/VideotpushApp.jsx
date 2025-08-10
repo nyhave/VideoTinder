@@ -487,7 +487,7 @@ export default function VideotpushApp() {
       videoCallId ?
         React.createElement(VideoCallPage, { matchId: videoCallId, userId, onBack: () => setVideoCallId(null) }) :
         React.createElement(React.Fragment, null,
-          React.createElement(TaskButton, { profile: currentUser, onClick: handleTaskClick }),
+          profiles.loaded && React.createElement(TaskButton, { profile: currentUser, onClick: handleTaskClick }),
           tab==='discovery' && !viewProfile && (
             React.createElement(DailyDiscovery, { userId, profiles, onSelectProfile: selectProfile, ageRange, onOpenProfile: openProfileSettings })
           ),
