@@ -38,19 +38,25 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
     };
   }, []);
 
+  useEffect(() => {
+    if(videoRef.current && streamRef.current){
+      videoRef.current.srcObject = streamRef.current;
+      videoRef.current.play();
+    }
+  }, [stage]);
+
   const startCountdown = () => {
     setStage('countdown');
-    setCount(3);
+    let current = 3;
+    setCount(current);
     countdownRef.current = setInterval(() => {
-      setCount(prev => {
-        if(prev <= 1){
-          clearInterval(countdownRef.current);
-          setStage('recording');
-          start();
-          return 0;
-        }
-        return prev - 1;
-      });
+      current -= 1;
+      setCount(current);
+      if(current <= 0){
+        clearInterval(countdownRef.current);
+        setStage('recording');
+        start();
+      }
     }, 1000);
   };
 
