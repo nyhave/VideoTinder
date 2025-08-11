@@ -21,7 +21,6 @@ import { getAge, getCurrentDate, getMaxVideoSeconds, getMonthlyBoostLimit, hasAd
 import PremiumIcon from './PremiumIcon.jsx';
 import { triggerHaptic } from '../haptics.js';
 import { sendPushNotification } from '../notifications.js';
-import ProfileAnalytics from './ProfileAnalytics.jsx';
 import VerificationBadge from './VerificationBadge.jsx';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId = userId, onBack, activeTask, taskTrigger = 0 }) {
@@ -39,7 +38,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [showSub, setShowSub] = useState(false);
   const [showInterests, setShowInterests] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  const [showAnalytics, setShowAnalytics] = useState(false);
   const [distanceRange, setDistanceRange] = useState([10,25]);
   const [editInfo, setEditInfo] = useState(false);
   const [editInterests, setEditInterests] = useState(false);
@@ -836,10 +834,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       })
     ),
     !publicView && React.createElement(Button, {
-        className: 'mt-2 w-full bg-blue-500 text-white',
-        onClick: () => setShowAnalytics(true)
-      }, t('viewAnalytics')),
-    !publicView && React.createElement(Button, {
         className: 'mt-2 w-full bg-yellow-500 text-white',
         onClick: () => setShowSub(true)
       }, subscriptionActive ? 'Skift abonnement' : 'Køb abonnement (ikke implementeret)'),
@@ -868,7 +862,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         text: reportItem.text || '',
         onClose: () => { setReportItem(null); setReportMode(false); }
       }),
-    showAnalytics && React.createElement(ProfileAnalytics, { userId, onBack: () => setShowAnalytics(false) }),
     showDelete && React.createElement(DeleteAccountOverlay, {
         onDelete: async () => { await deleteAccount(userId); onLogout && onLogout(); },
         onClose: () => setShowDelete(false)
