@@ -47,24 +47,3 @@ export async function showLocalNotification(title, body) {
   }
   addNotification({ title, body, type: 'local' });
 }
-
-export async function sendPushNotification(userId, body, title = '') {
-  const base = process.env.FUNCTIONS_BASE_URL || '';
-  const payload = JSON.stringify({ userId, body, title });
-  const endpoints = ['send-push', 'send-webpush'];
-  for (const endpoint of endpoints) {
-    try {
-      const resp = await fetch(`${base}/.netlify/functions/${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: payload
-      });
-      if (!resp.ok) {
-        const text = await resp.text();
-        console.error('Push failed', endpoint, text);
-      }
-    } catch (err) {
-      console.error('Push failed', endpoint, err);
-    }
-  }
-}

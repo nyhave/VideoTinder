@@ -35,27 +35,6 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Vis notifikationer ved push (iOS Safari m.fl.)
-self.addEventListener('push', (event) => {
-  let data = {};
-  try {
-    data = event.data ? event.data.json() : {};
-  } catch (err) {
-    data = {};
-  }
-  const title = data.title || 'Notifikation';
-  const body  = data.body  || '';
-  const options = {
-    body,
-    icon: rel('icons/icon-192.png'),
-    badge: rel('icons/badge.png'),
-    tag: data.tag || 'videotpush',
-    renotify: true,
-    data: { url: data.url || rel('') }
-  };
-  event.waitUntil(self.registration.showNotification(title, options));
-});
-
 // Klik-adfærd: fokusér åben fane eller åbn URL
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();

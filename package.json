@@ -6,7 +6,7 @@
     "start": "npx serve .",
     "dev": "parcel public/index.html",
     "prebuild": "node scripts/bump-version.js",
-    "build": "parcel build public/index.html public/invite.html public/testers.html --dist-dir dist --no-source-maps --public-url ./ && cp public/service-worker.js dist/ && cp src/firebase-messaging-sw.js dist/",
+    "build": "parcel build public/index.html public/invite.html public/testers.html --dist-dir dist --no-source-maps --public-url ./ && cp public/service-worker.js dist/",
     "test": "jest",
     "screenshots": "node scripts/capture-screens.js"
   },
@@ -19,8 +19,7 @@
     "qrcode.react": "^4.2.0",
     "rc-slider": "^11.1.8",
     "react": "^17.0.0",
-    "react-dom": "^17.0.0",
-    "web-push": "^3.5.4"
+    "react-dom": "^17.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",

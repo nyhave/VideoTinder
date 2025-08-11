@@ -8,7 +8,6 @@ import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
 import { useCollection, db, doc, updateDoc, deleteDoc, arrayUnion, onSnapshot } from '../firebase.js';
-import { sendPushNotification } from '../notifications.js';
 
 export default function ChatScreen({ userId, onStartCall }) {
   const profiles = useCollection('profiles');
@@ -100,7 +99,6 @@ export default function ChatScreen({ userId, onStartCall }) {
         typing:false
       })
     ]);
-    sendPushNotification(active.profileId, trimmed);
     setText('');
     if(messagesRef.current){
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
