@@ -86,6 +86,12 @@ export default function VideotpushApp() {
   const [cachedPhotoURL, setCachedPhotoURL] = useState('');
 
   useEffect(() => {
+    if (currentUser.ageRange) {
+      setAgeRange(currentUser.ageRange);
+    }
+  }, [currentUser.ageRange]);
+
+  useEffect(() => {
     if (!userId) {
       setCachedPhotoURL('');
       return;
