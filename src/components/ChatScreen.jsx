@@ -180,7 +180,7 @@ export default function ChatScreen({ userId, onStartCall }) {
                   className: `inline-block px-3 py-2 rounded-lg ${fromSelf ? 'bg-pink-500 text-white' : 'bg-gray-200 text-black'}`
                 }, m.text),
                 showReadReceipts && fromSelf && lastSelf && m.ts === lastSelf.ts && active.lastReadByOther && active.lastReadByOther >= m.ts &&
-                  React.createElement('div',{className:'text-xs text-gray-500 text-right'},'Seen')
+                  React.createElement('div',{className:'text-xs text-gray-500 text-right'},t('seen'))
               )
             );
           })
