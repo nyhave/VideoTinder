@@ -5,6 +5,7 @@ import { getCurrentDate } from '../utils.js';
 
 export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 10000, user, clipIndex }) {
   const streamRef = useRef();
+  const audioStreamRef = useRef();
   const recorderRef = useRef();
   const chunksRef = useRef([]);
   const timeoutRef = useRef();
@@ -23,7 +24,7 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   const canAddMusic = hasActiveSubscription && (tier === 'gold' || tier === 'platinum');
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: { echoCancellation: true } }).then(stream => {
+    navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
       streamRef.current = stream;
       if(videoRef.current){
         videoRef.current.srcObject = stream;
@@ -33,6 +34,9 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
     return () => {
       if(streamRef.current){
         streamRef.current.getTracks().forEach(t => t.stop());
+      }
+      if(audioStreamRef.current){
+        audioStreamRef.current.getTracks().forEach(t => t.stop());
       }
       clearInterval(countdownRef.current);
     };
@@ -60,9 +64,19 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
     }, 1000);
   };
 
-  const start = () => {
+  const start = async () => {
     if(!streamRef.current) return;
-    const recorder = new MediaRecorder(streamRef.current);
+    audioStreamRef.current = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true } });
+    const combinedStream = new MediaStream([
+      ...streamRef.current.getVideoTracks(),
+      ...audioStreamRef.current.getAudioTracks()
+    ]);
+    streamRef.current = combinedStream;
+    if(videoRef.current){
+      videoRef.current.srcObject = combinedStream;
+      videoRef.current.play();
+    }
+    const recorder = new MediaRecorder(combinedStream);
     recorderRef.current = recorder;
     chunksRef.current = [];
     recorder.ondataavailable = e => chunksRef.current.push(e.data);
@@ -92,6 +106,10 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
       cancelAnimationFrame(timeoutRef.current);
       timeoutRef.current = null;
       setRecording(false);
+      if(audioStreamRef.current){
+        audioStreamRef.current.getTracks().forEach(t => t.stop());
+        audioStreamRef.current = null;
+      }
     }
   };
 
