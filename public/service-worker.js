@@ -50,6 +50,28 @@ self.addEventListener('notificationclick', (event) => {
 });
 
 
+self.addEventListener('push', event => {
+  console.log('ServiceWorker push', event.data ? event.data.text() : '(no data)');
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch (err) {}
+  const title = data.title || 'VideoTinder';
+  const options = {
+    body: data.body,
+    icon: 'icon-192.png',
+    silent: !!data.silent,
+    data: data.data || {}
+  };
+  event.waitUntil(
+    self.registration.showNotification(title, options).then(() =>
+      self.clients.matchAll({ includeUncontrolled: true }).then(list => {
+        list.forEach(c => c.postMessage({ type: 'PUSH_RECEIVED', title, body: data.body }));
+      })
+    )
+  );
+});
+
 self.addEventListener('fetch', event => {
   console.log('ServiceWorker fetch', event.request.url);
   const dest = event.request.destination;
