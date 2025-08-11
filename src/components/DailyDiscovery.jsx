@@ -200,8 +200,8 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
         const prof = profiles.find(p => p.id === profileId);
         if(prof){
           setMatchedProfile(prof);
-          showLocalNotification("It's a match!", `You and ${prof.name} like each other`);
-          sendWebPushToProfile(profileId, "It's a match!", `${user.name || 'Someone'} matched with you`);
+          showLocalNotification('Det er et match!', `Du og ${prof.name} kan lide hinanden`);
+          sendWebPushToProfile(profileId, 'Det er et match!', `${user.name || 'En person'} har matchet med dig`);
         }
         triggerHaptic([100,50,100]);
       }
