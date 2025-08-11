@@ -24,6 +24,9 @@ const db = admin.firestore();
 const PUBLIC_KEY = process.env.WEB_PUSH_PUBLIC_KEY;
 const PRIVATE_KEY = process.env.WEB_PUSH_PRIVATE_KEY;
 
+console.log("PUBLIC: ${PUBLIC_KEY}");
+console.log("PRIVATE: ${PRIVATE_KEY}");
+
 if (!PUBLIC_KEY || !PRIVATE_KEY) {
   console.warn('WEB_PUSH_PUBLIC_KEY / WEB_PUSH_PRIVATE_KEY mangler');
 }
