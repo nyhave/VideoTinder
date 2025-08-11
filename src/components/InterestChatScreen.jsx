@@ -140,7 +140,8 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
         }),
         React.createElement(Button, { className:'bg-pink-500 text-white', disabled:!text.trim(), onClick:sendMessage }, 'Send')
       ),
-      React.createElement(Button, { className:'bg-blue-600 text-white font-bold mt-2', onClick:()=>setShowRealetten(true) }, realettenStarted ? 'Realetten started - Join now!' : 'Tag Chancen - Pr\u00f8v Realetten')
+      React.createElement(Button, { className:'bg-blue-600 text-white font-bold mt-2', onClick:()=>setShowRealetten(true) }, realettenStarted ? 'Realetten started - Join now!' : 'Tag Chancen - Pr\u00f8v Realetten'),
+      React.createElement('p', { className:'text-gray-600 text-sm mt-1' }, 'M\u00f8d andre i et videokald - op til 4 deltagere')
     )
   );
 }
