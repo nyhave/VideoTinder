@@ -463,8 +463,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         ]);
         await setDoc(doc(db,'episodeProgress', `${currentUserId}-${userId}`), { removed: true }, { merge: true });
         setMatchedProfile(profile);
-        showLocalNotification("It's a match!", `You and ${profile.name} like each other`);
-        sendWebPushToProfile(userId, "It's a match!", `${viewerProfile?.name || 'Someone'} matched with you`);
+        showLocalNotification('Det er et match!', `Du og ${profile.name} kan lide hinanden`);
+        sendWebPushToProfile(userId, 'Det er et match!', `${viewerProfile?.name || 'En person'} har matchet med dig`);
         triggerHaptic([100,50,100]);
       }
     }
