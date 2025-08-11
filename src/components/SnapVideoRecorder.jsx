@@ -16,6 +16,7 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   const [stage, setStage] = useState('intro');
   const [count, setCount] = useState(3);
   const countdownRef = useRef();
+  const previewTimeoutRef = useRef();
   const t = useT();
   const tier = user?.subscriptionTier || 'free';
   const hasActiveSubscription =
@@ -28,27 +29,45 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
         streamRef.current.getTracks().forEach(t => t.stop());
       }
       clearInterval(countdownRef.current);
+      clearTimeout(previewTimeoutRef.current);
     };
   }, []);
 
   const startCountdown = async () => {
-    const tempStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    tempStream.getTracks().forEach(t => t.stop());
-    setStage('countdown');
-    let current = 3;
-    setCount(current);
-    countdownRef.current = setInterval(() => {
-      current -= 1;
-      setCount(current);
-      if(current <= 0){
-        clearInterval(countdownRef.current);
-        setStage('recording');
-        start();
+    streamRef.current = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    if (videoRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+      await videoRef.current.play();
+    }
+    setStage('preview');
+    previewTimeoutRef.current = setTimeout(() => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(t => t.stop());
+        streamRef.current = null;
       }
-    }, 1000);
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+      setStage('countdown');
+      let current = 3;
+      setCount(current);
+      countdownRef.current = setInterval(() => {
+        current -= 1;
+        setCount(current);
+        if(current <= 0){
+          clearInterval(countdownRef.current);
+          setStage('recording');
+          start();
+        }
+      }, 1000);
+    }, 2000);
   };
 
   const start = async () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(t => t.stop());
+      streamRef.current = null;
+    }
     streamRef.current = await navigator.mediaDevices.getUserMedia({ video: true, audio: { echoCancellation: true } });
     if(videoRef.current){
       videoRef.current.srcObject = streamRef.current;
@@ -84,14 +103,16 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
       cancelAnimationFrame(timeoutRef.current);
       timeoutRef.current = null;
       setRecording(false);
-      if(streamRef.current){
-        streamRef.current.getTracks().forEach(t => t.stop());
-        streamRef.current = null;
-      }
+    }
+    if(streamRef.current){
+      streamRef.current.getTracks().forEach(t => t.stop());
+      streamRef.current = null;
     }
   };
 
   const cancel = () => {
+    clearTimeout(previewTimeoutRef.current);
+    clearInterval(countdownRef.current);
     stop();
     onCancel && onCancel();
   };
@@ -114,6 +135,12 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
           React.createElement('button', { onClick: cancel, className:'bg-gray-200 text-gray-700 px-4 py-2 rounded' }, t('cancel'))
         )
       )
+    );
+  }
+
+  if(stage === 'preview'){
+    return React.createElement('div', { className:'fixed inset-0 z-50 flex items-center justify-center bg-black/60' },
+      React.createElement('video', { ref: videoRef, className:'w-72 h-72 object-cover rounded', autoPlay:true, muted:true, playsInline:true })
     );
   }
 
