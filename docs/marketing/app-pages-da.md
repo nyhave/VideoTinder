@@ -81,7 +81,7 @@
 - Uden Gold/Platinum er listen sløret, og brugeren får tilbud om at opgradere.
 
 ## Login og opret bruger
-- Log ind med e-mail, Facebook eller Google.
+- Log ind med e-mail eller Google.
 
 ## Uden for app’en hos Netlify
 - Hjemmeside med baggrund og link til appen.

@@ -41,8 +41,7 @@ import {
   signOut,
   deleteUser,
   signInWithPopup,
-  GoogleAuthProvider,
-  FacebookAuthProvider
+  GoogleAuthProvider
 } from 'firebase/auth';
 import { fcmReg, fcmRegReady } from './swRegistration.js';
 import { detectOS, detectBrowser } from './utils.js';
@@ -270,12 +269,6 @@ export async function signInWithGoogle() {
     console.error('Google sign-in failed', err);
     throw err;
   }
-}
-
-export async function signInWithFacebook() {
-  const provider = new FacebookAuthProvider();
-  if (auth.currentUser) await signOut(auth);
-  return signInWithPopup(auth, provider);
 }
 
 export function signOutUser() {
