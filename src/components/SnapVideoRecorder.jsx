@@ -9,6 +9,7 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   const chunksRef = useRef([]);
   const timeoutRef = useRef();
   const videoRef = useRef();
+  const audioStreamRef = useRef();
   const [recording, setRecording] = useState(false);
   const [progress, setProgress] = useState(0);
   const startTimeRef = useRef(null);
@@ -23,10 +24,8 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   const canAddMusic = hasActiveSubscription && (tier === 'gold' || tier === 'platinum');
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: { echoCancellation: true } }).then(stream => {
+    navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
       streamRef.current = stream;
-      // disable audio until recording starts to avoid capturing unnecessarily
-      stream.getAudioTracks().forEach(t => { t.enabled = false; });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
@@ -35,6 +34,9 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
     return () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(t => t.stop());
+      }
+      if (audioStreamRef.current) {
+        audioStreamRef.current.getTracks().forEach(t => t.stop());
       }
       clearInterval(countdownRef.current);
     };
@@ -64,8 +66,9 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
 
   const start = async () => {
     if(!streamRef.current) return;
-    // enable audio tracks now that recording begins
-    streamRef.current.getAudioTracks().forEach(t => { t.enabled = true; });
+    const audioStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true } });
+    audioStreamRef.current = audioStream;
+    audioStream.getAudioTracks().forEach(t => streamRef.current.addTrack(t));
     if(videoRef.current){
       videoRef.current.srcObject = streamRef.current;
       videoRef.current.play();
@@ -100,9 +103,15 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
       cancelAnimationFrame(timeoutRef.current);
       timeoutRef.current = null;
       setRecording(false);
-      // disable audio tracks so microphone isn't used when not recording
       if(streamRef.current){
-        streamRef.current.getAudioTracks().forEach(t => { t.enabled = false; });
+        streamRef.current.getAudioTracks().forEach(t => {
+          t.stop();
+          streamRef.current.removeTrack(t);
+        });
+      }
+      if(audioStreamRef.current){
+        audioStreamRef.current.getTracks().forEach(t => t.stop());
+        audioStreamRef.current = null;
       }
     }
   };
