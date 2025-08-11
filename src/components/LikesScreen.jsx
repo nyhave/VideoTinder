@@ -11,6 +11,7 @@ import { useCollection, db, doc, setDoc, deleteDoc, getDoc } from '../firebase.j
 import { useT } from '../i18n.js';
 import { triggerHaptic } from '../haptics.js';
 import VerificationBadge from './VerificationBadge.jsx';
+import { showLocalNotification, sendWebPushToProfile } from '../notifications.js';
 
 export default function LikesScreen({ userId, onSelectProfile, onBack }) {
   const profiles = useCollection('profiles');
@@ -59,7 +60,11 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
         ]);
         await setDoc(doc(db,'episodeProgress', `${userId}-${profileId}`), { removed: true }, { merge: true });
         const prof = profiles.find(p => p.id === profileId);
-        if(prof) setMatchedProfile(prof);
+        if(prof){
+          setMatchedProfile(prof);
+          showLocalNotification("It's a match!", `You and ${prof.name} like each other`);
+          sendWebPushToProfile(profileId, "It's a match!", `${currentUser.name || 'Someone'} matched with you`);
+        }
         triggerHaptic([100,50,100]);
       }
     }

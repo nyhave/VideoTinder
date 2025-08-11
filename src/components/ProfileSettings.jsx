@@ -21,6 +21,7 @@ import { getAge, getCurrentDate, getMaxVideoSeconds, getMonthlyBoostLimit, hasAd
 import PremiumIcon from './PremiumIcon.jsx';
 import { triggerHaptic } from '../haptics.js';
 import VerificationBadge from './VerificationBadge.jsx';
+import { showLocalNotification, sendWebPushToProfile } from '../notifications.js';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId = userId, onBack, activeTask, taskTrigger = 0 }) {
   const [profile,setProfile]=useState(null);
@@ -462,6 +463,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         ]);
         await setDoc(doc(db,'episodeProgress', `${currentUserId}-${userId}`), { removed: true }, { merge: true });
         setMatchedProfile(profile);
+        showLocalNotification("It's a match!", `You and ${profile.name} like each other`);
+        sendWebPushToProfile(userId, "It's a match!", `${viewerProfile?.name || 'Someone'} matched with you`);
         triggerHaptic([100,50,100]);
       }
     }

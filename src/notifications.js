@@ -1,3 +1,5 @@
+import { db, collection, query, where, getDocs } from './firebase.js';
+
 let listeners = [];
 
 function read() {
@@ -46,4 +48,23 @@ export async function showLocalNotification(title, body) {
     console.error('showLocalNotification failed', err);
   }
   addNotification({ title, body, type: 'local' });
+}
+
+export async function sendWebPushToProfile(profileId, title, body, silent = false) {
+  try {
+    const userSnap = await getDocs(query(collection(db, 'users'), where('profileId', '==', profileId)));
+    if (userSnap.empty) return;
+    const uid = userSnap.docs[0].id;
+    const subSnap = await getDocs(query(collection(db, 'webPushSubscriptions'), where('uid', '==', uid)));
+    const subs = subSnap.docs.map(d => d.data().subscription);
+    if (!subs.length) return;
+    const base = process.env.FUNCTIONS_BASE_URL || '';
+    await fetch(`${base}/.netlify/functions/send-webpush`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, body, subscriptions: subs, silent })
+    });
+  } catch (err) {
+    console.error('sendWebPushToProfile failed', err);
+  }
 }

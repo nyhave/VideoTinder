@@ -16,6 +16,7 @@ import InfoOverlay from './InfoOverlay.jsx';
 import ExtendAreaOverlay from './ExtendAreaOverlay.jsx';
 import { triggerHaptic } from '../haptics.js';
 import useDayOffset from '../useDayOffset.js';
+import { showLocalNotification, sendWebPushToProfile } from '../notifications.js';
 
 export default function DailyDiscovery({ userId, profiles = [], onSelectProfile, ageRange, onOpenProfile }) {
   const t = useT();
@@ -197,7 +198,11 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
           setDoc(doc(db,'matches',m2.id),m2)
         ]);
         const prof = profiles.find(p => p.id === profileId);
-        if(prof) setMatchedProfile(prof);
+        if(prof){
+          setMatchedProfile(prof);
+          showLocalNotification("It's a match!", `You and ${prof.name} like each other`);
+          sendWebPushToProfile(profileId, "It's a match!", `${user.name || 'Someone'} matched with you`);
+        }
         triggerHaptic([100,50,100]);
       }
     }
