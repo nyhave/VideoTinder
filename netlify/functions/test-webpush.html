@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Web Push (iOS)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 1rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+    button {
+      margin-top: 1rem;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Web Push Test (iOS)</h1>
+  <p id="ios-warning" style="color: red; display: none;">This page is intended for iOS devices only.</p>
+  <label>Title: <input id="title" type="text" placeholder="Notification title"></label>
+  <label>Body: <input id="body" type="text" placeholder="Notification body"></label>
+  <button id="send">Send Notification</button>
+  <script>
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const warning = document.getElementById('ios-warning');
+    const sendBtn = document.getElementById('send');
+    if (!isIOS) {
+      warning.style.display = 'block';
+    }
+    sendBtn.addEventListener('click', () => {
+      fetch('/.netlify/functions/send-webpush', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: document.getElementById('title').value || 'Test Title',
+          body: document.getElementById('body').value || 'Test Body'
+        })
+      })
+      .then(res => res.json())
+      .then(data => alert('Success: ' + data.success + '\nFailed: ' + data.failed))
+      .catch(err => alert('Error: ' + err.message));
+    });
+  </script>
+</body>
+</html>
