@@ -130,3 +130,20 @@ export function getWeekId(date = getCurrentDate()){
   const weekNo = Math.ceil(((d - yearStart)/86400000 + 1)/7);
   return `${d.getUTCFullYear()}-${weekNo}`;
 }
+
+export async function clearAppCache(){
+  if(typeof window === 'undefined') return;
+  try{
+    if('caches' in window){
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+    if('localStorage' in window) localStorage.clear();
+    if('indexedDB' in window && indexedDB.databases){
+      const dbs = await indexedDB.databases();
+      await Promise.all(dbs.map(db => db.name && indexedDB.deleteDatabase(db.name)));
+    }
+  }catch(err){
+    console.error('Failed to clear app cache', err);
+  }
+}

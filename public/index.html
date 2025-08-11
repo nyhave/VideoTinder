@@ -17,12 +17,41 @@
   <link rel="stylesheet" href="../src/style.css" />
   <div id="root"></div>
   <script>
+    async function clearAppCache() {
+      try {
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+        if ('localStorage' in window) localStorage.clear();
+        if ('indexedDB' in window && indexedDB.databases) {
+          const dbs = await indexedDB.databases();
+          await Promise.all(
+            dbs.map(db => db.name && indexedDB.deleteDatabase(db.name))
+          );
+        }
+      } catch (err) {
+        console.error('Failed to clear app cache', err);
+      }
+    }
+
     function showLoadError() {
       const root = document.getElementById('root');
       root.innerHTML =
-        '<div style="padding:1rem;background-color:#fff;color:#000;">'+
-        'Appen kunne ikke indlæses. Ryd venligst din browsers cache og prøv igen.'+
+        '<div style="padding:1rem;background-color:#fff;color:#000;">' +
+        'Appen kunne ikke indlæses. Ryd venligst din browsers cache og prøv igen.' +
+        '<button id="clear-cache-btn" style="margin-top:1rem;padding:0.5rem 1rem;background-color:#6b7280;color:#fff;">Ryd cache</button>' +
         '</div>';
+      const btn = document.getElementById('clear-cache-btn');
+      if (btn) {
+        btn.addEventListener('click', async () => {
+          try {
+            await clearAppCache();
+          } finally {
+            window.location.reload();
+          }
+        });
+      }
     }
   </script>
   <script type="module" src="../src/index.js" onerror="showLoadError()"></script>
