@@ -148,7 +148,14 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
           React.createElement(CameraIcon, { className:'w-10 h-10' })
         ),
         React.createElement('div', { className:'absolute inset-0 flex items-center justify-center text-white text-4xl font-bold pointer-events-none' }, remainingSeconds),
-        React.createElement('button', { onClick: cancel, className:'absolute -bottom-12 left-1/2 -translate-x-1/2 text-white bg-black/40 px-4 py-1 rounded' }, t('cancel'))
+        React.createElement(
+          'button',
+          {
+            onClick: recording ? stop : cancel,
+            className: 'absolute -bottom-12 left-1/2 -translate-x-1/2 text-white bg-black/40 px-4 py-1 rounded'
+          },
+          t(recording ? 'stop' : 'cancel')
+        )
       )
     ),
     React.createElement('div', { className:'flex-1 flex items-center justify-center w-full' },
