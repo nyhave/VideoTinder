@@ -26,11 +26,6 @@ import {
   deleteObject
 } from 'firebase/storage';
 import {
-  getMessaging,
-  getToken,
-  onMessage
-} from 'firebase/messaging';
-import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -43,8 +38,6 @@ import {
   signInWithPopup,
   GoogleAuthProvider
 } from 'firebase/auth';
-import { fcmReg, fcmRegReady } from './swRegistration.js';
-import { detectOS, detectBrowser } from './utils.js';
 
 let extendedLogging = false;
 if (typeof window !== 'undefined') {
@@ -75,64 +68,6 @@ export async function logEvent(event, details = {}) {
   }
 }
 
-function urlB64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
-export async function subscribeToWebPush(userId, loginMethod = 'password') {
-  if (typeof window === 'undefined') return null;
-  if (Notification.permission !== 'granted') return null;
-
-  try {
-    logEvent('subscribeToWebPush start', { userId });
-    const reg = await navigator.serviceWorker.ready;
-    let sub = await reg.pushManager.getSubscription();
-    if (!sub) {
-      const rawKey = process.env.WEB_PUSH_PUBLIC_KEY;
-      // Temporary debug output of VAPID key - remove before production.
-      console.log('DEBUG: WEB_PUSH_PUBLIC_KEY', rawKey); // TODO: Remove before production
-      const appKey = urlB64ToUint8Array(rawKey);
-      sub = await reg.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: appKey
-      });
-    }
-    const safeId =
-      btoa(sub.endpoint)
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
-    await setDoc(doc(db, 'webPushSubscriptions', safeId), {
-      ...sub.toJSON(),
-      userId,
-      os: detectOS(),
-      browser: detectBrowser(),
-      loginMethod
-    });
-
-    const q = query(collection(db, 'webPushSubscriptions'), where('userId', '==', userId));
-    const snap = await getDocs(q);
-    const deletions = [];
-    snap.forEach(d => {
-      if (d.id !== safeId) deletions.push(deleteDoc(d.ref));
-    });
-    await Promise.all(deletions);
-
-    logEvent('subscribeToWebPush success', { userId });
-    return sub;
-  } catch (err) {
-    logEvent('subscribeToWebPush error', { error: err.message });
-    console.error('Failed to subscribe to web push', err);
-    return null;
-  }
-}
 
 export const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -150,59 +85,6 @@ const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '')
   .split(',')
   .map(e => e.trim())
   .filter(Boolean);
-export let messaging;
-if (typeof window !== 'undefined') {
-  messaging = getMessaging(app);
-}
-
-export async function requestNotificationPermission(userId, loginMethod = 'password') {
-
-  if (!messaging || Notification.permission === 'denied') return null;
-  let permission = Notification.permission;
-  if (permission === 'default') {
-    try {
-      permission = await Notification.requestPermission();
-    } catch (err) {
-      console.error('Failed to request notification permission', err);
-      return null;
-    }
-  }
-  if (permission !== 'granted') return null;
-
-  try {
-    logEvent('requestNotificationPermission start', { userId });
-    const reg = fcmReg || await fcmRegReady;
-    // Temporary debug output of VAPID key - remove before production.
-    console.log('DEBUG: FCM_VAPID_KEY', process.env.FCM_VAPID_KEY); // TODO: Remove before production
-    const token = await getToken(messaging, {
-      vapidKey: process.env.FCM_VAPID_KEY,
-      serviceWorkerRegistration: reg
-    });
-    if (token) {
-      await setDoc(doc(db, 'pushTokens', token), {
-        token,
-        userId,
-        os: detectOS(),
-        browser: detectBrowser(),
-        loginMethod
-      }, { merge: true });
-
-      const q = query(collection(db, 'pushTokens'), where('userId', '==', userId));
-      const snap = await getDocs(q);
-      const deletions = [];
-      snap.forEach(d => {
-        if (d.id !== token) deletions.push(deleteDoc(d.ref));
-      });
-      await Promise.all(deletions);
-    }
-    logEvent('requestNotificationPermission success', { userId });
-    return token;
-  } catch (err) {
-    logEvent('requestNotificationPermission error', { error: err.message });
-    console.error('Failed to get FCM token', err);
-    return null;
-  }
-}
 
 export function useCollection(collectionName, field, value) {
   const [data, setData] = useState([]);
@@ -297,8 +179,6 @@ export async function deleteAccount(profileId) {
     await clean('likes', 'userId', 'profileId');
     await clean('matches', 'userId', 'profileId');
     await clean('reflections', 'userId');
-    await clean('pushTokens', 'userId');
-    await clean('webPushSubscriptions', 'userId');
     await clean('episodeProgress', 'userId', 'profileId');
 
     try {

@@ -20,7 +20,6 @@ import { getInterestCategory } from '../interests.js';
 import { getAge, getCurrentDate, getMaxVideoSeconds, getMonthlyBoostLimit, hasAdvancedFilters } from '../utils.js';
 import PremiumIcon from './PremiumIcon.jsx';
 import { triggerHaptic } from '../haptics.js';
-import { sendPushNotification } from '../notifications.js';
 import VerificationBadge from './VerificationBadge.jsx';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId = userId, onBack, activeTask, taskTrigger = 0 }) {
@@ -462,7 +461,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           setDoc(doc(db,'matches',m2.id),m2)
         ]);
         await setDoc(doc(db,'episodeProgress', `${currentUserId}-${userId}`), { removed: true }, { merge: true });
-        sendPushNotification(userId, 'Du har et match. Start samtalen');
         setMatchedProfile(profile);
         triggerHaptic([100,50,100]);
       }

@@ -10,7 +10,6 @@ import SectionTitle from './SectionTitle.jsx';
 import { useCollection, db, doc, setDoc, deleteDoc, getDoc } from '../firebase.js';
 import { useT } from '../i18n.js';
 import { triggerHaptic } from '../haptics.js';
-import { sendPushNotification } from '../notifications.js';
 import VerificationBadge from './VerificationBadge.jsx';
 
 export default function LikesScreen({ userId, onSelectProfile, onBack }) {
@@ -59,7 +58,6 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
           setDoc(doc(db,'matches',m2.id),m2)
         ]);
         await setDoc(doc(db,'episodeProgress', `${userId}-${profileId}`), { removed: true }, { merge: true });
-        sendPushNotification(profileId, 'Du har et match. Start samtalen');
         const prof = profiles.find(p => p.id === profileId);
         if(prof) setMatchedProfile(prof);
         triggerHaptic([100,50,100]);

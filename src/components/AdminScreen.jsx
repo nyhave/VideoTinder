@@ -6,16 +6,13 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import seedData from '../seedData.js';
-import { db, collection, getDocs, deleteDoc, updateDoc, doc, getDoc, query, where, storage, listAll, ref, getDownloadURL, deleteObject, messaging, setExtendedLogging, isExtendedLogging, useDoc } from '../firebase.js';
+import { db, collection, getDocs, deleteDoc, updateDoc, doc, getDoc, query, where, storage, listAll, ref, getDownloadURL, deleteObject, setExtendedLogging, isExtendedLogging, useDoc } from '../firebase.js';
 import { setConsoleCapture, isConsoleCapture, showConsolePanel } from '../consoleLogs.js';
 import { advanceDay, resetDay, getTodayStr } from '../utils.js';
-import { getToken } from 'firebase/messaging';
-import { fcmReg } from '../swRegistration.js';
 import { triggerHaptic } from '../haptics.js';
-import { ensureWebPush } from '../ensureWebPush.js';
 
 
-export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenGroupCallLog, onOpenFunctionTest, onOpenRevealTest, onOpenTextLog, onOpenTextPieces, onOpenUserLog, onOpenServerLog, onOpenRecentLogins, profiles = [], userId, onSwitchProfile, onSaveUserLogout }) {
+export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatchLog, onOpenScoreLog, onOpenReports, onOpenCallLog, onOpenGroupCallLog, onOpenFunctionTest, onOpenRevealTest, onOpenTextLog, onOpenTextPieces, onOpenServerLog, onOpenRecentLogins, profiles = [], userId, onSwitchProfile, onSaveUserLogout }) {
 
   const { lang, setLang } = useLang();
   const t = useT();
@@ -26,10 +23,6 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   const config = useDoc('config', 'app') || {};
   const invitesEnabled = config.premiumInvitesEnabled !== false;
   const showLevels = config.showLevels !== false;
-  // Temporary debug output of VAPID keys - remove before production.
-  console.log('DEBUG: FCM_VAPID_KEY', process.env.FCM_VAPID_KEY); // TODO: Remove before production
-  console.log('DEBUG: WEB_PUSH_PUBLIC_KEY', process.env.WEB_PUSH_PUBLIC_KEY); // TODO: Remove before production
-  console.log('DEBUG: WEB_PUSH_PRIVATE_KEY', process.env.WEB_PUSH_PRIVATE_KEY); // TODO: Remove before production
 
   const toggleLog = () => {
     const val = !logEnabled;
@@ -47,137 +40,6 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     showConsolePanel();
   };
 
-  const sendPush = async text => {
-    const base = process.env.FUNCTIONS_BASE_URL || '';
-
-    const send = async endpoint => {
-      const resp = await fetch(`${base}/.netlify/functions/${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: text, body: text })
-      });
-      if (!resp.ok) {
-        const message = await resp.text();
-        throw new Error(message);
-      }
-    };
-
-    try {
-      await send('send-push');
-      await send('send-webpush');
-    } catch (err) {
-      alert('Failed: ' + err.message);
-    }
-  };
-
-  const logClientToken = async () => {
-    try {
-      // Temporary debug output of VAPID key - remove before production.
-      console.log('DEBUG: FCM_VAPID_KEY (logClientToken)', process.env.FCM_VAPID_KEY); // TODO: Remove before production
-      const token = await getToken(messaging, {
-        vapidKey: process.env.FCM_VAPID_KEY,
-        serviceWorkerRegistration: fcmReg
-      });
-      if (token) {
-        alert('Client token: ' + token);
-      } else {
-        alert('No registration token available.');
-      }
-    } catch (err) {
-      alert('Error getting token: ' + err);
-    }
-  };
-
-  const showVapidKeys = () => {
-    const pub = process.env.WEB_PUSH_PUBLIC_KEY || '';
-    const priv = process.env.WEB_PUSH_PRIVATE_KEY || '';
-    // Temporary debug output of VAPID keys - remove before production.
-    console.log('DEBUG: WEB_PUSH_PUBLIC_KEY (showVapidKeys)', pub); // TODO: Remove before production
-    console.log('DEBUG: WEB_PUSH_PRIVATE_KEY (showVapidKeys)', priv); // TODO: Remove before production
-    alert('Public: ' + pub + '\nPrivate: ' + priv);
-  };
-
-  const compareVapidKeys = async () => {
-    const base = process.env.FUNCTIONS_BASE_URL || '';
-    const toHex = buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-    const hash = async str => toHex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)));
-    try {
-      // Temporary debug output of VAPID keys - remove before production.
-      console.log('DEBUG: WEB_PUSH_PUBLIC_KEY (compareVapidKeys)', process.env.WEB_PUSH_PUBLIC_KEY); // TODO: Remove before production
-      console.log('DEBUG: WEB_PUSH_PRIVATE_KEY (compareVapidKeys)', process.env.WEB_PUSH_PRIVATE_KEY); // TODO: Remove before production
-      const resp = await fetch(`${base}/.netlify/functions/vapid-info`);
-      if (!resp.ok) throw new Error('status ' + resp.status);
-      const server = await resp.json();
-      const local = {
-        WEB_PUSH_PUBLIC_KEY: process.env.WEB_PUSH_PUBLIC_KEY || '',
-        WEB_PUSH_PRIVATE_KEY: process.env.WEB_PUSH_PRIVATE_KEY || ''
-      };
-      const lines = await Promise.all(Object.entries(local).map(async ([k, v]) => {
-        const localLen = v.length;
-        const localHash = await hash(v);
-        const serverInfo = server[k] || { length: 0, sha256: '' };
-        const match = localLen === serverInfo.length && localHash === serverInfo.sha256;
-        return `${k}: ${match ? '✔' : '✖'} local len ${localLen} hash ${localHash}, server len ${serverInfo.length} hash ${serverInfo.sha256}`;
-      }));
-      alert(lines.join('\n'));
-    } catch (err) {
-      alert('Comparison failed: ' + err.message);
-    }
-  };
-
-  const refreshVapidKeys = async () => {
-    try {
-      await ensureWebPush();
-      alert('Web push subscription refreshed');
-    } catch (err) {
-      alert('Failed: ' + err.message);
-    }
-  };
-
-  const showPushInfo = async () => {
-    // Temporary debug output of VAPID keys - remove before production.
-    console.log('DEBUG: WEB_PUSH_PUBLIC_KEY (showPushInfo)', process.env.WEB_PUSH_PUBLIC_KEY); // TODO: Remove before production
-    console.log('DEBUG: WEB_PUSH_PRIVATE_KEY (showPushInfo)', process.env.WEB_PUSH_PRIVATE_KEY); // TODO: Remove before production
-    const values = {
-      FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
-      FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
-      FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
-      FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
-      FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
-      FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
-      WEB_PUSH_PUBLIC_KEY: process.env.WEB_PUSH_PUBLIC_KEY,
-      WEB_PUSH_PRIVATE_KEY: process.env.WEB_PUSH_PRIVATE_KEY,
-      GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS,
-      FUNCTIONS_BASE_URL: process.env.FUNCTIONS_BASE_URL
-    };
-    let permission = Notification.permission;
-    try {
-      if (permission === 'default') {
-        permission = await Notification.requestPermission();
-      }
-    } catch (err) {
-      permission = 'error:' + err.message;
-    }
-    const lines = Object.entries(values).map(([k, v]) => `${k}: ${v}`);
-    lines.push('Notification permission: ' + permission);
-    alert(lines.join('\n'));
-  };
-
-  const testServiceWorker = () => {
-    if (!navigator.serviceWorker?.controller) {
-      alert('No active Service Worker');
-      return;
-    }
-    const channel = new MessageChannel();
-    const timer = setTimeout(() => {
-      alert('No response from Service Worker');
-    }, 2000);
-    channel.port1.onmessage = () => {
-      clearTimeout(timer);
-      alert('Service Worker responded');
-    };
-    navigator.serviceWorker.controller.postMessage({ type: 'PING' }, [channel.port2]);
-  };
 
   const checkAuthAccess = async () => {
     const base = process.env.FUNCTIONS_BASE_URL || '';
@@ -238,9 +100,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         removeFrom('matches', 'profileId'),
         removeFrom('reflections', 'userId'),
         removeFrom('episodeProgress', 'userId'),
-        removeFrom('episodeProgress', 'profileId'),
-        removeFrom('pushTokens', 'userId'),
-        removeFrom('webPushSubscriptions', 'userId')
+        removeFrom('episodeProgress', 'profileId')
       ]);
       const logsQ = query(collection(db, 'textLogs'), where('details.userId', '==', userId));
       const logsRes = await getDocs(logsQ);
@@ -422,16 +282,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: recoverMissing }, 'Hent mistet fra DB'),
     React.createElement(Button, { className: 'mt-2 bg-red-500 text-white px-4 py-2 rounded', onClick: resetInvites }, 'Reset invitations'),
     React.createElement(Button, { className: 'mt-2 bg-red-500 text-white px-4 py-2 rounded', onClick: killRealettenSessions }, 'Kill Realetten sessions'),
-    React.createElement('h4', { className: 'text-lg font-semibold mb-2 text-blue-600' }, t('adminPush')),
     React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
-      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: () => sendPush('Dagens klip er klar') }, 'Dagens klip er klar'),
-      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: () => sendPush('Du har et match. Start samtalen') }, 'Du har et match. Start samtalen'),
-      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: logClientToken }, 'Log client token'),
-      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: showVapidKeys }, 'Show VAPID keys'),
-      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: compareVapidKeys }, 'Compare VAPID keys'),
-      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: refreshVapidKeys }, 'Refresh VAPID keys'),
-      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: showPushInfo }, 'Show push info'),
-      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: testServiceWorker }, t('adminTestSW')),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: checkAuthAccess }, 'Check Firebase Auth'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenServerLog }, 'Server log')
     ),
@@ -467,7 +318,6 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenTextLog }, 'Se log'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenMatchLog }, 'Se matchlog'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenScoreLog }, 'Se score log'),
-      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenUserLog }, 'Følg bruger'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenTextPieces }, 'Alle tekststykker')
     ),
     React.createElement('h4', { className: 'text-lg font-semibold mb-2 mt-4 text-blue-600' }, t('videoCallsTitle')),
@@ -475,10 +325,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenCallLog }, 'Se aktive opkald'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenGroupCallLog }, 'Se gruppeopkald')
     ),
-    // Temporary debug output of VAPID keys - remove before production.
-    React.createElement('pre', { className: 'mt-4 p-2 bg-gray-100 text-xs break-words' },
-      `FCM_VAPID_KEY: ${process.env.FCM_VAPID_KEY}\nWEB_PUSH_PUBLIC_KEY: ${process.env.WEB_PUSH_PUBLIC_KEY}\nWEB_PUSH_PRIVATE_KEY: ${process.env.WEB_PUSH_PRIVATE_KEY}`
-    )
+    null
   ),
     showBugReport && React.createElement(BugReportOverlay, { onClose: () => setShowBugReport(false) }),
     showHelp && React.createElement(AdminHelpOverlay, { onClose: () => setShowHelp(false) })

@@ -22,7 +22,6 @@ import FunctionTestScreen from './components/FunctionTestScreen.jsx';
 import RevealTestScreen from './components/RevealTestScreen.jsx';
 import TextLogScreen from './components/TextLogScreen.jsx';
 import TextPiecesScreen from './components/TextPiecesScreen.jsx';
-import TrackUserScreen from './components/TrackUserScreen.jsx';
 import ServerLogScreen from './components/ServerLogScreen.jsx';
 import RecentLoginsScreen from './components/RecentLoginsScreen.jsx';
 import InterestChatScreen from './components/InterestChatScreen.jsx';
@@ -37,7 +36,7 @@ import { useCollection, db, doc, setDoc, updateDoc, arrayUnion, getDoc, incremen
 import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 import version from './version.js';
-import { getNotifications, subscribeNotifications, markNotificationsRead, sendPushNotification } from './notifications.js';
+import { getNotifications, subscribeNotifications, markNotificationsRead } from './notifications.js';
 import SubscriptionOverlay from './components/SubscriptionOverlay.jsx';
 import NotificationsScreen from './components/NotificationsScreen.jsx';
 
@@ -167,7 +166,6 @@ export default function VideotpushApp() {
         setDoc(doc(db, 'matches', m1.id), m1),
         setDoc(doc(db, 'matches', m2.id), m2)
       ]);
-      sendPushNotification(m2.userId, 'Du har et match. Start samtalen');
     } catch (err) {
       console.error('Failed to create match', err);
     }
@@ -525,7 +523,7 @@ export default function VideotpushApp() {
             taskTrigger: taskClicks
           }),
           tab==='likes' && React.createElement(LikesScreen, { userId, onBack: ()=>setTab('discovery'), onSelectProfile: selectProfile }),
-          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenGroupCallLog: ()=>setTab('groupcalllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenRevealTest: ()=>setTab('revealtest'), onOpenTextLog: ()=>setTab('textlog'), onOpenTextPieces: ()=>setTab('textpieces'), onOpenUserLog: ()=>setTab('trackuser'), onOpenServerLog: ()=>setTab('serverlog'), onOpenRecentLogins: ()=>setTab('recentlogins'), profiles, userId, onSwitchProfile: id=>{ setUserId(id); setLoginMethod('admin'); }, onSaveUserLogout: saveUserAndLogout }),
+          tab==='admin' && React.createElement(AdminScreen, { onOpenStats: ()=>setTab('stats'), onOpenBugReports: ()=>setTab('bugs'), onOpenMatchLog: ()=>setTab('matchlog'), onOpenScoreLog: ()=>setTab('scorelog'), onOpenReports: ()=>setTab('reports'), onOpenCallLog: ()=>setTab('calllog'), onOpenGroupCallLog: ()=>setTab('groupcalllog'), onOpenFunctionTest: ()=>setTab('functiontest'), onOpenRevealTest: ()=>setTab('revealtest'), onOpenTextLog: ()=>setTab('textlog'), onOpenTextPieces: ()=>setTab('textpieces'), onOpenServerLog: ()=>setTab('serverlog'), onOpenRecentLogins: ()=>setTab('recentlogins'), profiles, userId, onSwitchProfile: id=>{ setUserId(id); setLoginMethod('admin'); }, onSaveUserLogout: saveUserAndLogout }),
           tab==='stats' && React.createElement(StatsScreen, { onBack: ()=>setTab('admin') }),
           tab==='matchlog' && React.createElement(MatchLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='scorelog' && React.createElement(ScoreLogScreen, { onBack: ()=>setTab('admin') }),
@@ -537,7 +535,6 @@ export default function VideotpushApp() {
           tab==='revealtest' && React.createElement(RevealTestScreen, { onBack: ()=>setTab('admin') }),
           tab==='textlog' && React.createElement(TextLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='textpieces' && React.createElement(TextPiecesScreen, { onBack: ()=>setTab('admin') }),
-          tab==='trackuser' && React.createElement(TrackUserScreen, { onBack: ()=>setTab('admin'), profiles }),
           tab==='serverlog' && React.createElement(ServerLogScreen, { onBack: ()=>setTab('admin') }),
           tab==='recentlogins' && React.createElement(RecentLoginsScreen, { onBack: ()=>setTab('admin') }),
           tab==='graphics' && React.createElement(GraphicsElementsScreen, { onBack: ()=>setTab('admin') }),

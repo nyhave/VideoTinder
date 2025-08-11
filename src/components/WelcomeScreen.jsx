@@ -6,7 +6,7 @@ import InfoOverlay from './InfoOverlay.jsx';
 import ForgotPasswordOverlay from './ForgotPasswordOverlay.jsx';
 import { UserPlus, LogIn, Loader2 } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
-import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signInWithGoogle, logEvent, requestNotificationPermission, subscribeToWebPush } from '../firebase.js';
+import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signInWithGoogle, logEvent } from '../firebase.js';
 import { getAge, getCurrentDate, parseBirthday } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
@@ -41,27 +41,7 @@ export default function WelcomeScreen({ onLogin }) {
   const t = useT();
 
 
-  const requestPushPermissions = async (pid, method = 'password') => {
-    if (typeof Notification === 'undefined' || !('serviceWorker' in navigator)) return;
-
-    // Request permission immediately to avoid being blocked by other overlays
-    const perm = await Notification.requestPermission();
-    if (perm !== 'granted') return;
-
-    try {
-      await navigator.serviceWorker.ready;
-    } catch (err) {
-      console.error('Service worker not ready', err);
-      return;
-    }
-
-    await requestNotificationPermission(pid, method);
-    await subscribeToWebPush(pid, method);
-  };
-
-
   const handleSkip = async () => {
-    await requestPushPermissions('101', 'admin');
     onLogin('101', 'admin');
   };
 
@@ -77,9 +57,8 @@ export default function WelcomeScreen({ onLogin }) {
     try {
       const cred = await signInWithEmailAndPassword(auth, loginUser.trim(), loginPass);
       const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
-      const pid = userDoc.exists() ? userDoc.data().profileId : cred.user.uid;
-      await requestPushPermissions(pid, 'password');
-      onLogin(pid);
+        const pid = userDoc.exists() ? userDoc.data().profileId : cred.user.uid;
+        onLogin(pid);
     } catch (err) {
       console.error('Login failed', err);
       setLoginError(true);
@@ -92,9 +71,8 @@ export default function WelcomeScreen({ onLogin }) {
     try {
       const cred = await signInWithGoogle();
       const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
-      const pid = userDoc.exists() ? userDoc.data().profileId : cred.user.uid;
-      await requestPushPermissions(pid, 'google');
-      onLogin(pid, 'google');
+        const pid = userDoc.exists() ? userDoc.data().profileId : cred.user.uid;
+        onLogin(pid, 'google');
     } catch (err) {
       console.error('Google login failed', err);
       setLoginError(true);
@@ -138,7 +116,6 @@ export default function WelcomeScreen({ onLogin }) {
         console.error('Failed to update invite', err);
       }
     }
-    await requestPushPermissions(id, loginMethod);
     setCreatedMsg(t(giftFrom && inviteValid ? 'profileCreatedGift' : 'profileCreated'));
     setCreatedId(id);
     setShowCreated(true);
