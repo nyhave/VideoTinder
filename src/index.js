@@ -2,9 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './consoleLogs.js';
 import VideotpushApp from './VideotpushApp.jsx';
-import { firebaseConfig, logEvent } from './firebase.js';
-import { addNotification } from './notifications.js';
-import { detectOS, detectBrowser } from './utils.js';
+import { ensureWebPush } from './ensureWebPush.js';
 
 ReactDOM.render(React.createElement(VideotpushApp), document.getElementById('root'));
 
@@ -16,8 +14,9 @@ if ('serviceWorker' in navigator) {
     const swUrl = `${base}service-worker.js`;
     navigator.serviceWorker
       .register(swUrl, { scope: base })
-      .then(reg => {
+      .then(async reg => {
         console.log('SW scope:', reg.scope);
+        await ensureWebPush();
       })
       .catch(err => console.error('SW register failed:', err));
   });
