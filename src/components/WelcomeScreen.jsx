@@ -596,13 +596,13 @@ export default function WelcomeScreen({ onLogin }) {
           }, t('cancel'))
         ),
         React.createElement(Button, {
-          className: 'mt-2',
-          variant: 'outline',
+          type: 'button',
+          className: 'mt-2 text-blue-600 underline bg-transparent border-0 p-0 disabled:opacity-50 disabled:cursor-not-allowed',
           onClick: () => setShowForgot(true),
           disabled: loggingIn
         }, t('forgotPassword')),
         React.createElement(Button, {
-          className: `mt-4 bg-gray-500 text-white w-full${loggingIn ? ' opacity-50 cursor-not-allowed' : ''}`,
+          className: `mt-6 bg-gray-500 text-white w-full${loggingIn ? ' opacity-50 cursor-not-allowed' : ''}`,
           onClick: handleGoogleLogin,
           disabled: loggingIn
         }, loggingIn ? t('loggingIn') : t('loginGoogle')),
