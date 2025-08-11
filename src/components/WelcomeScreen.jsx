@@ -40,13 +40,18 @@ export default function WelcomeScreen({ onLogin }) {
 
   const requestPushPermissions = async (pid, method = 'password') => {
     if (typeof Notification === 'undefined' || !('serviceWorker' in navigator)) return;
-    await navigator.serviceWorker.ready;
-    if (!navigator.serviceWorker.controller) {
-      console.log('Service worker er endnu ikke aktiv; prøv at genindlæse siden.');
-      return;
-    }
+
+    // Request permission immediately to avoid being blocked by other overlays
     const perm = await Notification.requestPermission();
     if (perm !== 'granted') return;
+
+    try {
+      await navigator.serviceWorker.ready;
+    } catch (err) {
+      console.error('Service worker not ready', err);
+      return;
+    }
+
     await requestNotificationPermission(pid, method);
     await subscribeToWebPush(pid, method);
   };
