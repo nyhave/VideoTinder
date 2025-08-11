@@ -225,6 +225,7 @@ export default function WelcomeScreen({ onLogin }) {
     }
 
     const trimmedEmail = cred.user.email || '';
+    const age = parsedBirthday ? getAge(parsedBirthday) : 18;
     const profile = {
       id,
       name: trimmedNameFinal,
@@ -233,7 +234,8 @@ export default function WelcomeScreen({ onLogin }) {
       gender,
       interest: gender === 'Kvinde' ? 'Mand' : 'Kvinde',
       birthday: parsedBirthday,
-      age: parsedBirthday ? getAge(parsedBirthday) : 18,
+      age,
+      ageRange: [Math.max(18, age - 10), age + 10],
       language: lang,
       preferredLanguages: [lang],
       allowOtherLanguages: true,
@@ -349,6 +351,7 @@ export default function WelcomeScreen({ onLogin }) {
         inviteValid = false;
       }
     }
+    const age = birthday ? getAge(birthday) : 18;
     const profile = {
       id,
       name: trimmedName,
@@ -357,7 +360,8 @@ export default function WelcomeScreen({ onLogin }) {
       gender,
       interest: gender === 'Kvinde' ? 'Mand' : 'Kvinde',
       birthday,
-      age: birthday ? getAge(birthday) : 18,
+      age,
+      ageRange: [Math.max(18, age - 10), age + 10],
       language: lang,
       preferredLanguages: [lang],
       allowOtherLanguages: true,
