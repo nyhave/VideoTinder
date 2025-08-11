@@ -4,7 +4,7 @@ import { Button } from './ui/button.js';
 import { Input } from './ui/input.js';
 import InfoOverlay from './InfoOverlay.jsx';
 import ForgotPasswordOverlay from './ForgotPasswordOverlay.jsx';
-import { UserPlus, LogIn } from 'lucide-react';
+import { UserPlus, LogIn, Loader2 } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
 import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithGoogle, signInWithFacebook, logEvent, requestNotificationPermission, subscribeToWebPush } from '../firebase.js';
 import { getAge, getCurrentDate, parseBirthday } from '../utils.js';
@@ -34,6 +34,7 @@ export default function WelcomeScreen({ onLogin }) {
   const [createdId, setCreatedId] = useState('');
   const [showForgot, setShowForgot] = useState(false);
   const [pendingProvider, setPendingProvider] = useState(null);
+  const [loggingIn, setLoggingIn] = useState(false);
   const { lang } = useLang();
   const t = useT();
 
@@ -70,6 +71,7 @@ export default function WelcomeScreen({ onLogin }) {
   };
 
   const handleLogin = async () => {
+    setLoggingIn(true);
     try {
       const cred = await signInWithEmailAndPassword(auth, loginUser.trim(), loginPass);
       const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
@@ -79,10 +81,12 @@ export default function WelcomeScreen({ onLogin }) {
     } catch (err) {
       console.error('Login failed', err);
       setLoginError(true);
+      setLoggingIn(false);
     }
   };
 
   const handleGoogleLogin = async () => {
+    setLoggingIn(true);
     try {
       const cred = await signInWithGoogle();
       const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
@@ -92,10 +96,12 @@ export default function WelcomeScreen({ onLogin }) {
     } catch (err) {
       console.error('Google login failed', err);
       setLoginError(true);
+      setLoggingIn(false);
     }
   };
 
   const handleFacebookLogin = async () => {
+    setLoggingIn(true);
     try {
       const cred = await signInWithFacebook();
       const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
@@ -105,6 +111,7 @@ export default function WelcomeScreen({ onLogin }) {
     } catch (err) {
       console.error('Facebook login failed', err);
       setLoginError(true);
+      setLoggingIn(false);
     }
   };
 
@@ -587,22 +594,36 @@ export default function WelcomeScreen({ onLogin }) {
           onChange: e => setLoginPass(e.target.value)
         }),
         React.createElement('div', { className: 'flex justify-between' },
-          React.createElement(Button, { onClick: handleLogin, className:'bg-pink-500 text-white' }, t('login')),
-          React.createElement(Button, { variant:'outline', onClick: () => setShowLoginForm(false) }, t('cancel'))
+          React.createElement(Button, {
+            onClick: handleLogin,
+            className: `bg-pink-500 text-white${loggingIn ? ' opacity-50 cursor-not-allowed' : ''}`,
+            disabled: loggingIn
+          }, loggingIn ? React.createElement(React.Fragment, null,
+            React.createElement(Loader2, { className: 'animate-spin inline-block w-4 h-4 mr-2 text-white' }),
+            t('loggingIn')
+          ) : t('login')),
+          React.createElement(Button, {
+            variant:'outline',
+            onClick: () => setShowLoginForm(false),
+            disabled: loggingIn
+          }, t('cancel'))
         ),
         React.createElement(Button, {
           className: 'mt-2',
           variant: 'outline',
-          onClick: () => setShowForgot(true)
+          onClick: () => setShowForgot(true),
+          disabled: loggingIn
         }, t('forgotPassword')),
         React.createElement(Button, {
-          className: 'mt-4 bg-gray-500 text-white w-full',
-          onClick: handleGoogleLogin
-        }, t('loginGoogle')),
+          className: `mt-4 bg-gray-500 text-white w-full${loggingIn ? ' opacity-50 cursor-not-allowed' : ''}`,
+          onClick: handleGoogleLogin,
+          disabled: loggingIn
+        }, loggingIn ? t('loggingIn') : t('loginGoogle')),
         React.createElement(Button, {
-          className: 'mt-2 bg-blue-600 text-white w-full',
-          onClick: handleFacebookLogin
-        }, t('loginFacebook'))
+          className: `mt-2 bg-blue-600 text-white w-full${loggingIn ? ' opacity-50 cursor-not-allowed' : ''}`,
+          onClick: handleFacebookLogin,
+          disabled: loggingIn
+        }, loggingIn ? t('loggingIn') : t('loginFacebook'))
       )
     ) : (
       React.createElement(React.Fragment, null,
