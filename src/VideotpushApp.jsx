@@ -465,7 +465,7 @@ export default function VideotpushApp() {
           hasUnreadNotifications && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full min-w-4 h-4 flex items-center justify-center px-1' }, unreadNotifications)
         )
       ),
-      'RealDate',
+      React.createElement('span', { className: 'leading-none' }, 'RealDate'),
       React.createElement('div', {
         className: 'absolute top-1/2 right-16 -translate-y-1/2 flex items-center gap-1'
       },
