@@ -217,7 +217,6 @@ export {
   getDownloadURL,
   listAll,
   deleteObject,
-  onMessage,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
