@@ -518,7 +518,7 @@ export default function WelcomeScreen({ onLogin }) {
               }, t('cancel'))
             ),
             React.createElement(Button, {
-              className: 'mt-4 bg-white text-gray-800 border w-full',
+              className: 'mt-4 bg-gray-200 text-gray-800 border w-full',
               onClick: handleGoogleRegister
             }, t('registerGoogle')),
             React.createElement(Button, {
@@ -529,7 +529,7 @@ export default function WelcomeScreen({ onLogin }) {
         ) : (
           React.createElement(React.Fragment, null,
             React.createElement(Button, {
-              className: `mt-4 w-full ${pendingProvider==='facebook' ? 'bg-blue-600 text-white' : 'bg-white text-gray-800 border'}`,
+              className: `mt-4 w-full ${pendingProvider==='facebook' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 border'}`,
               onClick: pendingProvider === 'google' ? handleGoogleRegister : handleFacebookRegister
             }, t(pendingProvider === 'google' ? 'registerGoogle' : 'registerFacebook')),
             React.createElement(Button, {
@@ -544,7 +544,7 @@ export default function WelcomeScreen({ onLogin }) {
       React.createElement(React.Fragment, null,
         React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, t('register')),
         React.createElement(Button, {
-          className: 'bg-white text-gray-800 border w-full mb-2',
+          className: 'bg-gray-200 text-gray-800 border w-full mb-2',
           onClick: handleGoogleRegister
         }, t('registerGoogle')),
         React.createElement(Button, {
@@ -587,7 +587,7 @@ export default function WelcomeScreen({ onLogin }) {
           onClick: () => setShowForgot(true)
         }, t('forgotPassword')),
         React.createElement(Button, {
-          className: 'mt-4 bg-white text-gray-800 border w-full',
+          className: 'mt-4 bg-gray-200 text-gray-800 border w-full',
           onClick: handleGoogleLogin
         }, t('loginGoogle')),
         React.createElement(Button, {
