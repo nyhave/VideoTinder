@@ -17,6 +17,7 @@ import {
   hasReadReceipts,
   hasRatings,
   getWeekId
+  ,clearAppCache
 } from './utils';
 
 describe('utils', () => {
@@ -132,5 +133,9 @@ describe('utils', () => {
   test('getWeekId returns ISO week id', () => {
     const date = new Date('2023-01-05T00:00:00Z');
     expect(getWeekId(date)).toBe('2023-1');
+  });
+
+  test('clearAppCache resolves', async () => {
+    await expect(clearAppCache()).resolves.toBeUndefined();
   });
 });
