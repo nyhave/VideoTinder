@@ -6,7 +6,7 @@ import InfoOverlay from './InfoOverlay.jsx';
 import ForgotPasswordOverlay from './ForgotPasswordOverlay.jsx';
 import { UserPlus, LogIn, Loader2 } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
-import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signInWithGoogle, signInWithFacebook, logEvent, requestNotificationPermission, subscribeToWebPush } from '../firebase.js';
+import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signInWithGoogle, logEvent, requestNotificationPermission, subscribeToWebPush } from '../firebase.js';
 import { getAge, getCurrentDate, parseBirthday } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
@@ -102,21 +102,6 @@ export default function WelcomeScreen({ onLogin }) {
     }
   };
 
-  const handleFacebookLogin = async () => {
-    setLoggingIn(true);
-    try {
-      const cred = await signInWithFacebook();
-      const userDoc = await getDoc(doc(db, 'users', cred.user.uid));
-      const pid = userDoc.exists() ? userDoc.data().profileId : cred.user.uid;
-      await requestPushPermissions(pid, 'facebook');
-      onLogin(pid, 'facebook');
-    } catch (err) {
-      console.error('Facebook login failed', err);
-      setLoginError(true);
-      setLoggingIn(false);
-    }
-  };
-
   React.useEffect(() => {
     const handler = e => {
       switch (e.detail) {
@@ -159,7 +144,8 @@ export default function WelcomeScreen({ onLogin }) {
     setShowCreated(true);
   };
 
-  const registerWithProvider = async provider => {
+  const registerWithGoogle = async () => {
+    const provider = 'google';
     await logEvent('registerWithProvider start', { provider });
     setTriedSubmit(true);
     const trimmedName = name.trim();
@@ -181,7 +167,7 @@ export default function WelcomeScreen({ onLogin }) {
 
     let cred;
     try {
-      cred = provider === 'google' ? await signInWithGoogle() : await signInWithFacebook();
+      cred = await signInWithGoogle();
       await logEvent('registerWithProvider success', { provider, uid: cred.user?.uid });
     } catch (err) {
       await logEvent('registerWithProvider error', { provider, error: err.message });
@@ -290,18 +276,7 @@ export default function WelcomeScreen({ onLogin }) {
       return;
     }
     setPendingProvider('google');
-    registerWithProvider('google');
-  };
-  const handleFacebookRegister = () => {
-    if (!showRegister) {
-      setPendingProvider('facebook');
-      setRegisterStep(2);
-      setShowRegister(true);
-      setShowRegisterChoice(false);
-      return;
-    }
-    setPendingProvider('facebook');
-    registerWithProvider('facebook');
+    registerWithGoogle();
   };
 
   const startRegister = async () => {
@@ -560,9 +535,9 @@ export default function WelcomeScreen({ onLogin }) {
             ) : (
               React.createElement(React.Fragment, null,
                 React.createElement(Button, {
-                  className: `mt-4 w-full ${pendingProvider==='facebook' ? 'bg-blue-600 text-white' : 'bg-gray-500 text-white'}`,
-                  onClick: pendingProvider === 'google' ? handleGoogleRegister : handleFacebookRegister
-                }, t(pendingProvider === 'google' ? 'registerGoogle' : 'registerFacebook')),
+                  className: 'mt-4 w-full bg-gray-500 text-white',
+                  onClick: handleGoogleRegister
+                }, t('registerGoogle')),
                 React.createElement(Button, {
                   variant: 'outline',
                   className: 'mt-2 w-full',
@@ -579,10 +554,6 @@ export default function WelcomeScreen({ onLogin }) {
           className: 'bg-gray-500 text-white w-full mb-2',
           onClick: handleGoogleRegister
         }, t('registerGoogle')),
-        React.createElement(Button, {
-          className: 'bg-blue-600 text-white w-full mb-2',
-          onClick: handleFacebookRegister
-        }, t('registerFacebook')),
         React.createElement(Button, {
           className: 'bg-pink-500 text-white w-full',
           onClick: () => { setShowRegister(true); setShowRegisterChoice(false); setRegisterStep(1); }
@@ -635,11 +606,7 @@ export default function WelcomeScreen({ onLogin }) {
           onClick: handleGoogleLogin,
           disabled: loggingIn
         }, loggingIn ? t('loggingIn') : t('loginGoogle')),
-        React.createElement(Button, {
-          className: `mt-2 bg-blue-600 text-white w-full${loggingIn ? ' opacity-50 cursor-not-allowed' : ''}`,
-          onClick: handleFacebookLogin,
-          disabled: loggingIn
-        }, loggingIn ? t('loggingIn') : t('loginFacebook'))
+        
       )
     ) : (
       React.createElement(React.Fragment, null,
