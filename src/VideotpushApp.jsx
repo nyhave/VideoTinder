@@ -27,6 +27,7 @@ import RecentLoginsScreen from './components/RecentLoginsScreen.jsx';
 import InterestChatScreen from './components/InterestChatScreen.jsx';
 import ProfileEpisode from './components/ProfileEpisode.jsx';
 import HelpOverlay from './components/HelpOverlay.jsx';
+import InfoOverlay from './components/InfoOverlay.jsx';
 import ConsoleLogPanel from './components/ConsoleLogPanel.jsx';
 import FunctionTestGuide from './components/FunctionTestGuide.jsx';
 import TaskButton from './components/TaskButton.jsx';
@@ -39,6 +40,8 @@ import version from './version.js';
 import { getNotifications, subscribeNotifications, markNotificationsRead } from './notifications.js';
 import SubscriptionOverlay from './components/SubscriptionOverlay.jsx';
 import NotificationsScreen from './components/NotificationsScreen.jsx';
+import { Button } from './components/ui/button.js';
+import { ensureWebPush } from './ensureWebPush.js';
 
 export default function VideotpushApp() {
   const [lang, setLang] = useState(() =>
@@ -74,6 +77,7 @@ export default function VideotpushApp() {
   const [activeTask, setActiveTask] = useState(null);
   const [taskClicks, setTaskClicks] = useState(0);
   const [showSubscription, setShowSubscription] = useState(false);
+  const [showChatIntro, setShowChatIntro] = useState(false);
   const unreadCount = chats.filter(c => c.unreadByUser || c.newMatch).length;
   const hasUnread = unreadCount > 0;
   const unseenLikesCount = likesReceived.filter(l => !seenLikes.includes(l.id)).length;
@@ -131,6 +135,13 @@ export default function VideotpushApp() {
       setSeenLikes(ids);
     }
   }, [tab, likesReceived, userId]);
+
+  useEffect(() => {
+    if (tab === 'chat' && userId) {
+      const seen = localStorage.getItem(`chatIntroSeen-${userId}`);
+      if (!seen) setShowChatIntro(true);
+    }
+  }, [tab, userId]);
 
   useEffect(() => {
     if (!activeTask) return;
@@ -195,6 +206,14 @@ export default function VideotpushApp() {
     } catch (err) {
       console.error('Failed to send message', err);
     }
+  };
+
+  const enableNotifications = async () => {
+    await ensureWebPush();
+    if (userId) {
+      localStorage.setItem(`chatIntroSeen-${userId}`, 'true');
+    }
+    setShowChatIntro(false);
   };
 
   const handleSubscriptionPurchase = async tier => {
@@ -558,6 +577,18 @@ export default function VideotpushApp() {
       React.createElement(UserGroupIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('interestchat'); setViewProfile(null);} }),
       React.createElement(CalendarDaysIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} })
       ),
+    showChatIntro && React.createElement(InfoOverlay, {
+      title: 'Chat',
+      onClose: () => {
+        if (userId) {
+          localStorage.setItem(`chatIntroSeen-${userId}`, 'true');
+        }
+        setShowChatIntro(false);
+      }
+    },
+      React.createElement('p', { className: 'mb-4' }, 'Chats appear when profiles match. Enable notifications to get alerted when there is a match.'),
+      React.createElement(Button, { className: 'w-full bg-blue-500 text-white', onClick: enableNotifications }, 'Enable notifications')
+    ),
     showSubscription && React.createElement(SubscriptionOverlay, { onClose: () => setShowSubscription(false), onBuy: handleSubscriptionPurchase }),
     showHelp && React.createElement(HelpOverlay, { onClose: ()=>setShowHelp(false) }),
     React.createElement(ConsoleLogPanel),
