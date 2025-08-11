@@ -31,8 +31,18 @@ async function defaultSaveSubscription(sub) {
 
 export async function ensureWebPush(saveSubscription = defaultSaveSubscription) {
   try {
-    if (typeof window === 'undefined' || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+    if (
+      typeof window === 'undefined' ||
+      !('serviceWorker' in navigator) ||
+      !('PushManager' in window) ||
+      !('Notification' in window)
+    ) {
       return null;
+    }
+
+    if (Notification.permission !== 'granted') {
+      const perm = await Notification.requestPermission();
+      if (perm !== 'granted') return null;
     }
     const base = process.env.FUNCTIONS_BASE_URL || '';
     const res = await fetch(`${base}/.netlify/functions/get-vapid-public-key`);
