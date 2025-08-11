@@ -683,7 +683,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       !publicView && React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
         React.createElement(SectionTitle, { title: t('settings') }),
         subscriptionActive && profile.subscriptionTier === 'platinum' && React.createElement('label', { className:'flex items-center gap-2 mt-2' },
-          React.createElement('input', { type:'checkbox', checked: profile.incognito || false, onChange: async e => { await updateDoc(doc(db,'profiles', userId), { incognito: e.target.checked }); setProfile({ ...profile, incognito: e.target.checked }); } }),
+          React.createElement('input', { type:'checkbox', checked: profile.incognito || false, onChange: async e => { const checked = e.target.checked; await updateDoc(doc(db,'profiles', userId), { incognito: checked }); setProfile({ ...profile, incognito: checked }); } }),
           t('incognitoMode')
         )
       ),
