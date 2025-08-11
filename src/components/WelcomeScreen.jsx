@@ -6,7 +6,7 @@ import InfoOverlay from './InfoOverlay.jsx';
 import ForgotPasswordOverlay from './ForgotPasswordOverlay.jsx';
 import { UserPlus, LogIn, Loader2 } from 'lucide-react';
 import { useLang, useT } from '../i18n.js';
-import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithGoogle, signInWithFacebook, logEvent, requestNotificationPermission, subscribeToWebPush } from '../firebase.js';
+import { auth, db, doc, setDoc, updateDoc, increment, getDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signInWithGoogle, signInWithFacebook, logEvent, requestNotificationPermission, subscribeToWebPush } from '../firebase.js';
 import { getAge, getCurrentDate, parseBirthday } from '../utils.js';
 
 export default function WelcomeScreen({ onLogin }) {
@@ -35,6 +35,8 @@ export default function WelcomeScreen({ onLogin }) {
   const [showForgot, setShowForgot] = useState(false);
   const [pendingProvider, setPendingProvider] = useState(null);
   const [loggingIn, setLoggingIn] = useState(false);
+  const [registerStep, setRegisterStep] = useState(1);
+  const [pendingUid, setPendingUid] = useState(null);
   const { lang } = useLang();
   const t = useT();
 
@@ -282,6 +284,7 @@ export default function WelcomeScreen({ onLogin }) {
   const handleGoogleRegister = () => {
     if (!showRegister) {
       setPendingProvider('google');
+      setRegisterStep(2);
       setShowRegister(true);
       setShowRegisterChoice(false);
       return;
@@ -292,6 +295,7 @@ export default function WelcomeScreen({ onLogin }) {
   const handleFacebookRegister = () => {
     if (!showRegister) {
       setPendingProvider('facebook');
+      setRegisterStep(2);
       setShowRegister(true);
       setShowRegisterChoice(false);
       return;
@@ -300,12 +304,35 @@ export default function WelcomeScreen({ onLogin }) {
     registerWithProvider('facebook');
   };
 
-  const register = async () => {
+  const startRegister = async () => {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || !password) {
+      setTriedSubmit(true);
+      setShowMissingFields(true);
+      return;
+    }
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
+      await sendEmailVerification(cred.user);
+      setPendingUid(cred.user.uid);
+      setRegisterStep(2);
+    } catch (err) {
+      console.error('Failed to create user', err);
+      if (err?.code === 'auth/email-already-in-use') {
+        setRegisterErrorMsg('registerEmailExists');
+      } else {
+        setRegisterErrorMsg('registerFailed');
+      }
+      setRegisterError(true);
+    }
+  };
+
+  const completeRegistration = async () => {
     const trimmedName = name.trim();
     const trimmedCity = city.trim();
     const trimmedEmail = email.trim();
     const parsedBirthday = birthdayInput ? parseBirthday(birthdayInput) : '';
-    if (!trimmedName || !trimmedCity || !trimmedEmail || !birthdayInput || !password) {
+    if (!trimmedName || !trimmedCity || !parsedBirthday) {
       setTriedSubmit(true);
       setShowMissingFields(true);
       return;
@@ -316,19 +343,16 @@ export default function WelcomeScreen({ onLogin }) {
       return;
     }
     setBirthday(parsedBirthday);
-    // Require a valid birthday confirming the user is at least 18
     if (getAge(parsedBirthday) < 18) {
       setShowAgeError(true);
       return;
     }
-
 
     const id = Date.now().toString();
     const params = new URLSearchParams(window.location.search);
     let giftFrom = params.get('gift');
     const inviteId = params.get('invite');
 
-    // Validate invitation if present
     let inviteValid = false;
     if (inviteId) {
       try {
@@ -393,21 +417,8 @@ export default function WelcomeScreen({ onLogin }) {
         console.error('Failed to update inviter', err);
       }
     }
-    let userCred;
     try {
-      userCred = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
-    } catch (err) {
-      console.error('Failed to create user', err);
-      if (err?.code === 'auth/email-already-in-use') {
-        setRegisterErrorMsg('registerEmailExists');
-      } else {
-        setRegisterErrorMsg('registerFailed');
-      }
-      setRegisterError(true);
-      return;
-    }
-    try {
-      await finalizeRegistration(id, profile, userCred.user.uid, inviteId, inviteValid, giftFrom, 'password');
+      await finalizeRegistration(id, profile, pendingUid, inviteId, inviteValid, giftFrom, 'password');
     } catch (err) {
       console.error('Finalize registration failed', err);
       setRegisterErrorMsg('registerFailed');
@@ -458,97 +469,110 @@ export default function WelcomeScreen({ onLogin }) {
     }),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       showRegister ? (
-      React.createElement(React.Fragment, null,
-        React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, t('register')),
-        React.createElement('label', { className:'block mb-1' }, t('firstName')),
-        React.createElement(Input, {
-          className: `border p-2 mb-2 w-full ${triedSubmit && !name.trim() ? 'border-red-500' : ''}`,
-          value: name,
-          onChange: e => setName(e.target.value),
-          placeholder: 'Fornavn',
-          name: 'given-name',
-          autoComplete: 'given-name',
-          required: true
-        }),
-        React.createElement('label', { className:'block mb-1' }, t('city')),
-        React.createElement('input', {
-          className: `border p-2 mb-2 w-full ${triedSubmit && !city.trim() ? 'border-red-500' : ''}`,
-          value: city,
-          onChange: e => setCity(e.target.value),
-          placeholder: 'By',
-          name: 'city',
-          autoComplete: 'address-level2',
-          required: true
-        }),
-        React.createElement('label', { className:'block mb-1' }, t('birthday')),
-        React.createElement(Input, {
-          type: 'text',
-          className: `border p-2 mb-2 w-full ${triedSubmit && !birthday ? 'border-red-500' : ''}`,
-          value: birthdayInput,
-          onChange: handleBirthdayChange,
-          placeholder: 'dd.mm.yyyy',
-          required: true
-        }),
-        !pendingProvider && React.createElement('label', { className:'block mb-1' }, t('email')),
-        !pendingProvider && React.createElement(Input, {
-          type: 'email',
-          className: `border p-2 mb-2 w-full ${triedSubmit && !email.trim() && !pendingProvider ? 'border-red-500' : ''}`,
-          value: email,
-          onChange: e => setEmail(e.target.value),
-          placeholder: 'you@example.com',
-          name: 'email',
-          autoComplete: 'email',
-          required: true
-        }),
-        !pendingProvider && React.createElement('label', { className:'block mb-1' }, t('password')),
-        !pendingProvider && React.createElement(Input, {
-          type: 'password',
-          className: `border p-2 mb-2 w-full ${triedSubmit && !password && !pendingProvider ? 'border-red-500' : ''}`,
-          value: password,
-          onChange: e => setPassword(e.target.value),
-          placeholder: '********',
-          required: true
-        }),
-        !pendingProvider && React.createElement('p', {
-          className:'text-xs text-gray-500 mb-2'
-        }, t('emailPrivate')),
-        React.createElement('label', { className:'block mb-1' }, t('gender')),
-        React.createElement('select', {
-          className: 'border p-2 mb-4 w-full',
-          value: gender,
-          onChange: e => setGender(e.target.value)
-        },
-          React.createElement('option', { value: 'Kvinde' }, 'Kvinde'),
-          React.createElement('option', { value: 'Mand' }, 'Mand')
-        ),
-        !pendingProvider ? (
+        registerStep === 1 && !pendingProvider ? (
           React.createElement(React.Fragment, null,
+            React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, t('register')),
+            React.createElement('label', { className:'block mb-1' }, t('email')),
+            React.createElement(Input, {
+              type: 'email',
+              className: `border p-2 mb-2 w-full ${triedSubmit && !email.trim() ? 'border-red-500' : ''}`,
+              value: email,
+              onChange: e => setEmail(e.target.value),
+              placeholder: 'you@example.com',
+              name: 'email',
+              autoComplete: 'email',
+              required: true
+            }),
+            React.createElement('label', { className:'block mb-1' }, t('password')),
+            React.createElement(Input, {
+              type: 'password',
+              className: `border p-2 mb-2 w-full ${triedSubmit && !password ? 'border-red-500' : ''}`,
+              value: password,
+              onChange: e => setPassword(e.target.value),
+              placeholder: '********',
+              required: true
+            }),
+            React.createElement('p', { className:'text-xs text-gray-500 mb-2' }, t('emailPrivate')),
             React.createElement('div', { className: 'flex justify-between' },
               React.createElement(Button, {
-                onClick: register,
+                onClick: startRegister,
                 className: 'bg-pink-500 text-white'
-              }, t('register')),
+              }, t('next')),
               React.createElement(Button, {
                 variant: 'outline',
-                onClick: () => { setShowRegister(false); setShowRegisterChoice(true); }
+                onClick: () => { setShowRegister(false); setShowRegisterChoice(true); setRegisterStep(1); }
               }, t('cancel'))
             )
           )
         ) : (
           React.createElement(React.Fragment, null,
-            React.createElement(Button, {
-              className: `mt-4 w-full ${pendingProvider==='facebook' ? 'bg-blue-600 text-white' : 'bg-gray-500 text-white'}`,
-              onClick: pendingProvider === 'google' ? handleGoogleRegister : handleFacebookRegister
-            }, t(pendingProvider === 'google' ? 'registerGoogle' : 'registerFacebook')),
-            React.createElement(Button, {
-              variant: 'outline',
-              className: 'mt-2 w-full',
-              onClick: () => { setShowRegister(false); setShowRegisterChoice(true); setPendingProvider(null); }
-            }, t('cancel'))
+            React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, t('getToKnowYou')),
+            !pendingProvider && React.createElement('p', { className:'mb-2 text-center text-sm text-gray-600' }, t('verifyEmail')),
+            React.createElement('label', { className:'block mb-1' }, t('firstName')),
+            React.createElement(Input, {
+              className: `border p-2 mb-2 w-full ${triedSubmit && !name.trim() ? 'border-red-500' : ''}`,
+              value: name,
+              onChange: e => setName(e.target.value),
+              placeholder: 'Fornavn',
+              name: 'given-name',
+              autoComplete: 'given-name',
+              required: true
+            }),
+            React.createElement('label', { className:'block mb-1' }, t('city')),
+            React.createElement('input', {
+              className: `border p-2 mb-2 w-full ${triedSubmit && !city.trim() ? 'border-red-500' : ''}`,
+              value: city,
+              onChange: e => setCity(e.target.value),
+              placeholder: 'By',
+              name: 'city',
+              autoComplete: 'address-level2',
+              required: true
+            }),
+            React.createElement('label', { className:'block mb-1' }, t('birthday')),
+            React.createElement(Input, {
+              type: 'text',
+              className: `border p-2 mb-2 w-full ${triedSubmit && !birthday ? 'border-red-500' : ''}`,
+              value: birthdayInput,
+              onChange: handleBirthdayChange,
+              placeholder: 'dd.mm.yyyy',
+              required: true
+            }),
+            React.createElement('label', { className:'block mb-1' }, t('gender')),
+            React.createElement('select', {
+              className: 'border p-2 mb-4 w-full',
+              value: gender,
+              onChange: e => setGender(e.target.value)
+            },
+              React.createElement('option', { value: 'Kvinde' }, 'Kvinde'),
+              React.createElement('option', { value: 'Mand' }, 'Mand')
+            ),
+            !pendingProvider ? (
+              React.createElement('div', { className: 'flex justify-between' },
+                React.createElement(Button, {
+                  onClick: completeRegistration,
+                  className: 'bg-pink-500 text-white'
+                }, t('register')),
+                React.createElement(Button, {
+                  variant: 'outline',
+                  onClick: () => { setShowRegister(false); setShowRegisterChoice(true); setRegisterStep(1); }
+                }, t('cancel'))
+              )
+            ) : (
+              React.createElement(React.Fragment, null,
+                React.createElement(Button, {
+                  className: `mt-4 w-full ${pendingProvider==='facebook' ? 'bg-blue-600 text-white' : 'bg-gray-500 text-white'}`,
+                  onClick: pendingProvider === 'google' ? handleGoogleRegister : handleFacebookRegister
+                }, t(pendingProvider === 'google' ? 'registerGoogle' : 'registerFacebook')),
+                React.createElement(Button, {
+                  variant: 'outline',
+                  className: 'mt-2 w-full',
+                  onClick: () => { setShowRegister(false); setShowRegisterChoice(true); setPendingProvider(null); setRegisterStep(1); }
+                }, t('cancel'))
+              )
+            )
           )
         )
-      )
-    ) : showRegisterChoice ? (
+      ) : showRegisterChoice ? (
       React.createElement(React.Fragment, null,
         React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, t('register')),
         React.createElement(Button, {
@@ -561,7 +585,7 @@ export default function WelcomeScreen({ onLogin }) {
         }, t('registerFacebook')),
         React.createElement(Button, {
           className: 'bg-pink-500 text-white w-full',
-          onClick: () => { setShowRegister(true); setShowRegisterChoice(false); }
+          onClick: () => { setShowRegister(true); setShowRegisterChoice(false); setRegisterStep(1); }
         }, t('useEmail')),
         React.createElement(Button, {
           variant: 'outline',
