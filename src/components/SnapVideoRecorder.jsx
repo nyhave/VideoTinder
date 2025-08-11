@@ -9,7 +9,6 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   const chunksRef = useRef([]);
   const timeoutRef = useRef();
   const videoRef = useRef();
-  const audioStreamRef = useRef();
   const [recording, setRecording] = useState(false);
   const [progress, setProgress] = useState(0);
   const startTimeRef = useRef(null);
@@ -24,32 +23,17 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   const canAddMusic = hasActiveSubscription && (tier === 'gold' || tier === 'platinum');
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-      streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-      }
-    });
     return () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(t => t.stop());
-      }
-      if (audioStreamRef.current) {
-        audioStreamRef.current.getTracks().forEach(t => t.stop());
       }
       clearInterval(countdownRef.current);
     };
   }, []);
 
-  useEffect(() => {
-    if(videoRef.current && streamRef.current){
-      videoRef.current.srcObject = streamRef.current;
-      videoRef.current.play();
-    }
-  }, [stage]);
-
-  const startCountdown = () => {
+  const startCountdown = async () => {
+    const tempStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    tempStream.getTracks().forEach(t => t.stop());
     setStage('countdown');
     let current = 3;
     setCount(current);
@@ -65,10 +49,7 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   };
 
   const start = async () => {
-    if(!streamRef.current) return;
-    const audioStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true } });
-    audioStreamRef.current = audioStream;
-    audioStream.getAudioTracks().forEach(t => streamRef.current.addTrack(t));
+    streamRef.current = await navigator.mediaDevices.getUserMedia({ video: true, audio: { echoCancellation: true } });
     if(videoRef.current){
       videoRef.current.srcObject = streamRef.current;
       videoRef.current.play();
@@ -104,14 +85,8 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
       timeoutRef.current = null;
       setRecording(false);
       if(streamRef.current){
-        streamRef.current.getAudioTracks().forEach(t => {
-          t.stop();
-          streamRef.current.removeTrack(t);
-        });
-      }
-      if(audioStreamRef.current){
-        audioStreamRef.current.getTracks().forEach(t => t.stop());
-        audioStreamRef.current = null;
+        streamRef.current.getTracks().forEach(t => t.stop());
+        streamRef.current = null;
       }
     }
   };
@@ -144,10 +119,7 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
 
   if(stage === 'countdown'){
     return React.createElement('div', { className:'fixed inset-0 z-50 flex items-center justify-center bg-black/60' },
-      React.createElement('div', { className:'flex-1 flex items-center justify-center w-full relative' },
-        React.createElement('video', { ref: videoRef, className:'w-72 h-72 object-cover rounded', autoPlay:true, muted:true, playsInline:true }),
-        React.createElement('div', { className:'absolute inset-0 flex items-center justify-center text-white text-6xl font-bold' }, count)
-      )
+      React.createElement('div', { className:'flex items-center justify-center text-white text-6xl font-bold' }, count)
     );
   }
 
