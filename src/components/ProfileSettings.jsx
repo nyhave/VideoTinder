@@ -259,19 +259,30 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const replaceFile = async (file, field, index, music) => {
     if(!file) return;
-    const storageRef = ref(storage, `profiles/${userId}/${field}-${Date.now()}-${file.name}`);
-    await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
-    const clip = { url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() };
-    if(music){
-      const musicRef = ref(storage, `profiles/${userId}/${field}-music-${Date.now()}-${music.name}`);
-      await uploadBytes(musicRef, music);
-      clip.music = await getDownloadURL(musicRef);
+    try {
+      const storageRef = ref(storage, `profiles/${userId}/${field}-${Date.now()}-${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      const clip = { url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() };
+      if(music){
+        const musicRef = ref(storage, `profiles/${userId}/${field}-music-${Date.now()}-${music.name}`);
+        await uploadBytes(musicRef, music);
+        clip.music = await getDownloadURL(musicRef);
+      }
+      const updated = [...(profile[field] || [])];
+      const targetIndex = Number.isInteger(index) && index >= 0 ? index : updated.length;
+      if(targetIndex < updated.length){
+        updated[targetIndex] = clip;
+      } else {
+        updated.push(clip);
+      }
+      await updateDoc(doc(db,'profiles',userId), { [field]: updated });
+      setProfile({...profile, [field]: updated});
+    } catch(err){
+      console.error('Failed to upload file', err);
+      const msg = t('uploadFailed');
+      alert(msg !== 'uploadFailed' ? msg : 'Upload failed');
     }
-    const updated = [...(profile[field] || [])];
-    updated[index] = clip;
-    await updateDoc(doc(db,'profiles',userId), { [field]: updated });
-    setProfile({...profile, [field]: updated});
   };
 
   const deleteFile = async (field, index) => {
