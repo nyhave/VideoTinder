@@ -532,15 +532,7 @@ export default function WelcomeScreen({ onLogin }) {
                 variant: 'outline',
                 onClick: () => { setShowRegister(false); setShowRegisterChoice(true); }
               }, t('cancel'))
-            ),
-            React.createElement(Button, {
-              className: 'mt-4 bg-gray-500 text-white w-full',
-              onClick: handleGoogleRegister
-            }, t('registerGoogle')),
-            React.createElement(Button, {
-              className: 'mt-2 bg-blue-600 text-white w-full',
-              onClick: handleFacebookRegister
-            }, t('registerFacebook'))
+            )
           )
         ) : (
           React.createElement(React.Fragment, null,
