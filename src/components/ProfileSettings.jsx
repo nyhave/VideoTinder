@@ -314,7 +314,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       return;
     }
     setShowSnapVideoRecorder(false);
-    replaceFile(file, 'videoClips', recordClipIndex, music);
+    await replaceFile(file, 'videoClips', recordClipIndex, music);
     setRecordClipIndex(null);
   };
 
