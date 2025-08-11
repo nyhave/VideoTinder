@@ -497,7 +497,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             ? React.createElement(VideoPreview, { src: url })
             : React.createElement('div', { className:'flex flex-col items-center' },
                 React.createElement(CameraIcon, {
-                  className: `w-10 h-10 text-gray-400 blinking-thumb ${!publicView ? 'cursor-pointer' : ''}`,
+                  className: `w-10 h-10 text-gray-400 ${!publicView ? 'cursor-pointer' : ''}`,
                   onClick: !publicView ? () => { setRecordClipIndex(i); setShowSnapVideoRecorder(true); } : undefined
                 }),
                 React.createElement('span', { className:'text-xs text-gray-500 mt-1' }, t('max10Sec'))
@@ -587,7 +587,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
               className:`w-24 h-24 rounded bg-gray-200 flex items-center justify-center ${!publicView ? 'cursor-pointer' : ''}`,
               onClick: !publicView ? () => photoRef.current && photoRef.current.click() : undefined
             },
-              React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500 blinking-thumb' })
+              React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500' })
             ),
           profile.verified && React.createElement(VerificationBadge, null)
         ),
