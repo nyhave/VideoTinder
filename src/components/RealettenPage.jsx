@@ -162,6 +162,7 @@ export default function RealettenPage({ interest, userId, onBack }) {
   const buttons = React.createElement('div', { className:'flex gap-2 mt-2 self-center' }, turnBtn, shooterBtn);
   return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1 overflow-y-auto' },
     React.createElement(SectionTitle,{ title:'Realetten', action }),
+    React.createElement('p', { className:'text-gray-600 text-center mb-4' }, 'M\u00f8d op til 4 andre p\u00e5 videokald'),
     React.createElement(RealettenCallScreen,{ interest, userId, botId:BOT_ID, onEnd:onBack, onParticipantsChange:setPlayers }),
     !game && buttons,
     game === 'turn' && React.createElement(TurnGame,{ sessionId: sanitizeInterest(interest), players: playerNames, myName, botName:BOT_NAME, onExit:()=>setGame(null) }),

@@ -95,7 +95,10 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
   if(showRealetten && interest){
     return React.createElement(RealettenPage, { interest, userId, onBack:()=>setShowRealetten(false) });
   }
-  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1', style:{maxHeight:'calc(100vh - 10rem)', overflow:'hidden'} },
+  return React.createElement(Card, {
+    className: 'p-6 shadow-xl bg-white/90 flex flex-col h-full w-full flex-1',
+    style: { height: 'calc(100vh - 8rem)', overflow: 'hidden' }
+  },
     React.createElement(SectionTitle, { title: interest ? `${t('interestChatsTitle')} - ${interest}` : t('interestChatsTitle') }),
     React.createElement('div', { className:'flex gap-2 mb-4 overflow-x-auto' },
       (profile.interests || []).map(i =>
