@@ -51,6 +51,7 @@ export const messages = {
   aboutMe:{ en:'About me', da:'Om mig', sv:'Om mig', es:'Sobre mí', fr:'À propos de moi', de:'Über mich' },
   register:{ en:'Create profile', da:'Opret profil', sv:'Skapa profil', es:'Crear perfil', fr:'Créer un profil', de:'Profil erstellen' },
   cancel:{ en:'Cancel', da:'Annuller', sv:'Avbryt', es:'Cancelar', fr:'Annuler', de:'Abbrechen' },
+  stop:{ en:'Stop', da:'Stop', sv:'Stoppa', es:'Detener', fr:'Arrêter', de:'Stopp' },
   skip:{ en:'Skip', da:'Skip', sv:'Skip', es:'Skip', fr:'Skip', de:'Skip' },
   deleteAccount:{ en:'Delete account', da:'Slet konto' },
   viewAnalytics:{ en:'View analytics', da:'Se statistik' },
