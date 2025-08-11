@@ -54,7 +54,6 @@ export const messages = {
   stop:{ en:'Stop', da:'Stop', sv:'Stoppa', es:'Detener', fr:'Arrêter', de:'Stopp' },
   skip:{ en:'Skip', da:'Skip', sv:'Skip', es:'Skip', fr:'Skip', de:'Skip' },
   deleteAccount:{ en:'Delete account', da:'Slet konto' },
-  viewAnalytics:{ en:'View analytics', da:'Se statistik' },
   viewPublicProfile:{ en:'View public profile', da:'Vis offentlig profil' },
   premiumInvites:{ en:'Premium invites', da:'Premium invitationer' },
   viewLevels:{ en:'View levels', da:'Vis niveauer' },
