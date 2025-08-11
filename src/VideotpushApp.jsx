@@ -37,7 +37,7 @@ import { useCollection, db, doc, setDoc, updateDoc, arrayUnion, getDoc, incremen
 import { getCurrentDate } from './utils.js';
 import { cacheMediaIfNewer } from './cacheMedia.js';
 import version from './version.js';
-import { getNotifications, subscribeNotifications, markNotificationsRead } from './notifications.js';
+import { getNotifications, subscribeNotifications, markNotificationsRead, showLocalNotification, sendWebPushToProfile } from './notifications.js';
 import SubscriptionOverlay from './components/SubscriptionOverlay.jsx';
 import NotificationsScreen from './components/NotificationsScreen.jsx';
 import { Button } from './components/ui/button.js';
@@ -177,6 +177,8 @@ export default function VideotpushApp() {
         setDoc(doc(db, 'matches', m1.id), m1),
         setDoc(doc(db, 'matches', m2.id), m2)
       ]);
+      showLocalNotification("It's a match!", 'You have a new match');
+      sendWebPushToProfile('105', "It's a match!", 'You have a new match');
     } catch (err) {
       console.error('Failed to create match', err);
     }
@@ -203,6 +205,7 @@ export default function VideotpushApp() {
           newMatch: false
         })
       ]);
+      sendWebPushToProfile(to, 'New message', text);
     } catch (err) {
       console.error('Failed to send message', err);
     }
