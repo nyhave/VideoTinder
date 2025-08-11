@@ -16,6 +16,15 @@
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <link rel="stylesheet" href="../src/style.css" />
   <div id="root"></div>
-  <script type="module" src="../src/index.js"></script>
+  <script>
+    function showLoadError() {
+      const root = document.getElementById('root');
+      root.innerHTML =
+        '<div style="padding:1rem;background-color:#fff;color:#000;">'+
+        'Appen kunne ikke indlæses. Ryd venligst din browsers cache og prøv igen.'+
+        '</div>';
+    }
+  </script>
+  <script type="module" src="../src/index.js" onerror="showLoadError()"></script>
 </body>
 </html>
