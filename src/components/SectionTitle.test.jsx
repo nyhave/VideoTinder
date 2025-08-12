@@ -33,4 +33,10 @@ describe('SectionTitle', () => {
     const h2 = container.querySelector('h2');
     expect(h2.className).toContain('text-blue-500');
   });
+
+  test('adds bottom padding to title', () => {
+    ReactDOM.render(<SectionTitle title="Pad" />, container);
+    const h2 = container.querySelector('h2');
+    expect(h2.className).toContain('pb-[3px]');
+  });
 });
