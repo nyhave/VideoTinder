@@ -82,6 +82,16 @@ To reach the full penetration and conversion assumptions above, the first few ye
 - **Estimated costs:** infrastructure (1,120,000 DKK), marketing (2,500,000 DKK), overhead (1,900,000 DKK), Apple commission (1,106,784 DKK)
 - **Net result:** **−1,526,304 DKK** as tiered pricing and ads drive profitability
 
+## Q1 2025 Revenue Example
+An early projection for the launch quarter illustrates potential income with 10,000–20,000 users and a 5% premium conversion rate.
+
+| Antal brugere | Betalende brugere (5 %) | ARPU (DKK) | Månedsindtægt (DKK) | Indtægt i Q1 (DKK) |
+| --- | --- | --- | --- | --- |
+| 10,000 | 500 | 99 | 49,500 | 148,500 |
+| 20,000 | 1,000 | 99 | 99,000 | 297,000 |
+
+This suggests a quarterly revenue range of **150,000–300,000 DKK**.
+
 ## Strategic Considerations
 - High smartphone usage and a large single population support market entry
 - Localized Danish-language experience can differentiate VideoTinder from global competitors
