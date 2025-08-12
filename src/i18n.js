@@ -36,6 +36,8 @@ export const messages = {
   register:{ en:'Create profile', da:'Opret profil', sv:'Skapa profil', es:'Crear perfil', fr:'Créer un profil', de:'Profil erstellen' },
   cancel:{ en:'Cancel', da:'Annuller', sv:'Avbryt', es:'Cancelar', fr:'Annuler', de:'Abbrechen' },
   stop:{ en:'Stop', da:'Stop', sv:'Stoppa', es:'Detener', fr:'Arrêter', de:'Stopp' },
+  logout:{ en:'Logout', da:'Log ud', sv:'Logga ut', es:'Cerrar sesión', fr:'Déconnexion', de:'Abmelden' },
+  saveAndLogout:{ en:'Save & Logout', da:'Gem og log ud', sv:'Spara och logga ut', es:'Guardar y cerrar sesión', fr:'Enregistrer et se déconnecter', de:'Speichern und abmelden' },
   deleteAccount:{ en:'Delete account', da:'Slet konto' },
   viewPublicProfile:{ en:'View public profile', da:'Vis offentlig profil' },
   premiumInvites:{ en:'Premium invites', da:'Premium invitationer' },
