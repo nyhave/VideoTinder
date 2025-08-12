@@ -828,21 +828,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         value: profile.clip || '',
         onChange: (publicView || !editAbout) ? undefined : handleClipChange
       }),
-      publicView ?
-        React.createElement('p', { className:'mt-2' }, languages[profile.language] || profile.language) :
-        (editAbout
-          ? React.createElement(React.Fragment, null,
-              React.createElement('label', { className:'mt-2' }, t('language')),
-              React.createElement('select', {
-                className:'border p-2 rounded block mb-2',
-                value: profile.language || 'en',
-                onChange: e => { const language = e.target.value; setProfile({ ...profile, language }); updateDoc(doc(db,'profiles',userId), { language }); }
-              },
-                Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
-              )
-            )
-          : React.createElement('p', { className:'mt-2 mb-2' }, languages[profile.language] || profile.language)
-        ),
       publicView && reportMode && profile.clip && React.createElement(Flag, {
         className: 'w-5 h-5 text-red-500 cursor-pointer ml-auto',
         onClick: () => setReportItem({ text: profile.clip })
