@@ -27,7 +27,7 @@ export default function SubscriptionOverlay({ onClose, onBuy, allowFree = false 
           )
         ))
       ),
-      React.createElement(Button, { className: 'w-full bg-yellow-500 text-white mb-2', onClick: () => onBuy(selected) }, 'Køb (ikke implementeret)'),
+      React.createElement(Button, { className: 'w-full bg-yellow-500 text-white mb-2', onClick: () => onBuy(selected) }, 'Køb (gratis nu - betaling ikke implementeret)'),
       React.createElement(Button, { className: 'w-full bg-gray-200 text-black', onClick: onClose }, 'Luk')
     )
   );
