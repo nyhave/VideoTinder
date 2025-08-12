@@ -211,7 +211,6 @@ export default function WelcomeScreen({ onLogin }) {
       language: lang,
       preferredLanguages: [lang],
       allowOtherLanguages: true,
-      distanceRange: [10, 25],
       videoClips: [],
       interests: []
     };
@@ -348,7 +347,6 @@ export default function WelcomeScreen({ onLogin }) {
       language: lang,
       preferredLanguages: [lang],
       allowOtherLanguages: true,
-      distanceRange: [10, 25],
       videoClips: [],
       interests: []
     };

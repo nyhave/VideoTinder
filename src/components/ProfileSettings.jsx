@@ -38,7 +38,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [showSub, setShowSub] = useState(false);
   const [showInterests, setShowInterests] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  const [distanceRange, setDistanceRange] = useState([10,25]);
   const [editInfo, setEditInfo] = useState(false);
   const [editInterests, setEditInterests] = useState(false);
   const [editPrefs, setEditPrefs] = useState(false);
@@ -137,7 +136,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         setProfile(false);
       });
   }, [userId]);
-  useEffect(()=>{if(profile && profile.distanceRange) setDistanceRange(profile.distanceRange);},[profile]);
   useEffect(() => {
     const ref =
       activeTask === 'photo' ? photoSectionRef :
@@ -407,14 +405,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await updateDoc(doc(db,'profiles',userId), { interests });
   };
 
-  const handleDistanceRangeChange = async range => {
-    if (!advancedFilters) {
-      setShowSub(true);
-      return;
-    }
-    setDistanceRange(range);
-    await updateDoc(doc(db,'profiles',userId), { distanceRange: range });
-  };
 
   const handleClipChange = async e => {
     const clip = e.target.value;
@@ -474,8 +464,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await updateDoc(doc(db,'profiles',userId), {
       ageRange,
       interest: profile.interest || 'Mand',
-      city: profile.city || '',
-      distanceRange
+      city: profile.city || ''
     });
   };
 
@@ -750,20 +739,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onChange: editPrefs ? handleAgeRangeChange : undefined,
         className: 'w-full'
       }),
-      React.createElement('label', { className: 'mt-2' }, `Afstand: ${distanceRange[0]} - ${distanceRange[1]} km`),
-      React.createElement(Slider, {
-        range: true,
-        min: 0,
-        max: 100,
-        value: distanceRange,
-        onChange: editPrefs && advancedFilters ? handleDistanceRangeChange : undefined,
-        disabled: editPrefs && !advancedFilters,
-        className: 'w-full'
-      }),
-      !advancedFilters && editPrefs && React.createElement(Button, {
-        className:'mt-2 bg-yellow-500 text-white',
-        onClick: () => setShowSub(true)
-      }, 'Opgrader for at ændre afstand'),
       React.createElement('label', { className:'mt-2' }, t('preferredLanguages')),
       editPrefs
         ? advancedFilters
