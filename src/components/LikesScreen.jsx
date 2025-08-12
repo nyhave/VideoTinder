@@ -93,8 +93,8 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
 
   return React.createElement(Card,{className:'relative p-6 m-4 shadow-xl bg-white/90 flex flex-col'},
     React.createElement(SectionTitle,{title:t('likesTitle'), colorClass:'text-yellow-600', action: React.createElement(Button,{onClick:onBack, className:'bg-yellow-500 text-white'}, t('back'))}),
-    React.createElement('p',{className:'mb-4 text-gray-500'},`${likedProfiles.length} profiler`),
-    hasActiveSubscription && currentUser.subscriptionExpires &&
+    likedProfiles.length > 0 && React.createElement('p',{className:'mb-4 text-gray-500'},`${likedProfiles.length} profiler`),
+    likedProfiles.length > 0 && hasActiveSubscription && currentUser.subscriptionExpires &&
       React.createElement('p', {
         className: 'text-sm text-gray-600 mb-2'
       }, `${tierLabel} abonnement aktivt til ${new Date(currentUser.subscriptionExpires).toLocaleDateString('da-DK')}`),
@@ -132,11 +132,11 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
             )
           );
         }) :
-          React.createElement('li',{className:'text-center text-gray-500'},'Ingen har liket dig endnu')
+          React.createElement('li',{className:'text-center text-gray-500'},'Ingen har liked dig endnu')
       )
     ),
     showBlur && React.createElement('span',{className:'absolute inset-0 m-auto text-yellow-500 text-sm font-semibold pointer-events-none flex items-center justify-center text-center px-2'},'Kr\u00e6ver Guld eller Platin'),
-    !canSeeLikes && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb Guld eller Platin (gratis nu - betaling ikke implementeret)'),
+    !canSeeLikes && likedProfiles.length > 0 && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb Guld eller Platin (gratis nu - betaling ikke implementeret)'),
     showPurchase && React.createElement(SubscriptionOverlay,{onClose:()=>setShowPurchase(false), onBuy:handlePurchase}),
     matchedProfile && React.createElement(MatchOverlay,{name:matchedProfile.name,onClose:()=>setMatchedProfile(null)}),
     activeVideo && React.createElement(VideoOverlay,{src:activeVideo,onClose:()=>setActiveVideo(null)})
