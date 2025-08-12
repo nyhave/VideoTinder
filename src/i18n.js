@@ -53,7 +53,6 @@ export const messages = {
   register:{ en:'Create profile', da:'Opret profil', sv:'Skapa profil', es:'Crear perfil', fr:'Créer un profil', de:'Profil erstellen' },
   cancel:{ en:'Cancel', da:'Annuller', sv:'Avbryt', es:'Cancelar', fr:'Annuler', de:'Abbrechen' },
   stop:{ en:'Stop', da:'Stop', sv:'Stoppa', es:'Detener', fr:'Arrêter', de:'Stopp' },
-  skip:{ en:'Skip', da:'Skip', sv:'Skip', es:'Skip', fr:'Skip', de:'Skip' },
   deleteAccount:{ en:'Delete account', da:'Slet konto' },
   viewPublicProfile:{ en:'View public profile', da:'Vis offentlig profil' },
   premiumInvites:{ en:'Premium invites', da:'Premium invitationer' },
