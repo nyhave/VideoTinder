@@ -6,7 +6,7 @@ The admin page includes a screen for manual function testing. The tests are now 
 
 1. **Discovery & Subscriptions** – daily clips, extra clip purchase, subscriptions and premium likes page.
 2. **Chat & Reflections** – ratings, chat flow, match celebration and the reflection calendar.
-3. **Profile Settings** – editing profile info, language preferences and interests.
+3. **Profile Settings** – editing profile info and interests.
 4. **Recording & Media** – offline caching, recording limits, countdown timer, reveal animation and PWA installation.
 5. **Admin & Statistics** – seed data, profile switching and various admin statistics screens.
 6. **Account Access** – create profile, password reset and login flow.
@@ -37,7 +37,7 @@ Use the admin menu to open *Funktionstest* and choose a module to start testing.
 ### Profile Settings
 
 - Change the display name and reload to confirm it persists.
-- Update preferred languages and interests.
+- Update interests.
 - Delete the account and ensure a new profile can be created afterwards.
 
 ### Recording & Media

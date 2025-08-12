@@ -15,7 +15,7 @@ import SubscriptionOverlay from './SubscriptionOverlay.jsx';
 import InterestsOverlay from './InterestsOverlay.jsx';
 import SnapVideoRecorder from "./SnapVideoRecorder.jsx";
 import MatchOverlay from './MatchOverlay.jsx';
-import { languages, useT } from '../i18n.js';
+import { useT } from '../i18n.js';
 import { getInterestCategory } from '../interests.js';
 import { getAge, getCurrentDate, getMaxVideoSeconds, getMonthlyBoostLimit, hasAdvancedFilters } from '../utils.js';
 import PremiumIcon from './PremiumIcon.jsx';
@@ -739,36 +739,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onChange: editPrefs ? handleAgeRangeChange : undefined,
         className: 'w-full'
       }),
-      React.createElement('label', { className:'mt-2' }, t('preferredLanguages')),
-      editPrefs
-        ? advancedFilters
-          ? React.createElement('select', {
-              multiple: true,
-              className:'border p-2 rounded w-full',
-              value: profile.preferredLanguages || [],
-              onChange: e => { const opts = Array.from(e.target.selectedOptions).map(o=>o.value); setProfile({ ...profile, preferredLanguages: opts }); updateDoc(doc(db,'profiles',userId), { preferredLanguages: opts }); }
-            },
-              Object.entries(languages).map(([c,n]) => React.createElement('option',{ key:c, value:c }, n))
-            )
-          : React.createElement(Button, { className:'mt-2 bg-yellow-500 text-white', onClick: () => setShowSub(true) }, 'Opgrader for at ændre sprog')
-        : React.createElement('p', { className:'mb-2' },
-            (profile.preferredLanguages || []).map(c => languages[c] || c).join(', ')
-          ),
-      React.createElement('label', { className:'mt-2' }, t('allowOtherLanguages')),
-      editPrefs
-        ? advancedFilters
-          ? React.createElement('select', {
-              className:'border p-2 rounded block mb-2',
-              value: profile.allowOtherLanguages !== false ? 'yes' : 'no',
-              onChange: e => { const allowOtherLanguages = e.target.value === 'yes'; setProfile({ ...profile, allowOtherLanguages }); updateDoc(doc(db,'profiles',userId), { allowOtherLanguages }); }
-            },
-              React.createElement('option', { value:'yes' }, t('yes')),
-              React.createElement('option', { value:'no' }, t('no'))
-            )
-          : React.createElement(Button, { className:'mt-2 bg-yellow-500 text-white', onClick: () => setShowSub(true) }, 'Opgrader for at ændre sprogfiltre')
-        : React.createElement('p', { className:'mb-2' },
-            profile.allowOtherLanguages !== false ? t('yes') : t('no')
-          )
     ),
     !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: t('notificationsTitle'), action: editNotifications ?

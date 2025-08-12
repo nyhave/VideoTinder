@@ -84,27 +84,21 @@ function calculateMatchScore(user, profile, ageRange) {
   return calculateMatchScoreDetailed(user, profile, ageRange).score;
 }
 
-function scoreProfiles(user, profiles, ageRange) {
-  const interest = user.interest;
-  const preferred = user.preferredLanguages || [];
-  const allowOther = user.allowOtherLanguages !== false;
-  return profiles
-    .filter(p => {
-      const matchesLang = preferred.length === 0 || preferred.includes(p.language || 'en');
-      return (
-        p.id !== user.id &&
-        p.gender === interest &&
-        (p.birthday ? getAge(p.birthday) : p.age) >= ageRange[0] &&
-        (p.birthday ? getAge(p.birthday) : p.age) <= ageRange[1] &&
-        (allowOther || matchesLang)
-      );
-    })
-    .map(p => {
-      const { score, breakdown } = calculateMatchScoreDetailed(user, p, ageRange);
-      return { ...p, score, breakdown };
-    })
-    .sort((a, b) => b.score - a.score);
-}
+  function scoreProfiles(user, profiles, ageRange) {
+    const interest = user.interest;
+    return profiles
+      .filter(p => (
+          p.id !== user.id &&
+          p.gender === interest &&
+          (p.birthday ? getAge(p.birthday) : p.age) >= ageRange[0] &&
+          (p.birthday ? getAge(p.birthday) : p.age) <= ageRange[1]
+        ))
+      .map(p => {
+        const { score, breakdown } = calculateMatchScoreDetailed(user, p, ageRange);
+        return { ...p, score, breakdown };
+      })
+      .sort((a, b) => b.score - a.score);
+  }
 
 exports.handler = async function(event) {
   if (event.httpMethod !== 'POST') {

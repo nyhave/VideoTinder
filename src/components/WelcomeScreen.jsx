@@ -204,8 +204,6 @@ export default function WelcomeScreen({ onLogin }) {
       age,
       ageRange: [Math.max(18, age - 10), age + 10],
       language: lang,
-      preferredLanguages: [lang],
-      allowOtherLanguages: true,
       videoClips: [],
       interests: []
     };
@@ -340,8 +338,6 @@ export default function WelcomeScreen({ onLogin }) {
       age,
       ageRange: [Math.max(18, age - 10), age + 10],
       language: lang,
-      preferredLanguages: [lang],
-      allowOtherLanguages: true,
       videoClips: [],
       interests: []
     };
