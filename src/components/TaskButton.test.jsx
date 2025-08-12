@@ -59,4 +59,15 @@ describe('TaskButton', () => {
     );
     expect(container.innerHTML).toBe('');
   });
+
+  test('uses cached photo when profile lacks photoURL', () => {
+    getNextTask.mockReturnValue(null);
+    ReactDOM.render(
+      <LanguageProvider value={{ lang: 'en', setLang: () => {} }}>
+        <TaskButton profile={{}} cachedPhotoURL="url123" onClick={() => {}} />
+      </LanguageProvider>,
+      container
+    );
+    expect(getNextTask).toHaveBeenCalledWith({ photoURL: 'url123' });
+  });
 });
