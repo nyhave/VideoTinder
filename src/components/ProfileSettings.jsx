@@ -660,7 +660,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             action: publicView && !isOwnProfile && activeNow ? React.createElement('span', { className: 'text-sm text-green-600 font-medium' }, t('activeNow')) : null
           })
         ),
-      isOwnProfile && !publicView && profile.email && React.createElement('p', { className:'text-center text-sm text-gray-600 mt-1' }, profile.email),
+      isOwnProfile && !publicView && !editInfo && profile.email && React.createElement('p', { className:'text-center text-sm text-gray-600 mt-1' }, profile.email),
       !publicView && profile.subscriptionExpires && React.createElement('p', {
         className: 'text-center text-sm mt-2 flex items-center justify-center gap-1 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
       },
