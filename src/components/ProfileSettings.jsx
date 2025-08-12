@@ -42,7 +42,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [editInterests, setEditInterests] = useState(false);
   const [editPrefs, setEditPrefs] = useState(false);
   const [editAbout, setEditAbout] = useState(false);
-  const [editNotifications, setEditNotifications] = useState(false);
   const profiles = useCollection('profiles');
   const viewerProfile = viewerId ? profiles.find(p => p.id === viewerId) : null;
   const viewerInterests = viewerProfile ? viewerProfile.interests || [] : [];
@@ -768,9 +767,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       }),
     ),
     !publicView && React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement(SectionTitle, { title: t('notificationsTitle'), action: editNotifications ?
-        React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditNotifications(false) }, 'Gem ændringer') :
-        React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditNotifications(true) }) }),
+      React.createElement(SectionTitle, { title: t('notificationsTitle') }),
       React.createElement('label', { className:'flex items-center mt-2' },
         React.createElement('input', { type:'checkbox', className:'mr-2', checked: (profile.notificationPrefs?.types?.newClips !== false), onChange: e => updateNotificationPref('types.newClips', e.target.checked) }),
         'Nye klip'
