@@ -587,14 +587,16 @@ export default function WelcomeScreen({ onLogin }) {
           'RealDate er for dig, der søger noget ægte og meningsfuldt.'
         ),
 
-        React.createElement(Button, {
-          className: 'bg-pink-500 text-white mb-4',
-          onClick: () => setShowLoginForm(true)
-        }, t('login')),
-        React.createElement(Button, {
-          className: 'bg-pink-500 text-white',
-          onClick: () => { setShowRegisterChoice(true); setName(''); setCity(''); }
-        }, t('register'))
+        React.createElement('div', { className: 'flex gap-2' },
+          React.createElement(Button, {
+            className: 'bg-pink-500 text-white',
+            onClick: () => setShowLoginForm(true)
+          }, t('login')),
+          React.createElement(Button, {
+            className: 'bg-pink-500 text-white',
+            onClick: () => { setShowRegisterChoice(true); setName(''); setCity(''); }
+          }, t('register'))
+        )
       )
     )
   ));
