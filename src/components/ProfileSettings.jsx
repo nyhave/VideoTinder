@@ -597,12 +597,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             React.createElement('img', {
               src: profile.photoURL,
               alt: 'Profil',
-              className:`w-24 h-24 rounded object-cover ${!publicView ? 'cursor-pointer' : ''}`,
-              onClick: !publicView ? () => photoRef.current && photoRef.current.click() : undefined
+              className:`w-24 h-24 rounded object-cover ${!publicView && editInfo ? 'cursor-pointer' : ''}`,
+              onClick: !publicView && editInfo ? () => photoRef.current && photoRef.current.click() : undefined
             }) :
             React.createElement('div', {
-              className:`w-24 h-24 rounded bg-gray-200 flex items-center justify-center ${!publicView ? 'cursor-pointer' : ''}`,
-              onClick: !publicView ? () => photoRef.current && photoRef.current.click() : undefined
+              className:`w-24 h-24 rounded bg-gray-200 flex items-center justify-center ${!publicView && editInfo ? 'cursor-pointer' : ''}`,
+              onClick: !publicView && editInfo ? () => photoRef.current && photoRef.current.click() : undefined
             },
               React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500' })
             ),
