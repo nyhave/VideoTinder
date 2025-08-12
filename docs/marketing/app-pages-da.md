@@ -15,7 +15,7 @@
 - Videoklip kan maksimalt vare 10 sekunder (15 sekunder med Gold, 25 sekunder med Platinum); en timer tæller ned under optagelsen, og Gold/Platinum kan tilføje baggrundsmusik.
 - Gold og Platinum kan verificere profilen og få et badge.
 - **Indstillinger**
-  - Vælg køn og aldersinterval for kandidater; Silver kan også justere maks-afstand, mens Gold og Platinum får adgang til alle avancerede filtre.
+  - Vælg køn og aldersinterval for kandidater. Gold og Platinum får adgang til alle avancerede filtre.
   - Angiv foretrukne sprog og evt. tillad andre sprog.
   - Markér op til fem interesser, der kan bruges i interessechatten.
   - Aktiver incognito-tilstand for anonym browsing (kun Platinum).
@@ -26,7 +26,7 @@
 ## Dagens klip
 - Ved indgang vises listen med kandidatprofiler samt eventuelle ratede eller likede profiler.
 - Listen indeholder aktive profiler fra tidligere dage plus dagens nye (3 gratis, 5 med Silver, 8 med Gold og 10 med Platinum).
-- Hvis serveren returnerer for få nye profiler, kan brugeren udvide maks-afstanden.
+- Hvis serveren returnerer for få nye profiler, vises kun de profiler, der er tilgængelige.
 - Episodisk flow i tre trin: refleksion, reaktion og forbindelse.
 - Gratis brugere ser bannerannoncer; Silver og opefter er reklamefri.
 - Brugeren kan skrive en privat refleksion, og Gold samt Platinum kan også give en rating på 1–4 stjerner.
