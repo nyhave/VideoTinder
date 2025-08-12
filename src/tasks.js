@@ -1,22 +1,22 @@
 export const tasks = [
   {
     key: 'photo',
-    label: 'Add profile picture',
+    labelKey: 'taskAddProfilePicture',
     check: p => !!p.photoURL
   },
   {
     key: 'video1',
-    label: 'Add video clip',
+    labelKey: 'taskAddVideoClip',
     check: p => (p.videoClips || []).length >= 1
   },
   {
     key: 'about',
-    label: 'Add clip about me',
+    labelKey: 'taskAddClipAboutMe',
     check: p => !!(p.clip && p.clip.trim())
   },
   {
     key: 'video2',
-    label: 'Add second video clip',
+    labelKey: 'taskAddSecondVideoClip',
     check: p => (p.videoClips || []).length >= 2
   }
 ];

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LanguageProvider } from './i18n.js';
+import { LanguageProvider, useT } from './i18n.js';
 import { User as UserIcon, Shield, HelpCircle, Bell } from 'lucide-react';
 import { VideoCameraIcon, HeartIcon, ChatBubbleOvalLeftIcon, CalendarDaysIcon, UserGroupIcon } from '@heroicons/react/24/solid';
 import WelcomeScreen from './components/WelcomeScreen.jsx';
@@ -44,6 +44,7 @@ import { Button } from './components/ui/button.js';
 import { ensureWebPush } from './ensureWebPush.js';
 
 export default function VideotpushApp() {
+  const t = useT();
   const [lang, setLang] = useState(() =>
     localStorage.getItem('lang') || 'da'
   );
@@ -581,7 +582,7 @@ export default function VideotpushApp() {
       React.createElement(CalendarDaysIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} })
       ),
     showChatIntro && React.createElement(InfoOverlay, {
-      title: 'Chat',
+      title: t('chat'),
       onClose: () => {
         if (userId) {
           localStorage.setItem(`chatIntroSeen-${userId}`, 'true');
@@ -589,8 +590,8 @@ export default function VideotpushApp() {
         setShowChatIntro(false);
       }
     },
-      React.createElement('p', { className: 'mb-4' }, 'Chats appear when profiles match. Enable notifications to get alerted when there is a match.'),
-      React.createElement(Button, { className: 'w-full bg-blue-500 text-white', onClick: enableNotifications }, 'Enable notifications')
+      React.createElement('p', { className: 'mb-4' }, t('chatIntroText')),
+      React.createElement(Button, { className: 'w-full bg-blue-500 text-white', onClick: enableNotifications }, t('enableNotifications'))
     ),
     showSubscription && React.createElement(SubscriptionOverlay, { onClose: () => setShowSubscription(false), onBuy: handleSubscriptionPurchase }),
     showHelp && React.createElement(HelpOverlay, { onClose: ()=>setShowHelp(false) }),
