@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { useT } from '../i18n.js';
@@ -17,8 +17,27 @@ export default function InviteOverlay({ userId, onClose }) {
   const [recipient, setRecipient] = useState('');
   const [link, setLink] = useState('');
   const [inviteId, setInviteId] = useState(null);
+  const lastInvite = useRef({ recipient: '', id: '', link: '' });
+
+  const writeClipboard = async text => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      const el = document.createElement('textarea');
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    }
+  };
 
   const createInvite = async (name) => {
+    if (name === lastInvite.current.recipient && lastInvite.current.id) {
+      setInviteId(lastInvite.current.id);
+      setLink(lastInvite.current.link);
+      return lastInvite.current.link;
+    }
     try {
       const docRef = await addDoc(collection(db, 'invites'), {
         inviterId: userId,
@@ -27,13 +46,15 @@ export default function InviteOverlay({ userId, onClose }) {
         gift: invitesEnabled && remaining > 0,
         accepted: false
       });
-      setInviteId(docRef.id);
       const basePath = new URL('./invite.html', window.location.href).pathname;
       const base = window.location.origin + basePath;
       const giftParam = invitesEnabled && remaining > 0 ? '&gift=1' : '';
       const recipientParam = name ? `&recipient=${encodeURIComponent(name)}` : '';
-      setLink(`${base}?id=${userId}&invite=${docRef.id}${giftParam}${recipientParam}`);
-      return `${base}?id=${userId}&invite=${docRef.id}${giftParam}${recipientParam}`;
+      const newLink = `${base}?id=${userId}&invite=${docRef.id}${giftParam}${recipientParam}`;
+      setInviteId(docRef.id);
+      setLink(newLink);
+      lastInvite.current = { recipient: name, id: docRef.id, link: newLink };
+      return newLink;
     } catch (err) {
       console.error('Failed to create invite', err);
       return '';
@@ -59,8 +80,10 @@ export default function InviteOverlay({ userId, onClose }) {
   const copy = async () => {
     try {
       const newLink = await createInvite(recipient);
-      await navigator.clipboard.writeText(newLink);
-      alert(t('linkCopied'));
+      if (newLink) {
+        await writeClipboard(newLink);
+        alert(t('linkCopied'));
+      }
       setRecipient('');
       setInviteId(null);
     } catch(err) {
@@ -81,8 +104,10 @@ export default function InviteOverlay({ userId, onClose }) {
       }
     }
     try {
-      await navigator.clipboard.writeText(newLink);
-      alert(t('linkCopied'));
+      if (newLink) {
+        await writeClipboard(newLink);
+        alert(t('linkCopied'));
+      }
       setRecipient('');
       setInviteId(null);
     } catch (err) {
