@@ -212,10 +212,37 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   };
 
 
+  const resizeImage = (file, maxSize = 512) => new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+      if (width <= maxSize && height <= maxSize) {
+        resolve(file);
+        return;
+      }
+      if (width > height) {
+        height = Math.round(height * maxSize / width);
+        width = maxSize;
+      } else {
+        width = Math.round(width * maxSize / height);
+        height = maxSize;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.85);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+
+
   const uploadPhoto = async file => {
     if(!file) return;
-    const storageRef = ref(storage, `profiles/${userId}/photo-${Date.now()}-${file.name}`);
-    await uploadBytes(storageRef, file);
+    const resized = await resizeImage(file);
+    const storageRef = ref(storage, `profiles/${userId}/photo-${Date.now()}.jpg`);
+    await uploadBytes(storageRef, resized, { contentType: 'image/jpeg' });
     const url = await getDownloadURL(storageRef);
     const uploadedAt = new Date().toISOString();
     await updateDoc(doc(db,'profiles',userId), { photoURL: url, photoUploadedAt: uploadedAt });
