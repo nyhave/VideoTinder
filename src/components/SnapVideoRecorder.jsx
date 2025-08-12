@@ -16,7 +16,6 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   const [stage, setStage] = useState('intro');
   const [count, setCount] = useState(3);
   const countdownRef = useRef();
-  const previewTimeoutRef = useRef();
   const t = useT();
   const tier = user?.subscriptionTier || 'free';
   const hasActiveSubscription =
@@ -29,49 +28,35 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
         streamRef.current.getTracks().forEach(t => t.stop());
       }
       clearInterval(countdownRef.current);
-      clearTimeout(previewTimeoutRef.current);
     };
   }, []);
 
   const startCountdown = async () => {
-    streamRef.current = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    streamRef.current = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: { echoCancellation: true }
+    });
     if (videoRef.current) {
       videoRef.current.srcObject = streamRef.current;
       await videoRef.current.play();
     }
-    setStage('preview');
-    previewTimeoutRef.current = setTimeout(() => {
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(t => t.stop());
-        streamRef.current = null;
-      }
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
-      }
-      setStage('countdown');
-      let current = 3;
+    setStage('countdown');
+    let current = 3;
+    setCount(current);
+    countdownRef.current = setInterval(() => {
+      current -= 1;
       setCount(current);
-      countdownRef.current = setInterval(() => {
-        current -= 1;
-        setCount(current);
-        if(current <= 0){
-          clearInterval(countdownRef.current);
-          setStage('recording');
-          start();
-        }
-      }, 1000);
-    }, 2000);
+      if (current <= 0) {
+        clearInterval(countdownRef.current);
+        setStage('recording');
+        start();
+      }
+    }, 1000);
   };
 
   const start = async () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(t => t.stop());
-      streamRef.current = null;
-    }
-    streamRef.current = await navigator.mediaDevices.getUserMedia({ video: true, audio: { echoCancellation: true } });
-    if(videoRef.current){
-      videoRef.current.srcObject = streamRef.current;
-      videoRef.current.play();
+    if (!streamRef.current) {
+      return;
     }
     const recorder = new MediaRecorder(streamRef.current);
     recorderRef.current = recorder;
@@ -111,7 +96,6 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   };
 
   const cancel = () => {
-    clearTimeout(previewTimeoutRef.current);
     clearInterval(countdownRef.current);
     stop();
     onCancel && onCancel();
@@ -138,19 +122,18 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
     );
   }
 
-  if(stage === 'preview'){
-    return React.createElement('div', { className:'fixed inset-0 z-50 flex items-center justify-center bg-black/60' },
-      React.createElement('video', { ref: videoRef, className:'w-72 h-72 object-cover rounded', autoPlay:true, muted:true, playsInline:true })
-    );
-  }
-
   if(stage === 'countdown'){
     return React.createElement('div', { className:'fixed inset-0 z-50 flex items-center justify-center bg-black/60' },
-      React.createElement('div', { className:'flex items-center justify-center text-white text-6xl font-bold' }, count)
+      React.createElement('div', { className:'relative w-72 h-72' },
+        React.createElement('video', { ref: videoRef, className:'w-72 h-72 object-cover rounded', autoPlay:true, muted:true, playsInline:true }),
+        React.createElement('div', { className:'absolute inset-0 flex items-center justify-center text-white text-6xl font-bold' }, count),
+        React.createElement('div', { className:'absolute top-2 left-1/2 -translate-x-1/2 bg-black/50 text-white px-2 py-1 rounded text-sm' }, 'vent')
+      )
     );
   }
 
-  return React.createElement('div', { className:'fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60' },
+  return React.createElement('div', { className:'fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60 relative' },
+    recording && React.createElement('div', { className:'absolute top-2 left-1/2 -translate-x-1/2 bg-black/50 text-white px-2 py-1 rounded text-sm' }, 'optager nu!'),
     React.createElement('div', { className:'flex-1 flex items-center justify-center w-full' },
       React.createElement('div', { className:'relative w-72 h-72' },
         canAddMusic && React.createElement('label', { className:'absolute -top-10 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-2 py-1 rounded cursor-pointer' },
