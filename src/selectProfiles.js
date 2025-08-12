@@ -97,22 +97,16 @@ export function calculateMatchScore(user, profile, ageRange) {
 
 export function scoreProfiles(user, profiles, ageRange) {
   const interest = user.interest;
-  const preferred = user.preferredLanguages || [];
-  const allowOther = user.allowOtherLanguages !== false;
 
   const now = getCurrentDate();
   return profiles
-    .filter(p => {
-      const matchesLang = preferred.length === 0 || preferred.includes(p.language || 'en');
-      return (
+    .filter(p => (
         p.id !== user.id &&
         !p.incognito &&
         p.gender === interest &&
         (p.birthday ? getAge(p.birthday) : p.age) >= ageRange[0] &&
-        (p.birthday ? getAge(p.birthday) : p.age) <= ageRange[1] &&
-        (allowOther || matchesLang)
-      );
-    })
+        (p.birthday ? getAge(p.birthday) : p.age) <= ageRange[1]
+      ))
     .map(p => {
       const { score, breakdown } = calculateMatchScoreDetailed(user, p, ageRange);
       const boosted = p.boostExpires && new Date(p.boostExpires) > now;

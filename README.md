@@ -27,7 +27,6 @@ Profiles are presented as short episodes rather than a catalog of faces. Each ep
 * Calendar for daily reflections
 * Minimal profile settings and admin mode
 * Delete your account from the settings page
-* Preferred languages with option to allow other languages
 * Choose up to five personal interests in profile settings
 * Profile pictures and video clips cached for offline viewing
 * Push-notifications when new clips are ready with configurable do-not-disturb period and per-type preferences

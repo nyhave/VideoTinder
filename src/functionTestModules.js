@@ -96,14 +96,6 @@ export const modules = [
         action: { label: 'Open Profile', event: 'openProfileSettings' }
       },
       {
-        title: 'Preferred languages with option to allow other languages',
-        expected: [
-          'Users select one or more languages',
-          'Enabling "allow other languages" broadens matches',
-          'Discovery respects language preferences'
-        ]
-      },
-      {
         title: 'Choose up to five personal interests in profile settings',
         expected: [
           'Interests are selected from a predefined list',
