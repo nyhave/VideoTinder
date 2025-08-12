@@ -13,7 +13,6 @@ import MoreProfilesOverlay from './MoreProfilesOverlay.jsx';
 import PurchaseOverlay from './PurchaseOverlay.jsx';
 import MatchOverlay from './MatchOverlay.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
-import ExtendAreaOverlay from './ExtendAreaOverlay.jsx';
 import { triggerHaptic } from '../haptics.js';
 import useDayOffset from '../useDayOffset.js';
 import { showLocalNotification, sendWebPushToProfile } from '../notifications.js';
@@ -133,20 +132,11 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
 
   const [hoursUntil, setHoursUntil] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
-  const [showExtend, setShowExtend] = useState(false);
-  const [extendShown, setExtendShown] = useState(() =>
-    window.localStorage.getItem('extendAreaShown') === '1'
-  );
   const [showArchived, setShowArchived] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [showPurchase, setShowPurchase] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
-  useEffect(() => {
-    if (!extendShown && activeProfiles.length === 0) {
-      setShowExtend(true);
-    }
-  }, [activeProfiles, extendShown]);
   const handleExtraPurchase = async () => {
     const todayStr = getTodayStr();
     await updateDoc(doc(db, 'profiles', userId), { extraClipsDate: todayStr });
@@ -253,22 +243,6 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
     const id = `${userId}-${profileId}`;
     await setDoc(doc(db,'episodeProgress', id), { removed: true }, { merge: true });
   };
-  const markExtendShown = () => {
-    setExtendShown(true);
-    window.localStorage.setItem('extendAreaShown', '1');
-  };
-  const extendArea = async () => {
-    const range = user.distanceRange || [0, 50];
-    const newRange = [range[0], (range[1] || 0) + 35];
-    await updateDoc(doc(db,'profiles', userId), { distanceRange: newRange });
-    markExtendShown();
-    setShowExtend(false);
-    location.reload();
-  };
-  const dismissExtend = () => {
-    markExtendShown();
-    setShowExtend(false);
-  };
   useEffect(() => {
     const now = getCurrentDate();
     const next = new Date(now);
@@ -374,17 +348,11 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
       ),
       React.createElement(Button,{className:'w-full bg-gray-200 text-black',onClick:()=>setShowArchived(false)},t('cancel'))
     ),
-    activeProfiles.length === 0 && extendShown && React.createElement(Button, {
-      className:'mt-4 w-full bg-pink-500 text-white',
-      onClick: extendArea
-    }, t('extendReload')),
     React.createElement(Button, {
       className: 'mt-4 w-full bg-yellow-500 text-white',
       onClick: () => {
         const moreCandidates = scored.length > filtered.length;
-        if (!moreCandidates) {
-          setShowExtend(true);
-        } else if (user.extraClipsDate === today && user.freeClipsDate === today) {
+        if (!moreCandidates || (user.extraClipsDate === today && user.freeClipsDate === today)) {
           setShowInfo(true);
         } else {
           setShowMore(true);
@@ -416,7 +384,6 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
       name: matchedProfile.name,
       onClose: () => setMatchedProfile(null)
     }),
-    showExtend && React.createElement(ExtendAreaOverlay, { onExtend: extendArea, onClose: dismissExtend }),
     showHelp && React.createElement(InfoOverlay, {
       title: t('dailyHelpTitle'),
       onClose: () => setShowHelp(false)

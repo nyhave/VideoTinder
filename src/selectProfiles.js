@@ -36,19 +36,9 @@ export function calculateMatchScoreDetailed(user, profile, ageRange) {
   }
 
   // 3. Distance (max 20)
-  const userMax = (user.distanceRange || [0, 50])[1];
-  // Without real geo data, treat same city as distance 0 and others as 100km
-  const distance = user.city && profile.city && user.city === profile.city ? 0 : 100;
-  if (distance <= userMax) {
-    breakdown.distance = 20;
-    score += 20;
-  } else if (distance <= userMax + 50) {
-    const s = 20 * (1 - (distance - userMax) / 50);
-    breakdown.distance = s;
-    score += s;
-  } else {
-    breakdown.distance = 0;
-  }
+  // Distance is no longer used to limit or score matches.
+  breakdown.distance = 20;
+  score += 20;
 
   // 4. Shared interests (max 15)
   const userInt = user.interests || [];
