@@ -30,6 +30,14 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
     };
   }, []);
 
+  useEffect(() => {
+    if ((stage === 'countdown' || stage === 'recording') && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+      const p = videoRef.current.play();
+      if (p && p.catch) p.catch(() => {});
+    }
+  }, [stage]);
+
   const startCountdown = async () => {
     streamRef.current = await navigator.mediaDevices.getUserMedia({
       video: true,
