@@ -5,6 +5,7 @@
   - Log ud og vend tilbage til loginskærmen.
   - Vis offentlig profil som andre ser den.
   - Gå til siden "Om RealDate".
+  - Boost din profil for øget synlighed (1, 2 eller 4 gange pr. måned afhængigt af abonnement).
 - **Informationer der kan uploades efter redigering**
   - Profilbillede
   - Videoklip 1 ("Introduktion")
@@ -13,15 +14,12 @@
 - En hjælpefunktion i toppen guider brugeren gennem disse skridt.
 - Brugeren kan slette sin profil.
 - Videoklip kan maksimalt vare 10 sekunder (15 sekunder med Gold, 25 sekunder med Platinum); en timer tæller ned under optagelsen, og Gold/Platinum kan tilføje baggrundsmusik.
+- inden en optagelse vises brugerens video illede og der tælles ned 3-2-1.
 - Gold og Platinum kan verificere profilen og få et badge.
 - **Indstillinger**
   - Vælg køn og aldersinterval for kandidater. Gold og Platinum får adgang til alle avancerede filtre.
-  - Angiv foretrukne sprog og evt. tillad andre sprog.
-  - Markér op til fem interesser, der kan bruges i interessechatten.
+  - Markér op til fem interesser, der kan bruges i interessechatten og kan øge march score
   - Aktiver incognito-tilstand for anonym browsing (kun Platinum).
-  - Boost din profil for øget synlighed (1, 2 eller 4 gange pr. måned afhængigt af abonnement).
-- **Statistik**
-  - Alle kan se grundlæggende profilstatistik (visninger, seertid og matches). Gold får udvidede statistikker, og Platinum inkluderer avanceret analyse af videoafspilning og matchkonvertering.
 
 ## Dagens klip
 - Ved indgang vises listen med kandidatprofiler samt eventuelle ratede eller likede profiler.
