@@ -476,7 +476,7 @@ export default function VideotpushApp() {
       }
     },
       userId && React.createElement('div', {
-        className: 'absolute top-1/2 left-4 -translate-y-1/2 flex gap-4 mt-0.5'
+        className: 'absolute top-1/2 left-4 -translate-y-1/2 flex gap-4'
       },
         isAdminUser(auth.currentUser) && React.createElement('div', { className: 'relative cursor-pointer', onClick: openAdmin },
           React.createElement(Shield, { className: 'w-6 h-6 text-white' })
@@ -486,9 +486,9 @@ export default function VideotpushApp() {
           hasUnreadNotifications && React.createElement('span', { className: 'absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full min-w-4 h-4 flex items-center justify-center px-1' }, unreadNotifications)
         )
       ),
-      React.createElement('span', { className: 'leading-none' }, 'RealDate'),
+      'RealDate',
       React.createElement('div', {
-        className: 'absolute top-1/2 right-16 -translate-y-1/2 flex items-center gap-1 mt-0.5'
+        className: 'absolute top-1/2 right-16 -translate-y-1/2 flex items-center gap-1'
       },
         React.createElement('span', { className: 'text-xs leading-none' }, `v${version}`),
         React.createElement(HelpCircle, {
@@ -497,7 +497,7 @@ export default function VideotpushApp() {
         })
       ),
       userId && React.createElement('div', {
-        className: 'absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer mt-0.5',
+        className: 'absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer',
         onClick: openProfileSettings
       },
         cachedPhotoURL ?
