@@ -546,7 +546,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onLogout && React.createElement(Button, {
           className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
           onClick: onLogout
-        }, 'Logout')
+        }, t('logout'))
       ),
       React.createElement('div', { className: 'mt-4 flex justify-end' },
         React.createElement(Button, {
