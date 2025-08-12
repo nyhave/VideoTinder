@@ -25,7 +25,6 @@
 - Ved indgang vises listen med kandidatprofiler samt eventuelle ratede eller likede profiler.
 - Listen indeholder aktive profiler fra tidligere dage plus dagens nye (3 gratis, 5 med Silver, 8 med Gold og 10 med Platinum).
 - Hvis serveren returnerer for få nye profiler, vises kun de profiler, der er tilgængelige.
-- Episodisk flow i tre trin: refleksion, reaktion og forbindelse.
 - Gratis brugere ser bannerannoncer; Silver og opefter er reklamefri.
 - Brugeren kan skrive en privat refleksion, og Gold samt Platinum kan også give en rating på 1–4 stjerner.
 - Refleksioner gemmes for alle, mens ratings for Gold og Platinum vises sammen med refleksionskalenderen.
@@ -43,11 +42,11 @@
   - Dag 1: kun video 1
   - Dag 2: video 1 og 2
   - Efterfølgende dage: alt materiale
-- Brugeren kan se tilgængeligt materiale og skrive en refleksion med rating 1–4
+- Brugeren kan se tilgængeligt materiale og skrive en refleksion med rating 1–4 (med rette subacription)
   samt give et like.
 - Verificerede profiler (Gold og Platinum) viser et badge.
 
-## Daglig check-in
+## Dagens reflektion
 - Kalender med oversigt over egne refleksioner.
 - Brugeren kan skrive en kort, privat tekst for hver dag.
 - Refleksioner kan knyttes til profiler og vises sammen med eventuelle ratings.
