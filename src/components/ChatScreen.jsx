@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getAge, hasReadReceipts } from '../utils.js';
-import { User as UserIcon, Smile, MessageCircle as ChatIcon, ArrowLeft } from 'lucide-react';
+import { User as UserIcon, ArrowLeft } from 'lucide-react';
 import VerificationBadge from './VerificationBadge.jsx';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
@@ -200,9 +200,7 @@ export default function ChatScreen({ userId, onStartCall }) {
               className: 'bg-pink-500 text-white',
               disabled: !text.trim(),
               onClick: sendMessage
-            },
-              React.createElement(ChatIcon, null)
-            )
+            }, 'Send')
           ),
           React.createElement(Button, {
             className: 'bg-pink-500 text-white',
