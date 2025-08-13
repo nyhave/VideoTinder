@@ -476,7 +476,7 @@ export default function VideotpushApp() {
       }
     },
       userId && React.createElement('div', {
-        className: 'absolute top-1/2 left-4 -translate-y-1/2 flex gap-4'
+        className: 'absolute inset-y-0 left-4 flex items-center gap-4'
       },
         isAdminUser(auth.currentUser) && React.createElement('div', { className: 'relative cursor-pointer', onClick: openAdmin },
           React.createElement(Shield, { className: 'w-6 h-6 text-white' })
@@ -488,7 +488,7 @@ export default function VideotpushApp() {
       ),
       'RealDate',
       React.createElement('div', {
-        className: 'absolute top-1/2 right-16 -translate-y-1/2 flex items-center gap-1'
+        className: 'absolute inset-y-0 right-16 flex items-center gap-1'
       },
         React.createElement('span', { className: 'text-xs leading-none' }, `v${version}`),
         React.createElement(HelpCircle, {
@@ -497,7 +497,7 @@ export default function VideotpushApp() {
         })
       ),
       userId && React.createElement('div', {
-        className: 'absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer',
+        className: 'absolute inset-y-0 right-4 flex items-center cursor-pointer',
         onClick: openProfileSettings
       },
         cachedPhotoURL ?
