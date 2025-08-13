@@ -132,7 +132,7 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
             )
           );
         }) :
-          React.createElement('li',{className:'text-center text-gray-500'},'Ingen har liked dig endnu')
+          React.createElement('li',{className:'text-center text-gray-500'},'Ingen har liket dig endnu')
       )
     ),
     showBlur && React.createElement('span',{className:'absolute inset-0 m-auto text-yellow-500 text-sm font-semibold pointer-events-none flex items-center justify-center text-center px-2'},'Kr\u00e6ver Guld eller Platin'),
