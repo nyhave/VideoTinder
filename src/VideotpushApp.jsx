@@ -476,7 +476,8 @@ export default function VideotpushApp() {
       }
     },
       userId && React.createElement('div', {
-        className: 'absolute inset-y-0 left-4 flex items-center gap-4'
+        className: 'absolute left-4 flex items-end gap-4',
+        style: { top: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)', bottom: '0.5rem' }
       },
         isAdminUser(auth.currentUser) && React.createElement('div', { className: 'relative cursor-pointer', onClick: openAdmin },
           React.createElement(Shield, { className: 'w-6 h-6 text-white' })
@@ -488,7 +489,8 @@ export default function VideotpushApp() {
       ),
       'RealDate',
       React.createElement('div', {
-        className: 'absolute inset-y-0 right-16 flex items-center gap-1'
+        className: 'absolute right-16 flex items-end gap-1',
+        style: { top: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)', bottom: '0.5rem' }
       },
         React.createElement('span', { className: 'text-xs leading-none' }, `v${version}`),
         React.createElement(HelpCircle, {
@@ -497,7 +499,8 @@ export default function VideotpushApp() {
         })
       ),
       userId && React.createElement('div', {
-        className: 'absolute inset-y-0 right-4 flex items-center cursor-pointer',
+        className: 'absolute right-4 flex items-end cursor-pointer',
+        style: { top: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)', bottom: '0.5rem' },
         onClick: openProfileSettings
       },
         cachedPhotoURL ?
