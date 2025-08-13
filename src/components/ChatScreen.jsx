@@ -207,7 +207,7 @@ export default function ChatScreen({ userId, onStartCall }) {
           React.createElement(Button, {
             className: 'bg-pink-500 text-white',
             onClick: () => onStartCall && onStartCall([userId, active.profileId].sort().join('-'))
-          }, incomingCall ? 'Deltag i opkald' : 'Foretag opkald')
+          }, incomingCall ? 'Deltag i opkald' : 'Foretag videoopkald')
         )
       )
     ) : (
