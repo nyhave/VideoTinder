@@ -11,9 +11,11 @@ import {
   onSnapshot,
   arrayUnion,
   arrayRemove,
-  getDoc
+  getDoc,
+  useCollection
 } from '../firebase.js';
 import { deleteField } from 'firebase/firestore';
+import { getAge } from '../utils.js';
 
 function sanitizeInterest(i){
   return encodeURIComponent(i || '').replace(/%20/g,'_');
@@ -42,6 +44,9 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
   const remoteRefs = useRef({});
   const remoteStreams = useRef({});
   const pcsRef = useRef({});
+
+  const profiles = useCollection('profiles');
+  const profileMap = Object.fromEntries(profiles.map(p => [p.id, p]));
 
   const disconnectPeer = async uid => {
     const data = pcsRef.current[uid];
@@ -297,6 +302,9 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
     slots.map((slot,i) => {
       const uid = participants[i];
       const isSelf = uid === userId;
+      const profile = profileMap[uid];
+      const age = profile?.birthday ? getAge(profile.birthday) : profile?.age;
+      const nameAge = profile ? profile.name + (age ? `, ${age}` : '') : uid;
       return React.createElement('div',{ key:i, className:'relative bg-black rounded overflow-hidden' },
         React.createElement('video', {
           ref: el => {
@@ -326,7 +334,7 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
         }),
         !uid && React.createElement('div',{className:'absolute inset-0 flex items-center justify-center text-white bg-black/60'},'Venter...'),
         uid === botId && React.createElement('div',{className:'absolute inset-0 flex items-center justify-center text-white bg-black/60 text-6xl'},'\u{1F916}'),
-        uid && React.createElement('div',{className:'absolute bottom-1 right-1 text-xs text-white bg-black/60 px-1 rounded'},uid)
+        uid && React.createElement('div',{className:'absolute bottom-1 right-1 text-xs text-white bg-black/60 px-1 rounded'},nameAge)
       );
     })
   );
