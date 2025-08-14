@@ -26,7 +26,7 @@ describe('TaskButton', () => {
     getNextTask.mockReturnValue({ labelKey: 'taskAddProfilePicture' });
     ReactDOM.render(
       <LanguageProvider value={{ lang: 'en', setLang: () => {} }}>
-        <TaskButton profile={{}} onClick={() => {}} />
+        <TaskButton profile={{ id: 'p1' }} onClick={() => {}} />
       </LanguageProvider>,
       container
     );
@@ -40,7 +40,7 @@ describe('TaskButton', () => {
     const handleClick = jest.fn();
     ReactDOM.render(
       <LanguageProvider value={{ lang: 'en', setLang: () => {} }}>
-        <TaskButton profile={{}} onClick={handleClick} />
+        <TaskButton profile={{ id: 'p1' }} onClick={handleClick} />
       </LanguageProvider>,
       container
     );
@@ -53,7 +53,7 @@ describe('TaskButton', () => {
     getNextTask.mockReturnValue(null);
     ReactDOM.render(
       <LanguageProvider value={{ lang: 'en', setLang: () => {} }}>
-        <TaskButton profile={{}} onClick={() => {}} />
+        <TaskButton profile={{ id: 'p1' }} onClick={() => {}} />
       </LanguageProvider>,
       container
     );
@@ -64,10 +64,22 @@ describe('TaskButton', () => {
     getNextTask.mockReturnValue(null);
     ReactDOM.render(
       <LanguageProvider value={{ lang: 'en', setLang: () => {} }}>
-        <TaskButton profile={{}} cachedPhotoURL="url123" onClick={() => {}} />
+        <TaskButton profile={{ id: 'p1' }} cachedPhotoURL="url123" onClick={() => {}} />
       </LanguageProvider>,
       container
     );
-    expect(getNextTask).toHaveBeenCalledWith({ photoURL: 'url123' });
+    expect(getNextTask).toHaveBeenCalledWith({ id: 'p1', photoURL: 'url123' });
+  });
+
+  test('renders nothing when profile id missing', () => {
+    getNextTask.mockReturnValue({ labelKey: 'taskAddProfilePicture' });
+    ReactDOM.render(
+      <LanguageProvider value={{ lang: 'en', setLang: () => {} }}>
+        <TaskButton profile={{}} onClick={() => {}} />
+      </LanguageProvider>,
+      container
+    );
+    expect(getNextTask).not.toHaveBeenCalled();
+    expect(container.innerHTML).toBe('');
   });
 });
