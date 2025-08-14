@@ -12,7 +12,7 @@ async function loadInvite() {
     if (!snap.exists()) return;
     const profile = snap.data();
     const inviteText = document.getElementById('invite-text');
-    const greeting = recipient ? `${recipient}, ` : '';
+    const greeting = recipient ? `Hej ${recipient},\n` : '';
     inviteText.textContent = gift
       ? `${greeting}${profile.name} giver dig gratis premium i 3 måneder`
       : `${greeting}${profile.name} inviterer dig til RealDate`;
