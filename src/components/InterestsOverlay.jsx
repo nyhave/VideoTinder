@@ -14,10 +14,6 @@ export default function InterestsOverlay({ current = [], onSave, onClose }) {
 
   const handleSave = () => {
     const arr = Array.from(selected);
-    if (arr.length > 5) {
-      alert('Du kan vælge op til 5 interesser');
-      return;
-    }
     onSave(arr);
     onClose();
   };

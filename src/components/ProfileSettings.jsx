@@ -412,10 +412,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   const handleInterestsChange = async e => {
     const opts = Array.from(e.target.selectedOptions).map(o => o.value);
-    if (opts.length > 5) {
-      alert(t('maxInterests'));
-      return;
-    }
     setProfile({ ...profile, interests: opts });
     await updateDoc(doc(db,'profiles',userId), { interests: opts });
   };
