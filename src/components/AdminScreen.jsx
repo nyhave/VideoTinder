@@ -188,6 +188,8 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     triggerHaptic([100, 50, 100]);
   };
 
+  const languageEntries = [['da', languages.da], ...Object.entries(languages).filter(([code]) => code !== 'da')];
+
 
   return React.createElement(React.Fragment, null,
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
@@ -205,7 +207,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       value: lang,
       onChange: e => setLang(e.target.value)
     },
-      Object.entries(languages).map(([code, name]) =>
+      languageEntries.map(([code, name]) =>
         React.createElement('option', { key: code, value: code }, name)
       )
     ),
