@@ -62,7 +62,7 @@
 - Chat i grupper baseret på valgte interesser (kræver mindst Silver).
 - Gold og Platinum får prioriteret placering i chatlisterne (Platinum med topprioritet).
 - Mulighed for at starte Realetten – et turbaseret spil kombineret med fælles videokald (kun for Silver+).
-- Realetten kan spilles sammen med andre brugere eller mod en indbygget AI.
+- Realetten kan spilles sammen med andre brugere.
 
 ## Notifikationer
 - Viser systembeskeder og invitationer sorteret efter dato.
