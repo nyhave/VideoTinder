@@ -30,6 +30,8 @@ import HelpOverlay from './components/HelpOverlay.jsx';
 import InfoOverlay from './components/InfoOverlay.jsx';
 import ConsoleLogPanel from './components/ConsoleLogPanel.jsx';
 import FunctionTestGuide from './components/FunctionTestGuide.jsx';
+import InviteOverlay from './components/InviteOverlay.jsx';
+import RealettenPage from './components/RealettenPage.jsx';
 import TaskButton from './components/TaskButton.jsx';
 import GraphicsElementsScreen from './components/GraphicsElementsScreen.jsx';
 import { getNextTask } from './tasks.js';
@@ -75,6 +77,8 @@ export default function VideotpushApp() {
   const [returnTab,setReturnTab]=useState('discovery');
   const [videoCallId,setVideoCallId]=useState(null);
   const [showHelp,setShowHelp]=useState(false);
+  const [showInvite,setShowInvite]=useState(false);
+  const [showRealetten,setShowRealetten]=useState(false);
   const [activeTask, setActiveTask] = useState(null);
   const [taskClicks, setTaskClicks] = useState(0);
   const [showSubscription, setShowSubscription] = useState(false);
@@ -437,6 +441,18 @@ export default function VideotpushApp() {
     return () => window.removeEventListener('showSubscription', handler);
   }, []);
 
+  useEffect(() => {
+    const handler = () => setShowInvite(true);
+    window.addEventListener('showInvite', handler);
+    return () => window.removeEventListener('showInvite', handler);
+  }, []);
+
+  useEffect(() => {
+    const handler = () => setShowRealetten(true);
+    window.addEventListener('showRealetten', handler);
+    return () => window.removeEventListener('showRealetten', handler);
+  }, []);
+
 
   if(!loggedIn) return React.createElement(LanguageProvider, { value:{lang,setLang} },
     React.createElement(WelcomeScreen, { onLogin: (id, method = 'password') => {
@@ -596,6 +612,8 @@ export default function VideotpushApp() {
       React.createElement('p', { className: 'mb-4' }, t('chatIntroText')),
       React.createElement(Button, { className: 'w-full bg-blue-500 text-white', onClick: enableNotifications }, t('enableNotifications'))
     ),
+    showInvite && React.createElement(InviteOverlay, { userId, onClose: () => setShowInvite(false) }),
+    showRealetten && React.createElement(RealettenPage, { interest:'demo', userId, onBack: () => setShowRealetten(false) }),
     showSubscription && React.createElement(SubscriptionOverlay, { onClose: () => setShowSubscription(false), onBuy: handleSubscriptionPurchase }),
     showHelp && React.createElement(HelpOverlay, { onClose: ()=>setShowHelp(false) }),
     React.createElement(ConsoleLogPanel),

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { act } from 'react-dom/test-utils';
 import AdBanner from './AdBanner.jsx';
 
 jest.mock('../i18n.js', () => ({
@@ -7,6 +8,10 @@ jest.mock('../i18n.js', () => ({
     const map = {
       adBannerText: 'Upgrade to {tier}',
       adBannerButton: 'Upgrade',
+      adInviteText: 'Invite a friend',
+      adInviteButton: 'Invite',
+      adRealettenText: 'Try Realetten',
+      adRealettenButton: 'Play',
       tierSilver: 'Silver'
     };
     return map[key] || key;
@@ -16,6 +21,7 @@ jest.mock('../i18n.js', () => ({
 describe('AdBanner', () => {
   let container;
   beforeEach(() => {
+    jest.useFakeTimers();
     container = document.createElement('div');
     document.body.appendChild(container);
   });
@@ -24,11 +30,16 @@ describe('AdBanner', () => {
     ReactDOM.unmountComponentAtNode(container);
     document.body.removeChild(container);
     container = null;
+    jest.useRealTimers();
   });
 
-  test('shows upgrade to Silver for free tier', () => {
+  test('cycles through ads for free tier', () => {
     ReactDOM.render(<AdBanner user={{ subscriptionTier: 'free' }} />, container);
     expect(container.textContent).toContain('Upgrade to Silver');
+    act(() => { jest.advanceTimersByTime(5000); });
+    expect(container.textContent).toContain('Invite a friend');
+    act(() => { jest.advanceTimersByTime(5000); });
+    expect(container.textContent).toContain('Try Realetten');
   });
 
   test('renders nothing for silver tier', () => {
