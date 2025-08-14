@@ -59,7 +59,7 @@ export const messages = {
   adInviteText:{ en:'Invite a friend to RealDate', da:'Inviter en ven til RealDate' },
   adInviteButton:{ en:'Invite', da:'Inviter' },
   adRealettenText:{ en:'Meet new people - video call up to 4 people', da:'Mød nye mennesker - videokald op til 4 personer' },
-  adRealettenButton:{ en:'Play', da:'Spil' },
+  adRealettenButton:{ en:'Connect', da:'Forbind' },
   tierSilver:{ en:'Silver', da:'Sølv' },
   tierGold:{ en:'Gold', da:'Guld' },
   tierPlatinum:{ en:'Platinum', da:'Platin' },
