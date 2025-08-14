@@ -6,7 +6,7 @@ Typing indicators show when the other person is composing a message
 Unmatch to remove chat from both users
 Calendar interface for daily reflection notes
 Profile settings with age range filtering
-Select up to five interests in profile settings
+Choose from five interests in profile settings
 Ability to upload or record video clips
 Video duration limited to 10 seconds
 Animated countdown shown while recording video
