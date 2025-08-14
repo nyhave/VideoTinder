@@ -28,7 +28,7 @@ const questions = [
   }
 ];
 
-export default function TurnGame({ sessionId, players: propPlayers = [], myName, botName, onExit }) {
+export default function TurnGame({ sessionId, players: propPlayers = [], myName, onExit }) {
   const [nameInput, setNameInput] = useState('');
   const [timeLeft, setTimeLeft] = useState(10);
   const [game, setGame] = useState(null);
@@ -148,27 +148,6 @@ export default function TurnGame({ sessionId, players: propPlayers = [], myName,
     }
   }, [step, choice]);
 
-  useEffect(() => {
-    if (!botName) return;
-    if (step === 'play' && players[current] === botName && choice === null) {
-      const id = setTimeout(() => {
-        const idx = 0; // Deterministic choice for easier testing
-        selectOption(idx);
-      }, 800);
-      return () => clearTimeout(id);
-    }
-  }, [botName, step, current, choice, qIdx, players]);
-
-  useEffect(() => {
-    if (!botName) return;
-    if (step === 'guess' && players[current] !== botName && guesses[botName] === undefined) {
-      const id = setTimeout(() => {
-        const idx = 0; // Deterministic guess for easier testing
-        guess(botName, idx);
-      }, 800);
-      return () => clearTimeout(id);
-    }
-  }, [botName, step, guesses, current, qIdx, players]);
 
   useEffect(() => {
     if (step === 'reveal') {

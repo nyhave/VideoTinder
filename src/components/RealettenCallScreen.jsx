@@ -21,9 +21,9 @@ function sanitizeInterest(i){
   return encodeURIComponent(i || '').replace(/%20/g,'_');
 }
 
-export default function RealettenCallScreen({ interest, userId, botId, onEnd, onParticipantsChange }) {
+export default function RealettenCallScreen({ interest, userId, onEnd, onParticipantsChange }) {
   const HEARTBEAT_INTERVAL = 10000;
-  const STALE_TIMEOUT = 60000; // allow more time before removing inactive participants (bots ignored)
+  const STALE_TIMEOUT = 60000; // allow more time before removing inactive participants
   const [participants, setParticipants] = useState([]);
   const [count, setCount] = useState(null);
   const [connectFailed, setConnectFailed] = useState(false);
@@ -140,7 +140,6 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
       const now = Date.now();
       const stale = list.filter(uid =>
         uid !== userId &&
-        uid !== botId &&
         now - new Date(hb[uid] || 0).getTime() > STALE_TIMEOUT
       );
       if (stale.length) {
@@ -199,7 +198,6 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
     const id = sanitizeInterest(interest);
 
     const connect = async uid => {
-      if (botId && uid === botId) return;
       if (pcsRef.current[uid]) return;
       const pairId = [userId, uid].sort().join('_');
       const callDoc = doc(db, 'realetten', id, 'calls', pairId);
@@ -333,7 +331,6 @@ export default function RealettenCallScreen({ interest, userId, botId, onEnd, on
           playsInline:true
         }),
         !uid && React.createElement('div',{className:'absolute inset-0 flex items-center justify-center text-white bg-black/60'},'Venter...'),
-        uid === botId && React.createElement('div',{className:'absolute inset-0 flex items-center justify-center text-white bg-black/60 text-6xl'},'\u{1F916}'),
         uid && React.createElement('div',{className:'absolute bottom-1 right-1 text-xs text-white bg-black/60 px-1 rounded'},nameAge)
       );
     })
