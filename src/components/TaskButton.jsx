@@ -4,7 +4,8 @@ import { useT } from '../i18n.js';
 
 export default function TaskButton({ profile, cachedPhotoURL, onClick }) {
   const t = useT();
-  const prof = { ...(profile || {}) };
+  if (!profile?.id) return null;
+  const prof = { ...profile };
   if (!prof.photoURL && cachedPhotoURL) prof.photoURL = cachedPhotoURL;
   const task = getNextTask(prof);
   if (!task) return null;
