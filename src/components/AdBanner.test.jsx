@@ -56,5 +56,19 @@ describe('AdBanner', () => {
     ReactDOM.render(<AdBanner user={{ subscriptionTier: 'platinum' }} />, container);
     expect(container.innerHTML).toBe('');
   });
+
+  test('Realetten ad redirects to interest chat', () => {
+    act(() => { ReactDOM.render(<AdBanner user={{ subscriptionTier: 'free' }} />, container); });
+    act(() => { jest.advanceTimersByTime(10000); });
+    expect(container.textContent).toContain('Try Realetten');
+    const handler = jest.fn();
+    window.addEventListener('showInterestChat', handler);
+    const button = container.querySelector('button');
+    act(() => {
+      button.click();
+    });
+    expect(handler).toHaveBeenCalled();
+    window.removeEventListener('showInterestChat', handler);
+  });
 });
 

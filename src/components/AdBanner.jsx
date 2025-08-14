@@ -22,7 +22,7 @@ export default function AdBanner({ user }){
     {
       text: t('adRealettenText'),
       button: t('adRealettenButton'),
-      onClick: () => window.dispatchEvent(new CustomEvent('showRealetten'))
+      onClick: () => window.dispatchEvent(new CustomEvent('showInterestChat'))
     }
   ];
   const [idx, setIdx] = useState(0);
