@@ -453,6 +453,12 @@ export default function VideotpushApp() {
     return () => window.removeEventListener('showRealetten', handler);
   }, []);
 
+  useEffect(() => {
+    const handler = () => setTab('interestchat');
+    window.addEventListener('showInterestChat', handler);
+    return () => window.removeEventListener('showInterestChat', handler);
+  }, []);
+
 
   if(!loggedIn) return React.createElement(LanguageProvider, { value:{lang,setLang} },
     React.createElement(WelcomeScreen, { onLogin: (id, method = 'password') => {
