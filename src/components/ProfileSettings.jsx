@@ -26,7 +26,6 @@ import { showLocalNotification, sendWebPushToProfile } from '../notifications.js
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId = userId, onBack, activeTask, taskTrigger = 0 }) {
   const [profile,setProfile]=useState(null);
   const t = useT();
-  const videoRef = useRef();
   const photoRef = useRef();
   const photoSectionRef = useRef();
   const videoSectionRef = useRef();
@@ -194,23 +193,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const highlightVideo2 = activeTask === 'video2';
   const highlightAbout = activeTask === 'about';
 
-  const uploadFile = async (file, field, music) => {
-    if(!file) return;
-    const storageRef = ref(storage, `profiles/${userId}/${field}-${Date.now()}-${file.name}`);
-    await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
-    const clip = { url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() };
-    if(music){
-      const musicRef = ref(storage, `profiles/${userId}/${field}-music-${Date.now()}-${music.name}`);
-      await uploadBytes(musicRef, music);
-      clip.music = await getDownloadURL(musicRef);
-    }
-    const updated = [...(profile[field] || []), clip];
-    await updateDoc(doc(db,'profiles',userId), { [field]: updated });
-    setProfile({ ...profile, [field]: updated });
-  };
-
-
   const resizeImage = (file, maxSize = 512) => new Promise(resolve => {
     const img = new Image();
     img.onload = () => {
@@ -325,17 +307,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     }
   };
 
-
-  const handleVideoChange = async e => {
-    const file = e.target.files[0];
-    if(!file) return;
-    const max = getMaxVideoSeconds(profile);
-    if(!(await checkDuration(file, max))){
-      alert(t('videoTooLong').replace('{seconds}', max));
-      return;
-    }
-    uploadFile(file, 'videoClips');
-  };
 
   const handleAgeRangeChange = async range => {
     onChangeAgeRange(range);
@@ -533,19 +504,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         );
       })
     ),
-    !publicView && React.createElement('div', { className:'flex justify-center mb-2' },
-      React.createElement(Button, {
-        className: 'bg-pink-500 text-white',
-        onClick: () => videoRef.current && videoRef.current.click()
-      }, 'Evas upload knap')
-    ),
-    !publicView && React.createElement('input', {
-      type: 'file',
-      accept: 'video/*',
-      ref: videoRef,
-      onChange: handleVideoChange,
-      className: 'hidden'
-    }),
     !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => { setShowSnapVideoRecorder(false); setRecordClipIndex(null); }, onRecorded: handleVideoRecorded, maxDuration: getMaxVideoSeconds(profile)*1000, user: profile, clipIndex: recordClipIndex })
   );
 
