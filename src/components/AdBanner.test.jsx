@@ -11,7 +11,7 @@ jest.mock('../i18n.js', () => ({
       adInviteText: 'Invite a friend',
       adInviteButton: 'Invite',
       adRealettenText: 'Try Realetten',
-      adRealettenButton: 'Play',
+      adRealettenButton: 'Connect',
       tierSilver: 'Silver'
     };
     return map[key] || key;
