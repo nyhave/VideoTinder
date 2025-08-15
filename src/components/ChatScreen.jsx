@@ -71,7 +71,7 @@ export default function ChatScreen({ userId, onStartCall }) {
 
   useEffect(() => {
     if (!ringAudioRef.current) {
-      ringAudioRef.current = new Audio('/reveal.mp3');
+      ringAudioRef.current = new Audio('/iphone_15.mp3');
       ringAudioRef.current.loop = true;
     }
     const audio = ringAudioRef.current;
