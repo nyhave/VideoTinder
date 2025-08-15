@@ -641,32 +641,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         ),
       isOwnProfile && !publicView && !editInfo && profile.email && React.createElement('p', { className:'text-center text-sm text-gray-600 mt-1' }, profile.email)
     ),
-    !publicView && React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
-        React.createElement(SectionTitle, { title: t('settings') }),
-        profile.subscriptionExpires && React.createElement('p', {
-          className: 'text-center text-sm mt-2 flex items-center justify-center gap-1 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
-        },
-          !subscriptionActive && React.createElement(PremiumIcon, null),
-          (() => {
-            const tierLabel = {
-              silver: t('tierSilver'),
-              gold: t('tierGold'),
-              platinum: t('tierPlatinum')
-            }[profile.subscriptionTier] || 'Premium';
-            const date = new Date(profile.subscriptionExpires).toLocaleDateString('da-DK');
-            return subscriptionActive
-              ? `${tierLabel} abonnement aktivt til ${date}`
-              : `${tierLabel} abonnement udløb ${date}`;
-          })()
-        ),
-        profile.subscriptionPurchased && React.createElement('p', {
-          className: 'text-center text-sm text-gray-500'
-        }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`),
-        subscriptionActive && profile.subscriptionTier === 'platinum' && React.createElement('label', { className:'flex items-center gap-2 mt-2' },
-          React.createElement('input', { type:'checkbox', checked: profile.incognito || false, onChange: async e => { const checked = e.target.checked; await updateDoc(doc(db,'profiles', userId), { incognito: checked }); setProfile({ ...profile, incognito: checked }); } }),
-          t('incognitoMode')
-        )
-      ),
     React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightVideo1 || highlightVideo2 ? 'ring-4 ring-green-500' : ''}`, ref: videoSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } }, videoSection),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
       React.createElement(SectionTitle, { title: t('interests'), action: !publicView && (editInterests ?
@@ -754,6 +728,32 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         className: 'w-5 h-5 text-red-500 cursor-pointer ml-auto',
         onClick: () => setReportItem({ text: profile.clip })
       })
+    ),
+    !publicView && React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
+      React.createElement(SectionTitle, { title: t('settings') }),
+      profile.subscriptionExpires && React.createElement('p', {
+        className: 'text-center text-sm mt-2 flex items-center justify-center gap-1 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
+      },
+        !subscriptionActive && React.createElement(PremiumIcon, null),
+        (() => {
+          const tierLabel = {
+            silver: t('tierSilver'),
+            gold: t('tierGold'),
+            platinum: t('tierPlatinum')
+          }[profile.subscriptionTier] || 'Premium';
+          const date = new Date(profile.subscriptionExpires).toLocaleDateString('da-DK');
+          return subscriptionActive
+            ? `${tierLabel} abonnement aktivt til ${date}`
+            : `${tierLabel} abonnement udløb ${date}`;
+        })()
+      ),
+      profile.subscriptionPurchased && React.createElement('p', {
+        className: 'text-center text-sm text-gray-500'
+      }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`),
+      subscriptionActive && profile.subscriptionTier === 'platinum' && React.createElement('label', { className:'flex items-center gap-2 mt-2' },
+        React.createElement('input', { type:'checkbox', checked: profile.incognito || false, onChange: async e => { const checked = e.target.checked; await updateDoc(doc(db,'profiles', userId), { incognito: checked }); setProfile({ ...profile, incognito: checked }); } }),
+        t('incognitoMode')
+      )
     ),
     !publicView && React.createElement(Button, {
         className: 'mt-2 w-full bg-yellow-500 text-white',
