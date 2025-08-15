@@ -507,33 +507,15 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
   return React.createElement('div', { className:'mt-8' },
     !publicView && React.createElement(Card, { className: 'p-4 m-4 shadow-xl bg-white/90' },
-      React.createElement('div', { className: 'flex items-start justify-between gap-2' },
-        React.createElement('div', { className: 'flex flex-col' },
-          React.createElement(Button, {
-            className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
-            onClick: onViewPublicProfile
-          }, t('viewPublicProfile')),
-          boostActive && React.createElement('p', {
-            className: 'mt-2 text-sm text-purple-700'
-          }, `Boost aktiv${boostCountdown ? ` (${boostCountdown})` : ''}`),
-          !boostActive && boostsLeft > 0 && React.createElement(Button, {
-            className: 'mt-2 bg-purple-600 text-white',
-            onClick: handleBoost
-          }, `Boost profil (${boostsLeft} tilbage)`),
-          !boostActive && boostsLeft <= 0 && getMonthlyBoostLimit(profile) > 0 && React.createElement('p', {
-            className: 'mt-2 text-sm text-gray-500'
-          }, 'Ingen boosts tilbage denne måned')
-        ),
+      React.createElement('div', { className: 'flex items-center justify-between gap-2' },
+        React.createElement(Button, {
+          className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
+          onClick: onViewPublicProfile
+        }, t('viewPublicProfile')),
         onLogout && React.createElement(Button, {
           className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
           onClick: onLogout
         }, t('logout'))
-      ),
-      React.createElement('div', { className: 'mt-4 flex justify-end' },
-        React.createElement(Button, {
-          className: 'bg-pink-500 text-white',
-          onClick: onOpenAbout
-        }, t('about'))
       )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90', ref: photoSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } },
@@ -736,6 +718,16 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     ),
     !publicView && React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
         React.createElement(SectionTitle, { title: t('settings') }),
+        boostActive && React.createElement('p', {
+          className: 'mt-2 text-sm text-purple-700 text-center'
+        }, `Boost aktiv${boostCountdown ? ` (${boostCountdown})` : ''}`),
+        !boostActive && boostsLeft > 0 && React.createElement(Button, {
+          className: 'mt-2 w-full bg-purple-600 text-white',
+          onClick: handleBoost
+        }, `Boost profil (${boostsLeft} tilbage)`),
+        !boostActive && boostsLeft <= 0 && getMonthlyBoostLimit(profile) > 0 && React.createElement('p', {
+          className: 'mt-2 text-sm text-gray-500 text-center'
+        }, 'Ingen boosts tilbage denne måned'),
         profile.subscriptionExpires && React.createElement('p', {
           className: 'text-center text-sm mt-2 flex items-center justify-center gap-1 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
         },
@@ -758,6 +750,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         subscriptionActive && profile.subscriptionTier === 'platinum' && React.createElement('label', { className:'flex items-center gap-2 mt-2' },
           React.createElement('input', { type:'checkbox', checked: profile.incognito || false, onChange: async e => { const checked = e.target.checked; await updateDoc(doc(db,'profiles', userId), { incognito: checked }); setProfile({ ...profile, incognito: checked }); } }),
           t('incognitoMode')
+        ),
+        React.createElement('div', { className: 'mt-4 flex justify-end' },
+          React.createElement(Button, {
+            className: 'bg-pink-500 text-white',
+            onClick: onOpenAbout
+          }, t('about'))
         )
       ),
     !publicView && React.createElement(Button, {
