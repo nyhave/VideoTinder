@@ -23,6 +23,7 @@ export default function ChatScreen({ userId, onStartCall }) {
   const messagesRef = useRef(null);
   const textareaRef = useRef(null);
   const typingTimeout = useRef(null);
+  const ringAudioRef = useRef(null);
 
   useEffect(() => {
     if(textareaRef.current){
@@ -67,6 +68,26 @@ export default function ChatScreen({ userId, onStartCall }) {
     });
     return () => unsub();
   }, [active, userId]);
+
+  useEffect(() => {
+    if (!ringAudioRef.current) {
+      ringAudioRef.current = new Audio('/reveal.mp3');
+      ringAudioRef.current.loop = true;
+    }
+    const audio = ringAudioRef.current;
+    if (incomingCall) {
+      audio.play().catch(() => {});
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  }, [incomingCall]);
+
+  useEffect(() => () => {
+    if (ringAudioRef.current) {
+      ringAudioRef.current.pause();
+    }
+  }, []);
 
   const openChat = chat => {
     setActive(chat);
@@ -145,6 +166,14 @@ export default function ChatScreen({ userId, onStartCall }) {
   const activeProfile = active ? profileMap[active.profileId] || {} : null;
   const lastSelf = active ? [...(active.messages || [])].filter(m => m.from === userId).slice(-1)[0] : null;
 
+  const startCall = () => {
+    if (!active) return;
+    const id = [userId, active.profileId].sort().join('-');
+    const caller = currentUser.name || 'Nogen';
+    sendWebPushToProfile(active.profileId, 'Indgående videoopkald', `${caller} ringer dig op`);
+    onStartCall && onStartCall(id);
+  };
+
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1 touch-none', style:{maxHeight:'calc(100vh - 10rem)', overflow:'hidden', touchAction:'none'} },
     React.createElement(SectionTitle, {
       title: t('chat'),
@@ -204,7 +233,7 @@ export default function ChatScreen({ userId, onStartCall }) {
           ),
           React.createElement(Button, {
             className: 'bg-pink-500 text-white',
-            onClick: () => onStartCall && onStartCall([userId, active.profileId].sort().join('-'))
+            onClick: startCall
           }, incomingCall ? 'Deltag i opkald' : 'Foretag videoopkald')
         )
       )
