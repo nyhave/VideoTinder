@@ -22,6 +22,7 @@ import PremiumIcon from './PremiumIcon.jsx';
 import { triggerHaptic } from '../haptics.js';
 import VerificationBadge from './VerificationBadge.jsx';
 import { showLocalNotification, sendWebPushToProfile } from '../notifications.js';
+import InfoOverlay from './InfoOverlay.jsx';
 
 export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId = userId, onBack, activeTask, taskTrigger = 0 }) {
   const [profile,setProfile]=useState(null);
@@ -53,6 +54,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
   const [reportMode, setReportMode] = useState(false);
   const [reportItem, setReportItem] = useState(null);
   const [boostCountdown, setBoostCountdown] = useState('');
+  const [showHelp, setShowHelp] = useState(false);
   const progressId = publicView && viewerId && viewerId !== userId ? `${viewerId}-${userId}` : null;
   const progress = useDoc('episodeProgress', progressId);
   const stage = isOwnProfile ? 3 : (progress?.stage || 1);
@@ -535,13 +537,15 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       )
     ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90', ref: photoSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } },
-        React.createElement(SectionTitle, { title: t('yourProfileTitle'), action: !publicView && (
-          editInfo ? null :
-          React.createElement(EditIcon, {
-            className:'w-5 h-5 text-gray-500 cursor-pointer',
-            onClick: () => setEditInfo(true)
-          })
-        ) }),
+        React.createElement(SectionTitle, { title: t('yourProfileTitle'), action:
+          React.createElement('div', { className:'flex items-center gap-2' },
+            React.createElement('span', { className:'text-sm text-blue-500 underline cursor-pointer', onClick: () => setShowHelp(true) }, t('dailyHelpLabel')),
+            !publicView && !editInfo && React.createElement(EditIcon, {
+              className:'w-5 h-5 text-gray-500 cursor-pointer',
+              onClick: () => setEditInfo(true)
+            })
+          )
+        }),
       publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
       React.createElement('div', { className:'flex items-center mb-4 gap-4' },
         React.createElement('div', { className:`flex flex-col items-center ${highlightPhoto ? 'ring-4 ring-green-500' : ''}` },
@@ -774,6 +778,12 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         onSave: handleSaveInterests,
         onClose: () => setShowInterests(false)
       }),
+    showHelp && React.createElement(InfoOverlay, {
+        title: t('profileHelpTitle'),
+        onClose: () => setShowHelp(false)
+      },
+        React.createElement('p', { className:'text-sm' }, t('profileHelpText'))
+      ),
     matchedProfile && React.createElement(MatchOverlay, {
         name: matchedProfile.name,
         onClose: () => setMatchedProfile(null)
