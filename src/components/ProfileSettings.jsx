@@ -517,6 +517,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             onClick: onLogout
           }, t('logout'))
         ),
+        publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
         React.createElement(SectionTitle, { title: t('yourProfileTitle'), action:
           React.createElement('div', { className:'flex items-center gap-2' },
             React.createElement('span', { className:'text-sm text-blue-500 underline cursor-pointer', onClick: () => setShowHelp(true) }, t('dailyHelpLabel')),
@@ -526,8 +527,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             })
           )
         }),
-      publicView && onBack && React.createElement(Button, { className: 'mb-4 bg-pink-500 text-white', onClick: onBack }, 'Tilbage'),
-      React.createElement('div', { className:'flex items-center mb-4 gap-4' },
+        React.createElement('div', { className:'flex items-center mb-4 gap-4' },
         React.createElement('div', { className:`flex flex-col items-center ${highlightPhoto ? 'ring-4 ring-green-500' : ''}` },
           profile.photoURL ?
             React.createElement('img', {
