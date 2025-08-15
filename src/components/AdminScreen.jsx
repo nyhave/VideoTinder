@@ -188,6 +188,11 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     triggerHaptic([100, 50, 100]);
   };
 
+  const testRingtone = () => {
+    const audio = new Audio('/reveal.mp3');
+    audio.play().catch(() => {});
+  };
+
   const languageEntries = [['da', languages.da], ...Object.entries(languages).filter(([code]) => code !== 'da')];
 
 
@@ -325,7 +330,8 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement('h4', { className: 'text-lg font-semibold mb-2 mt-4 text-blue-600' }, t('videoCallsTitle')),
     React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenCallLog }, 'Se aktive opkald'),
-      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenGroupCallLog }, 'Se gruppeopkald')
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenGroupCallLog }, 'Se gruppeopkald'),
+      React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: testRingtone }, t('adminTestRingtone'))
     ),
     null
   ),
