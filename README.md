@@ -98,7 +98,7 @@ This approach keeps the codebase unified while still allowing environment‑spec
 
 ## Manual Function Testing
 
-The admin page contains a dedicated function test screen. Tests are organized in modules so each area can be completed separately. See [docs/developers/function-test-modules.md](docs/developers/function-test-modules.md) for an overview of the modules and how to submit results.
+The admin page contains a dedicated function test screen. Tests are organized in modules so each area can be completed separately. To access the admin interface, open the app with `?tab=admin` in the URL. See [docs/developers/function-test-modules.md](docs/developers/function-test-modules.md) for an overview of the modules and how to submit results.
 
 ## Automated Screenshots
 
