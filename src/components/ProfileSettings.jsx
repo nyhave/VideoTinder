@@ -506,19 +506,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
 
 
   return React.createElement('div', { className:'mt-8' },
-    !publicView && React.createElement(Card, { className: 'p-4 m-4 shadow-xl bg-white/90' },
-      React.createElement('div', { className: 'flex items-center justify-between gap-2' },
-        React.createElement(Button, {
-          className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
-          onClick: onViewPublicProfile
-        }, t('viewPublicProfile')),
-        onLogout && React.createElement(Button, {
-          className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
-          onClick: onLogout
-        }, t('logout'))
-      )
-    ),
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90', ref: photoSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } },
+        !publicView && React.createElement('div', { className: 'flex items-center justify-between mb-4' },
+          React.createElement(Button, {
+            className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
+            onClick: onViewPublicProfile
+          }, t('viewPublicProfile')),
+          onLogout && React.createElement(Button, {
+            className: 'bg-gray-200 text-gray-700 px-4 py-2 rounded',
+            onClick: onLogout
+          }, t('logout'))
+        ),
         React.createElement(SectionTitle, { title: t('yourProfileTitle'), action:
           React.createElement('div', { className:'flex items-center gap-2' },
             React.createElement('span', { className:'text-sm text-blue-500 underline cursor-pointer', onClick: () => setShowHelp(true) }, t('dailyHelpLabel')),
