@@ -749,17 +749,15 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           React.createElement('input', { type:'checkbox', checked: profile.incognito || false, onChange: async e => { const checked = e.target.checked; await updateDoc(doc(db,'profiles', userId), { incognito: checked }); setProfile({ ...profile, incognito: checked }); } }),
           t('incognitoMode')
         ),
-        React.createElement('div', { className: 'mt-4 flex justify-end' },
-          React.createElement(Button, {
-            className: 'bg-pink-500 text-white',
-            onClick: onOpenAbout
-          }, t('about'))
-        )
+        React.createElement(Button, {
+          className: 'mt-4 w-full bg-yellow-500 text-white',
+          onClick: () => setShowSub(true)
+        }, subscriptionActive ? 'Skift abonnement' : 'Køb abonnement (gratis nu - betaling ikke implementeret)'),
+        React.createElement(Button, {
+          className: 'mt-4 w-full bg-pink-500 text-white',
+          onClick: onOpenAbout
+        }, t('about'))
       ),
-    !publicView && React.createElement(Button, {
-        className: 'mt-2 w-full bg-yellow-500 text-white',
-        onClick: () => setShowSub(true)
-      }, subscriptionActive ? 'Skift abonnement' : 'Køb abonnement (gratis nu - betaling ikke implementeret)'),
     !publicView && React.createElement(Button, {
         className: 'mt-6 w-full bg-red-500 text-white',
         onClick: () => setShowDelete(true)
