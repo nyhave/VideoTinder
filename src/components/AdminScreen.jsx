@@ -189,7 +189,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   };
 
   const testRingtone = () => {
-    const audio = new Audio('/reveal.mp3');
+    const audio = new Audio('/iphone_15.mp3');
     audio.play().catch(() => {});
   };
 
