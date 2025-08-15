@@ -112,11 +112,9 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   const remainingSeconds = remaining;
 
   if(stage === 'intro'){
-    const clipLabel = clipIndex != null ? t(`clip${clipIndex+1}`) : '';
-    const seconds = Math.round(maxDuration/1000);
     return React.createElement('div', { className:'fixed inset-0 z-50 flex items-center justify-center bg-black/60' },
       React.createElement('div', { className:'bg-white p-4 rounded max-w-sm text-center' },
-        React.createElement('p', { className:'mb-4' }, t('recordIntro').replace('{clip}', clipLabel).replace('{seconds}', seconds)),
+        React.createElement('p', { className:'mb-4' }, t('recordIntro')),
         React.createElement('div', { className:'flex justify-center gap-2' },
           React.createElement('button', { onClick: startCountdown, className:'bg-pink-500 text-white px-4 py-2 rounded' }, t('ok')),
           React.createElement('button', { onClick: cancel, className:'bg-gray-200 text-gray-700 px-4 py-2 rounded' }, t('cancel'))
