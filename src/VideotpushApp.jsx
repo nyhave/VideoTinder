@@ -71,7 +71,7 @@ export default function VideotpushApp() {
   });
   const [ageRange,setAgeRange]=useState([35,55]);
   const params = new URLSearchParams(window.location.search);
-  const initialTab = params.get('tab') || 'admin';
+  const initialTab = params.get('tab') || 'discovery';
   const [tab,setTab]=useState(initialTab);
   const [viewProfile,setViewProfile]=useState(null);
   const [returnTab,setReturnTab]=useState('discovery');
