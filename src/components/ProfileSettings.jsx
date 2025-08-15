@@ -623,7 +623,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             action: publicView && !isOwnProfile && activeNow ? React.createElement('span', { className: 'text-sm text-green-600 font-medium' }, t('activeNow')) : null
           })
         ),
-      isOwnProfile && !publicView && !editInfo && profile.email && React.createElement('p', { className:'text-center text-sm text-gray-600 mt-1' }, profile.email)
+      isOwnProfile && !publicView && !editInfo && profile.email && React.createElement('p', { className:'text-left text-sm text-gray-600 mt-1' }, profile.email)
     ),
     React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightAbout ? 'ring-4 ring-green-500' : ''}`, ref: aboutSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } },
       React.createElement(SectionTitle, { title: t('aboutMe'), action: !publicView && (editAbout ?
