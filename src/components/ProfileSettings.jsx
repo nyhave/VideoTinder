@@ -641,6 +641,21 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         ),
       isOwnProfile && !publicView && !editInfo && profile.email && React.createElement('p', { className:'text-center text-sm text-gray-600 mt-1' }, profile.email)
     ),
+    React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightAbout ? 'ring-4 ring-green-500' : ''}`, ref: aboutSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } },
+      React.createElement(SectionTitle, { title: t('aboutMe'), action: !publicView && (editAbout ?
+        React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditAbout(false) }, 'Gem ændringer') :
+        React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditAbout(true) }) ) }),
+      React.createElement(Textarea, {
+        className: `mb-4 ${highlightAbout ? 'ring-4 ring-green-500' : ''}`,
+        readOnly: publicView || !editAbout,
+        value: profile.clip || '',
+        onChange: (publicView || !editAbout) ? undefined : handleClipChange
+      }),
+      publicView && reportMode && profile.clip && React.createElement(Flag, {
+        className: 'w-5 h-5 text-red-500 cursor-pointer ml-auto',
+        onClick: () => setReportItem({ text: profile.clip })
+      })
+    ),
     !publicView && React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
         React.createElement(SectionTitle, { title: t('settings') }),
         profile.subscriptionExpires && React.createElement('p', {
@@ -736,24 +751,9 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement('div', { className:'flex items-center gap-2 mt-2' },
         React.createElement('label', null, 'Forstyr ikke fra'),
         React.createElement('input', { type:'time', value: profile.notificationPrefs?.dndStart || '', onChange: e => updateNotificationPref('dndStart', e.target.value) }),
-        React.createElement('span', null, 'til'),
-        React.createElement('input', { type:'time', value: profile.notificationPrefs?.dndEnd || '', onChange: e => updateNotificationPref('dndEnd', e.target.value) })
+      React.createElement('span', null, 'til'),
+      React.createElement('input', { type:'time', value: profile.notificationPrefs?.dndEnd || '', onChange: e => updateNotificationPref('dndEnd', e.target.value) })
       )
-    ),
-    React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightAbout ? 'ring-4 ring-green-500' : ''}`, ref: aboutSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } },
-      React.createElement(SectionTitle, { title: t('aboutMe'), action: !publicView && (editAbout ?
-        React.createElement(Button, { className:'bg-pink-500 text-white', onClick: () => setEditAbout(false) }, 'Gem ændringer') :
-        React.createElement(EditIcon, { className:'w-5 h-5 text-gray-500 cursor-pointer', onClick: () => setEditAbout(true) }) ) }),
-      React.createElement(Textarea, {
-        className: `mb-4 ${highlightAbout ? 'ring-4 ring-green-500' : ''}`,
-        readOnly: publicView || !editAbout,
-        value: profile.clip || '',
-        onChange: (publicView || !editAbout) ? undefined : handleClipChange
-      }),
-      publicView && reportMode && profile.clip && React.createElement(Flag, {
-        className: 'w-5 h-5 text-red-500 cursor-pointer ml-auto',
-        onClick: () => setReportItem({ text: profile.clip })
-      })
     ),
     !publicView && React.createElement(Button, {
         className: 'mt-2 w-full bg-yellow-500 text-white',
