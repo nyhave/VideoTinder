@@ -753,11 +753,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             className: 'mt-4 w-full bg-yellow-500 text-white',
             onClick: () => setShowSub(true)
           }, subscriptionActive ? 'Skift abonnement' : 'Køb abonnement (gratis nu - betaling ikke implementeret)'),
-          React.createElement(Button, {
-            className: 'mt-4 w-full bg-pink-500 text-white',
-            onClick: onOpenAbout
-          }, t('about'))
         ),
+      !publicView && React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
+        React.createElement(SectionTitle, { title: t('about') }),
+        React.createElement(Button, {
+          className: 'mt-4 w-full bg-pink-500 text-white',
+          onClick: onOpenAbout
+        }, t('about'))
+      ),
     !publicView && React.createElement(Button, {
         className: 'mt-6 w-full bg-red-500 text-white',
         onClick: () => setShowDelete(true)
