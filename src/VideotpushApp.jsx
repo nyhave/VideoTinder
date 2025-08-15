@@ -183,7 +183,7 @@ export default function VideotpushApp() {
         setDoc(doc(db, 'matches', m2.id), m2)
       ]);
       showLocalNotification('Det er et match!', 'Du har et nyt match');
-      sendWebPushToProfile('105', 'Det er et match!', 'Du har et nyt match');
+      sendWebPushToProfile('105', 'Det er et match!', 'Du har et nyt match', false, 'newMatch');
     } catch (err) {
       console.error('Failed to create match', err);
     }
@@ -210,7 +210,7 @@ export default function VideotpushApp() {
           newMatch: false
         })
       ]);
-      sendWebPushToProfile(to, 'Ny besked', text);
+      sendWebPushToProfile(to, 'Ny besked', text, false, 'newMessage');
     } catch (err) {
       console.error('Failed to send message', err);
     }

@@ -100,7 +100,7 @@ export default function ChatScreen({ userId, onStartCall }) {
         typing:false
       })
     ]);
-    sendWebPushToProfile(active.profileId, 'Ny besked', trimmed);
+    sendWebPushToProfile(active.profileId, 'Ny besked', trimmed, false, 'newMessage');
     setText('');
     if(messagesRef.current){
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
