@@ -623,7 +623,17 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             action: publicView && !isOwnProfile && activeNow ? React.createElement('span', { className: 'text-sm text-green-600 font-medium' }, t('activeNow')) : null
           })
         ),
-      isOwnProfile && !publicView && !editInfo && profile.email && React.createElement('p', { className:'text-left text-sm text-gray-600 mt-1' }, profile.email)
+      isOwnProfile && !publicView && !editInfo && profile.email && React.createElement('p', { className:'text-left text-sm text-gray-600 mt-1' }, profile.email),
+      boostActive && React.createElement('p', {
+        className: 'mt-4 text-sm text-purple-700 text-center'
+      }, `Boost aktiv${boostCountdown ? ` (${boostCountdown})` : ''}`),
+      !boostActive && boostsLeft > 0 && React.createElement(Button, {
+        className: 'mt-4 w-full bg-purple-600 text-white',
+        onClick: handleBoost
+      }, `Boost profil (${boostsLeft} tilbage)`),
+      !boostActive && boostsLeft <= 0 && getMonthlyBoostLimit(profile) > 0 && React.createElement('p', {
+        className: 'mt-4 text-sm text-gray-500 text-center'
+      }, 'Ingen boosts tilbage denne måned')
     ),
     React.createElement(Card, { className: `p-6 m-4 shadow-xl bg-white/90 ${highlightAbout ? 'ring-4 ring-green-500' : ''}`, ref: aboutSectionRef, style: { scrollMarginTop: 'calc(5rem + 1rem)' } },
       React.createElement(SectionTitle, { title: t('aboutMe'), action: !publicView && (editAbout ?
@@ -714,24 +724,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       React.createElement('input', { type:'time', value: profile.notificationPrefs?.dndEnd || '', onChange: e => updateNotificationPref('dndEnd', e.target.value) })
       )
     ),
-    !publicView && React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
-        React.createElement(SectionTitle, { title: t('settings') }),
-        boostActive && React.createElement('p', {
-          className: 'mt-2 text-sm text-purple-700 text-center'
-        }, `Boost aktiv${boostCountdown ? ` (${boostCountdown})` : ''}`),
-        !boostActive && boostsLeft > 0 && React.createElement(Button, {
-          className: 'mt-2 w-full bg-purple-600 text-white',
-          onClick: handleBoost
-        }, `Boost profil (${boostsLeft} tilbage)`),
-        !boostActive && boostsLeft <= 0 && getMonthlyBoostLimit(profile) > 0 && React.createElement('p', {
-          className: 'mt-2 text-sm text-gray-500 text-center'
-        }, 'Ingen boosts tilbage denne måned'),
-        profile.subscriptionExpires && React.createElement('p', {
-          className: 'text-center text-sm mt-2 flex items-center justify-center gap-1 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
-        },
-          !subscriptionActive && React.createElement(PremiumIcon, null),
-          (() => {
-            const tierLabel = {
+      !publicView && React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
+          React.createElement(SectionTitle, { title: t('settings') }),
+          profile.subscriptionExpires && React.createElement('p', {
+            className: 'text-center text-sm mt-2 flex items-center justify-center gap-1 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
+          },
+            !subscriptionActive && React.createElement(PremiumIcon, null),
+            (() => {
+              const tierLabel = {
               silver: t('tierSilver'),
               gold: t('tierGold'),
               platinum: t('tierPlatinum')
@@ -740,24 +740,24 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             return subscriptionActive
               ? `${tierLabel} abonnement aktivt til ${date}`
               : `${tierLabel} abonnement udløb ${date}`;
-          })()
+            })()
+          ),
+          profile.subscriptionPurchased && React.createElement('p', {
+            className: 'text-center text-sm text-gray-500'
+          }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`),
+          subscriptionActive && profile.subscriptionTier === 'platinum' && React.createElement('label', { className:'flex items-center gap-2 mt-2' },
+            React.createElement('input', { type:'checkbox', checked: profile.incognito || false, onChange: async e => { const checked = e.target.checked; await updateDoc(doc(db,'profiles', userId), { incognito: checked }); setProfile({ ...profile, incognito: checked }); } }),
+            t('incognitoMode')
+          ),
+          React.createElement(Button, {
+            className: 'mt-4 w-full bg-yellow-500 text-white',
+            onClick: () => setShowSub(true)
+          }, subscriptionActive ? 'Skift abonnement' : 'Køb abonnement (gratis nu - betaling ikke implementeret)'),
+          React.createElement(Button, {
+            className: 'mt-4 w-full bg-pink-500 text-white',
+            onClick: onOpenAbout
+          }, t('about'))
         ),
-        profile.subscriptionPurchased && React.createElement('p', {
-          className: 'text-center text-sm text-gray-500'
-        }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`),
-        subscriptionActive && profile.subscriptionTier === 'platinum' && React.createElement('label', { className:'flex items-center gap-2 mt-2' },
-          React.createElement('input', { type:'checkbox', checked: profile.incognito || false, onChange: async e => { const checked = e.target.checked; await updateDoc(doc(db,'profiles', userId), { incognito: checked }); setProfile({ ...profile, incognito: checked }); } }),
-          t('incognitoMode')
-        ),
-        React.createElement(Button, {
-          className: 'mt-4 w-full bg-yellow-500 text-white',
-          onClick: () => setShowSub(true)
-        }, subscriptionActive ? 'Skift abonnement' : 'Køb abonnement (gratis nu - betaling ikke implementeret)'),
-        React.createElement(Button, {
-          className: 'mt-4 w-full bg-pink-500 text-white',
-          onClick: onOpenAbout
-        }, t('about'))
-      ),
     !publicView && React.createElement(Button, {
         className: 'mt-6 w-full bg-red-500 text-white',
         onClick: () => setShowDelete(true)
