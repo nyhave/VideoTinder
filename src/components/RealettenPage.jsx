@@ -5,7 +5,6 @@ import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import RealettenCallScreen from './RealettenCallScreen.jsx';
 import TurnGame from './TurnGame.jsx';
-import CoopShootingGame from './CoopShootingGame.jsx';
 import { useCollection, db, doc, setDoc, onSnapshot } from '../firebase.js';
 
 function sanitizeInterest(i){
@@ -27,17 +26,6 @@ export default function RealettenPage({ interest, userId, onBack }) {
         setGame(g => g || 'turn');
       } else {
         setGame(g => g === 'turn' ? null : g);
-      }
-    });
-    return () => unsub();
-  }, [interest]);
-  useEffect(() => {
-    if (!interest) return;
-    const gameId = sanitizeInterest(interest);
-    const ref = doc(db, 'coopShooter', gameId);
-    const unsub = onSnapshot(ref, snap => {
-      if (snap.exists()) {
-        setGame(g => g || 'shoot');
       }
     });
     return () => unsub();
@@ -71,17 +59,12 @@ export default function RealettenPage({ interest, userId, onBack }) {
     disabled: players.length === 0,
     onClick: startGame
   }, 'Start quiz');
-  const shooterBtn = React.createElement(Button, {
-    className: 'bg-green-600 text-white',
-    onClick: () => setGame('shoot')
-  }, 'Start shooter');
-  const buttons = React.createElement('div', { className:'flex gap-2 mt-2 self-center' }, turnBtn, shooterBtn);
+  const buttons = React.createElement('div', { className:'flex gap-2 mt-2 self-center' }, turnBtn);
   return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1 overflow-y-auto' },
     React.createElement(SectionTitle,{ title:'Realetten', action }),
     React.createElement('p', { className:'text-gray-600 text-center mb-4' }, 'M\u00f8d op til 4 andre p\u00e5 videokald'),
     React.createElement(RealettenCallScreen,{ interest, userId, onEnd:onBack, onParticipantsChange:setPlayers }),
     !game && buttons,
-    game === 'turn' && React.createElement(TurnGame,{ sessionId: sanitizeInterest(interest), players: playerNames, myName, onExit:()=>setGame(null) }),
-    game === 'shoot' && React.createElement(CoopShootingGame,{ interest, userId, onBack:()=>setGame(null) })
+    game === 'turn' && React.createElement(TurnGame,{ sessionId: sanitizeInterest(interest), players: playerNames, myName, onExit:()=>setGame(null) })
   );
 }
