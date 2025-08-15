@@ -149,6 +149,10 @@ export async function signInWithGoogle() {
   } catch (err) {
     await logEvent('signInWithGoogle error', { error: err.message });
     console.error('Google sign-in failed', err);
+    if (auth.currentUser) {
+      await logEvent('signInWithGoogle recovered', { uid: auth.currentUser.uid });
+      return { user: auth.currentUser };
+    }
     throw err;
   }
 }
