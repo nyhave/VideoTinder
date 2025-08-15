@@ -1,4 +1,4 @@
-import { db, collection, query, where, getDocs } from './firebase.js';
+import { db, collection, query, where, getDocs, doc, getDoc } from './firebase.js';
 
 let listeners = [];
 
@@ -50,8 +50,29 @@ export async function showLocalNotification(title, body) {
   addNotification({ title, body, type: 'local' });
 }
 
-export async function sendWebPushToProfile(profileId, title, body, silent = false) {
+function isWithinDnd(pref) {
+  const { dndStart, dndEnd } = pref || {};
+  if (!dndStart || !dndEnd) return false;
+  const now = new Date();
+  const [sh, sm] = dndStart.split(':').map(Number);
+  const [eh, em] = dndEnd.split(':').map(Number);
+  const start = new Date(now);
+  start.setHours(sh, sm, 0, 0);
+  const end = new Date(now);
+  end.setHours(eh, em, 0, 0);
+  if (start <= end) {
+    return now >= start && now < end;
+  }
+  return now >= start || now < end;
+}
+
+export async function sendWebPushToProfile(profileId, title, body, silent = false, type = null) {
   try {
+    const profileSnap = await getDoc(doc(db, 'profiles', profileId));
+    const prefs = profileSnap.exists() ? (profileSnap.data().notificationPrefs || {}) : {};
+    if (type && prefs.types && prefs.types[type] === false) return;
+    if (isWithinDnd(prefs)) return;
+
     const userSnap = await getDocs(query(collection(db, 'users'), where('profileId', '==', profileId)));
     if (userSnap.empty) return;
     const uid = userSnap.docs[0].id;
