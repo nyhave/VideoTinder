@@ -79,7 +79,8 @@ export default function ChatScreen({ userId, onStartCall }) {
     volumeTimeouts.current.forEach(clearTimeout);
     volumeTimeouts.current = [];
     if (incomingCall) {
-      const steps = [0.5, 0.6, 0.7, 0.8, 0.7, 1];
+      const steps = [0.8, 0.9, 1];
+      audio.currentTime = 0;
       audio.volume = steps[0];
       audio.play().catch(() => {});
       steps.slice(1).forEach((v, i) => {
