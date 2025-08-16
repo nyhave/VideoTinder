@@ -13,32 +13,52 @@ export default function AgeDistributionChart({ distribution = {}, title }) {
 
   const labels = Object.keys(distribution);
   if (!labels.length) return null;
-  const values = labels.map(l => distribution[l] || 0);
-  const max = Math.max(...values, 1);
+  const maleValues = labels.map(l => (distribution[l] && distribution[l].male) || 0);
+  const femaleValues = labels.map(l => (distribution[l] && distribution[l].female) || 0);
+  const max = Math.max(...maleValues, ...femaleValues, 1);
   const GAP = 10;
 
   const renderSvg = (barWidth = 20, h = 100) => {
-    const w = labels.length * (barWidth + GAP) + GAP;
-    const bars = labels.map((label, idx) => {
-      const val = distribution[label] || 0;
-      const barH = val / max * h;
-      const x = GAP + idx * (barWidth + GAP);
-      const y = h - barH;
-      return [
-        React.createElement('rect', { key: `b-${label}`, x, y, width: barWidth, height: barH, fill: '#3b82f6' }),
-        React.createElement('text', { key: `v-${label}`, x: x + barWidth / 2, y: y - 4, textAnchor: 'middle', fontSize: 10 }, val),
-        React.createElement('text', { key: `l-${label}`, x: x + barWidth / 2, y: h + 12, textAnchor: 'middle', fontSize: 10 }, label)
-      ];
+    const groupWidth = barWidth * 2 + GAP;
+    const w = labels.length * groupWidth + GAP;
+    const elements = [];
+    labels.forEach((label, idx) => {
+      const male = maleValues[idx];
+      const female = femaleValues[idx];
+      const maleH = male / max * h;
+      const femaleH = female / max * h;
+      const x0 = GAP + idx * groupWidth;
+      const maleY = h - maleH;
+      const femaleY = h - femaleH;
+      elements.push(
+        React.createElement('rect', { key: `m-${label}`, x: x0, y: maleY, width: barWidth, height: maleH, fill: '#3b82f6' }),
+        React.createElement('text', { key: `mv-${label}`, x: x0 + barWidth / 2, y: maleY - 4, textAnchor: 'middle', fontSize: 10 }, male),
+        React.createElement('rect', { key: `f-${label}`, x: x0 + barWidth, y: femaleY, width: barWidth, height: femaleH, fill: '#ec4899' }),
+        React.createElement('text', { key: `fv-${label}`, x: x0 + barWidth + barWidth / 2, y: femaleY - 4, textAnchor: 'middle', fontSize: 10 }, female),
+        React.createElement('text', { key: `l-${label}`, x: x0 + barWidth, y: h + 12, textAnchor: 'middle', fontSize: 10 }, label)
+      );
     });
-    return React.createElement('svg', { width: w, height: h + 20 }, bars);
+    return React.createElement('svg', { width: w, height: h + 20 }, elements);
   };
 
-  const expandedBarWidth = Math.max(20, Math.floor((screen.width - 60 - GAP * (labels.length + 1)) / labels.length));
+  const legend = React.createElement('div', { className: 'flex gap-4 mb-1 text-sm' },
+    React.createElement('span', { className: 'flex items-center gap-1' },
+      React.createElement('svg', { width: 12, height: 12 }, React.createElement('rect', { width: 12, height: 12, fill: '#3b82f6' })),
+      'Mænd'
+    ),
+    React.createElement('span', { className: 'flex items-center gap-1' },
+      React.createElement('svg', { width: 12, height: 12 }, React.createElement('rect', { width: 12, height: 12, fill: '#ec4899' })),
+      'Kvinder'
+    )
+  );
+
+  const expandedBarWidth = Math.max(20, Math.floor((screen.width - 60 - GAP * (labels.length + 1)) / (labels.length * 2)));
   const expandedHeight = Math.max(screen.height - 160, 200);
 
   return React.createElement(React.Fragment, null,
     React.createElement('div', { className: 'mb-4', onClick: () => setExpanded(true) },
       React.createElement('h3', { className: 'font-semibold mb-1' }, title),
+      legend,
       renderSvg()
     ),
     expanded && React.createElement('div', {
@@ -47,6 +67,7 @@ export default function AgeDistributionChart({ distribution = {}, title }) {
     },
       React.createElement('div', { className: 'bg-white p-4 rounded shadow-xl w-full h-full overflow-auto' },
         React.createElement('h3', { className: 'font-semibold mb-2 text-center text-lg' }, title),
+        legend,
         renderSvg(expandedBarWidth, expandedHeight)
       )
     )

@@ -39,17 +39,27 @@ export default function StatsScreen({ onBack }) {
         return last && new Date(last).getTime() >= activeSince;
       }).length;
 
-      const dist = { '18-25': 0, '26-35': 0, '36-45': 0, '46-55': 0, '56+': 0 };
+      const dist = {
+        '18-25': { male: 0, female: 0 },
+        '26-35': { male: 0, female: 0 },
+        '36-45': { male: 0, female: 0 },
+        '46-55': { male: 0, female: 0 },
+        '56+': { male: 0, female: 0 }
+      };
       profilesSnap.docs.forEach(d => {
         const p = d.data();
         let age = p.age;
         if (age == null && p.birthday) age = getAge(p.birthday);
-        if (age == null) return;
-        if (age <= 25) dist['18-25']++;
-        else if (age <= 35) dist['26-35']++;
-        else if (age <= 45) dist['36-45']++;
-        else if (age <= 55) dist['46-55']++;
-        else dist['56+']++;
+        if (age == null || !p.gender) return;
+        const gender = p.gender === 'Mand' ? 'male' : p.gender === 'Kvinde' ? 'female' : null;
+        if (!gender) return;
+        let key;
+        if (age <= 25) key = '18-25';
+        else if (age <= 35) key = '26-35';
+        else if (age <= 45) key = '36-45';
+        else if (age <= 55) key = '46-55';
+        else key = '56+';
+        dist[key][gender]++;
       });
       setAgeDist(dist);
       const giftInvites = invitesSnap.docs.filter(d => d.data().gift);
