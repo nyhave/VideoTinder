@@ -229,10 +229,11 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         className: 'bg-blue-500 text-white px-4 py-2 rounded whitespace-nowrap',
         onClick: onSaveUserLogout
       }, t('saveAndLogout'))
-    ),
+    )
+  ),
 
-  // Daily admin section
-  React.createElement('h2', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, t('adminDaily')),
+  React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+    React.createElement('h2', { className: 'text-xl font-semibold mb-2 text-pink-600' }, t('adminDaily')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenReports }, 'Se anmeldt indhold'),
     React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
       React.createElement(Button, {
@@ -242,21 +243,23 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
           await updateDoc(doc(db, 'profiles', userId), { verified: !prof.verified });
         }
       }, (profiles.find(p => p.id === userId) || {}).verified ? 'Fjern verificering' : 'Verificer profil'),
-      React.createElement(Button, {
-        className: 'bg-red-500 text-white px-4 py-2 rounded',
-        onClick: deleteUser
-      }, 'Delete user')
-    ),
+    React.createElement(Button, {
+      className: 'bg-red-500 text-white px-4 py-2 rounded',
+      onClick: deleteUser
+    }, 'Delete user')
+  )
+  ),
 
-  // Business section
-  React.createElement('h2', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, t('adminBusiness')),
+  React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+    React.createElement('h2', { className: 'text-xl font-semibold mb-2 text-pink-600' }, t('adminBusiness')),
     React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenStats }, 'Vis statistik'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenRecentLogins }, 'Se seneste logins')
-    ),
+    )
+  ),
 
-  // Tester section
-  React.createElement('h2', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, t('adminTesters')),
+  React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+    React.createElement('h2', { className: 'text-xl font-semibold mb-2 text-pink-600' }, t('adminTesters')),
     React.createElement('p', { className: 'mb-2' }, 'Dagens dato: ' + getTodayStr()),
     React.createElement('div', { className: 'flex gap-2 mb-4' },
       React.createElement(Button, {
@@ -280,10 +283,11 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement('h4', { className: 'text-lg font-semibold mb-2 mt-4 text-blue-600' }, t('adminFunctionTest')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenFunctionTest }, 'Åbn funktionstest'),
     React.createElement('h4', { className: 'text-lg font-semibold mb-2 mt-4 text-blue-600' }, t('adminRevealTest')),
-    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenRevealTest }, 'Åbn reveal test'),
+    React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenRevealTest }, 'Åbn reveal test')
+  ),
 
-  // Developer section
-  React.createElement('h2', { className: 'text-xl font-semibold mb-2 mt-4 text-pink-600' }, t('adminDevelopers')),
+  React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
+    React.createElement('h2', { className: 'text-xl font-semibold mb-2 text-pink-600' }, t('adminDevelopers')),
     React.createElement('h4', { className: 'text-lg font-semibold mb-2 text-blue-600' }, t('adminDatabase')),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => seedData().then(() => alert('Databasen er nulstillet')) }, 'Reset database'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: recoverMissing }, 'Hent mistet fra DB'),
@@ -332,8 +336,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenCallLog }, 'Se aktive opkald'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenGroupCallLog }, 'Se gruppeopkald'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: testRingtone }, t('adminTestRingtone'))
-    ),
-    null
+    )
   ),
     showBugReport && React.createElement(BugReportOverlay, { onClose: () => setShowBugReport(false) }),
     showHelp && React.createElement(AdminHelpOverlay, { onClose: () => setShowHelp(false) })
