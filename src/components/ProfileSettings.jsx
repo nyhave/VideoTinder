@@ -763,7 +763,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         React.createElement(Button, {
           className: 'mt-2 w-full bg-indigo-500 text-white',
           onClick: () => {
-            window.location.href = '/faq.html';
+            window.location.href = 'faq.html';
           }
         }, t('faq'))
       ),
