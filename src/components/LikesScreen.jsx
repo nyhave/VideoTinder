@@ -34,7 +34,7 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
     platinum: t('tierPlatinum')
   }[tier] || 'Premium';
 
-  const [activeVideo, setActiveVideo] = useState(null);
+  const [activeProfile, setActiveProfile] = useState(null);
   const [matchedProfile, setMatchedProfile] = useState(null);
   const toggleLike = async profileId => {
     const likeId = `${userId}-${profileId}`;
@@ -126,7 +126,7 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
               )
             ),
             React.createElement('div',{className:'flex gap-2 mt-2'},
-              React.createElement(Button,{size:'sm',variant:'outline',className:'flex items-center gap-1',onClick:e=>{e.stopPropagation();const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null;if(url)setActiveVideo(url);}},
+              React.createElement(Button,{size:'sm',variant:'outline',className:'flex items-center gap-1',onClick:e=>{e.stopPropagation();const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null;if(url)setActiveProfile({id:p.id,url});}},
                 React.createElement(PlayCircle,{className:'w-5 h-5'}),'Afspil'
               )
             )
@@ -139,6 +139,12 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
     !canSeeLikes && likedProfiles.length > 0 && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb Guld eller Platin (gratis nu - betaling ikke implementeret)'),
     showPurchase && React.createElement(SubscriptionOverlay,{onClose:()=>setShowPurchase(false), onBuy:handlePurchase}),
     matchedProfile && React.createElement(MatchOverlay,{name:matchedProfile.name,onClose:()=>setMatchedProfile(null)}),
-    activeVideo && React.createElement(VideoOverlay,{src:activeVideo,onClose:()=>setActiveVideo(null)})
+    activeProfile && React.createElement(VideoOverlay,{
+      src:activeProfile.url,
+      profileId:activeProfile.id,
+      liked:likes.some(l=>l.profileId===activeProfile.id),
+      onLike:()=>toggleLike(activeProfile.id),
+      onClose:()=>setActiveProfile(null)
+    })
   );
 }
