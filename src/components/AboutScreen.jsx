@@ -22,7 +22,7 @@ export default function AboutScreen({ userId }) {
       React.createElement(Button, { className: 'bg-blue-500 text-white w-full mb-2', onClick: () => setShowInvite(true) }, t('inviteFriend')),
       React.createElement(Button, { className: 'bg-pink-500 text-white w-full mb-2', onClick: () => setShowReport(true) }, 'Fejlmeld'),
       React.createElement(Button, { className: 'bg-green-500 text-white w-full mb-2', onClick: () => window.open('https://videotpush.netlify.app/', '_blank') }, t('visitWebsite')),
-      React.createElement(Button, { className: 'bg-purple-500 text-white w-full mb-2', onClick: () => window.location.href = 'testers.html' }, 'Tester guide'),
+      React.createElement(Button, { className: 'bg-purple-500 text-white w-full mb-2', onClick: () => window.location.href = 'faq.html' }, t('faq')),
       React.createElement('div', { className: 'flex flex-col items-center mt-4' },
         React.createElement(QRCodeSVG, { value: new URL('./index.html', window.location.href).href, size: 128 }),
         React.createElement('p', { className: 'text-xs mt-2 text-gray-600' }, t('qrOpen')),
