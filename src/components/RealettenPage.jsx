@@ -63,6 +63,7 @@ export default function RealettenPage({ interest, userId, onBack }) {
   return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1 overflow-y-auto' },
     React.createElement(SectionTitle,{ title:'Realetten', action }),
     React.createElement('p', { className:'text-gray-600 text-center mb-4' }, 'M\u00f8d op til 4 andre p\u00e5 videokald'),
+    React.createElement('p', { className:'text-gray-600 text-center mb-4' }, 'Hvis der ikke er nogen nu, s\u00e5 kom tilbage kl. 20 i aften. Der plejer Realetten at v\u00e6re popul\u00e6r.'),
     React.createElement(RealettenCallScreen,{ interest, userId, onEnd:onBack, onParticipantsChange:setPlayers }),
     !game && buttons,
     game === 'turn' && React.createElement(TurnGame,{ sessionId: sanitizeInterest(interest), players: playerNames, myName, onExit:()=>setGame(null) })
