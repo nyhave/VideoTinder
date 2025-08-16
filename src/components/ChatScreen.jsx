@@ -182,16 +182,26 @@ export default function ChatScreen({ userId, onStartCall }) {
   const activeProfile = active ? profileMap[active.profileId] || {} : null;
   const lastSelf = active ? [...(active.messages || [])].filter(m => m.from === userId).slice(-1)[0] : null;
 
-  const startCall = () => {
+  const startCall = (answer = false) => {
     if (!active) return;
     const id = [userId, active.profileId].sort().join('-');
-    const caller = currentUser.name || 'Nogen';
-    sendWebPushToProfile(active.profileId, 'Indgående videoopkald', `${caller} ringer dig op`);
+    if (!answer) {
+      const caller = currentUser.name || 'Nogen';
+      sendWebPushToProfile(active.profileId, 'Indgående videoopkald', `${caller} ringer dig op`);
+    }
     onStartCall && onStartCall(id);
   };
 
-  return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1 touch-none', style:{maxHeight:'calc(100vh - 10rem)', overflow:'hidden', touchAction:'none'} },
-    React.createElement(SectionTitle, {
+  const declineCall = async () => {
+    if (!active) return;
+    const id = [userId, active.profileId].sort().join('-');
+    try { await deleteDoc(doc(db, 'calls', id)); } catch {}
+    setIncomingCall(false);
+  };
+
+  return React.createElement(React.Fragment, null,
+    React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90 flex flex-col h-full flex-1 touch-none', style:{maxHeight:'calc(100vh - 10rem)', overflow:'hidden', touchAction:'none'} },
+      React.createElement(SectionTitle, {
       title: t('chat'),
       action: active && React.createElement(Button, { className: 'flex items-center gap-1', onClick: () => { setActive(null); } },
         React.createElement(ArrowLeft, { className: 'w-4 h-4' }), 'Tilbage')
@@ -249,7 +259,7 @@ export default function ChatScreen({ userId, onStartCall }) {
           ),
           React.createElement(Button, {
             className: 'bg-pink-500 text-white',
-            onClick: startCall
+            onClick: () => startCall(incomingCall)
           }, incomingCall ? 'Deltag i opkald' : 'Foretag videoopkald')
         )
       )
@@ -282,6 +292,16 @@ export default function ChatScreen({ userId, onStartCall }) {
           })
         ) :
         React.createElement('p', { className: 'text-center text-gray-500 flex-1 flex items-center justify-center' }, 'Ingen matches endnu')
+    )
+    ),
+    incomingCall && activeProfile && React.createElement('div', { className: 'fixed inset-0 z-50 bg-black/50 flex items-center justify-center' },
+      React.createElement('div', { className: 'bg-white p-6 rounded shadow-xl text-center space-y-4' },
+        React.createElement('p', { className: 'text-lg font-medium' }, `${activeProfile.name || 'Nogen'} ringer...`),
+        React.createElement('div', { className: 'flex gap-4 justify-center' },
+          React.createElement(Button, { className: 'bg-pink-500 text-white', onClick: () => startCall(true) }, 'Deltag'),
+          React.createElement(Button, { className: 'bg-gray-300 text-black', onClick: declineCall }, 'Afvis')
+        )
+      )
     )
   );
 }
