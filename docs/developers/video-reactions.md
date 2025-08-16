@@ -17,5 +17,6 @@ The `VideoLikeButton` component renders two buttons below each video:
 
 - **Thumbs up** – blue background when selected
 - **Heart** – pink background when selected
+Each button displays the count of its respective reactions.
 
 Both buttons explicitly set text colors to maintain contrast against their backgrounds.
