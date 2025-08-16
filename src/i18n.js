@@ -22,6 +22,8 @@ export const messages = {
   checkInTitle:{ en:'Daily reflection', da:'Dagens refleksion', sv:'Dagens reflektion', es:'Reflexión diaria', fr:'Réflexion du jour', de:'Tägliche Reflexion' },
   profile:{ en:'Profile', da:'Profil', sv:'Profil', es:'Perfil', fr:'Profil', de:'Profil' },
   about:{ en:'About RealDate', da:'Om RealDate', sv:'Om RealDate', es:'Acerca de RealDate', fr:'À propos de RealDate', de:'Über RealDate' },
+  faq:{ en:'FAQ', da:'Hyppige spørgsmål' },
+  faqIntro:{ en:'Find answers to common questions about RealDate.', da:'Find svar på de mest hyppige spørgsmål om RealDate.' },
   loadMore:{ en:'Load more', da:'Hent flere...', sv:'Hämta fler...', es:'Cargar más', fr:'Charger plus', de:'Mehr laden' },
   noProfiles:{ en:'No profiles found', da:'Ingen profiler fundet', sv:'Inga profiler', es:'No hay perfiles', fr:'Aucun profil', de:'Keine Profile gefunden'},
   ok:{ en:'OK', da:'OK', sv:'OK', es:'OK', fr:'OK', de:'OK' },
