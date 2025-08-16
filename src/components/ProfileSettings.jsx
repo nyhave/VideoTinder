@@ -24,7 +24,7 @@ import VerificationBadge from './VerificationBadge.jsx';
 import { showLocalNotification, sendWebPushToProfile } from '../notifications.js';
 import InfoOverlay from './InfoOverlay.jsx';
 
-export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onLogout = null, viewerId = userId, onBack, activeTask, taskTrigger = 0 }) {
+export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, publicView = false, onViewPublicProfile = () => {}, onOpenAbout = () => {}, onOpenFaq = () => {}, onLogout = null, viewerId = userId, onBack, activeTask, taskTrigger = 0 }) {
   const [profile,setProfile]=useState(null);
   const t = useT();
   const photoRef = useRef();
@@ -759,7 +759,11 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         React.createElement(Button, {
           className: 'mt-4 w-full bg-pink-500 text-white',
           onClick: onOpenAbout
-        }, t('about'))
+        }, t('about')),
+        React.createElement(Button, {
+          className: 'mt-2 w-full bg-indigo-500 text-white',
+          onClick: onOpenFaq
+        }, t('faq'))
       ),
     !publicView && React.createElement(Button, {
         className: 'mt-6 w-full bg-red-500 text-white',

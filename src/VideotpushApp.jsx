@@ -18,6 +18,7 @@ import ActiveCallsScreen from './components/ActiveCallsScreen.jsx';
 import ActiveGroupCallsScreen from './components/ActiveGroupCallsScreen.jsx';
 import ReportedContentScreen from './components/ReportedContentScreen.jsx';
 import AboutScreen from './components/AboutScreen.jsx';
+import FaqScreen from './components/FaqScreen.jsx';
 import FunctionTestScreen from './components/FunctionTestScreen.jsx';
 import RevealTestScreen from './components/RevealTestScreen.jsx';
 import TextLogScreen from './components/TextLogScreen.jsx';
@@ -566,6 +567,7 @@ export default function VideotpushApp() {
             onChangeAgeRange: setAgeRange,
             onViewPublicProfile: viewOwnPublicProfile,
             onOpenAbout: ()=>setTab('about'),
+            onOpenFaq: ()=>setTab('faq'),
             onLogout: logout,
             activeTask,
             taskTrigger: taskClicks
@@ -587,7 +589,8 @@ export default function VideotpushApp() {
           tab==='recentlogins' && React.createElement(RecentLoginsScreen, { onBack: ()=>setTab('admin') }),
           tab==='graphics' && React.createElement(GraphicsElementsScreen, { onBack: ()=>setTab('admin') }),
           tab==='notifications' && React.createElement(NotificationsScreen, { notifications, onBack: ()=>setTab(returnTab) }),
-          tab==='about' && React.createElement(AboutScreen, { userId })
+          tab==='about' && React.createElement(AboutScreen, { userId }),
+          tab==='faq' && React.createElement(FaqScreen, { onBack: ()=>setTab('profile') })
         )
     ),
     React.createElement('div', {
