@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { getAge, getCurrentDate } from '../utils.js';
-import { User as UserIcon, Heart, Star } from 'lucide-react';
+import { getAge, getCurrentDate, getSuperLikeLimit, getWeekId } from '../utils.js';
+import { User as UserIcon, Star } from 'lucide-react';
 import MatchOverlay from './MatchOverlay.jsx';
 import { Card } from './ui/card.js';
 import SubscriptionOverlay from './SubscriptionOverlay.jsx';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
-import { useCollection, db, doc, setDoc, deleteDoc, getDoc } from '../firebase.js';
+import { useCollection, db, doc, setDoc, deleteDoc, getDoc, updateDoc } from '../firebase.js';
 import { useT } from '../i18n.js';
 import { triggerHaptic } from '../haptics.js';
 import VerificationBadge from './VerificationBadge.jsx';
@@ -14,13 +14,15 @@ import { showLocalNotification, sendWebPushToProfile } from '../notifications.js
 
 export default function LikesScreen({ userId, onSelectProfile, onBack }) {
   const profiles = useCollection('profiles');
-  const likes = useCollection('likes', 'profileId', userId);
+  const likesToMe = useCollection('likes', 'profileId', userId);
+  const myLikes = useCollection('likes', 'userId', userId);
   const matches = useCollection('matches', 'userId', userId);
   const matchedIds = matches.map(m => m.profileId);
   const likedProfiles = profiles.filter(p =>
-    likes.some(l => l.userId === p.id) && !matchedIds.includes(p.id)
+    likesToMe.some(l => l.userId === p.id) && !matchedIds.includes(p.id)
   );
   const currentUser = profiles.find(p => p.id === userId) || {};
+  const showSuperLike = getSuperLikeLimit(currentUser) > 0;
   const tier = currentUser.subscriptionTier || 'free';
   const hasActiveSubscription =
     currentUser.subscriptionExpires &&
@@ -36,7 +38,7 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
   const [matchedProfile, setMatchedProfile] = useState(null);
   const toggleLike = async profileId => {
     const likeId = `${userId}-${profileId}`;
-    const exists = likes.some(l => l.profileId === profileId);
+    const exists = myLikes.some(l => l.profileId === profileId);
     const ref = doc(db,'likes',likeId);
     if(exists){
       if(!window.confirm('Er du sikker?')) return;
@@ -66,6 +68,42 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
         triggerHaptic([100,50,100]);
       }
     }
+  };
+
+  const sendSuperLike = async profileId => {
+    const weekId = getWeekId();
+    const limit = getSuperLikeLimit(currentUser);
+    const used = currentUser.superLikeWeek === weekId ? (currentUser.superLikesUsed || 0) : 0;
+    if(used >= limit){
+      alert('Ugentlig super like gr\u00e6nse n\u00e5et');
+      return;
+    }
+    const likeId = `${userId}-${profileId}`;
+    await setDoc(doc(db,'likes',likeId),{id:likeId,userId,profileId,super:true});
+    await setDoc(doc(db,'episodeProgress', `${userId}-${profileId}`), { removed: true }, { merge: true });
+    await updateDoc(doc(db,'profiles',userId),{ superLikeWeek: weekId, superLikesUsed: used + 1 });
+    triggerHaptic([200,50,200]);
+    const otherLike = await getDoc(doc(db,'likes',`${profileId}-${userId}`));
+    if(otherLike.exists()){
+      const m1 = {id:`${userId}-${profileId}`,userId,profileId,lastMessage:'',unreadByUser:false,unreadByProfile:false,newMatch:false};
+      const m2 = {id:`${profileId}-${userId}`,userId:profileId,profileId:userId,lastMessage:'',unreadByUser:false,unreadByProfile:false,newMatch:true};
+      await Promise.all([
+        setDoc(doc(db,'matches',m1.id),m1),
+        setDoc(doc(db,'matches',m2.id),m2)
+      ]);
+      const prof = profiles.find(p => p.id === profileId);
+      if(prof){
+        setMatchedProfile(prof);
+        showLocalNotification('Det er et match!', `Du og ${prof.name} kan lide hinanden`);
+        sendWebPushToProfile(profileId, 'Det er et match!', `${currentUser.name || 'En person'} har matchet med dig`, false, 'newMatch');
+      }
+      triggerHaptic([100,50,100]);
+    }
+  };
+
+  const removeProfile = async profileId => {
+    await deleteDoc(doc(db,'likes',`${profileId}-${userId}`));
+    await setDoc(doc(db,'episodeProgress', `${userId}-${profileId}`), { removed: true }, { merge: true });
   };
 
   const [showPurchase, setShowPurchase] = useState(false);
@@ -99,18 +137,15 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
     React.createElement('div',{className: showBlur ? 'flex-1 filter blur-sm pointer-events-none' : 'flex-1'},
       React.createElement('ul',{className:'space-y-4'},
         likedProfiles.length ? likedProfiles.map(p => {
-          const like = likes.find(l => l.userId === p.id);
-          const superLike = like?.super;
+          const theirLike = likesToMe.find(l => l.userId === p.id);
+          const superLike = theirLike?.super;
+          const myLike = myLikes.find(l => l.profileId === p.id);
           return React.createElement('li',{
             key:p.id,
             className:'p-4 bg-yellow-50 rounded-lg cursor-pointer shadow flex flex-col relative',
             onClick:()=>onSelectProfile(p.id)
           },
             superLike && React.createElement(Star,{className:'w-6 h-6 absolute top-2 left-2 text-blue-500'}),
-            React.createElement(Heart,{
-              className:`w-8 h-8 absolute top-2 right-2 ${likes.some(l=>l.profileId===p.id)?'text-yellow-500':'text-gray-400'}`,
-              onClick:e=>{e.stopPropagation(); toggleLike(p.id);}
-            }),
             React.createElement('div',{className:'flex items-center gap-4 mb-2'},
               React.createElement('div', { className:'flex flex-col items-center' },
                 p.photoURL ?
@@ -122,6 +157,22 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
                 React.createElement('p',{className:'font-medium'},`${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`),
                 p.clip && React.createElement('p',{className:'text-sm text-gray-500'},`“${p.clip}”`)
               )
+            ),
+            React.createElement('div',{className:'flex gap-2 mt-2'},
+              [
+                React.createElement(Button, {
+                  className:'flex-1 bg-red-500 text-white text-xs px-2 py-1 rounded',
+                  onClick: e => { e.stopPropagation(); removeProfile(p.id); }
+                }, t('remove')),
+                showSuperLike && React.createElement(Button, {
+                  className:`flex-1 bg-blue-500 text-white text-xs px-2 py-1 rounded ${myLike && myLike.super ? '' : 'opacity-80'}`,
+                  onClick: e => { e.stopPropagation(); sendSuperLike(p.id); }
+                }, t('superLike')),
+                React.createElement(Button, {
+                  className:`flex-1 bg-yellow-500 text-white text-xs px-2 py-1 rounded ${myLike ? '' : 'opacity-80'}`,
+                  onClick: e => { e.stopPropagation(); toggleLike(p.id); }
+                }, myLike ? 'Unlike' : 'Like')
+              ].filter(Boolean)
             )
           );
         }) :
