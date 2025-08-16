@@ -24,6 +24,7 @@ export default function ChatScreen({ userId, onStartCall }) {
   const textareaRef = useRef(null);
   const typingTimeout = useRef(null);
   const ringAudioRef = useRef(null);
+  const volumeTimeouts = useRef([]);
 
   useEffect(() => {
     if(textareaRef.current){
@@ -75,17 +76,32 @@ export default function ChatScreen({ userId, onStartCall }) {
       ringAudioRef.current.loop = true;
     }
     const audio = ringAudioRef.current;
+    volumeTimeouts.current.forEach(clearTimeout);
+    volumeTimeouts.current = [];
     if (incomingCall) {
+      const steps = [0.5, 0.6, 0.7, 0.8, 0.7, 1];
+      audio.volume = steps[0];
       audio.play().catch(() => {});
+      steps.slice(1).forEach((v, i) => {
+        volumeTimeouts.current.push(setTimeout(() => { audio.volume = v; }, (i + 1) * 1000));
+      });
     } else {
       audio.pause();
       audio.currentTime = 0;
+      audio.volume = 1;
     }
+    return () => {
+      volumeTimeouts.current.forEach(clearTimeout);
+      volumeTimeouts.current = [];
+    };
   }, [incomingCall]);
 
   useEffect(() => () => {
     if (ringAudioRef.current) {
       ringAudioRef.current.pause();
+      ringAudioRef.current.volume = 1;
+      volumeTimeouts.current.forEach(clearTimeout);
+      volumeTimeouts.current = [];
     }
   }, []);
 
