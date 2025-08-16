@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { getAge, getCurrentDate } from '../utils.js';
-import { User as UserIcon, PlayCircle, Heart, Star } from 'lucide-react';
-import VideoOverlay from './VideoOverlay.jsx';
+import { User as UserIcon, Heart, Star } from 'lucide-react';
 import MatchOverlay from './MatchOverlay.jsx';
 import { Card } from './ui/card.js';
 import SubscriptionOverlay from './SubscriptionOverlay.jsx';
@@ -34,7 +33,6 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
     platinum: t('tierPlatinum')
   }[tier] || 'Premium';
 
-  const [activeProfile, setActiveProfile] = useState(null);
   const [matchedProfile, setMatchedProfile] = useState(null);
   const toggleLike = async profileId => {
     const likeId = `${userId}-${profileId}`;
@@ -124,11 +122,6 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
                 React.createElement('p',{className:'font-medium'},`${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`),
                 p.clip && React.createElement('p',{className:'text-sm text-gray-500'},`“${p.clip}”`)
               )
-            ),
-            React.createElement('div',{className:'flex gap-2 mt-2'},
-              React.createElement(Button,{size:'sm',variant:'outline',className:'flex items-center gap-1',onClick:e=>{e.stopPropagation();const url=(p.videoClips&&p.videoClips[0])?(p.videoClips[0].url||p.videoClips[0]):null;if(url)setActiveProfile({id:p.id,url});}},
-                React.createElement(PlayCircle,{className:'w-5 h-5'}),'Afspil'
-              )
             )
           );
         }) :
@@ -138,13 +131,6 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
     showBlur && React.createElement('span',{className:'absolute inset-0 m-auto text-yellow-500 text-sm font-semibold pointer-events-none flex items-center justify-center text-center px-2'},'Kr\u00e6ver Guld eller Platin'),
     !canSeeLikes && likedProfiles.length > 0 && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb Guld eller Platin (gratis nu - betaling ikke implementeret)'),
     showPurchase && React.createElement(SubscriptionOverlay,{onClose:()=>setShowPurchase(false), onBuy:handlePurchase}),
-    matchedProfile && React.createElement(MatchOverlay,{name:matchedProfile.name,onClose:()=>setMatchedProfile(null)}),
-    activeProfile && React.createElement(VideoOverlay,{
-      src:activeProfile.url,
-      profileId:activeProfile.id,
-      liked:likes.some(l=>l.profileId===activeProfile.id),
-      onLike:()=>toggleLike(activeProfile.id),
-      onClose:()=>setActiveProfile(null)
-    })
+    matchedProfile && React.createElement(MatchOverlay,{name:matchedProfile.name,onClose:()=>setMatchedProfile(null)})
   );
 }
