@@ -2,18 +2,21 @@ import React, { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
+import { ArrowLeft } from 'lucide-react';
 import BugReportOverlay from './BugReportOverlay.jsx';
 import InviteOverlay from './InviteOverlay.jsx';
 import version from '../version.js';
 import { useT } from '../i18n.js';
 
-export default function AboutScreen({ userId }) {
+export default function AboutScreen({ userId, onBack }) {
   const [showReport, setShowReport] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
   const t = useT();
   return React.createElement(React.Fragment, null,
     React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
-      React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, 'Om RealDate'),
+      React.createElement(Button, { className: 'mb-4 bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-1', onClick: onBack },
+        React.createElement(ArrowLeft, { className: 'w-4 h-4' }), t('back')),
+      React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-pink-600 text-center' }, t('about')),
       React.createElement('p', { className: 'mb-4 text-gray-700' },
         'Velkommen til en ny måde at date på. Her handler det ikke om hurtige swipes, men om at tage sig tid til at lære hinanden at kende. '
         + 'RealDate er for dig, der søger noget ægte og meningsfuldt. Tag det stille og roligt, og find den forbindelse, der virkelig betyder noget.'
