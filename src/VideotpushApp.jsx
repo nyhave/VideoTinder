@@ -587,7 +587,7 @@ export default function VideotpushApp() {
           tab==='recentlogins' && React.createElement(RecentLoginsScreen, { onBack: ()=>setTab('admin') }),
           tab==='graphics' && React.createElement(GraphicsElementsScreen, { onBack: ()=>setTab('admin') }),
           tab==='notifications' && React.createElement(NotificationsScreen, { notifications, onBack: ()=>setTab(returnTab) }),
-          tab==='about' && React.createElement(AboutScreen, { userId })
+          tab==='about' && React.createElement(AboutScreen, { userId, onBack: ()=>setTab('profile') })
         )
     ),
     React.createElement('div', {
