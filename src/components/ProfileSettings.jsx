@@ -271,7 +271,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       const storageRef = ref(storage, `profiles/${userId}/${field}-${Date.now()}-${file.name}`);
       await uploadBytes(storageRef, file);
       const url = await getDownloadURL(storageRef);
-      const clip = { url, lang: profile.language || 'en', uploadedAt: new Date().toISOString() };
+      const recordedAt = new Date().toISOString();
+      const clip = { url, lang: profile.language || 'en', recordedAt, uploadedAt: recordedAt };
       if(music){
         const musicRef = ref(storage, `profiles/${userId}/${field}-music-${Date.now()}-${music.name}`);
         await uploadBytes(musicRef, music);
@@ -479,7 +480,10 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         const locked = i >= stage;
         return React.createElement('div', { key: i, className: `w-[30%] flex flex-col items-center justify-end min-h-[160px] relative ${locked ? 'pointer-events-none' : ''} ${ (i===0 && highlightVideo1) || (i===1 && highlightVideo2) ? 'ring-4 ring-green-500' : ''}` },
           url
-            ? React.createElement(VideoPreview, { src: url })
+            ? React.createElement(VideoPreview, {
+                src: url,
+                timestamp: clip && (clip.recordedAt || clip.uploadedAt)
+              })
             : React.createElement('div', { className:'flex flex-col items-center' },
                 React.createElement(CameraIcon, {
                   className: `w-10 h-10 text-gray-400 ${!publicView ? 'cursor-pointer' : ''}`,

@@ -206,7 +206,11 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         const locked = i >= stage;
         const classes = `w-[30%] flex flex-col items-center justify-end min-h-[160px] relative ${locked ? 'pointer-events-none' : ''}`;
         return React.createElement('div', { key: i, className: classes },
-          url && React.createElement(VideoPreview, { src: url, onEnded: () => handleClipEnd(i) }),
+          url && React.createElement(VideoPreview, {
+            src: url,
+            timestamp: clip && (clip.recordedAt || clip.uploadedAt),
+            onEnded: () => handleClipEnd(i)
+          }),
           url && !locked && React.createElement(VideoLikeButton, { userId, videoId: `${profileId}-clip-${i}` }),
           !locked && i === stage - 1 && React.createElement('span', { className:'absolute top-1 right-1 bg-green-100 text-green-600 text-xs font-semibold px-1 rounded' }, t('dayLabel').replace('{day}', i + 1)),
           (locked || (showReveal && i === stage - 1)) && React.createElement('div', { className:`absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2 ${showReveal && i === stage - 1 ? 'reveal-animation' : ''}` },

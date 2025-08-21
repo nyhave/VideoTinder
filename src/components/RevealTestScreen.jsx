@@ -34,7 +34,10 @@ export default function RevealTestScreen({ onBack }) {
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: t('revealTestTitle'), colorClass: 'text-blue-600', action: React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onBack }, t('back')) }),
     videoURL && React.createElement('div', { className: 'mb-4 relative' },
-      React.createElement(VideoPreview, { src: videoURL }),
+      React.createElement(VideoPreview, {
+        src: videoURL,
+        timestamp: profile.videoClips?.[0]?.recordedAt || profile.videoClips?.[0]?.uploadedAt
+      }),
       overlay
     ),
     React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: runTest }, 'Test reveal')
