@@ -71,7 +71,8 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         }
       } else if (name.startsWith('videoClips-')) {
         if (!videoClips.some(v => v.url === url)) {
-          videoClips.push({ url, lang: language, uploadedAt: new Date().toISOString() });
+          const recordedAt = new Date().toISOString();
+          videoClips.push({ url, lang: language, recordedAt, uploadedAt: recordedAt });
           updates.videoClips = videoClips;
         }
       }
