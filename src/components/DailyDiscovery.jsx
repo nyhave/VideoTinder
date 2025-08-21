@@ -246,7 +246,6 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
     React.createElement(SectionTitle, { title: t('dailyClips'), action:
       React.createElement('span', { className:'text-sm text-blue-500 underline cursor-pointer', onClick:()=>setShowHelp(true) }, t('dailyHelpLabel'))
     }),
-    React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, 'Tag dig god tid til at udforske dit feed'),
     React.createElement('blockquote', { className: 'm-4 italic text-center text-gray-600' }, `“En kaffedate et eller andet sted. Det er jo slet, slet ikke nok. Giv tid!” – Bente, Hotel Romantik, Sæson 1, Afsnit 8`),
     React.createElement(AdBanner, { user }),
     React.createElement('ul', { className: 'space-y-4' },
