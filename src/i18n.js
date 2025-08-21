@@ -13,7 +13,7 @@ export const messages = {
   login: { en:'Login', da:'Log ind', sv:'Logga in', es:'Iniciar', fr:'Connexion', de:'Anmelden' },
   selectUser: { en:'Select user', da:'Vælg bruger', sv:'Välj användare', es:'Seleccionar usuario', fr:'Choisir un utilisateur', de:'Benutzer auswählen' },
   chooseLanguage: { en:'Language', da:'Sprog', sv:'Språk', es:'Idioma', fr:'Langue', de:'Sprache' },
-  dailyClips: { en:'Daily Clips', da:'Dagens klip', sv:'Dagens klipp', es:'Clips diarios', fr:'Clips du jour', de:'Tägliche Clips' },
+  dailyClips: { en:'Daily Clips', da:'Dit feed', sv:'Dagens klipp', es:'Clips diarios', fr:'Clips du jour', de:'Tägliche Clips' },
   chat: { en:'Chat', da:'Samtale', sv:'Chat', es:'Chat', fr:'Discussion', de:'Chat' },
   chatIntroText:{ en:'Chats appear when profiles match. Enable notifications to get alerted when there is a match.', da:'Chats vises, når profiler matcher. Aktiver notifikationer for at få besked, når der er et match.', sv:'Chattar visas när profiler matchar. Aktivera aviseringar för att få en notis när du får en match.', es:'Los chats aparecen cuando los perfiles coinciden. Activa las notificaciones para recibir un aviso cuando haya un match.', fr:'Les discussions apparaissent lorsque les profils correspondent. Activez les notifications pour être alerté en cas de match.', de:'Chats erscheinen, wenn Profile übereinstimmen. Aktiviere Benachrichtigungen, um bei einem Match benachrichtigt zu werden.' },
   enableNotifications:{ en:'Enable notifications', da:'Aktiver notifikationer', sv:'Aktivera aviseringar', es:'Activar notificaciones', fr:'Activer les notifications', de:'Benachrichtigungen aktivieren' },
@@ -133,7 +133,7 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   helpSupport:{ en:'Need assistance? Choose "Report bug" on the About page to contact support.', da:'Brug for hjælp? Vælg \"Fejlmeld\" på Om RealDate-siden for at kontakte support.' },
   helpInvites:{ en:'You can send up to ten invitations. Follow each invitation until your friend has created a profile.', da:'Du kan sende op til ti invitationer. Følg hver invitation, indtil din ven har oprettet en profil.' },
   dailyHelpLabel:{ en:'Need help?', da:'Brug for hjælp?' },
-  dailyHelpTitle:{ en:'Daily Clips Help', da:'Hjælp til Dagens klip' },
+  dailyHelpTitle:{ en:'Daily Clips Help', da:'Hjælp til Dit feed' },
   dailyHelpText:{
     en:'Feel the energy and consider carefully before matching. We use video clips to show the person\'s energy and personality. Take your time with the profiles. We support reflection time and want to avoid endless swiping. Therefore you get one video at a time and can look forward to more clips of the same person being released in the next days. To make the videos unique we ask for different content: introduction, biggest interest and free choice.',
     da:'Føl energien og overvej grundigt inden du matcher. Vi bruger videoklip til at vise personens energi og personlighed. Brug god tid på profilerne. Vi understøtter tid til refleksion og ønsker at undgå uendelig swipe. Derfor får du én video ad gangen og kan glæde dig til at der næste dage frigives flere klip af samme person. For at gøre videoerne unikke beder vi om forskelligt indhold: introduktion, største interesse og frit valg.'

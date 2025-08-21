@@ -21,7 +21,7 @@
   - Markér op til fem interesser, der kan bruges i interessechatten og kan øge march score
   - Aktiver incognito-tilstand for anonym browsing (kun Platinum).
 
-## Dagens klip
+## Dit feed
 - Ved indgang vises listen med kandidatprofiler samt eventuelle ratede eller likede profiler.
 - Listen indeholder aktive profiler fra tidligere dage plus dagens nye (3 gratis, 5 med Silver, 8 med Gold og 10 med Platinum).
 - Hvis serveren returnerer for få nye profiler, vises kun de profiler, der er tilgængelige.
