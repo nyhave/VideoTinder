@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { getCurrentDate, getTodayStr, hasRatings } from '../utils.js';
+import { getCurrentDate, getTodayStr } from '../utils.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
-import { useCollection, db, doc, setDoc, collection, useDoc } from '../firebase.js';
+import { useCollection, db, doc, setDoc, collection } from '../firebase.js';
 
 export default function DailyCheckIn({ userId }) {
   const refs = useCollection('reflections','userId',userId);
-  const currentUser = useDoc('profiles', userId) || {};
-  const canSeeRatings = hasRatings(currentUser);
   const t = useT();
   const [month,setMonth]=useState(()=>{
     const d=getCurrentDate();
@@ -75,7 +73,6 @@ export default function DailyCheckIn({ userId }) {
         const monthNum = parseInt(m,10);
         let info = `${dayNum}/${monthNum}: ${r.text}`;
         if(r.profileName) info += ` \u2013 ${r.profileName}`;
-        if(canSeeRatings && r.rating) info += ` (${r.rating}\u2605)`;
         return React.createElement('li', { key: r.id }, info);
       })
     ),

@@ -5,7 +5,7 @@ The admin page includes a screen for manual function testing. The tests are now 
 ## Modules
 
 1. **Discovery & Subscriptions** – daily clips, extra clip purchase, subscriptions and premium likes page.
-2. **Chat & Reflections** – ratings, chat flow, match celebration and the reflection calendar.
+2. **Chat & Reflections** – chat flow, match celebration and the reflection calendar.
 3. **Profile Settings** – editing profile info and interests.
 4. **Recording & Media** – offline caching, recording limits, countdown timer, reveal animation and PWA installation.
 5. **Admin & Statistics** – seed data, profile switching and various admin statistics screens.
@@ -32,7 +32,7 @@ Use the admin menu to open *Funktionstest* and choose a module to start testing.
   4. Log in as Peter and reply "Hej" to Maria.
   5. Confirm Maria sees Peter's reply.
 - Trigger the match celebration overlay and make sure it can be dismissed.
-- Open the reflection calendar and verify ratings or notes appear on the correct dates.
+- Open the reflection calendar and verify notes appear on the correct dates.
 
 ### Profile Settings
 

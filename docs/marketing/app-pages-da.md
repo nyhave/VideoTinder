@@ -22,18 +22,17 @@
   - Aktiver incognito-tilstand for anonym browsing (kun Platinum).
 
 ## Dit feed
-- Ved indgang vises listen med kandidatprofiler samt eventuelle ratede eller likede profiler.
+ - Ved indgang vises listen med kandidatprofiler samt eventuelle likede profiler.
 - Listen indeholder aktive profiler fra tidligere dage plus dagens nye (3 gratis, 5 med Silver, 8 med Gold og 10 med Platinum).
 - Hvis serveren returnerer for få nye profiler, vises kun de profiler, der er tilgængelige.
 - Gratis brugere ser bannerannoncer; Silver og opefter er reklamefri.
-- Brugeren kan skrive en privat refleksion, og Gold samt Platinum kan også give en rating på 1–4 stjerner.
-- Refleksioner gemmes for alle, mens ratings for Gold og Platinum vises sammen med refleksionskalenderen.
+ - Brugeren kan skrive en privat refleksion.
+ - Refleksioner gemmes for alle og vises sammen med refleksionskalenderen.
 - **Handlinger på kandidatlisten**
   - Åbn en profil for at se den offentlige kandidatprofil.
   - Vælg "Like" (kan blive til et match).
   - Vælg "Super like" for at signalere ekstra interesse (1, 3 eller 5 pr. uge afhængigt af abonnement).
-  - Vælg "Remove" for at fjerne profilen helt, medmindre rating 3 eller 4 er givet
-    (så vises den under ratede eller likede profiler).
+    - Vælg "Remove" for at fjerne profilen helt.
   - Silver kan fortryde den seneste "Remove"; Gold og Platinum kan fortryde flere.
   - Brugeren kan én gang dagligt købe ekstra profiler (gratis nu - betaling ikke implementeret).
 
@@ -42,14 +41,13 @@
   - Dag 1: kun video 1
   - Dag 2: video 1 og 2
   - Efterfølgende dage: alt materiale
-- Brugeren kan se tilgængeligt materiale og skrive en refleksion med rating 1–4 (med rette subacription)
-  samt give et like.
+ - Brugeren kan se tilgængeligt materiale og skrive en refleksion samt give et like.
 - Verificerede profiler (Gold og Platinum) viser et badge.
 
 ## Dagens reflektion
 - Kalender med oversigt over egne refleksioner.
 - Brugeren kan skrive en kort, privat tekst for hver dag.
-- Refleksioner kan knyttes til profiler og vises sammen med eventuelle ratings.
+ - Refleksioner kan knyttes til profiler.
 
 ## Chat
 - Matchede profiler vises på en liste.
@@ -92,8 +90,7 @@
 - **Daglig administration**
   - Håndtering af anmeldt materiale og sletning af brugere.
 - **Business og statistik**
-  - Grafer over udvikling i brugerantal, uploads, likes, matches, chats,
-    refleksioner og ratings.
+    - Grafer over udvikling i brugerantal, uploads, likes, matches, chats og refleksioner.
   - Øjebliksbillede af aldersfordeling.
 - **Testere**
   - Mulighed for at se appen som en bestemt bruger.

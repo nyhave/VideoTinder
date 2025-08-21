@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDoc, db, doc, setDoc } from '../firebase.js';
-import { getTodayStr, getCurrentDate, getAge, hasRatings } from '../utils.js';
+import { getTodayStr, getCurrentDate, getAge } from '../utils.js';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
@@ -10,7 +10,6 @@ import ProfileSettings from './ProfileSettings.jsx';
 import VideoPreview from './VideoPreview.jsx';
 import VideoLikeButton from './VideoLikeButton.jsx';
 import PuzzleReveal from './PuzzleReveal.jsx';
-import { Star } from 'lucide-react';
 import InfoOverlay from './InfoOverlay.jsx';
 import useDayOffset from '../useDayOffset.js';
 
@@ -27,26 +26,20 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const showLevels = config.showLevels !== false;
   const profileHasSub = profile?.subscriptionExpires && new Date(profile.subscriptionExpires) > getCurrentDate();
   const expiryDays = profileHasSub ? 10 : 5;
-  const viewerHasSub = viewer?.subscriptionExpires && new Date(viewer.subscriptionExpires) > getCurrentDate();
-  const canRate = viewerHasSub && hasRatings(viewer);
-  const [reflection, setReflection] = useState('');
-  const [reaction, setReaction] = useState('');
-  const [rating, setRating] = useState(0);
-  const [showHelp, setShowHelp] = useState(false);
-  const reflectionRef = useRef('');
-  const ratingRef = useRef(0);
-  const progressRef = useRef(null);
+    const [reflection, setReflection] = useState('');
+    const [reaction, setReaction] = useState('');
+    const [showHelp, setShowHelp] = useState(false);
+    const reflectionRef = useRef('');
+    const progressRef = useRef(null);
   const MAX_REFLECTION_LEN = 30;
   const today = getTodayStr();
-  useEffect(() => {
-    if(progress?.rating) setRating(progress.rating);
-    if(progress?.lastUpdated === today && progress?.reflection){
-      setReflection(progress.reflection);
-    }
-  }, [progress, today]);
-  useEffect(()=>{ reflectionRef.current = reflection; }, [reflection]);
-  useEffect(()=>{ ratingRef.current = rating; }, [rating]);
-  useEffect(()=>{ progressRef.current = progress; }, [progress]);
+    useEffect(() => {
+      if(progress?.lastUpdated === today && progress?.reflection){
+        setReflection(progress.reflection);
+      }
+    }, [progress, today]);
+    useEffect(()=>{ reflectionRef.current = reflection; }, [reflection]);
+    useEffect(()=>{ progressRef.current = progress; }, [progress]);
   const stepLabels = [
     'Level 1',
     'Level 2',
@@ -89,35 +82,31 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     }
   }, [progress, stage]);
 
-  useEffect(() => {
-    return () => {
-      const text = reflectionRef.current.trim();
-      const r = ratingRef.current;
-      const prog = progressRef.current;
-      if (!text && (!canRate || r === (prog?.rating || 0))) return;
-      const data = {
-        id: progressId,
-        userId,
-        profileId,
-        lastUpdated: today,
+    useEffect(() => {
+      return () => {
+        const text = reflectionRef.current.trim();
+        if (!text) return;
+        const data = {
+          id: progressId,
+          userId,
+          profileId,
+          lastUpdated: today,
+          reflection: text
+        };
+        setDoc(doc(db, 'episodeProgress', progressId), data, { merge: true })
+          .catch(err => console.error('Failed to save progress on unmount', err));
+        const refId = `${userId}-${today}-${profileId}`;
+        const refData = {
+          id: refId,
+          userId,
+          date: today,
+          profileName: profile?.name,
+          text
+        };
+        setDoc(doc(db, 'reflections', refId), refData, { merge: true })
+          .catch(err => console.error('Failed to save reflection on unmount', err));
       };
-      if (canRate) data.rating = r;
-      if (text) data.reflection = text;
-      setDoc(doc(db, 'episodeProgress', progressId), data, { merge: true })
-        .catch(err => console.error('Failed to save progress on unmount', err));
-      const refId = `${userId}-${today}-${profileId}`;
-      const refData = {
-        id: refId,
-        userId,
-        date: today,
-        profileName: profile?.name
-      };
-      if (canRate) refData.rating = r;
-      if (text) refData.text = text;
-      setDoc(doc(db, 'reflections', refId), refData, { merge: true })
-        .catch(err => console.error('Failed to save reflection on unmount', err));
-    };
-  }, []);
+    }, []);
 
   if (!profile) {
     return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90 text-center' }, 'Profile not found');
@@ -126,29 +115,27 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
   const daysLeft = progress?.daysLeft ?? expiryDays;
 
 
-  const saveReflection = async (givenRating = rating) => {
-    const text = reflection.trim();
-    if (!text && (!canRate || givenRating === (progress?.rating || 0))) return;
-    const data = {
-      id: progressId,
-      userId,
-      profileId,
-      lastUpdated: today,
+    const saveReflection = async () => {
+      const text = reflection.trim();
+      if (!text) return;
+      const data = {
+        id: progressId,
+        userId,
+        profileId,
+        lastUpdated: today,
+        reflection: text
+      };
+      await setDoc(doc(db, 'episodeProgress', progressId), data, { merge: true });
+      const refId = `${userId}-${today}-${profileId}`;
+      const refData = {
+        id: refId,
+        userId,
+        date: today,
+        profileName: profile?.name,
+        text
+      };
+      await setDoc(doc(db, 'reflections', refId), refData, { merge: true });
     };
-    if (canRate) data.rating = givenRating;
-    if (text) data.reflection = text;
-    await setDoc(doc(db, 'episodeProgress', progressId), data, { merge: true });
-    const refId = `${userId}-${today}-${profileId}`;
-    const refData = {
-      id: refId,
-      userId,
-      date: today,
-      profileName: profile?.name
-    };
-    if (canRate) refData.rating = givenRating;
-    if (text) refData.text = text;
-    await setDoc(doc(db, 'reflections', refId), refData, { merge: true });
-  };
 
   const saveReaction = async () => {
     const text = reaction.trim();
@@ -221,52 +208,29 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
         );
       })
     ),
-    stage === 1 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
-      canRate && React.createElement('div', { className: 'flex justify-center gap-1 mb-2' },
-        [1,2,3,4].map(n => (
-          React.createElement(Star, {
-            key: n,
-            className: `w-6 h-6 cursor-pointer ${n <= rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`,
-            onClick: async () => {
-              setRating(n);
-              await saveReflection(n);
-            }
-          })
-        ))
+      stage === 1 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
+        React.createElement(Textarea, {
+          value: reflection,
+          maxLength: MAX_REFLECTION_LEN,
+          onChange: e => setReflection(e.target.value.slice(0, MAX_REFLECTION_LEN)),
+          onBlur: saveReflection,
+          placeholder: t('episodeReflectionPrompt'),
+          className: 'mb-1'
+        }),
+        React.createElement('p', { className:'text-xs text-right text-gray-500 mb-3' },
+          t('charactersLeft').replace('{count}', MAX_REFLECTION_LEN - reflection.length))
       ),
-      canRate && rating >= 3 && React.createElement('p', { className:'text-xs text-green-700 font-medium text-center' }, t('keepProfile')),
-      canRate && React.createElement('p', { className: 'text-sm text-gray-500 mb-2 text-center' }, 'Ratingen er privat'),
-      React.createElement(Textarea, {
-        value: reflection,
-        maxLength: MAX_REFLECTION_LEN,
-        onChange: e => setReflection(e.target.value.slice(0, MAX_REFLECTION_LEN)),
-        onBlur: saveReflection,
-        placeholder: t('episodeReflectionPrompt'),
-        className: 'mb-1'
-      }),
-      React.createElement('p', { className:'text-xs text-right text-gray-500 mb-3' },
-        t('charactersLeft').replace('{count}', MAX_REFLECTION_LEN - reflection.length))
-    ),
-    stage === 2 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
-      progress?.reflection &&
-        React.createElement('p', { className: 'italic text-gray-700 mb-2' }, `“${progress.reflection}”`),
-      canRate && progress?.rating && React.createElement('div', { className:'flex justify-center gap-1 mb-2' },
-        [1,2,3,4].map(n => (
-          React.createElement(Star, {
-            key:n,
-            className:`w-5 h-5 ${n <= progress.rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`
-          })
-        ))
-      ),
-      canRate && progress?.rating >= 3 && React.createElement('p', { className:'text-xs text-green-700 font-medium text-center mb-2' }, t('keepProfile')),
-      React.createElement(Textarea, {
-        value: reaction,
-        onChange: e => setReaction(e.target.value),
-        placeholder: t('episodeReactionPrompt'),
-        className: 'mb-4'
-      }),
-      React.createElement(Button, { className: 'bg-pink-500 text-white', onClick: saveReaction }, 'Gem')
-    )
+      stage === 2 && React.createElement('div', { className:'mt-6 p-4 bg-gray-50 rounded-lg border border-gray-300' },
+        progress?.reflection &&
+          React.createElement('p', { className: 'italic text-gray-700 mb-2' }, `“${progress.reflection}”`),
+        React.createElement(Textarea, {
+          value: reaction,
+          onChange: e => setReaction(e.target.value),
+          placeholder: t('episodeReactionPrompt'),
+          className: 'mb-4'
+        }),
+        React.createElement(Button, { className: 'bg-pink-500 text-white', onClick: saveReaction }, 'Gem')
+      )
   ),
     showHelp && React.createElement(InfoOverlay, {
       title: t('dailyHelpTitle'),

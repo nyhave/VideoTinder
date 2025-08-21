@@ -18,11 +18,11 @@ Denne episodiske tilgang gør det mere engagerende end at bladre i et uendeligt 
 Vi tror på, at dybere forbindelser starter med nysgerrighed og tid – ikke med hurtige valg. Derfor får brugeren adgang til hver profil i tre trin, der låses op ved at se korte videoklip:
 
 1. **Trin 1 – Refleksion:** Brugeren ser en kort præsentation og svarer på en refleksions-prompt, der gemmes til senere.
-2. **Trin 2 – Reaktion:** Brugeren genser profilen hvor yderligere materiale er blevet tilgengeligt og kan nu sende små reaktioner, fx emojier eller en kort besked.
-3. **Trin 3 – Forbindelse:** Efter endnu et klip får brugeren mulighed match som ved gensidigt match åbner for mulighed for chat og videosamtale.
-Skift fra et trin til et andet kræver at brugeren interagerer med profilen ved enten at se video/lyd, gøre egne reklektioner eller rate profilen.
+2. **Trin 2 – Reaktion:** Brugeren genser profilen hvor yderligere materiale er blevet tilgængeligt og kan nu sende små reaktioner, fx emojier eller en kort besked.
+3. **Trin 3 – Forbindelse:** Efter endnu et klip får brugeren mulighed for at matche, som ved gensidigt match åbner for chat og videosamtale.
+Skift fra et trin til et andet kræver at brugeren interagerer med profilen ved enten at se video/lyd eller gøre egne refleksioner.
 
-Brugeren har altid adgang til egne refleksioner og ratings. For at holde brugeren engageret i app'en arbejder vi med udløbsdatoer på profiler. Brugeren kan undgå udløb ved at rate profilen over middel hvorved det bliver muligt at gense profiler, men det er først efter de tre trin, at muligheden for at matche opstår.
+Brugeren har altid adgang til egne refleksioner. For at holde brugeren engageret i app'en arbejder vi med udløbsdatoer på profiler, men det er først efter de tre trin, at muligheden for at matche opstår.
 
 Dette flow skaber en oplevelse, hvor forbindelser får lov at modne over tid – og hvor førstehåndsindtryk bliver en begyndelse, ikke en dom.
 

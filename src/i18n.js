@@ -141,17 +141,15 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   profileHelpTitle:{ en:'Profile Help', da:'Hjælp til profil' },
   profileHelpText:{ en:'Here you can edit your profile information, photos and videos. Available options may vary depending on your subscription.', da:'Her kan du redigere dine profiloplysninger, billeder og videoer. Mulighederne kan variere afhængigt af dit abonnement.' },
   level2Watch:{ en:'Watch the new video clip', da:'Se det nye videoklip', sv:'Titta på det nya videoklippet', es:'Mira el nuevo videoclip', fr:'Regardez le nouveau clip vidéo', de:'Sieh dir den neuen Videoclip an' },
-  level2Rate:{ en:'Give a private rating', da:'Giv en privat vurdering', sv:'Ge ett privat betyg', es:'Da una calificación privada', fr:'Donnez une évaluation privée', de:'Gib eine private Bewertung ab' },
   level2Reflect:{ en:'Write a private reflection', da:'Skriv en privat refleksion', sv:'Skriv en privat reflektion', es:'Escribe una reflexión privada', fr:'Écrivez une réflexion privée', de:'Schreibe eine private Reflexion' },
   level2Intro:{
-    en:'This is Day {day} with {name}. Watch all available content and add a reflection or rating. If you do both they\'ll show together in your daily reflection. Come back tomorrow for more content',
-    da:'Dette er dag {day} med {name}. Se alt indhold og skriv en refleksion eller giv en vurdering. Hvis begge udfyldes vises de samlet i din daglige refleksion. Kom tilbage i morgen for mere indhold',
-    sv:'Detta är dag {day} med {name}. Titta på allt innehåll och skriv en reflektion eller ge ett betyg. Om båda fylls i visas de tillsammans i din dagliga reflektion. Kom tillbaka i morgon för mer innehåll',
-    es:'Este es el día {day} con {name}. Mira todo el contenido y escribe una reflexión o da una calificación. Si completas ambos aparecerán juntos en tu reflexión diaria. Vuelve mañana para ver más contenido',
-    fr:'C\'est le jour {day} avec {name}. Regardez tout le contenu puis écrivez une réflexion ou donnez une note. Si vous faites les deux, ils apparaîtront ensemble dans votre réflexion quotidienne. Revenez demain pour plus de contenu',
-    de:'Dies ist Tag {day} mit {name}. Sieh dir alle Inhalte an und schreibe eine Reflexion oder gib eine Bewertung ab. Wenn du beides machst, erscheinen sie zusammen in deiner täglichen Reflexion. Komm morgen zurück, um mehr Inhalte zu sehen'
+    en:'This is Day {day} with {name}. Watch all available content and add a reflection. Come back tomorrow for more content',
+    da:'Dette er dag {day} med {name}. Se alt indhold og skriv en refleksion. Kom tilbage i morgen for mere indhold',
+    sv:'Detta är dag {day} med {name}. Titta på allt innehåll och skriv en reflektion. Kom tillbaka i morgon för mer innehåll',
+    es:'Este es el día {day} con {name}. Mira todo el contenido y escribe una reflexión. Vuelve mañana para ver más contenido',
+    fr:'C\'est le jour {day} avec {name}. Regardez tout le contenu puis écrivez une réflexion. Revenez demain pour plus de contenu',
+    de:'Dies ist Tag {day} mit {name}. Sieh dir alle Inhalte an und schreibe eine Reflexion. Komm morgen zurück, um mehr Inhalte zu sehen'
   },
-  keepProfile:{ en:'Keep profile', da:'Bevar profilen med 3 eller 4 stjerner', sv:'Bevara profilen', es:'Mantener perfil', fr:'Garder le profil', de:'Profil behalten' },
   dayLabel:{
     en:'Day {day}',
     da:'Dag {day}',
@@ -163,20 +161,20 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   max10Sec:{ en:'Max 10 sec', da:'Max 10 sek', sv:'Max 10 sek', es:'M\u00e1x 10 seg', fr:'Max 10 s', de:'Max 10 Sek' },
   remove:{ en:'Remove', da:'Fjern', sv:'Ta bort', es:'Eliminar', fr:'Supprimer', de:'Entfernen' },
   showArchived:{
-    en:'Show rated or liked profiles',
-    da:'Vis ratede eller likede profiler',
-    sv:'Visa gillade eller betygsatta profiler',
-    es:"Mostrar perfiles valorados o con 'like'",
-    fr:'Afficher les profils notés ou likés',
-    de:'Bewertete oder gelikte Profile anzeigen'
+    en:'Show liked profiles',
+    da:'Vis likede profiler',
+    sv:'Visa gillade profiler',
+    es:"Mostrar perfiles con 'like'",
+    fr:'Afficher les profils likés',
+    de:'Gelikte Profile anzeigen'
   },
   archivedProfiles:{
-    en:'Rated or liked profiles',
-    da:'Ratede eller likede profiler',
-    sv:'Gillade eller betygsatta profiler',
-    es:"Perfiles valorados o con 'like'",
-    fr:'Profils notés ou likés',
-    de:'Bewertete oder gelikte Profile'
+    en:'Liked profiles',
+    da:'Likede profiler',
+    sv:'Gillade profiler',
+    es:"Perfiles con 'like'",
+    fr:'Profils likés',
+    de:'Gelikte Profile'
   },
   qrOpen:{
     en:'Scan to open RealDate',

@@ -41,14 +41,6 @@ export const modules = [
     name: 'Chat & Reflections',
     features: [
       {
-        title: 'Four-star rating stored with each reflection (ratings are private)',
-        expected: [
-          'Gold and Platinum can select 1-4 stars when writing a reflection',
-          'Rating is saved together with the reflection',
-          'Ratings are only visible to the user'
-        ]
-      },
-      {
         title: 'Basic chat between matched profiles with option to unmatch',
         expected: [
           'Send multiple long messages as one user',
