@@ -339,6 +339,6 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     )
   ),
     showBugReport && React.createElement(BugReportOverlay, { onClose: () => setShowBugReport(false) }),
-    showHelp && React.createElement(AdminHelpOverlay, { onClose: () => setShowHelp(false) })
-  );
+    showHelp && React.createElement(AdminHelpOverlay, { onClose: () => setShowHelp(false) }),
+  ));
 }
