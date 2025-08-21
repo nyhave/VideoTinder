@@ -109,7 +109,10 @@ button.btn-outline-red {
 
 /* Reveal animation for newly unlocked content */
 .reveal-animation {
-  animation: overlay-fade 1s ease-out forwards;
+  animation-name: overlay-fade;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
 }
 
 @keyframes overlay-fade {
@@ -121,7 +124,6 @@ button.btn-outline-red {
 .puzzle-reveal .piece {
   position: absolute;
   background: rgba(0,0,0,0.8);
-  animation: overlay-fade 0.8s ease-out forwards;
 }
 .puzzle-reveal .piece.tl { top:0; left:0; width:50%; height:50%; animation-delay:0s; }
 .puzzle-reveal .piece.tr { top:0; right:0; width:50%; height:50%; animation-delay:0.15s; }

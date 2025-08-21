@@ -44,6 +44,7 @@ Use the admin menu to open *Funktionstest* and choose a module to start testing.
 
 - Record a short video and confirm the countdown timer is visible.
 - Play the recording and check that the reveal animation runs.
+- On the Reveal Test screen, confirm the profile image reveals in five steps via the Next button.
 - Install the PWA from the browser menu.
 - While offline, open a previously viewed profile to verify clips are cached.
 
