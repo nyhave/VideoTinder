@@ -44,11 +44,11 @@ export default function RevealTestScreen({ onBack }) {
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: t('revealTestTitle'), colorClass: 'text-blue-600', action: React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onBack }, t('back')) }),
-    photoURL && React.createElement('div', { className: 'mb-4 relative' },
+    photoURL && React.createElement('div', { className: 'mb-4 relative w-48 h-48 mx-auto' },
       React.createElement('img', {
         src: photoURL,
         alt: profile.name || '',
-        className: 'w-full rounded object-cover'
+        className: 'w-48 h-48 rounded object-cover'
       }),
       React.createElement('div', { className: 'puzzle-reveal absolute inset-0 rounded overflow-hidden pointer-events-none' }, overlays)
     ),
