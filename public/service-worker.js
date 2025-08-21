@@ -1,6 +1,6 @@
 // Bump the cache name whenever cached files change to ensure
 // clients receive the latest versions.
-const CACHE_NAME = 'VideoTinder-cache-v6';
+const CACHE_NAME = 'VideoTinder-cache-v7';
 console.log('ServiceWorker script loaded', CACHE_NAME);
 // Cache for images and video so large media files work offline
 const MEDIA_CACHE = 'media-cache-v1';
@@ -8,6 +8,10 @@ const rel = (p) => new URL(p, self.registration.scope).href;
 const URLS_TO_CACHE = [
   rel(''),
   rel('index.html'),
+  rel('offline.html'),
+  rel('manifest.json'),
+  rel('icon-192.png'),
+  rel('icon-512.png'),
 ];
 
 self.addEventListener('install', event => {
@@ -75,6 +79,12 @@ self.addEventListener('push', event => {
 self.addEventListener('fetch', event => {
   console.log('ServiceWorker fetch', event.request.url);
   const dest = event.request.destination;
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match(rel('offline.html')))
+    );
+    return;
+  }
   if (['image', 'video'].includes(dest)) {
     event.respondWith(
       caches.open(MEDIA_CACHE).then(cache =>
