@@ -263,17 +263,14 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
       activeProfiles.length ? activeProfiles.map(p => {
         const prog = progresses.find(pr => pr.profileId === p.id);
         const stage = prog?.stage || 1;
-        const defaultDays = hasActiveSub(p) ? 10 : 5;
-        const daysLeft = prog?.daysLeft ?? defaultDays;
+        const isLastDay = prog?.daysLeft !== undefined && prog.daysLeft <= 0;
         return React.createElement('li', {
           key: p.id,
           className: 'p-4 bg-white rounded-lg cursor-pointer shadow-lg border border-gray-200 flex flex-col relative',
           onClick: () => onSelectProfile(p.id)
         },
           showLevels && React.createElement('span', { className:'absolute top-2 left-2 bg-pink-100 text-pink-600 text-xs font-semibold px-2 rounded' }, `Level ${stage}`),
-          React.createElement('span', { className:`absolute top-2 right-2 z-10 ${daysLeft <= 0 ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'} text-xs font-semibold px-2 rounded` },
-            daysLeft <= 0 ? t('lastDay') : t('expiresIn').replace('{days}', daysLeft)
-          ),
+          isLastDay && React.createElement('span', { className:'absolute top-2 right-2 z-10 bg-red-100 text-red-600 text-xs font-semibold px-2 rounded' }, t('lastDay')),
           React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
             React.createElement('div', { className:'flex flex-col items-center' },
               (p.photoURL ?

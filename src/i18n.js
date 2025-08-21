@@ -125,7 +125,6 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
   episodeStageReflection:{ en:'Reflection', da:'Refleksion', sv:'Reflektion', es:'Reflexión', fr:'Réflexion', de:'Reflexion' },
   episodeStageReaction:{ en:'Reaction', da:'Reaktion', sv:'Reaktion', es:'Reacción', fr:'Réaction', de:'Reaktion' },
   episodeStageConnect:{ en:'Connect', da:'Forbind', sv:'Anslut', es:'Conectar', fr:'Connecter', de:'Verbinden' },
-  expiresIn:{ en:'Expires in {days} days', da:'Udl\u00f8ber om {days} dage', sv:'G\u00e5r ut om {days} dagar', es:'Expira en {days} d\u00edas', fr:'Expire dans {days} jours', de:'L\u00e4uft in {days} Tagen ab' },
   lastDay:{ en:'Last day', da:'Sidste dag', sv:'Sista dagen', es:'\u00daltimo d\u00eda', fr:'Dernier jour', de:'Letzter Tag' },
   missingFieldsTitle:{ en:'Missing information', da:'Mangler information', sv:'Saknar information', es:'Falta información', fr:'Informations manquantes', de:'Fehlende Angaben' },
   missingFieldsDesc:{ en:'Please fill out all required fields', da:'Udfyld venligst alle obligatoriske felter', sv:'Vänligen fyll i alla obligatoriska fält', es:'Por favor, completa todos los campos obligatorios', fr:'Veuillez remplir tous les champs obligatoires', de:'Bitte fülle alle Pflichtfelder aus' },
