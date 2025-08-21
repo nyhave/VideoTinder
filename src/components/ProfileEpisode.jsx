@@ -194,8 +194,8 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
     ),
     // The old level 2 intro box has been removed
     React.createElement(SectionTitle, { title: `${profile.name || ''}, ${profile.birthday ? getAge(profile.birthday) : profile.age || ''}${profile.city ? ', ' + profile.city : ''}` }),
-    React.createElement('p', { className:`text-left text-xs ${daysLeft <= 0 ? 'text-red-600' : 'text-yellow-600'} mb-2` },
-      daysLeft <= 0 ? t('lastDay') : t('expiresIn').replace('{days}', daysLeft)
+    daysLeft <= 0 && React.createElement('p', { className:'text-left text-xs text-red-600 mb-2' },
+      t('lastDay')
     ),
     React.createElement(SectionTitle, { title: t('episodeIntro') }),
     profile.clip && React.createElement('p', { className: 'mb-4' }, `"${profile.clip}"`),
