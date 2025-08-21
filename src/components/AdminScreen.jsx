@@ -23,8 +23,6 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
   const config = useDoc('config', 'app') || {};
   const invitesEnabled = config.premiumInvitesEnabled !== false;
   const showLevels = config.showLevels !== false;
-  const [revealStep, setRevealStep] = useState(0);
-  const photoURL = (profiles.find(p => p.id === userId) || {}).photoURL;
 
   const toggleLog = () => {
     const val = !logEnabled;
@@ -233,7 +231,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
         onClick: onSaveUserLogout
       }, t('saveAndLogout'))
     )
-  ),
+    ),
 
   React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement('h2', { className: 'text-xl font-semibold mb-2 text-pink-600' }, t('adminDaily')),
@@ -250,28 +248,7 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
       className: 'bg-red-500 text-white px-4 py-2 rounded',
       onClick: deleteUser
     }, 'Delete user')
-  ),
-  photoURL && React.createElement('div', { className: 'mt-4' },
-    React.createElement(Button, {
-      className: 'bg-blue-500 text-white px-4 py-2 rounded mb-2',
-      onClick: () => setRevealStep(s => Math.min(5, s + 1))
-    }, 'Vis profilbillede'),
-    React.createElement('div', { className: 'relative w-48 h-48 border' },
-      React.createElement('img', {
-        src: photoURL,
-        alt: 'Profil',
-        className: 'w-full h-full object-cover'
-      }),
-      Array.from({ length: 5 }).map((_, i) =>
-        revealStep <= i && React.createElement('div', {
-          key: i,
-          className: 'absolute top-0 h-full',
-          style: { left: `${i * 20}%`, width: '20%', backgroundColor: '#ccc' }
-        })
-      )
-    )
-  )
-  ),
+    ),
 
   React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement('h2', { className: 'text-xl font-semibold mb-2 text-pink-600' }, t('adminBusiness')),
