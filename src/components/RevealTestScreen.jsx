@@ -13,7 +13,7 @@ export default function RevealTestScreen({ onBack }) {
   const t = useT();
 
   const nextStep = () => {
-    if (revealStep >= 5) return;
+    if (revealStep >= 5 || showReveal) return;
     setRevealStep(s => s + 1);
     setShowReveal(true);
     const audio = new Audio('/reveal.mp3');
@@ -52,6 +52,6 @@ export default function RevealTestScreen({ onBack }) {
       ),
       showReveal && React.createElement(PuzzleReveal, { label: t('dayLabel').replace('{day}', 1) })
     ),
-    revealStep < 5 && React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: nextStep }, t('next'))
+    revealStep < 5 && React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: nextStep, disabled: showReveal }, t('next'))
   );
 }
