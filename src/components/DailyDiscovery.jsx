@@ -130,7 +130,6 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
     .map(pr => profiles.find(p => p.id === pr.profileId))
     .filter(Boolean);
 
-  const [hoursUntil, setHoursUntil] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
   const [showMore, setShowMore] = useState(false);
@@ -243,20 +242,11 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
     const id = `${userId}-${profileId}`;
     await setDoc(doc(db,'episodeProgress', id), { removed: true }, { merge: true });
   };
-  useEffect(() => {
-    const now = getCurrentDate();
-    const next = new Date(now);
-    next.setDate(now.getDate() + 1);
-    next.setHours(0,0,0,0);
-    setHoursUntil(Math.ceil((next - now) / 3600000));
-  }, []);
-
   return React.createElement(Card, { className: 'p-6 pb-24 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: t('dailyClips'), action:
       React.createElement('span', { className:'text-sm text-blue-500 underline cursor-pointer', onClick:()=>setShowHelp(true) }, t('dailyHelpLabel'))
     }),
-    React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Nye klip om ${hoursUntil} timer`),
-    React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, `Tag dig god tid til at udforske dagens klip`),
+    React.createElement('p', { className: 'text-center text-gray-500 mb-4' }, 'Tag dig god tid til at udforske dit feed'),
     React.createElement('blockquote', { className: 'm-4 italic text-center text-gray-600' }, `“En kaffedate et eller andet sted. Det er jo slet, slet ikke nok. Giv tid!” – Bente, Hotel Romantik, Sæson 1, Afsnit 8`),
     React.createElement(AdBanner, { user }),
     React.createElement('ul', { className: 'space-y-4' },
