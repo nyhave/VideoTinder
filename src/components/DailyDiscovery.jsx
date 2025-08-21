@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getAge, getTodayStr, getCurrentDate, getDailyProfileLimit, getSuperLikeLimit, getWeekId, hasRatings } from '../utils.js';
-import { User, Star } from 'lucide-react';
+import { getAge, getTodayStr, getCurrentDate, getDailyProfileLimit, getSuperLikeLimit, getWeekId } from '../utils.js';
+import { User } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
@@ -21,9 +21,8 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
   const t = useT();
   const config = useDoc('config', 'app') || {};
   const showLevels = config.showLevels !== false;
-  const user = profiles.find(p => p.id === userId) || {};
-  const canViewRatings = hasRatings(user);
-  const showSuperLike = getSuperLikeLimit(user) > 0;
+    const user = profiles.find(p => p.id === userId) || {};
+    const showSuperLike = getSuperLikeLimit(user) > 0;
   // Trigger re-renders when the admin changes the virtual date
   useDayOffset();
   const hasActiveSub = prof =>
@@ -123,7 +122,7 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
   const archivedProfiles = progresses
     .filter(pr => {
       const expired = pr.daysLeft !== undefined && pr.daysLeft < 0;
-      const shouldShow = pr.rating >= 3 || likedIds.has(pr.profileId);
+      const shouldShow = likedIds.has(pr.profileId);
       return (pr.removed || expired) && shouldShow;
     })
     .sort((a,b)=>(a.rank ?? 0)-(b.rank ?? 0))
@@ -273,11 +272,6 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
               p.clip && React.createElement('p', { className: 'text-sm text-gray-700' }, `“${p.clip}”`)
             )
           ),
-          canViewRatings && prog?.rating && React.createElement('div', { className:'flex gap-1 mt-2' },
-            [1,2,3,4].map(n =>
-              React.createElement(Star,{key:n,className:`w-4 h-4 ${n <= prog.rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`})
-            )
-          ),
           React.createElement('div', { className: 'flex gap-2 mt-2' },
             [
               React.createElement(Button, {
@@ -324,11 +318,6 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
                 p.clip && React.createElement('p',{className:'text-sm text-gray-700'},`“${p.clip}”`)
               )
             ),
-            canViewRatings && prog.rating && React.createElement('div',{className:'flex gap-1 mt-2'},
-              [1,2,3,4].map(n =>
-                React.createElement(Star,{key:n,className:`w-4 h-4 ${n <= prog.rating ? 'fill-pink-500 stroke-pink-500' : 'stroke-gray-400'}`})
-              )
-            )
           );
         })
       ),
