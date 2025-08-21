@@ -3,6 +3,7 @@ import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
 import VideoPreview from './VideoPreview.jsx';
+import PuzzleReveal from './PuzzleReveal.jsx';
 import { useDoc } from '../firebase.js';
 import { useT } from '../i18n.js';
 
@@ -27,9 +28,11 @@ export default function RevealTestScreen({ onBack }) {
 
   const videoURL = profile.videoClips?.[0]?.url || profile.videoClips?.[0] || '';
 
-  const overlay = React.createElement('div', { className:`absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2 ${showReveal ? 'reveal-animation pointer-events-none' : ''}` },
-    React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('dayLabel').replace('{day}', 1))
-  );
+  const overlay = showReveal
+    ? React.createElement(PuzzleReveal, { label: t('dayLabel').replace('{day}', 1) })
+    : React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2' },
+      React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('dayLabel').replace('{day}', 1))
+    );
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: t('revealTestTitle'), colorClass: 'text-blue-600', action: React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onBack }, t('back')) }),

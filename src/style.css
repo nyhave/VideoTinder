@@ -116,3 +116,15 @@ button.btn-outline-red {
   from { opacity: 1; }
   to { opacity: 0; }
 }
+
+/* Puzzle reveal overlay */
+.puzzle-reveal .piece {
+  position: absolute;
+  background: rgba(0,0,0,0.8);
+  animation: overlay-fade 0.8s ease-out forwards;
+}
+.puzzle-reveal .piece.tl { top:0; left:0; width:50%; height:50%; animation-delay:0s; }
+.puzzle-reveal .piece.tr { top:0; right:0; width:50%; height:50%; animation-delay:0.15s; }
+.puzzle-reveal .piece.bl { bottom:0; left:0; width:50%; height:50%; animation-delay:0.3s; }
+.puzzle-reveal .piece.br { bottom:0; right:0; width:50%; height:50%; animation-delay:0.45s; }
+.puzzle-reveal .piece.center { top:25%; left:25%; width:50%; height:50%; animation-delay:0.6s; display:flex; align-items:center; justify-content:center; }
