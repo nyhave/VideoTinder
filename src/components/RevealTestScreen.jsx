@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
-import VideoPreview from './VideoPreview.jsx';
 import PuzzleReveal from './PuzzleReveal.jsx';
 import { useDoc } from '../firebase.js';
 import { useT } from '../i18n.js';
@@ -26,7 +25,7 @@ export default function RevealTestScreen({ onBack }) {
     );
   }
 
-  const videoURL = profile.videoClips?.[0]?.url || profile.videoClips?.[0] || '';
+  const photoURL = profile.photoURL || '';
 
   const overlay = showReveal
     ? React.createElement(PuzzleReveal, { label: t('dayLabel').replace('{day}', 1) })
@@ -36,10 +35,11 @@ export default function RevealTestScreen({ onBack }) {
 
   return React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },
     React.createElement(SectionTitle, { title: t('revealTestTitle'), colorClass: 'text-blue-600', action: React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onBack }, t('back')) }),
-    videoURL && React.createElement('div', { className: 'mb-4 relative' },
-      React.createElement(VideoPreview, {
-        src: videoURL,
-        timestamp: profile.videoClips?.[0]?.recordedAt || profile.videoClips?.[0]?.uploadedAt
+    photoURL && React.createElement('div', { className: 'mb-4 relative' },
+      React.createElement('img', {
+        src: photoURL,
+        alt: profile.name || '',
+        className: 'w-full rounded object-cover'
       }),
       overlay
     ),
