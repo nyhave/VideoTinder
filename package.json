@@ -6,7 +6,7 @@
     "start": "npx serve .",
     "dev": "parcel public/index.html",
     "prebuild": "node scripts/bump-version.js",
-    "build": "parcel build public/index.html public/invite.html public/commercial.html public/faq.html public/pricing.html public/test-webpush.html --dist-dir dist --no-source-maps --public-url ./ && cp public/service-worker.js dist/ && cp public/*.mp3 dist/",
+    "build": "parcel build public/index.html public/invite.html public/commercial.html public/faq.html public/pricing.html public/test-webpush.html public/offline.html --dist-dir dist --no-source-maps --public-url ./ && cp public/service-worker.js dist/ && cp public/*.mp3 dist/",
     "test": "jest",
     "screenshots": "node scripts/capture-screens.js"
   },
