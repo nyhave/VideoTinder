@@ -14,7 +14,6 @@ import {
   getMaxVideoSeconds,
   hasInterestChat,
   hasAdvancedFilters,
-  hasReadReceipts,
   hasRatings,
   getWeekId
   ,clearAppCache
@@ -116,11 +115,6 @@ describe('utils', () => {
   test('hasAdvancedFilters requires paid tier', () => {
     expect(hasAdvancedFilters({ subscriptionTier: 'gold' })).toBe(true);
     expect(hasAdvancedFilters({ subscriptionTier: 'free' })).toBe(false);
-  });
-
-  test('hasReadReceipts only for gold tier', () => {
-    expect(hasReadReceipts({ subscriptionTier: 'gold' })).toBe(true);
-    expect(hasReadReceipts({ subscriptionTier: 'free' })).toBe(false);
   });
 
   test('hasRatings only for gold tier', () => {
