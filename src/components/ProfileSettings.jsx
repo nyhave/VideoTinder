@@ -719,12 +719,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         React.createElement('input', { type:'checkbox', className:'mr-2', checked: (profile.notificationPrefs?.types?.newMessage !== false), onChange: e => updateNotificationPref('types.newMessage', e.target.checked) }),
         'Nye beskeder'
       ),
-    React.createElement('div', { className:'flex items-center gap-2 mt-2' },
-        React.createElement('label', null, 'Forstyr ikke fra'),
-        React.createElement('input', { type:'time', value: profile.notificationPrefs?.dndStart || '', onChange: e => updateNotificationPref('dndStart', e.target.value) }),
-      React.createElement('span', null, 'til'),
-      React.createElement('input', { type:'time', value: profile.notificationPrefs?.dndEnd || '', onChange: e => updateNotificationPref('dndEnd', e.target.value) })
-      )
     ),
       !publicView && React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
           React.createElement(SectionTitle, { title: t('settings') }),
