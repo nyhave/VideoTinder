@@ -715,8 +715,8 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         'Nye beskeder'
       ),
     ),
-      !publicView && React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
-          React.createElement(SectionTitle, { title: t('settings') }),
+        !publicView && React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90' },
+            React.createElement(SectionTitle, { title: t('mySubscription') }),
           profile.subscriptionExpires && React.createElement('p', {
             className: 'text-center text-sm mt-2 flex items-center justify-center gap-1 ' + (subscriptionActive ? 'text-green-600' : 'text-red-500')
           },

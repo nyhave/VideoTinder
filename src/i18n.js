@@ -207,9 +207,17 @@ inviteAccepted:{ en:"Profile created", da:"Oprettet", sv:"Skapad", es:"Perfil cr
     de:'Keine Interessen ausgewählt. Füge Interessen auf deiner Profilseite hinzu.'
   },
   gameTitle:{ en:'Guess My Choice', da:'Gæt mit valg' },
-  superLike:{ en:'Super like', da:'Super like', sv:'Super like', es:'Súper like', fr:'Super like', de:'Super like' },
-  settings:{ en:'Settings', da:'Indstillinger', sv:'Inställningar', es:'Configuración', fr:'Paramètres', de:'Einstellungen' },
-  videoTooLong:{ en:'Video may be at most {seconds} seconds', da:'Video må højst være {seconds} sekunder', sv:'Videon får högst vara {seconds} sekunder', es:'El video puede durar como máximo {seconds} segundos', fr:'La vidéo peut durer au maximum {seconds} secondes', de:'Video darf höchstens {seconds} Sekunden lang sein' },
+    superLike:{ en:'Super like', da:'Super like', sv:'Super like', es:'Súper like', fr:'Super like', de:'Super like' },
+    settings:{ en:'Settings', da:'Indstillinger', sv:'Inställningar', es:'Configuración', fr:'Paramètres', de:'Einstellungen' },
+    mySubscription:{
+      en:'My subscription',
+      da:'Mit abonnement',
+      sv:'Mitt abonnemang',
+      es:'Mi suscripción',
+      fr:'Mon abonnement',
+      de:'Mein Abonnement'
+    },
+    videoTooLong:{ en:'Video may be at most {seconds} seconds', da:'Video må højst være {seconds} sekunder', sv:'Videon får högst vara {seconds} sekunder', es:'El video puede durar como máximo {seconds} segundos', fr:'La vidéo peut durer au maximum {seconds} secondes', de:'Video darf höchstens {seconds} Sekunden lang sein' },
   adminBugReports:{ en:'Bug reports', da:'Fejlmeldinger', sv:'Buggrapporter', es:'Informes de errores', fr:'Rapports de bugs', de:'Fehlermeldungen' },
   adminBusiness:{ en:'Business and statistics', da:'Business og statistik', sv:'Aff\u00e4r och statistik', es:'Negocios y estad\u00edsticas', fr:'Business et statistiques', de:'Gesch\u00e4ft und Statistik' },
   adminDaily:{ en:'Daily admin', da:'Daglig administration', sv:'Daglig administration', es:'Administraci\u00f3n diaria', fr:'Administration quotidienne', de:'T\u00e4gliche Verwaltung' },
