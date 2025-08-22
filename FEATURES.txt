@@ -1,7 +1,6 @@
 Daily discovery of short video clips
 Three-step episodic flow for each profile (reflection, reaction, connection)
 Basic chat between matched profiles
-Typing indicators show when the other person is composing a message
 Unmatch to remove chat from both users
 Calendar interface for daily reflection notes
 Profile settings with age range filtering
