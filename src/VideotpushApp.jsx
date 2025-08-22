@@ -34,6 +34,8 @@ import InviteOverlay from './components/InviteOverlay.jsx';
 import RealettenPage from './components/RealettenPage.jsx';
 import TaskButton from './components/TaskButton.jsx';
 import GraphicsElementsScreen from './components/GraphicsElementsScreen.jsx';
+import BugReportOverlay from './components/BugReportOverlay.jsx';
+import FeedbackButton from './components/FeedbackButton.jsx';
 import { getNextTask } from './tasks.js';
 import { useCollection, db, doc, setDoc, updateDoc, arrayUnion, getDoc, increment, logEvent, auth, isAdminUser, signOutUser } from './firebase.js';
 import { getCurrentDate } from './utils.js';
@@ -79,6 +81,7 @@ export default function VideotpushApp() {
   const [showHelp,setShowHelp]=useState(false);
   const [showInvite,setShowInvite]=useState(false);
   const [showRealetten,setShowRealetten]=useState(false);
+  const [showBugReport, setShowBugReport] = useState(false);
   const [activeTask, setActiveTask] = useState(null);
   const [taskClicks, setTaskClicks] = useState(0);
   const [showSubscription, setShowSubscription] = useState(false);
@@ -606,6 +609,7 @@ export default function VideotpushApp() {
       React.createElement(UserGroupIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('interestchat'); setViewProfile(null);} }),
       React.createElement(CalendarDaysIcon, { className: 'w-8 h-8 text-pink-600', onClick: ()=>{setTab('checkin'); setViewProfile(null);} })
       ),
+    !showBugReport && React.createElement(FeedbackButton, { onClick: () => setShowBugReport(true) }),
     showChatIntro && React.createElement(InfoOverlay, {
       title: t('chat'),
       onClose: () => {
@@ -621,6 +625,7 @@ export default function VideotpushApp() {
     showInvite && React.createElement(InviteOverlay, { userId, onClose: () => setShowInvite(false) }),
     showRealetten && React.createElement(RealettenPage, { interest:'demo', userId, onBack: () => setShowRealetten(false) }),
     showSubscription && React.createElement(SubscriptionOverlay, { onClose: () => setShowSubscription(false), onBuy: handleSubscriptionPurchase }),
+    showBugReport && React.createElement(BugReportOverlay, { onClose: () => setShowBugReport(false) }),
     showHelp && React.createElement(HelpOverlay, { onClose: ()=>setShowHelp(false) }),
     React.createElement(ConsoleLogPanel),
     React.createElement(FunctionTestGuide)
