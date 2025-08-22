@@ -25,7 +25,6 @@ VideoTinder uses a freemium model with three paid membership levels that expand 
 | Longer videos | ❌ | ❌ | 15 sec | 25 sec |
 | Ad-free experience | Ads | ✓ | ✓ (priority) | ✓ (priority) |
 | Profile verification badge | ❌ | ❌ | ✓ | ✓ |
-| Read receipts & typing indicators | ❌ | ❌ | ✓ | ✓ |
 | Advanced profile analytics | ❌ | ❌ | ✓ (basic) | ✓ (advanced) |
 
 Daily refers to days where the user is active

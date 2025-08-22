@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getAge, hasReadReceipts } from '../utils.js';
+import { getAge } from '../utils.js';
 import { User as UserIcon, ArrowLeft } from 'lucide-react';
 import VerificationBadge from './VerificationBadge.jsx';
 import { Card } from './ui/card.js';
@@ -16,13 +16,11 @@ export default function ChatScreen({ userId, onStartCall }) {
   const t = useT();
   const profileMap = Object.fromEntries(profiles.map(p => [p.id, p]));
   const currentUser = profileMap[userId] || {};
-  const showReadReceipts = hasReadReceipts(currentUser);
   const [active, setActive] = useState(null);
   const [text, setText] = useState('');
   const [incomingCall, setIncomingCall] = useState(false);
   const messagesRef = useRef(null);
   const textareaRef = useRef(null);
-  const typingTimeout = useRef(null);
   const ringAudioRef = useRef(null);
 
   useEffect(() => {
@@ -49,11 +47,6 @@ export default function ChatScreen({ userId, onStartCall }) {
     }
   }, [active?.messages?.length]);
 
-  useEffect(() => {
-    if(!active) return;
-    const otherId = `${active.profileId}-${active.userId}`;
-    updateDoc(doc(db,'matches',otherId),{lastReadByOther:Date.now()}).catch(()=>{});
-  }, [active?.messages?.length, active?.id]);
 
   useEffect(() => {
     if (!active) {
@@ -95,8 +88,6 @@ export default function ChatScreen({ userId, onStartCall }) {
     if(chat.unreadByUser || chat.newMatch){
       updateDoc(doc(db,'matches',chat.id),{unreadByUser:false,newMatch:false});
     }
-    const otherId = `${chat.profileId}-${chat.userId}`;
-    updateDoc(doc(db,'matches',otherId),{lastReadByOther:Date.now()}).catch(()=>{});
   };
 
   const sendMessage = async () => {
@@ -118,8 +109,7 @@ export default function ChatScreen({ userId, onStartCall }) {
         unreadByProfile: false,
         unreadByUser: true,
         messages: arrayUnion(message),
-        newMatch:false,
-        typing:false
+        newMatch:false
       })
     ]);
     sendWebPushToProfile(active.profileId, 'Ny besked', trimmed, false, 'newMessage');
@@ -129,27 +119,9 @@ export default function ChatScreen({ userId, onStartCall }) {
     }
   };
 
-  useEffect(() => {
-    return () => {
-      if(active){
-        const id = `${active.profileId}-${active.userId}`;
-        updateDoc(doc(db,'matches',id),{typing:false});
-      }
-    };
-  }, [active]);
-
   const handleTextChange = e => {
     const val = e.target.value;
     setText(val);
-    if(!active) return;
-    const id = `${active.profileId}-${active.userId}`;
-    updateDoc(doc(db,'matches',id),{typing:!!val.trim()});
-    if(typingTimeout.current) clearTimeout(typingTimeout.current);
-    if(val.trim()){
-      typingTimeout.current = setTimeout(() => {
-        updateDoc(doc(db,'matches',id),{typing:false});
-      },2000);
-    }
   };
 
   const unmatch = async () => {
@@ -165,7 +137,6 @@ export default function ChatScreen({ userId, onStartCall }) {
   };
 
   const activeProfile = active ? profileMap[active.profileId] || {} : null;
-  const lastSelf = active ? [...(active.messages || [])].filter(m => m.from === userId).slice(-1)[0] : null;
 
   const startCall = (answer = false) => {
     if (!active) return;
@@ -219,14 +190,11 @@ export default function ChatScreen({ userId, onStartCall }) {
                 React.createElement('div', {
                   className: `inline-block px-3 py-2 rounded-lg ${fromSelf ? 'bg-pink-500 text-white' : 'bg-gray-200 text-black'}`
                 }, m.text),
-                showReadReceipts && fromSelf && lastSelf && m.ts === lastSelf.ts && active.lastReadByOther && active.lastReadByOther >= m.ts &&
-                  React.createElement('div',{className:'text-xs text-gray-500 text-right'},t('seen'))
               )
             );
           })
         ),
         React.createElement('div', { className: 'flex flex-col gap-2 mt-2' },
-          showReadReceipts && active.typing && React.createElement('p',{className:'text-sm text-gray-500'},`${activeProfile.name || 'Someone'} is typing...`),
           React.createElement('div', { className: 'flex items-center gap-2' },
             React.createElement(Textarea, {
               className: 'flex-1',

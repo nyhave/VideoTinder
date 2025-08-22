@@ -112,11 +112,6 @@ export function hasAdvancedFilters(user){
   return tier !== 'free';
 }
 
-export function hasReadReceipts(user){
-  const tier = user?.subscriptionTier || 'free';
-  return tier === 'gold';
-}
-
 export function hasRatings(user){
   const tier = user?.subscriptionTier || 'free';
   return tier === 'gold';
