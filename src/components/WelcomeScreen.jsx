@@ -180,7 +180,7 @@ export default function WelcomeScreen({ onLogin }) {
     if (giftFrom && inviteValid) {
       try {
         const inviterSnap = await getDoc(doc(db, 'profiles', giftFrom));
-        if (!inviterSnap.exists() || (inviterSnap.data().premiumInvitesUsed || 0) >= 10) {
+        if (!inviterSnap.exists() || (inviterSnap.data().premiumInvitesUsed || 0) >= 3) {
           giftFrom = null;
           inviteValid = false;
         }
@@ -316,7 +316,7 @@ export default function WelcomeScreen({ onLogin }) {
     if (giftFrom && inviteValid) {
       try {
         const inviterSnap = await getDoc(doc(db, 'profiles', giftFrom));
-        if (!inviterSnap.exists() || (inviterSnap.data().premiumInvitesUsed || 0) >= 10) {
+        if (!inviterSnap.exists() || (inviterSnap.data().premiumInvitesUsed || 0) >= 3) {
           giftFrom = null;
           inviteValid = false;
         }
