@@ -15,7 +15,6 @@
 - Brugeren kan slette sin profil.
 - Videoklip kan maksimalt vare 10 sekunder (15 sekunder med Gold, 25 sekunder med Platinum); en timer tæller ned under optagelsen, og Gold/Platinum kan tilføje baggrundsmusik.
 - inden en optagelse vises brugerens video illede og der tælles ned 3-2-1.
-- Gold og Platinum kan verificere profilen og få et badge.
 - **Indstillinger**
   - Vælg køn og aldersinterval for kandidater. Gold og Platinum får adgang til alle avancerede filtre.
   - Markér op til fem interesser, der kan bruges i interessechatten og kan øge march score
@@ -42,7 +41,6 @@
   - Dag 2: video 1 og 2
   - Efterfølgende dage: alt materiale
  - Brugeren kan se tilgængeligt materiale og skrive en refleksion samt give et like.
-- Verificerede profiler (Gold og Platinum) viser et badge.
 
 ## Dagens reflektion
 - Kalender med oversigt over egne refleksioner.

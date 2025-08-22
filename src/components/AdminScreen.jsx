@@ -207,16 +207,9 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenReports }, 'Se anmeldt indhold'),
     React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
       React.createElement(Button, {
-        className: 'bg-blue-500 text-white px-4 py-2 rounded',
-        onClick: async () => {
-          const prof = profiles.find(p => p.id === userId) || {};
-          await updateDoc(doc(db, 'profiles', userId), { verified: !prof.verified });
-        }
-      }, (profiles.find(p => p.id === userId) || {}).verified ? 'Fjern verificering' : 'Verificer profil'),
-    React.createElement(Button, {
-      className: 'bg-red-500 text-white px-4 py-2 rounded',
-      onClick: deleteUser
-    }, 'Delete user')
+        className: 'bg-red-500 text-white px-4 py-2 rounded',
+        onClick: deleteUser
+      }, 'Delete user')
     ),
 
   React.createElement(Card, { className: 'p-6 m-4 shadow-xl bg-white/90' },

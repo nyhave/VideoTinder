@@ -7,7 +7,6 @@ const descriptions = [
   'V\u00e6lg bruger: Skift mellem profiler.',
   'Gem & log ud: Gem brugers \u00e6ndringer og log ud.',
   'Se anmeldt indhold: Vis rapporteret indhold.',
-  'Verificer profil/Fjern verificering: Skift verificering for den valgte profil.',
   'Slet bruger: Fjern den valgte bruger permanent.',
   'Vis statistik: Se statistikdiagrammer.',
   'Se seneste logins: Vis de seneste loginmetoder.',

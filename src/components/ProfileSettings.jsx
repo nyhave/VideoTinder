@@ -20,7 +20,6 @@ import { getInterestCategory } from '../interests.js';
 import { getAge, getCurrentDate, getMaxVideoSeconds, getMonthlyBoostLimit, hasAdvancedFilters } from '../utils.js';
 import PremiumIcon from './PremiumIcon.jsx';
 import { triggerHaptic } from '../haptics.js';
-import VerificationBadge from './VerificationBadge.jsx';
 import { showLocalNotification, sendWebPushToProfile } from '../notifications.js';
 import InfoOverlay from './InfoOverlay.jsx';
 
@@ -546,7 +545,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             },
               React.createElement(UserIcon,{ className:'w-12 h-12 text-gray-500' })
             ),
-          profile.verified && React.createElement(VerificationBadge, null)
         ),
         !publicView && editInfo && profile.photoURL && React.createElement(Button, {
           className: 'bg-pink-500 text-white p-1 rounded flex items-center justify-center',

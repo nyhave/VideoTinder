@@ -4,7 +4,6 @@ import { User } from 'lucide-react';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import SectionTitle from './SectionTitle.jsx';
-import VerificationBadge from './VerificationBadge.jsx';
 import AdBanner from './AdBanner.jsx';
 import { useT } from '../i18n.js';
 import { useCollection, useDoc, db, doc, setDoc, deleteDoc, getDoc, updateDoc, collection } from '../firebase.js';
@@ -264,8 +263,7 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
               (p.photoURL ?
                 React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
                 React.createElement(User, { className: 'w-10 h-10 text-pink-500' })
-              ),
-              p.verified && React.createElement(VerificationBadge, null)
+              )
             ),
             React.createElement('div', null,
               React.createElement('p', { className: 'font-medium' }, `${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`),
@@ -310,8 +308,7 @@ export default function DailyDiscovery({ userId, profiles = [], onSelectProfile,
               React.createElement('div',{ className:'flex flex-col items-center' },
                 p.photoURL ?
                   React.createElement('img',{src:p.photoURL,className:'w-10 h-10 rounded object-cover'}) :
-                  React.createElement(User,{className:'w-10 h-10 text-pink-500'}),
-                p.verified && React.createElement(VerificationBadge, null)
+                  React.createElement(User,{className:'w-10 h-10 text-pink-500'})
               ),
               React.createElement('div',null,
                 React.createElement('p',{className:'font-medium'},`${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`),

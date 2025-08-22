@@ -9,7 +9,6 @@ import SectionTitle from './SectionTitle.jsx';
 import { useCollection, db, doc, setDoc, deleteDoc, getDoc, updateDoc } from '../firebase.js';
 import { useT } from '../i18n.js';
 import { triggerHaptic } from '../haptics.js';
-import VerificationBadge from './VerificationBadge.jsx';
 import { showLocalNotification, sendWebPushToProfile } from '../notifications.js';
 
 export default function LikesScreen({ userId, onSelectProfile, onBack }) {
@@ -148,8 +147,7 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
               React.createElement('div', { className:'flex flex-col items-center' },
                 p.photoURL ?
                   React.createElement('img',{src:p.photoURL,className:'w-10 h-10 rounded object-cover'}) :
-                  React.createElement(UserIcon,{className:'w-10 h-10 text-yellow-500'}),
-                p.verified && React.createElement(VerificationBadge, null)
+                  React.createElement(UserIcon,{className:'w-10 h-10 text-yellow-500'})
               ),
               React.createElement('div',null,
                 React.createElement('p',{className:'font-medium'},`${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`),
