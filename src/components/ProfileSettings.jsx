@@ -264,7 +264,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     };
   });
 
-  const replaceFile = async (file, field, index, music) => {
+  const replaceFile = async (file, field, index) => {
     if(!file) return;
     try {
       const storageRef = ref(storage, `profiles/${userId}/${field}-${Date.now()}-${file.name}`);
@@ -272,11 +272,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
       const url = await getDownloadURL(storageRef);
       const recordedAt = new Date().toISOString();
       const clip = { url, lang: profile.language || 'en', recordedAt, uploadedAt: recordedAt };
-      if(music){
-        const musicRef = ref(storage, `profiles/${userId}/${field}-music-${Date.now()}-${music.name}`);
-        await uploadBytes(musicRef, music);
-        clip.music = await getDownloadURL(musicRef);
-      }
       const updated = [...(profile[field] || [])];
       const targetIndex = Number.isInteger(index) && index >= 0 ? index : updated.length;
       if(targetIndex < updated.length){
@@ -315,14 +310,14 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
     await updateDoc(doc(db,'profiles',userId), { ageRange: range });
   };
 
-  const handleVideoRecorded = async (file, music) => {
+  const handleVideoRecorded = async (file) => {
     const max = getMaxVideoSeconds(profile);
     if(!(await checkDuration(file, max))){
       alert(t('videoTooLong').replace('{seconds}', max));
       return;
     }
     setShowSnapVideoRecorder(false);
-    await replaceFile(file, 'videoClips', recordClipIndex, music);
+    await replaceFile(file, 'videoClips', recordClipIndex);
     setRecordClipIndex(null);
   };
 
@@ -504,7 +499,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
         );
       })
     ),
-    !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => { setShowSnapVideoRecorder(false); setRecordClipIndex(null); }, onRecorded: handleVideoRecorded, maxDuration: getMaxVideoSeconds(profile)*1000, user: profile, clipIndex: recordClipIndex })
+    !publicView && showSnapVideoRecorder && React.createElement(SnapVideoRecorder, { onCancel: () => { setShowSnapVideoRecorder(false); setRecordClipIndex(null); }, onRecorded: handleVideoRecorded, maxDuration: getMaxVideoSeconds(profile)*1000 })
   );
 
 

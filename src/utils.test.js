@@ -102,8 +102,8 @@ describe('utils', () => {
     expect(getMonthlyBoostLimit({})).toBe(0);
   });
 
-  test('getMaxVideoSeconds respects tier', () => {
-    expect(getMaxVideoSeconds({ subscriptionTier: 'gold' })).toBe(15);
+  test('getMaxVideoSeconds returns default', () => {
+    expect(getMaxVideoSeconds({ subscriptionTier: 'gold' })).toBe(10);
     expect(getMaxVideoSeconds({})).toBe(10);
   });
 

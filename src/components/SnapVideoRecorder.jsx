@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useT } from '../i18n.js';
-import { getCurrentDate } from '../utils.js';
 
-export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 10000, user, clipIndex }) {
+export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 10000 }) {
   const streamRef = useRef();
   const recorderRef = useRef();
   const chunksRef = useRef([]);
@@ -11,15 +10,10 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   const [recording, setRecording] = useState(false);
   const [remaining, setRemaining] = useState(Math.round(maxDuration / 1000));
   const startTimeRef = useRef(null);
-  const [music, setMusic] = useState(null);
   const [stage, setStage] = useState('intro');
   const [count, setCount] = useState(3);
   const countdownRef = useRef();
   const t = useT();
-  const tier = user?.subscriptionTier || 'free';
-  const hasActiveSubscription =
-    user?.subscriptionExpires && new Date(user.subscriptionExpires) > getCurrentDate();
-  const canAddMusic = hasActiveSubscription && tier === 'gold';
 
   useEffect(() => {
     return () => {
@@ -72,7 +66,7 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
     recorder.onstop = () => {
       const blob = new Blob(chunksRef.current, { type: recorder.mimeType });
       const file = new File([blob], `video-${Date.now()}.webm`, { type: blob.type });
-      onRecorded && onRecorded(file, canAddMusic ? music : null);
+      onRecorded && onRecorded(file);
     };
     recorder.start();
     setRecording(true);
@@ -133,10 +127,6 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   return React.createElement('div', { className:'fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60' },
     React.createElement('div', { className:'text-white text-4xl font-bold mb-4' }, remainingSeconds),
     React.createElement('div', { className:'relative' },
-      canAddMusic && React.createElement('label', { className:'absolute -top-10 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-2 py-1 rounded cursor-pointer' },
-        t('addMusic'),
-        React.createElement('input', { type:'file', accept:'audio/*', className:'hidden', onChange:e=>setMusic(e.target.files[0]) })
-      ),
       React.createElement('video', { ref: videoRef, className:'w-72 h-72 object-cover rounded', autoPlay:true, muted:true, playsInline:true }),
       React.createElement('button', { onClick: recording ? stop : cancel, className:'absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/40 text-white px-4 py-1 rounded' }, t(recording ? 'stop' : 'cancel'))
     )

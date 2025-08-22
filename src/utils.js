@@ -97,9 +97,7 @@ export function getMonthlyBoostLimit(user){
 }
 
 export function getMaxVideoSeconds(user){
-  const tier = user?.subscriptionTier || 'free';
-  const caps = { free:10, gold:15 };
-  return caps[tier] ?? caps.free;
+  return 10;
 }
 
 export function hasInterestChat(user){

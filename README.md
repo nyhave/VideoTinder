@@ -33,9 +33,7 @@ Profiles are presented as short episodes rather than a catalog of faces. Each ep
 * Seed data includes 11 mandlige profiler der matcher standardbrugeren så du kan teste premium og ekstra klip
 * Super likes let you signal strong interest and improve match rates
 * Boost your profile for increased visibility (1, 2 or 4 times per month depending on subscription)
-* Incognito mode allows subscribers to browse profiles anonymously
-* Video creation tools add background music and support longer uploads
-* Videoklip begrænset til 10 sekunder (op til 25 sekunder med premium)
+* Videoklip begrænset til 10 sekunder
   (optagelser lidt over grænsen accepteres for at håndtere kodningsforsinkelser)
 * Animation med nedtælling viser hvor lang tid der er tilbage under videooptagelse
 * Daglige statistikker gemmes automatisk og vises som grafer i adminområdet

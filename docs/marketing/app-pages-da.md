@@ -13,12 +13,11 @@
   - Videoklip 2 og 3
 - En hjælpefunktion i toppen guider brugeren gennem disse skridt.
 - Brugeren kan slette sin profil.
- - Videoklip kan maksimalt vare 10 sekunder (15 sekunder med Gold); en timer tæller ned under optagelsen, og Gold kan tilføje baggrundsmusik.
-- inden en optagelse vises brugerens video illede og der tælles ned 3-2-1.
-- **Indstillinger**
+ - Videoklip kan maksimalt vare 10 sekunder; en timer tæller ned under optagelsen.
+ - inden en optagelse vises brugerens video illede og der tælles ned 3-2-1.
+ - **Indstillinger**
    - Vælg køn og aldersinterval for kandidater. Gold får adgang til alle avancerede filtre.
   - Markér op til fem interesser, der kan bruges i interessechatten og kan øge march score
-   - Aktiver incognito-tilstand for anonym browsing (kun Gold).
 
 ## Dit feed
  - Ved indgang vises listen med kandidatprofiler samt eventuelle likede profiler.
