@@ -4,8 +4,8 @@ import { Button } from './ui/button.js';
 
 export default function SubscriptionOverlay({ onClose, onBuy, allowFree = false }) {
   const plans = [
-    ...(allowFree ? [{ tier: 'free', title: 'Freemium', price: '0 kr/md', daily: 3, seconds: 10, boosts: 0 }] : []),
-    { tier: 'gold', title: 'Guld', price: '79 kr/md', daily: 8, seconds: 15, boosts: 2 }
+    ...(allowFree ? [{ tier: 'free', title: 'Freemium', price: '0 kr/md', daily: 5, seconds: 10, boosts: 0 }] : []),
+    { tier: 'gold', title: 'Guld', price: '79 kr/md', daily: 10, seconds: 15, boosts: 2 }
   ];
   const [selected, setSelected] = useState(plans[0].tier);
   return React.createElement('div', { className: 'fixed inset-0 z-50 bg-black/50 flex items-center justify-center' },

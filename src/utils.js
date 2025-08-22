@@ -80,7 +80,7 @@ export function detectBrowser(){
 
 export function getDailyProfileLimit(user){
   const tier = user?.subscriptionTier || 'free';
-  const limits = { free:3, gold:8 };
+  const limits = { free:5, gold:10 };
   return limits[tier] ?? limits.free;
 }
 
