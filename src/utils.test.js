@@ -94,7 +94,7 @@ describe('utils', () => {
   });
 
   test('getSuperLikeLimit respects tier', () => {
-    expect(getSuperLikeLimit({ subscriptionTier: 'platinum' })).toBe(5);
+    expect(getSuperLikeLimit({ subscriptionTier: 'gold' })).toBe(3);
     expect(getSuperLikeLimit({})).toBe(0);
   });
 
@@ -109,25 +109,23 @@ describe('utils', () => {
   });
 
   test('hasInterestChat requires paid tier', () => {
-    expect(hasInterestChat({ subscriptionTier: 'silver' })).toBe(true);
+    expect(hasInterestChat({ subscriptionTier: 'gold' })).toBe(true);
     expect(hasInterestChat({ subscriptionTier: 'free' })).toBe(false);
   });
 
   test('hasAdvancedFilters requires paid tier', () => {
-    expect(hasAdvancedFilters({ subscriptionTier: 'silver' })).toBe(true);
+    expect(hasAdvancedFilters({ subscriptionTier: 'gold' })).toBe(true);
     expect(hasAdvancedFilters({ subscriptionTier: 'free' })).toBe(false);
   });
 
-  test('hasReadReceipts only for gold and above', () => {
+  test('hasReadReceipts only for gold tier', () => {
     expect(hasReadReceipts({ subscriptionTier: 'gold' })).toBe(true);
-    expect(hasReadReceipts({ subscriptionTier: 'platinum' })).toBe(true);
-    expect(hasReadReceipts({ subscriptionTier: 'silver' })).toBe(false);
+    expect(hasReadReceipts({ subscriptionTier: 'free' })).toBe(false);
   });
 
-  test('hasRatings only for gold and above', () => {
+  test('hasRatings only for gold tier', () => {
     expect(hasRatings({ subscriptionTier: 'gold' })).toBe(true);
-    expect(hasRatings({ subscriptionTier: 'platinum' })).toBe(true);
-    expect(hasRatings({ subscriptionTier: 'silver' })).toBe(false);
+    expect(hasRatings({ subscriptionTier: 'free' })).toBe(false);
   });
 
   test('getWeekId returns ISO week id', () => {

@@ -19,7 +19,7 @@ export default function SnapVideoRecorder({ onCancel, onRecorded, maxDuration = 
   const tier = user?.subscriptionTier || 'free';
   const hasActiveSubscription =
     user?.subscriptionExpires && new Date(user.subscriptionExpires) > getCurrentDate();
-  const canAddMusic = hasActiveSubscription && (tier === 'gold' || tier === 'platinum');
+  const canAddMusic = hasActiveSubscription && tier === 'gold';
 
   useEffect(() => {
     return () => {

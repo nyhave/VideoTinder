@@ -34,9 +34,7 @@ async function capture() {
 
   const users = [
     { id: '102', tier: 'free' },
-    { id: '101', tier: 'silver' },
-    { id: '103', tier: 'gold' },
-    { id: '104', tier: 'platinum' }
+    { id: '103', tier: 'gold' }
   ];
 
   const routes = [
