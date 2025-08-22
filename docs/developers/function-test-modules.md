@@ -65,7 +65,3 @@ Use the admin menu to open *Funktionstest* and choose a module to start testing.
 - Gift premium access and verify the recipient sees the upgrade.
 - Track the invite status from the admin page.
 
-### Offline test
-
-When verifying the **Recording & Media** module, open a profile while online, then switch the device to airplane mode. The previously viewed clips should continue to play and navigation should still work. Return online before continuing with the next module.
-After reconnecting, send a chat message to confirm that synchronization resumes properly.
