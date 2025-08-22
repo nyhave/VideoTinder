@@ -8,7 +8,6 @@ import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
 import ProfileSettings from './ProfileSettings.jsx';
 import VideoPreview from './VideoPreview.jsx';
-import VideoLikeButton from './VideoLikeButton.jsx';
 import PuzzleReveal from './PuzzleReveal.jsx';
 import InfoOverlay from './InfoOverlay.jsx';
 import useDayOffset from '../useDayOffset.js';
@@ -199,7 +198,6 @@ export default function ProfileEpisode({ userId, profileId, onBack }) {
             timestamp: clip && (clip.recordedAt || clip.uploadedAt),
             onEnded: () => handleClipEnd(i)
           }),
-          url && !locked && React.createElement(VideoLikeButton, { userId, videoId: `${profileId}-clip-${i}` }),
           !locked && i === stage - 1 && React.createElement('span', { className:'absolute top-1 right-1 bg-green-100 text-green-600 text-xs font-semibold px-1 rounded' }, t('dayLabel').replace('{day}', i + 1)),
           locked && React.createElement('div', { className:'absolute inset-0 bg-black/80 flex items-center justify-center rounded text-center px-2' },
             React.createElement('span', { className:'text-pink-500 text-xs font-semibold' }, t('dayLabel').replace('{day}', i + 1))
