@@ -25,5 +25,3 @@ Reusable profile filtering helper for Netlify Functions
 Track logs for individual users from admin
 Super likes to signal strong interest and improve match rates
 Monthly profile boosts depending on subscription tier
-Incognito mode lets subscribers browse profiles anonymously
-Video creation tools with music and longer uploads for richer profiles

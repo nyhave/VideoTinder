@@ -102,7 +102,6 @@ export function scoreProfiles(user, profiles, ageRange) {
   return profiles
     .filter(p => (
         p.id !== user.id &&
-        !p.incognito &&
         p.gender === interest &&
         (p.birthday ? getAge(p.birthday) : p.age) >= ageRange[0] &&
         (p.birthday ? getAge(p.birthday) : p.age) <= ageRange[1]

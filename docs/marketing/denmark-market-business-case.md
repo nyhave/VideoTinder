@@ -20,9 +20,6 @@ VideoTinder uses a freemium model with a single paid membership level (Gold) tha
 | Super like per week | 1 | 5 |
 | Boost visibility | ❌ | 2/month |
 | Advanced filters (gender, age, etc.) | gender, age | Full |
-| Incognito mode | ❌ | ✓ |
-| Video creation tools (music) | ❌ | ✓ |
-| Longer videos | 10 sec | 15 sec |
 | Ad-free experience | Ads | ✓ |
 | Advanced profile analytics | ❌ | ✓ (basic) |
 
