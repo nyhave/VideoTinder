@@ -27,12 +27,10 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
   const hasActiveSubscription =
     currentUser.subscriptionExpires &&
     new Date(currentUser.subscriptionExpires) > getCurrentDate();
-  const canSeeLikes = hasActiveSubscription && (tier === 'gold' || tier === 'platinum');
+  const canSeeLikes = hasActiveSubscription && tier === 'gold';
   const t = useT();
   const tierLabel = {
-    silver: t('tierSilver'),
-    gold: t('tierGold'),
-    platinum: t('tierPlatinum')
+    gold: t('tierGold')
   }[tier] || 'Premium';
 
   const [matchedProfile, setMatchedProfile] = useState(null);
@@ -179,8 +177,8 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
           React.createElement('li',{className:'text-center text-gray-500'},'Ingen har liket dig endnu')
       )
     ),
-    showBlur && React.createElement('span',{className:'absolute inset-0 m-auto text-yellow-500 text-sm font-semibold pointer-events-none flex items-center justify-center text-center px-2'},'Kr\u00e6ver Guld eller Platin'),
-    !canSeeLikes && likedProfiles.length > 0 && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb Guld eller Platin (gratis nu - betaling ikke implementeret)'),
+    showBlur && React.createElement('span',{className:'absolute inset-0 m-auto text-yellow-500 text-sm font-semibold pointer-events-none flex items-center justify-center text-center px-2'},'Kr\u00e6ver Guld'),
+    !canSeeLikes && likedProfiles.length > 0 && React.createElement(Button,{className:'mt-4 w-full bg-yellow-500 text-white',onClick:()=>setShowPurchase(true)},'Køb Guld (gratis nu - betaling ikke implementeret)'),
     showPurchase && React.createElement(SubscriptionOverlay,{onClose:()=>setShowPurchase(false), onBuy:handlePurchase}),
     matchedProfile && React.createElement(MatchOverlay,{name:matchedProfile.name,onClose:()=>setMatchedProfile(null)})
   );

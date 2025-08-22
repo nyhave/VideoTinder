@@ -736,9 +736,7 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
             !subscriptionActive && React.createElement(PremiumIcon, null),
             (() => {
               const tierLabel = {
-              silver: t('tierSilver'),
-              gold: t('tierGold'),
-              platinum: t('tierPlatinum')
+              gold: t('tierGold')
             }[profile.subscriptionTier] || 'Premium';
             const date = new Date(profile.subscriptionExpires).toLocaleDateString('da-DK');
             return subscriptionActive
@@ -749,10 +747,6 @@ export default function ProfileSettings({ userId, ageRange, onChangeAgeRange, pu
           profile.subscriptionPurchased && React.createElement('p', {
             className: 'text-center text-sm text-gray-500'
           }, `Købt ${new Date(profile.subscriptionPurchased).toLocaleDateString('da-DK')}`),
-          subscriptionActive && profile.subscriptionTier === 'platinum' && React.createElement('label', { className:'flex items-center gap-2 mt-2' },
-            React.createElement('input', { type:'checkbox', checked: profile.incognito || false, onChange: async e => { const checked = e.target.checked; await updateDoc(doc(db,'profiles', userId), { incognito: checked }); setProfile({ ...profile, incognito: checked }); } }),
-            t('incognitoMode')
-          ),
           React.createElement(Button, {
             className: 'mt-4 w-full bg-yellow-500 text-white',
             onClick: () => setShowSub(true)

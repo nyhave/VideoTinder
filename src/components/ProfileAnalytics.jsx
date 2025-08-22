@@ -10,8 +10,7 @@ export default function ProfileAnalytics({ userId, onBack }){
   const matches = useCollection('matches', 'profileId', userId);
   const t = useT();
   const tier = profile.subscriptionTier;
-  const isGold = tier === 'gold' || tier === 'platinum';
-  const isPlatinum = tier === 'platinum';
+  const isGold = tier === 'gold';
   const views = profile.viewCount || 0;
   const watchTime = profile.watchTime || 0;
   const likeCount = profile.likeCount || 0;
@@ -23,7 +22,6 @@ export default function ProfileAnalytics({ userId, onBack }){
     React.createElement('p',{className:'mb-2'},`${t('watchTime')}: ${watchTime} ${t('seconds')}`),
     React.createElement('p',{className:'mb-2'},`${t('matchConversions')}: ${matches.length}`),
     isGold && React.createElement('p',{className:'mb-2'},`${t('likes')}: ${likeCount}`),
-    isGold && React.createElement('p',{className:'mb-2'},`${t('matchRate')}: ${matchRate}%`),
-    isPlatinum && React.createElement('p',null,`${t('avgWatchTime')}: ${avgWatch} ${t('seconds')}`)
+    isGold && React.createElement('p',{className:'mb-2'},`${t('matchRate')}: ${matchRate}%`)
   );
 }

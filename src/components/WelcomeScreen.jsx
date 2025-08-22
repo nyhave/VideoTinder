@@ -215,7 +215,7 @@ export default function WelcomeScreen({ onLogin }) {
       profile.subscriptionActive = true;
       profile.subscriptionPurchased = now.toISOString();
       profile.subscriptionExpires = expiry.toISOString();
-      profile.subscriptionTier = 'silver';
+      profile.subscriptionTier = 'gold';
       profile.boostMonth = now.toISOString().slice(0,7);
       profile.boostsUsed = 0;
       profile.giftedBy = giftFrom;
@@ -348,7 +348,7 @@ export default function WelcomeScreen({ onLogin }) {
       profile.subscriptionActive = true;
       profile.subscriptionPurchased = now.toISOString();
       profile.subscriptionExpires = expiry.toISOString();
-      profile.subscriptionTier = 'silver';
+      profile.subscriptionTier = 'gold';
       profile.boostMonth = now.toISOString().slice(0,7);
       profile.boostsUsed = 0;
       profile.giftedBy = giftFrom;

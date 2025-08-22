@@ -80,31 +80,31 @@ export function detectBrowser(){
 
 export function getDailyProfileLimit(user){
   const tier = user?.subscriptionTier || 'free';
-  const limits = { free:3, silver:5, gold:8, platinum:10 };
+  const limits = { free:3, gold:8 };
   return limits[tier] ?? limits.free;
 }
 
 export function getSuperLikeLimit(user){
   const tier = user?.subscriptionTier || 'free';
-  const limits = { free:0, silver:1, gold:3, platinum:5 };
+  const limits = { free:0, gold:3 };
   return limits[tier] ?? limits.free;
 }
 
 export function getMonthlyBoostLimit(user){
   const tier = user?.subscriptionTier || 'free';
-  const limits = { free:0, silver:1, gold:2, platinum:4 };
+  const limits = { free:0, gold:2 };
   return limits[tier] ?? limits.free;
 }
 
 export function getMaxVideoSeconds(user){
   const tier = user?.subscriptionTier || 'free';
-  const caps = { free:10, silver:10, gold:15, platinum:25 };
+  const caps = { free:10, gold:15 };
   return caps[tier] ?? caps.free;
 }
 
 export function hasInterestChat(user){
   const tier = user?.subscriptionTier || 'free';
-  return ['silver','gold','platinum'].includes(tier);
+  return tier === 'gold';
 }
 
 export function hasAdvancedFilters(user){
@@ -114,12 +114,12 @@ export function hasAdvancedFilters(user){
 
 export function hasReadReceipts(user){
   const tier = user?.subscriptionTier || 'free';
-  return ['gold','platinum'].includes(tier);
+  return tier === 'gold';
 }
 
 export function hasRatings(user){
   const tier = user?.subscriptionTier || 'free';
-  return ['gold','platinum'].includes(tier);
+  return tier === 'gold';
 }
 
 export function getWeekId(date = getCurrentDate()){

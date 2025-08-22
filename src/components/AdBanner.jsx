@@ -7,7 +7,7 @@ export default function AdBanner({ user }){
   const t = useT();
   const tier = user?.subscriptionTier || 'free';
   if(tier !== 'free') return null;
-  const tierLabel = t('tierSilver');
+  const tierLabel = t('tierGold');
   const ads = [
     {
       text: t('adBannerText').replace('{tier}', tierLabel),
