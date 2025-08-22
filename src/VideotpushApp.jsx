@@ -31,6 +31,7 @@ import InfoOverlay from './components/InfoOverlay.jsx';
 import ConsoleLogPanel from './components/ConsoleLogPanel.jsx';
 import FunctionTestGuide from './components/FunctionTestGuide.jsx';
 import InviteOverlay from './components/InviteOverlay.jsx';
+import FeedbackButton from './components/FeedbackButton.jsx';
 import TaskButton from './components/TaskButton.jsx';
 import GraphicsElementsScreen from './components/GraphicsElementsScreen.jsx';
 import { getNextTask } from './tasks.js';
@@ -613,6 +614,7 @@ export default function VideotpushApp() {
     showInvite && React.createElement(InviteOverlay, { userId, onClose: () => setShowInvite(false) }),
     showSubscription && React.createElement(SubscriptionOverlay, { onClose: () => setShowSubscription(false), onBuy: handleSubscriptionPurchase }),
     showHelp && React.createElement(HelpOverlay, { onClose: ()=>setShowHelp(false) }),
+    React.createElement(FeedbackButton),
     React.createElement(ConsoleLogPanel),
     React.createElement(FunctionTestGuide)
   ));
