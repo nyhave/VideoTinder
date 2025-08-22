@@ -15,9 +15,9 @@
 - Brugeren kan slette sin profil.
  - Videoklip kan maksimalt vare 10 sekunder; en timer tæller ned under optagelsen.
  - inden en optagelse vises brugerens video illede og der tælles ned 3-2-1.
- - **Indstillinger**
+ - **Mit abonnement**
    - Vælg køn og aldersinterval for kandidater. Gold får adgang til alle avancerede filtre.
-  - Markér op til fem interesser, der kan bruges i interessechatten og kan øge march score
+   - Markér op til fem interesser, der kan bruges i interessechatten og kan øge march score
 
 ## Dit feed
  - Ved indgang vises listen med kandidatprofiler samt eventuelle likede profiler.
