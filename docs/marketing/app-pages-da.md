@@ -13,12 +13,12 @@
   - Videoklip 2 og 3
 - En hjælpefunktion i toppen guider brugeren gennem disse skridt.
 - Brugeren kan slette sin profil.
-- Videoklip kan maksimalt vare 10 sekunder (15 sekunder med Gold, 25 sekunder med Platinum); en timer tæller ned under optagelsen, og Gold/Platinum kan tilføje baggrundsmusik.
+ - Videoklip kan maksimalt vare 10 sekunder (15 sekunder med Gold); en timer tæller ned under optagelsen, og Gold kan tilføje baggrundsmusik.
 - inden en optagelse vises brugerens video illede og der tælles ned 3-2-1.
 - **Indstillinger**
-  - Vælg køn og aldersinterval for kandidater. Gold og Platinum får adgang til alle avancerede filtre.
+   - Vælg køn og aldersinterval for kandidater. Gold får adgang til alle avancerede filtre.
   - Markér op til fem interesser, der kan bruges i interessechatten og kan øge march score
-  - Aktiver incognito-tilstand for anonym browsing (kun Platinum).
+   - Aktiver incognito-tilstand for anonym browsing (kun Gold).
 
 ## Dit feed
  - Ved indgang vises listen med kandidatprofiler samt eventuelle likede profiler.
@@ -52,11 +52,11 @@
 - Chat med matchede brugere.
 - Start videokald.
 - Mulighed for at unmatche.
-- Gold og Platinum får læsekvitteringer og skriverindikatorer.
+ - Gold får læsekvitteringer og skriverindikatorer.
 
 ## Interessechat
-- Chat i grupper baseret på valgte interesser (kræver mindst Silver).
-- Gold og Platinum får prioriteret placering i chatlisterne (Platinum med topprioritet).
+ - Chat i grupper baseret på valgte interesser (kræver Gold).
+ - Gold får prioriteret placering i chatlisterne.
 
 ## Notifikationer
 - Viser systembeskeder og invitationer sorteret efter dato.
@@ -68,8 +68,8 @@
   Når en invitation er sendt, følges der med i, om brugeren opretter profil.
 
 ## Du er blevet liket
-- Viser en liste over kandidatprofiler, hvis brugeren har Gold eller Platinum.
-- Uden Gold/Platinum er listen sløret, og brugeren får tilbud om at opgradere.
+ - Viser en liste over kandidatprofiler, hvis brugeren har Gold.
+ - Uden Gold er listen sløret, og brugeren får tilbud om at opgradere.
 
 ## Login og opret bruger
 - Log ind med e-mail eller Google.
