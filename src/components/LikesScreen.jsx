@@ -142,7 +142,10 @@ export default function LikesScreen({ userId, onSelectProfile, onBack }) {
             className:'p-4 bg-yellow-50 rounded-lg cursor-pointer shadow flex flex-col relative',
             onClick:()=>onSelectProfile(p.id)
           },
-            superLike && React.createElement(Star,{className:'w-6 h-6 absolute top-2 left-2 text-blue-500'}),
+            superLike && React.createElement('div',{className:'absolute top-2 left-2 flex items-center gap-1 text-blue-500'},
+              React.createElement(Star,{className:'w-6 h-6'}),
+              React.createElement('span',{className:'text-sm font-semibold'}, t('superLike'))
+            ),
             React.createElement('div',{className:'flex items-center gap-4 mb-2'},
               React.createElement('div', { className:'flex flex-col items-center' },
                 p.photoURL ?
