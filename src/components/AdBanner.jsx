@@ -18,11 +18,6 @@ export default function AdBanner({ user }){
       text: t('adInviteText'),
       button: t('adInviteButton'),
       onClick: () => window.dispatchEvent(new CustomEvent('showInvite'))
-    },
-    {
-      text: t('adRealettenText'),
-      button: t('adRealettenButton'),
-      onClick: () => window.dispatchEvent(new CustomEvent('showInterestChat'))
     }
   ];
   const [idx, setIdx] = useState(0);
