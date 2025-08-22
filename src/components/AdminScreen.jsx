@@ -153,37 +153,6 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     }
   };
 
-  const killRealettenSessions = async () => {
-    if (!window.confirm('Delete all Realetten sessions?')) return;
-    try {
-      const list = await getDocs(collection(db, 'realetten'));
-      for (const docSnap of list.docs) {
-        const callsCol = collection(db, 'realetten', docSnap.id, 'calls');
-        const calls = await getDocs(callsCol);
-        for (const call of calls.docs) {
-          const offers = await getDocs(collection(callsCol, call.id, 'offerCandidates'));
-          const answers = await getDocs(collection(callsCol, call.id, 'answerCandidates'));
-          await Promise.all([
-            ...offers.docs.map(d => deleteDoc(d.ref)),
-            ...answers.docs.map(d => deleteDoc(d.ref))
-          ]);
-          await deleteDoc(call.ref);
-        }
-        await deleteDoc(docSnap.ref);
-        await deleteDoc(doc(db, 'turnGames', docSnap.id)).catch(() => {});
-      }
-
-      // Remove any stray turnGames documents that may remain
-      const games = await getDocs(collection(db, 'turnGames'));
-      for (const game of games.docs) {
-        await deleteDoc(game.ref).catch(() => {});
-      }
-
-      alert('Alle Realetten sessions slettet');
-    } catch (err) {
-      alert('Failed: ' + err.message);
-    }
-  };
 
   const testHaptic = () => {
     triggerHaptic([100, 50, 100]);
@@ -292,7 +261,6 @@ export default function AdminScreen({ onOpenStats, onOpenBugReports, onOpenMatch
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: () => seedData().then(() => alert('Databasen er nulstillet')) }, 'Reset database'),
     React.createElement(Button, { className: 'mt-2 bg-blue-500 text-white px-4 py-2 rounded', onClick: recoverMissing }, 'Hent mistet fra DB'),
     React.createElement(Button, { className: 'mt-2 bg-red-500 text-white px-4 py-2 rounded', onClick: resetInvites }, 'Reset invitations'),
-    React.createElement(Button, { className: 'mt-2 bg-red-500 text-white px-4 py-2 rounded', onClick: killRealettenSessions }, 'Kill Realetten sessions'),
     React.createElement('div', { className: 'mt-2 flex flex-wrap gap-2' },
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: checkAuthAccess }, 'Check Firebase Auth'),
       React.createElement(Button, { className: 'bg-blue-500 text-white px-4 py-2 rounded', onClick: onOpenServerLog }, 'Server log')

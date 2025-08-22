@@ -5,8 +5,7 @@ import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
 import SectionTitle from './SectionTitle.jsx';
 import { useT } from '../i18n.js';
-import { useDoc, useCollection, db, doc, setDoc, arrayUnion, onSnapshot, getDoc } from '../firebase.js';
-import RealettenPage from './RealettenPage.jsx';
+import { useDoc, useCollection, db, doc, setDoc, arrayUnion } from '../firebase.js';
 
 function sanitizeInterest(i){
   return encodeURIComponent(i || '').replace(/%20/g,'_');
@@ -19,8 +18,6 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
   const [interest, setInterest] = useState(null);
   const chat = useDoc('interestChats', interest ? sanitizeInterest(interest) : null);
   const [text, setText] = useState('');
-  const [showRealetten, setShowRealetten] = useState(false);
-  const [realettenStarted, setRealettenStarted] = useState(false);
   const messagesRef = useRef(null);
   const textareaRef = useRef(null);
   const t = useT();
@@ -50,25 +47,6 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
     }
   }, [chat?.messages?.length]);
 
-  useEffect(() => {
-    if(!interest) return;
-    let ignore = false;
-    // reset state immediately when switching interests so
-    // the button text doesn't momentarily show outdated info
-    setRealettenStarted(false);
-    const ref = doc(db, 'turnGames', sanitizeInterest(interest));
-    getDoc(ref).then(snap => {
-      if(!ignore) setRealettenStarted(snap.exists());
-    });
-    const unsub = onSnapshot(ref, snap => {
-      if(!ignore) setRealettenStarted(snap.exists());
-    });
-    return () => {
-      ignore = true;
-      unsub();
-    };
-  }, [interest]);
-
   const sendMessage = async () => {
     const trimmed = text.trim();
     if(!trimmed || !interest) return;
@@ -91,9 +69,6 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
       React.createElement('p', { className:'text-gray-600 mb-4' }, 'Kræver Sølv, Guld eller Platin'),
       React.createElement(Button, { className:'bg-pink-500 text-white', onClick:()=>window.dispatchEvent(new CustomEvent('showSubscription')) }, 'Køb abonnement (gratis nu - betaling ikke implementeret)')
     );
-  }
-  if(showRealetten && interest){
-    return React.createElement(RealettenPage, { interest, userId, onBack:()=>setShowRealetten(false) });
   }
   return React.createElement(Card, { className: 'p-6 shadow-xl bg-white/90 flex flex-col h-full flex-1', style:{height:'calc(100vh - 10rem)', maxHeight:'calc(100vh - 10rem)', overflow:'hidden'} },
     React.createElement(SectionTitle, { title: interest ? `${t('interestChatsTitle')} - ${interest}` : t('interestChatsTitle') }),
@@ -139,10 +114,6 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
           ref:textareaRef
         }),
         React.createElement(Button, { className:'bg-pink-500 text-white', disabled:!text.trim(), onClick:sendMessage }, 'Send')
-      ),
-      React.createElement('div', { className:'flex flex-col items-center mt-2 mb-4' },
-        React.createElement(Button, { className:'bg-blue-600 text-white font-bold', onClick:()=>setShowRealetten(true) }, realettenStarted ? 'Realetten started - Join now!' : 'Tag Chancen - Pr\u00f8v Realetten'),
-        React.createElement('p', { className:'text-gray-600 text-sm mt-1' }, 'M\u00f8d andre i et videokald - op til 4 deltagere')
       )
     )
   );

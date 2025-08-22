@@ -10,8 +10,6 @@ jest.mock('../i18n.js', () => ({
       adBannerButton: 'Upgrade',
       adInviteText: 'Invite a friend',
       adInviteButton: 'Invite',
-      adRealettenText: 'Try Realetten',
-      adRealettenButton: 'Connect',
       tierGold: 'Gold'
     };
     return map[key] || key;
@@ -39,7 +37,7 @@ describe('AdBanner', () => {
     act(() => { jest.advanceTimersByTime(5000); });
     expect(container.textContent).toContain('Invite a friend');
     act(() => { jest.advanceTimersByTime(5000); });
-    expect(container.textContent).toContain('Try Realetten');
+    expect(container.textContent).toContain('Upgrade to Gold');
   });
 
   test('renders nothing for gold tier', () => {
@@ -47,18 +45,5 @@ describe('AdBanner', () => {
     expect(container.innerHTML).toBe('');
   });
 
-  test('Realetten ad redirects to interest chat', () => {
-    act(() => { ReactDOM.render(<AdBanner user={{ subscriptionTier: 'free' }} />, container); });
-    act(() => { jest.advanceTimersByTime(10000); });
-    expect(container.textContent).toContain('Try Realetten');
-    const handler = jest.fn();
-    window.addEventListener('showInterestChat', handler);
-    const button = container.querySelector('button');
-    act(() => {
-      button.click();
-    });
-    expect(handler).toHaveBeenCalled();
-    window.removeEventListener('showInterestChat', handler);
-  });
 });
 

@@ -31,7 +31,6 @@ import InfoOverlay from './components/InfoOverlay.jsx';
 import ConsoleLogPanel from './components/ConsoleLogPanel.jsx';
 import FunctionTestGuide from './components/FunctionTestGuide.jsx';
 import InviteOverlay from './components/InviteOverlay.jsx';
-import RealettenPage from './components/RealettenPage.jsx';
 import TaskButton from './components/TaskButton.jsx';
 import GraphicsElementsScreen from './components/GraphicsElementsScreen.jsx';
 import { getNextTask } from './tasks.js';
@@ -78,7 +77,6 @@ export default function VideotpushApp() {
   const [videoCallId,setVideoCallId]=useState(null);
   const [showHelp,setShowHelp]=useState(false);
   const [showInvite,setShowInvite]=useState(false);
-  const [showRealetten,setShowRealetten]=useState(false);
   const [activeTask, setActiveTask] = useState(null);
   const [taskClicks, setTaskClicks] = useState(0);
   const [showSubscription, setShowSubscription] = useState(false);
@@ -448,12 +446,6 @@ export default function VideotpushApp() {
   }, []);
 
   useEffect(() => {
-    const handler = () => setShowRealetten(true);
-    window.addEventListener('showRealetten', handler);
-    return () => window.removeEventListener('showRealetten', handler);
-  }, []);
-
-  useEffect(() => {
     const handler = () => setTab('interestchat');
     window.addEventListener('showInterestChat', handler);
     return () => window.removeEventListener('showInterestChat', handler);
@@ -619,7 +611,6 @@ export default function VideotpushApp() {
       React.createElement(Button, { className: 'w-full bg-blue-500 text-white', onClick: enableNotifications }, t('enableNotifications'))
     ),
     showInvite && React.createElement(InviteOverlay, { userId, onClose: () => setShowInvite(false) }),
-    showRealetten && React.createElement(RealettenPage, { interest:'demo', userId, onBack: () => setShowRealetten(false) }),
     showSubscription && React.createElement(SubscriptionOverlay, { onClose: () => setShowSubscription(false), onBuy: handleSubscriptionPurchase }),
     showHelp && React.createElement(HelpOverlay, { onClose: ()=>setShowHelp(false) }),
     React.createElement(ConsoleLogPanel),

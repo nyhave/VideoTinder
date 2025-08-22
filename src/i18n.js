@@ -60,8 +60,6 @@ export const messages = {
   adBannerButton:{ en:'Upgrade', da:'Opgrader' },
   adInviteText:{ en:'Invite a friend to RealDate', da:'Inviter en ven til RealDate' },
   adInviteButton:{ en:'Invite', da:'Inviter' },
-  adRealettenText:{ en:'Meet new people - video call up to 4 people', da:'Mød nye mennesker - videokald op til 4 personer' },
-  adRealettenButton:{ en:'Connect', da:'Forbind' },
   tierGold:{ en:'Gold', da:'Guld' },
   confirmDeleteTitle:{ en:'Delete account?', da:'Slet konto?' },
   confirmDeleteDesc:{ en:'This will permanently remove your profile. Continue?', da:'Dette vil fjerne din profil permanent. Fortsæt?' },
