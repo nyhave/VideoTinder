@@ -88,8 +88,8 @@ describe('utils', () => {
   });
 
   test('getDailyProfileLimit respects tier', () => {
-    expect(getDailyProfileLimit({ subscriptionTier: 'gold' })).toBe(8);
-    expect(getDailyProfileLimit({})).toBe(3);
+    expect(getDailyProfileLimit({ subscriptionTier: 'gold' })).toBe(10);
+    expect(getDailyProfileLimit({})).toBe(5);
   });
 
   test('getSuperLikeLimit respects tier', () => {

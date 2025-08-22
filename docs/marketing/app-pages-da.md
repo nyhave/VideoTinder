@@ -22,9 +22,9 @@
 
 ## Dit feed
  - Ved indgang vises listen med kandidatprofiler samt eventuelle likede profiler.
-- Listen indeholder aktive profiler fra tidligere dage plus dagens nye (3 gratis, 5 med Silver, 8 med Gold og 10 med Platinum).
+- Listen indeholder aktive profiler fra tidligere dage plus dagens nye (5 gratis og 10 med Guld).
 - Hvis serveren returnerer for få nye profiler, vises kun de profiler, der er tilgængelige.
-- Gratis brugere ser bannerannoncer; Silver og opefter er reklamefri.
+- Gratis brugere ser bannerannoncer; Guld er reklamefri.
  - Brugeren kan skrive en privat refleksion.
  - Refleksioner gemmes for alle og vises sammen med refleksionskalenderen.
 - **Handlinger på kandidatlisten**
@@ -32,7 +32,7 @@
   - Vælg "Like" (kan blive til et match).
   - Vælg "Super like" for at signalere ekstra interesse (1, 3 eller 5 pr. uge afhængigt af abonnement).
     - Vælg "Remove" for at fjerne profilen helt.
-  - Silver kan fortryde den seneste "Remove"; Gold og Platinum kan fortryde flere.
+  - Guld-brugere kan fortryde flere "Remove".
   - Brugeren kan én gang dagligt købe ekstra profiler (gratis nu - betaling ikke implementeret).
 
 ### Offentlig kandidatprofil
