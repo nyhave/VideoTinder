@@ -6,7 +6,6 @@ import SectionTitle from './SectionTitle.jsx';
 import { useCollection } from '../firebase.js';
 import { useT } from '../i18n.js';
 import { User as UserIcon, Star } from 'lucide-react';
-import VerificationBadge from './VerificationBadge.jsx';
 
 export default function PremiumFeatures({ userId, onBack, onSelectProfile }) {
   const likes = useCollection('likes', 'profileId', userId);
@@ -30,8 +29,7 @@ export default function PremiumFeatures({ userId, onBack, onSelectProfile }) {
           React.createElement('div', { className:'flex flex-col items-center' },
             p.photoURL ?
               React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
-              React.createElement(UserIcon, { className: 'w-10 h-10 text-yellow-500' }),
-            p.verified && React.createElement(VerificationBadge, null)
+              React.createElement(UserIcon, { className: 'w-10 h-10 text-yellow-500' })
           ),
           React.createElement('span', { className:'flex items-center gap-2' }, `${p.name} (${p.birthday ? getAge(p.birthday) : p.age})`,
             superLike && React.createElement(Star, { className:'w-4 h-4 text-blue-500' })

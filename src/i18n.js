@@ -18,7 +18,6 @@ export const messages = {
   chatIntroText:{ en:'Chats appear when profiles match. Enable notifications to get alerted when there is a match.', da:'Chats vises, når profiler matcher. Aktiver notifikationer for at få besked, når der er et match.', sv:'Chattar visas när profiler matchar. Aktivera aviseringar för att få en notis när du får en match.', es:'Los chats aparecen cuando los perfiles coinciden. Activa las notificaciones para recibir un aviso cuando haya un match.', fr:'Les discussions apparaissent lorsque les profils correspondent. Activez les notifications pour être alerté en cas de match.', de:'Chats erscheinen, wenn Profile übereinstimmen. Aktiviere Benachrichtigungen, um bei einem Match benachrichtigt zu werden.' },
   enableNotifications:{ en:'Enable notifications', da:'Aktiver notifikationer', sv:'Aktivera aviseringar', es:'Activar notificaciones', fr:'Activer les notifications', de:'Benachrichtigungen aktivieren' },
   seen: { en:'Seen', da:'Set', sv:'Sett', es:'Visto', fr:'Vu', de:'Gesehen' },
-  verified: { en:'Verified', da:'Bekræftet', sv:'Verifierad', es:'Verificado', fr:'Vérifié', de:'Verifiziert' },
   checkInTitle:{ en:'Daily reflection', da:'Dagens refleksion', sv:'Dagens reflektion', es:'Reflexión diaria', fr:'Réflexion du jour', de:'Tägliche Reflexion' },
   profile:{ en:'Profile', da:'Profil', sv:'Profil', es:'Perfil', fr:'Profil', de:'Profil' },
   about:{ en:'About RealDate', da:'Om RealDate', sv:'Om RealDate', es:'Acerca de RealDate', fr:'À propos de RealDate', de:'Über RealDate' },

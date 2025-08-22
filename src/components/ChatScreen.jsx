@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getAge, hasReadReceipts } from '../utils.js';
 import { User as UserIcon, ArrowLeft } from 'lucide-react';
-import VerificationBadge from './VerificationBadge.jsx';
 import { Card } from './ui/card.js';
 import { Button } from './ui/button.js';
 import { Textarea } from './ui/textarea.js';
@@ -197,8 +196,7 @@ export default function ChatScreen({ userId, onStartCall }) {
           React.createElement('div', { className: 'flex flex-col items-center' },
             activeProfile.photoURL ?
               React.createElement('img', { src: activeProfile.photoURL, className: 'w-16 h-16 rounded-lg object-cover' }) :
-              React.createElement(UserIcon, { className: 'w-16 h-16 text-pink-500' }),
-            activeProfile.verified && React.createElement(VerificationBadge, null)
+              React.createElement(UserIcon, { className: 'w-16 h-16 text-pink-500' })
           ),
           React.createElement('p', { className: 'flex-1 font-medium' }, `${activeProfile.name || ''}, ${activeProfile.birthday ? getAge(activeProfile.birthday) : activeProfile.age || ''}, ${activeProfile.city || ''}`),
           React.createElement(Button, {
@@ -266,7 +264,6 @@ export default function ChatScreen({ userId, onStartCall }) {
                 p.photoURL ?
                   React.createElement('img', { src: p.photoURL, className: 'w-10 h-10 rounded object-cover' }) :
                   React.createElement(UserIcon, { className: 'w-10 h-10 text-pink-500' }),
-                p.verified && React.createElement(VerificationBadge, null),
                 !lastFromSelf && React.createElement('span', { className: 'text-sm text-blue-600 font-semibold' }, 'Din tur!')
               ),
               React.createElement('div', { className: 'flex flex-col' },
