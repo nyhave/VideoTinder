@@ -61,8 +61,12 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
     );
     setText('');
   };
-
-  if(!profile) return null;
+  if(!profile){
+    return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90 flex flex-col items-center text-center' },
+      React.createElement(SectionTitle, { title: t('interestChatsTitle') }),
+      React.createElement('p', { className:'text-gray-600' }, 'Henter profil...')
+    );
+  }
   if(!canUseInterestChat){
     return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90 flex flex-col items-center text-center' },
       React.createElement(SectionTitle, { title: t('interestChatsTitle') }),
