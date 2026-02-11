@@ -71,7 +71,7 @@ export default function InterestChatScreen({ userId, onSelectProfile = null }) {
     return React.createElement(Card, { className:'p-6 m-4 shadow-xl bg-white/90 flex flex-col items-center text-center' },
       React.createElement(SectionTitle, { title: t('interestChatsTitle') }),
       React.createElement('p', { className:'text-gray-600 mb-4' }, 'Kræver Guld'),
-      React.createElement(Button, { className:'bg-pink-500 text-white', onClick:()=>window.dispatchEvent(new CustomEvent('showSubscription')) }, 'Køb abonnement (gratis nu - betaling ikke implementeret)')
+      React.createElement(Button, { className:'bg-pink-500 text-white', onClick:()=>window.dispatchEvent(new CustomEvent('showSubscription')) }, 'Køb abonnement')
     );
   }
   return React.createElement(Card, { className: 'p-6 shadow-xl bg-white/90 flex flex-col h-full flex-1', style:{height:'calc(100vh - 10rem)', maxHeight:'calc(100vh - 10rem)', overflow:'hidden'} },
